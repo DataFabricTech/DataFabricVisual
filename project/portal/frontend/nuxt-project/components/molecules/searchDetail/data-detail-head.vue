@@ -9,29 +9,15 @@
       <div class="inner-data">
         <!-- category-group : 해당된 모든 카테고리 출력 -->
         <div v-if="entityCategories.length > 0 || props.isAdmin" class="category-group">
-          <div
-            v-if="entityCategories.length > 0"
-            v-for="(item, index) in entityCategories"
-            :key="index"
-            class="category"
-          >
+          <div v-if="entityCategories.length > 0" v-for="(item, index) in entityCategories" :key="index"
+            class="category">
             <em class="category-label">{{ item.c_description }}</em>
-            <button
-              v-if="props.isAdmin"
-              type="button"
-              class="mu-btn mu-btn-delete"
-              @click="onClickDeleteMapping(item)"
-            >
+            <button v-if="props.isAdmin" type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteMapping(item)">
               <i class="mu-icon-svg item-delete"></i><span>삭제</span>
             </button>
           </div>
-          <button
-            v-if="showCategoryMapButton"
-            type="button"
-            class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only"
-            title="카테고리 추가"
-            @click="onClickAddMapping"
-          >
+          <button v-if="showCategoryMapButton" type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only"
+            title="카테고리 추가" @click="onClickAddMapping">
             <i class="mu-icon-svg add"></i><span>카테고리 추가</span>
           </button>
         </div>
@@ -57,30 +43,15 @@
           </em>
         </div>
       </div>
-      <div
-        class="inner-data buttons"
-        v-show="typeName.includes('table')"
-      >
-        <data-recommend-status-top
-          v-if="!props.isAdmin"
-          :data="props.data"
-          :params="props.params"
-          @reloadFavorite="onToggleFavorite"
-          @reloadRecommend="onToggleRecommend"
-        />
-        <button
-          v-if="typeName.includes('table')"
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
+      <div class="inner-data buttons" v-show="typeName.includes('table')">
+        <data-recommend-status-top v-if="!props.isAdmin" :data="props.data" :params="props.params"
+          @reloadFavorite="onToggleFavorite" @reloadRecommend="onToggleRecommend" />
+        <button v-if="typeName.includes('table')" type="button" class="mu-btn mu-btn-lg mu-btn-primary"
           @click="onClickEliminate">
           <i class="mu-icon-svg apply"></i>
           <span>데이터 추출</span>
         </button>
-        <button
-          v-else
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          style="background-color: lightgrey;"
+        <button v-else type="button" class="mu-btn mu-btn-lg mu-btn-primary" style="background-color: lightgrey;"
           @click="onClickAuthRequest()">
           <i class="mu-icon-svg apply"></i>
           <span>권한 요청</span>
@@ -95,13 +66,10 @@
 import ObjectUtils from "@/utils/ObjectUtils";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import DataRecommendStatusTop from "@molecules/searchDetail/data-recommend-status-top";
-import { onUpdated } from "vue";
-import { useCategoryStore } from "~/store/category";
 
 const { $ofetch } = useNuxtApp();
 
 const router = useRouter();
-const categoryStore = useCategoryStore();
 
 const emit = defineEmits(["onOpenModal", "reload", "onOpenEliminateModal", "reloadRecommendStatus"]);
 const props = defineProps([
@@ -115,16 +83,16 @@ const props = defineProps([
   "typeName",
 ]);
 
-const entityCategories = computed(() =>{
-    let categories = ObjectUtils.getPropertyValue(props.entity, "classifications", "")
-    if (categories) {
-      categories.sort((a, b) => a.c_id - b.c_id) // c_id 오름차순 정렬
-      // categories.sort((a, b) => a.c_name - b.c_name) // c_name 오름차순 정렬
-      // categories.sort((a, b) => a.c_description - b.c_description) // c_description 오름차순 정렬
+const entityCategories = computed(() => {
+  let categories = ObjectUtils.getPropertyValue(props.entity, "classifications", "")
+  if (categories) {
+    categories.sort((a, b) => a.c_id - b.c_id) // c_id 오름차순 정렬
+    // categories.sort((a, b) => a.c_name - b.c_name) // c_name 오름차순 정렬
+    // categories.sort((a, b) => a.c_description - b.c_description) // c_description 오름차순 정렬
 
-    }
-    return categories
   }
+  return categories
+}
 );
 const entityName = computed(() =>
   ObjectUtils.getPropertyValue(props.entity, "meta_name", "")
@@ -177,7 +145,7 @@ const onClickAuthRequest = async () => {
     // 데이터 권한 요청
     const newRouterObj = {
       path: "/data/request/register",
-      query: {request_type: 1}
+      query: { request_type: 1 }
     };
     router.push(newRouterObj);
   }

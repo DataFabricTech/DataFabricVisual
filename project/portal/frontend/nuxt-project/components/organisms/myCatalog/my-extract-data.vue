@@ -3,8 +3,8 @@
     <div class="mu-heading">
       <h4>데이터 추출 내역</h4>
       <div class="mu-item-group">
-        <button type="button" title="더보기" class="mu-btn mu-btn-round mu-btn-icon-only"
-          @click="goToExtractData()"><i class="mu-icon-svg add"></i>
+        <button type="button" title="더보기" class="mu-btn mu-btn-round mu-btn-icon-only" @click="goToExtractData()"><i
+            class="mu-icon-svg add"></i>
         </button>
       </div>
     </div>
@@ -18,7 +18,8 @@
     <!-- 추출한 데이터 최신순으로 ‘데이터명’ 3개 정렬 -->
     <ul class="basic-list">
       <li v-for="(item, index) in dataList" :key="index">
-        <a v-if="item.description != null && item.description != ''" v-on:click="onClickDataName(item)">{{item.description}}</a>
+        <a v-if="item.description != null && item.description != ''" v-on:click="onClickDataName(item)">{{
+          item.description }}</a>
         <a v-else v-on:click="onClickDataName(item)">{{ item.meta_name }}</a>
         <span class="date" @click="onClickDataName(item)">{{ formatDate(item.download_date) }}</span>
       </li>
@@ -51,12 +52,8 @@ const formatDate = (value: string | number | Date): string => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
-  // return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
 const goToExtractData = () => {

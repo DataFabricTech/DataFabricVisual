@@ -51,9 +51,6 @@
           <li v-bind:class="{ active: currentTab == 1 }" @click="changeTab(1)">
             <a>요청변수<span>(Request)</span></a>
           </li>
-          <!-- <li v-bind:class="{ active: currentTab == 2 }" @click="changeTab(2)">
-            <a href="#none">API 테스트</a>
-          </li> -->
           <li v-bind:class="{ active: currentTab == 3 }" @click="changeTab(3)">
             <a>출력결과<span>(Response Element)</span></a>
           </li>
@@ -107,7 +104,8 @@
         <br />
         <!-- //mu-formbox -->
         <div style="text-align: right; margin: 0 15px 10px 0;">
-          <button @click="copyCode" style="padding: 4px; border-radius: 0.5em; font-size: 12px; font-weight: 600">코드 복사</button>
+          <button @click="copyCode" style="padding: 4px; border-radius: 0.5em; font-size: 12px; font-weight: 600">코드
+            복사</button>
         </div>
         <div class="code-box" style="background-color: #000000; max-height: 700px; margin: 0 auto;">
           <!-- 복사 버튼 -->
@@ -160,7 +158,7 @@ while True:
             요청변수 안내
           </caption>
           <colgroup>
-            <col style="width: 120px;"/>
+            <col style="width: 120px;" />
             <col style="width: 250px" />
             <col style="width: 100px" />
             <col style="width: 200px" />
@@ -252,8 +250,7 @@ FINISHED : 데이터 검색 및 처리가 종료된 상태
 ③ 데이터 검색이 완료되어 데이터 수신 상태인 경우 nextUri : ~/v1/data/executing/~ 로 응답
 ④ 데이터 수신 완료 후 nextUri 요청 시 Data가 Body로 전송
 ⑤ 데이터 전송 완료 시 nextUri 가 없이 응답합니다.
-      </pre
-          >
+      </pre>
         </div>
 
         <div class="mu-heading">
@@ -327,7 +324,8 @@ FINISHED : 데이터 검색 및 처리가 종료된 상태
               <td class="tl">서버 요청 오류 발생시 표시되는 에러 메세지</td>
             </tr>
           </tbody>
-        </table><div class="mu-heading">
+        </table>
+        <div class="mu-heading">
           <h4>쿼리 조회 결과 에러 속성</h4>
         </div>
         <!-- mu-grid -->
@@ -522,8 +520,7 @@ Example) 요청한 데이터를 모두 수신 한 상태의 response body 예시
     }
   }
 
-      </pre
-          >
+      </pre>
         </div>
       </div>
       <!-- 에러메세지 -->
@@ -581,13 +578,6 @@ const userStore = useUserStore();
 
 const currentTab = ref(0)
 const currentHostname = ref(window.location.hostname);
-const iframePath = ref(
-  "https://" +
-    window.location.hostname +
-    ":13200/docs?uuid=" +
-    Math.floor(Math.random() * 10000000000000000).toString()
-);
-
 
 onMounted(() => {
   currentTab.value = props.currentTab
@@ -603,7 +593,7 @@ const changeTab = (idx) => {
 const copyCode = () => {
   const codeContent = document.getElementById("code-content").innerText;
   navigator.clipboard.writeText(codeContent).then(() => {
-      defaultAlert("코드가 복사되었습니다.");
+    defaultAlert("코드가 복사되었습니다.");
   }).catch(err => {
     errorAlert("코드 복사에 실패하였습니다.");
   });

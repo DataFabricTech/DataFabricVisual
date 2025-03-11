@@ -6,22 +6,12 @@
           <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggle('all')">
             <span>펼치기</span>
           </button>
-          <a
-            href="javascript:void(0);"
-            :class="['' === selectedId ? 'active' : '', 'item-label']"
-            title="조직 전체"
-            @click="() => onClick()"
-          >
+          <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']" title="조직 전체"
+            @click="() => onClick()">
             조직 전체
           </a>
-          <menu-item
-            :list="deptList"
-            :toggle-targets="toggleTargets"
-            :selected-id="selectedId"
-            @onToggleNode="onToggle"
-            @onClickMenuItem="onClick"
-            @onClickSetup="onToggleTooltip"
-          />
+          <menu-item :list="deptList" :toggle-targets="toggleTargets" :selected-id="selectedId" @onToggleNode="onToggle"
+            @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
         </li>
       </ul>
     </div>
@@ -30,7 +20,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onBeforeMount, onMounted, onUnmounted, ref, computed } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useDeptStore } from "@store/dept.ts";
 import { useEventStore } from "~/store/event.ts";
 import MenuItem from "@/pages/admin/manager/system/user/menu-item";
@@ -47,45 +37,43 @@ const deptStore = useDeptStore();
 const deptList = computed(() => deptStore.getDeptList);
 const toggleTargets = deptStore.getToggleTargets;
 const selectedId = deptStore.getSelectedItemId;
-const calledFrom = deptStore.getCalledFrom;
 
 const eventStore = useEventStore();
 
-// 
+//
 onMounted(() => {
   fetchDepartments();
 });
 
-// 
+//
 const fetchDepartments = async () => {
   await deptStore.fetchDepts();
-  const { _deptMap } = storeToRefs(deptStore);
 };
 
-// 
+//
 const onClick = (item) => {
   deptStore.setSelectedItemId(item && item.id ? item.id : "");
 
   if (item && item.id) {
-    eventStore.emit('deptSelected', {dept_cd: item.name});
+    eventStore.emit('deptSelected', { dept_cd: item.name });
   } else {
-    eventStore.emit('deptSelected', {dept_cd: ''});
+    eventStore.emit('deptSelected', { dept_cd: '' });
   }
 
   emit("onClickMenuItem", item);
 };
 
-// 
+//
 const onClickCategoryOrderChange = () => {
   emit("onClickCategoryOrderChange");
 };
 
-// 
+//
 const onToggleTooltip = (e, item, type) => {
   eventStore.emit("onToggleMetaDataTooltip", e, item, type);
 };
 
-// 
+//
 const onClickButton = (type) => {
   emit("onClickOptionalButtons", type);
 };

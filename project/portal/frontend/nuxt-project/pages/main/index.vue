@@ -14,7 +14,8 @@
                 <legend>통합검색</legend>
                 <div class="inner-search">
                   <div class="mu-input-icon">
-                    <input type="text" class="mu-input" placeholder="데이터를 쉽고 빠르게 검색해보세요" title="검색어입력" v-model="word" @keypress.enter.prevent='onSearch($event)' />
+                    <input type="text" class="mu-input" placeholder="데이터를 쉽고 빠르게 검색해보세요" title="검색어입력" v-model="word"
+                      @keypress.enter.prevent='onSearch($event)' />
                     <button type="button" class="mu-btn mu-btn-delete" @click="onDeleteKeyword()">
                       <i class="mu-icon-svg item-delete"></i>
                       <span>삭제</span>
@@ -45,11 +46,11 @@
             <div class="main-heading">
               <h3><a href="javascript:void(0)" @click="goToNoticeList()">공지사항</a></h3>
             </div>
-            <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper" >
-                <swiper-slide class="swiper-slide" v-for="(nt, idx) in noticeList">
-                  <a href="javascript:void(0)" @click="goToNotice(nt.id)">{{ nt.title }}</a>
-                  <p class="date">{{ yyyyMMdddot(nt.upload_date) }}</p>
-                </swiper-slide>
+            <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper">
+              <swiper-slide class="swiper-slide" v-for="(nt, idx) in noticeList">
+                <a href="javascript:void(0)" @click="goToNotice(nt.id)">{{ nt.title }}</a>
+                <p class="date">{{ yyyyMMdddot(nt.upload_date) }}</p>
+              </swiper-slide>
             </swiper>
           </div>
           <!-- section-wrap : FAQ -->
@@ -57,7 +58,7 @@
             <div class="main-heading">
               <h3><a href="javascript:void(0)" @click="goToFaqList()">FAQ</a></h3>
             </div>
-            <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper" >
+            <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper">
               <swiper-slide class="swiper-slide" v-for="(faq, idx) in faqList">
                 <a href="javascript:void(0)" @click="goToFaq(faq.id)">{{ getPostContent(faq.post_content) }}</a>
                 <p class="date">{{ yyyyMMdddot(faq.upload_date) }}</p>
@@ -81,28 +82,25 @@
           <div class="main-category-group">
             <div class="chart-area" id="chartCategory"></div>
             <div class="chart-category-swiper" style="width: 919px; padding: 0 30px 0 40px;">
-              <Swiper
-                @swiper="onSwiperChartCategory"
-                @mouseenter="controlSwiper(false)"
-                @mouseleave="controlSwiper(true)"
-                @touch-end="controlSwiper(null)"
-                class="swiper"
-                :modules="[Autoplay]"
-                slidesPerView="10"
-                :autoplay="{delay: 1000, disableOnInteraction: true,}"
-                :speed="1000"
-                loop
-                loopAdditionalSlides="1"
-              >
+              <Swiper @swiper="onSwiperChartCategory" @mouseenter="controlSwiper(false)"
+                @mouseleave="controlSwiper(true)" @touch-end="controlSwiper(null)" class="swiper" :modules="[Autoplay]"
+                slidesPerView="10" :autoplay="{ delay: 1000, disableOnInteraction: true, }" :speed="1000" loop
+                loopAdditionalSlides="1">
                 <swiper-slide v-for="(cat, idx) in addCategoryList">
-                  <div style="width: 100%; height: 100%;margin-top: 30px; justify-content: center; align-items: center; text-align: center;">
+                  <div
+                    style="width: 100%; height: 100%;margin-top: 30px; justify-content: center; align-items: center; text-align: center;">
                     <a @click="goToSearch(cat)" class="chart-category">
-                      <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(9 + 1)"></i>
+                      <i v-if="cat.file_location == '' || cat.file_location == null"
+                        :class="getCategoryIcon(9 + 1)"></i>
                       <img v-else :src="cat.imageSrc" :class="cat.imageClass" :style="cat.imageStyle" />
                       <br>
-                      <em class="chart-category-label" style="margin-top: 10px;display: block;line-height: 1;color: #fff; width: 84px; height: 14px; text-align: center; overflow: hidden;;">{{ cat.description }}</em>
+                      <em class="chart-category-label"
+                        style="margin-top: 10px;display: block;line-height: 1;color: #fff; width: 84px; height: 14px; text-align: center; overflow: hidden;;">{{
+                          cat.description }}</em>
                       <br>
-                      <span class="chart-count" style="width: 84px;display: block;line-height: 1;color: #fff;font-size: 18px;font-weight: 500; text-align: center;">{{ cat.tableCount.toLocaleString() }}</span>
+                      <span class="chart-count"
+                        style="width: 84px;display: block;line-height: 1;color: #fff;font-size: 18px;font-weight: 500; text-align: center;">{{
+                          cat.tableCount.toLocaleString() }}</span>
                     </a>
                   </div>
                 </swiper-slide>
@@ -279,18 +277,13 @@
             <ul v-if="shareDataList && shareDataList.length > 0" class="card-list">
               <li class="card-box" v-for="(share, idx) in shareDataList">
                 <a @click="goToShare(share.id)">
-                  <div class="inner-thumb" >
+                  <div class="inner-thumb">
                     <div v-html="share.image_html"></div>
                   </div>
                   <div class="inner-data">
-                    <div class="card-category">
-                      <!-- <div class="category">
-                        <em class="category-label">IT</em>
-                      </div> -->
-                    </div>
                     <strong class="card-title">{{ share.title }}</strong>
                     <p class="card-desc">
-                      <div v-html="limitedContent(share.contents)"></div>
+                    <div v-html="limitedContent(share.contents)"></div>
                     </p>
                   </div>
                 </a>
@@ -306,20 +299,14 @@
 
 
 <script setup lang="ts">
-import type { Ref } from "@vue/reactivity";
 import { ref } from "@vue/reactivity";
 import { useNuxtApp, useRouter } from "nuxt/app";
-import {
-  confirmAlert,
-  errorAlert,
-  successAlert,
-} from "@/components/functional/alert/alert-default";
-import { onBeforeMount, onMounted } from "vue";
+import { errorAlert } from "@/components/functional/alert/alert-default";
+import { onMounted } from "vue";
 import { useUserStore } from "@/store/user";
 import { useCategoryStore } from "@/store/category";
-import MyRequestData from "@/components/organisms/myCatalog/my-request-data.vue";
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue'
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -376,7 +363,7 @@ const controlSwiper = (play) => {
     const distanceRatio = Math.abs(
       (currentSlideWidth * swiperEl.value.activeIndex +
         swiperEl.value.getTranslate()) /
-        currentSlideWidth
+      currentSlideWidth
     );
     duration.value = swiperEl.value.params.speed * distanceRatio;
     swiperEl.value.autoplay.stop();
@@ -395,66 +382,19 @@ const router = useRouter();
 const userStore = useUserStore()
 const categoryStore = useCategoryStore()
 const searchStore = useSearchStore()
-
-const word: Ref<string> = ref("");
+const word = ref("");
 const recommendedWordList = ref(["추천 검색어1", "추천 검색어2"]); // 추천 검색어들, 최대 5개
 const totalDataCount = ref(0) // 전체 데이터 수
 const useDataCount = ref(0) // 데이터 활용 횟수
-const newDataCount = ref(0) // 신규 데이터 수
 const noticeList = ref([]) // 공지사항
 const faqList = ref([]) // FAQ
 const shareDataList = ref([]) // 활용사례
-const currentDataList = ref([]) // 인기 데이터 > 현재 보여줄 데이터 목록
 const latestDataList = ref([]) // 최신 데이터 순
 const myRequestDataList = ref([]) // 데이터 요청 내역
 const myFavoriteDataList = ref([]) // 찜 데이터
 const myReviewDataList = ref([]) // 리뷰 데이터
 const myExtractedDataList = ref([]) // 데이터 추출 내역
-
 const categoryList = computed(() => categoryStore.getCategoryList); // 차트 카테고리 목록
-const filterCategoryList = ref([]);
-const currentSwiperStatus  = ref(1) // swiper 현재 위치
-const swiperRef = ref(null); // swiper Instance
-const swiperNoticeRef = ref(null); // swiper Instance
-const swiperOptions = {
-  modules: [Autoplay, Pagination, Navigation],
-  autoplay: {
-    delay: 3000,
-    disableOnInteraction: false,
-    pauseOnMouseEnter: true,
-  },
-  loop: true,
-  pagination: { clickable: true },
-  navigation: true,
-};
-
-const sliderSwiperOptions = {
-  modules: [Autoplay, Pagination, Navigation],
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  navigation: true,
-  autoplay: {
-          delay: 5000,
-          disableOnInteraction: true,
-        },
-  effect: 'fade', // fade, slide
-  speed: 1000,
-};
-
-// Swiper 설정
-const noticeSwiperOptions = {
-  modules: [Autoplay],
-  direction: 'horizontal',
-  autoplay: {
-    delay: 3000,
-    pauseOnMouseEnter: true,
-  },
-  loop: true,
-  speed: 500,
-};
-
 const mainBannerSubjectList = ref([
   {
     name: "MAIN_BANNER_SUBJECT1",
@@ -472,7 +412,7 @@ const mainBannerSubjectList = ref([
 
 // 메인화면 배너 제목 조회
 const getMainBannerSubject = async () => {
-  $ofetch(`/api/main/mainBannerSubject`).then((res) => {
+  await $ofetch(`/api/main/mainBannerSubject`).then((res) => {
     if (res && res.data) {
       if (res.data.subjectList && res.data.subjectList.length > 1) {
         mainBannerSubjectList.value = res.data.subjectList
@@ -554,12 +494,9 @@ const limitedContent = (contents: string): string => {
   images.forEach(img => img.remove())
 
   const textWithLineBreaks = contents
-        .replace(/<[^>]+>/g, '') // HTML 태그 제거
-        // .replace(/<p><\/p>/g, '') // p 태그 제거
-        // .replace(/<\/[^>]+>/g, '\n') // 닫는 태그 뒤에 줄바꿈 추가
-        // .replace(/<\/?span>/g, '') // span 태그 제거
-        .replace(/\n+/g, '\n') // 연속된 줄바꿈을 하나로 줄임
-        .replace(/^\s*[\r\n]/gm, "") // 빈 줄바꿈만 제거
+    .replace(/<[^>]+>/g, '') // HTML 태그 제거
+    .replace(/\n+/g, '\n') // 연속된 줄바꿈을 하나로 줄임
+    .replace(/^\s*[\r\n]/gm, "") // 빈 줄바꿈만 제거
 
   // 줄바꿈으로 나누고, 첫 1줄만 가져오기
   const lines = textWithLineBreaks.split('\n');
@@ -615,7 +552,6 @@ const getCountData = async () => {
     if (res && !res.errorMessage) {
       totalDataCount.value = res.data.totalDataCount
       useDataCount.value = res.data.useDataCount
-      newDataCount.value = res.data.newDataCount
     }
   }).catch((e) => {
     console.log(e)
@@ -638,7 +574,6 @@ const getPostData = async () => {
 const getCategoryData = async () => {
   const data = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
 
-  //
   let i = 0;
   for (const item of data) {
     if (item.file_location != null && item.file_location != '') {
@@ -661,17 +596,16 @@ const getCategoryData = async () => {
   }
 
   if (data && data.length > 0) {
-    // filterCategoryList.value = chunkArray(data, 10);
     const chartData = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
     categeoryChart(chartData);
 
     addCategoryList.value = [...chartData];
-}
+  }
 }
 
-//
+// 카테고리 중앙 차트 설정
 const categeoryChart = (categoryList) => {
-  var chartCategory = Highcharts.chart("chartCategory", {
+  Highcharts.chart("chartCategory", {
     chart: {
       type: "column",
       height: 150,
@@ -738,7 +672,7 @@ const categeoryChart = (categoryList) => {
         fontFamily: "Pretendard",
         color: "#fff"
       },
-      formatter: function() {
+      formatter: function () {
         var categoryIndex = this.point.index;
         var categoryDescription = categoryList[categoryIndex].description;
         var tooltipContent = `<div style="color:#fff">${categoryDescription}`;
@@ -774,43 +708,6 @@ const fetchImageTagAsBlob = async (imageUrl: string, defaultImageUrl: string) =>
     return `${defaultImageUrl}`;
   }
 };
-
-// 배열 나누어 저장
-const chunkArray = (array, chunk) => {
-  const result = []
-  for (let i=0; i<array.length; i += chunk) {
-    result.push(array.slice(i, i + chunk))
-  }
-
-  const lastChunk = result[result.length - 1];
-  if (lastChunk.length < chunk) {
-    const needed = chunk - lastChunk.length;
-    const uniqueItems = array.filter(item => !lastChunk.includes(item));
-    const itemsToAdd = uniqueItems.slice(0, needed);
-    lastChunk.push(...itemsToAdd);
-  }
-
-  return result
-}
-
-// swiper 변경 이벤트
-const onSlideChange = (swiper) => {
-  categeoryChart(addCategoryList.value);
-}
-
-// swiper 버튼 활성화 여부
-const swiperButtonActiveStatus = (cnt) => {
-  if (currentSwiperStatus.value == cnt) {
-    return 'swiper-pagination-bullet swiper-pagination-bullet-active'
-  } else {
-    return 'swiper-pagination-bullet'
-  }
-}
-
-// swiper 버튼 클릭 여부
-// const onClickSwiperButton = (cnt) => {
-//   currentSwiperStatus.value = cnt
-// }
 
 // 카테고리 아이콘 설정
 const getCategoryIcon = (idx: number) => {
@@ -855,36 +752,6 @@ const getShareData = async () => {
     // 썸네일 설정
     // 버그로 인해 forEach 대신 for...of 사용
     for (const element of shareDataList.value) {
-      // const modifiedText = text.replace(/<img\b[^>]*>/g, '');
-      // const regex = /<img[^>]+src=[\"']?([^>\"']+)[\"']?[^>]*>/g;
-
-      // let imgTag;
-      // while ((imgTag = regex.exec(element.contents))) {
-      //   if (imgTag[1].indexOf("http://") == -1 && imgTag[1].indexOf("https://") == -1) {
-      //     const tempDiv = document.createElement('div')
-      //     tempDiv.innerHTML = imgTag[0]
-
-
-      //     const images = tempDiv.querySelectorAll('img');
-      //     images.forEach(img => {
-      //       // 기존 이미지 사이즈 제거
-      //       img.removeAttribute('style')
-      //       img.removeAttribute('width')
-      //       img.removeAttribute('height')
-      //       img.setAttribute('style', 'width: 100%; height: 220px; object-fit: fill;')
-      //     })
-
-      //     element.image = tempDiv.innerHTML;
-      //     break;
-      //   } else {
-      //     continue;
-      //   }
-      // }
-
-      // 썸네일 없는 경우 기본값 설정
-      // if (!element.image) {
-      //   element.image = "<img src='/share_basic.png' style='width: 335px; height: 220px;'></img>"
-      // }
       // 썸네일 없는 경우 기본값 설정
       if (!element.image) {
         element.image_html = `<img src='/share_basic.png' style="width: 335px; height: 220px;"></img>`;
@@ -895,26 +762,25 @@ const getShareData = async () => {
         // 백엔드에서 서빙되는 이미지 경로로 변경
         let response = null
         try {
-            // 백엔드에서 서빙되는 이미지 경로로 변경
-            response = await $ofetch(`/api/images?path=${encodeURIComponent(element.image)}`, {
-                responseType: 'blob' // 응답을 Blob 형태로 요청
-              });
-            // 응답이 유효한 경우에만 Blob 생성
-            if (response) {
-                const imageBlob = new Blob([response], {
-                    type: response.type
-                });
-                const imageUrl = URL.createObjectURL(imageBlob);
-                element.image_html = `<img src='${imageUrl}' style="width: 335px; height: 220px;">`;
+          // 백엔드에서 서빙되는 이미지 경로로 변경
+          response = await $ofetch(`/api/images?path=${encodeURIComponent(element.image)}`, {
+            responseType: 'blob' // 응답을 Blob 형태로 요청
+          });
+          // 응답이 유효한 경우에만 Blob 생성
+          if (response) {
+            const imageBlob = new Blob([response], {
+              type: response.type
+            });
+            const imageUrl = URL.createObjectURL(imageBlob);
+            element.image_html = `<img src='${imageUrl}' style="width: 335px; height: 220px;">`;
 
-            } else {
-                // 응답이 유효하지 않은 경우 기본 이미지로 설정
-                element.image_html = `<img src='/share_basic.png' style="width: 335px; height: 220px;"></img>`;
-            }
-        } catch (error) {
-            // console.error("파일 등록 API 호출 중 오류 발생:", error);
-            // 썸네일 파일 못 찾는 경우 기본값 설정
+          } else {
+            // 응답이 유효하지 않은 경우 기본 이미지로 설정
             element.image_html = `<img src='/share_basic.png' style="width: 335px; height: 220px;"></img>`;
+          }
+        } catch (error) {
+          // 썸네일 파일 못 찾는 경우 기본값 설정
+          element.image_html = `<img src='/share_basic.png' style="width: 335px; height: 220px;"></img>`;
         }
       }
 
@@ -1066,25 +932,6 @@ const goToShare = (id) => {
   router.push(`/share/board/detail?id=${id}`)
 }
 
-// 카테고리 2개까지 표기 처리
-const getClassificationList = (data) => {
-  let tmpData = Object.assign(data)
-  tmpData.sort((a, b) => {
-    return a.c_id - b.c_id
-    // const nameCompare = a.c_name.localeCompare(b.c_name, "ko")
-    // if (nameCompare !== 0) return nameCompare; // name이 다르면 비교 결과 반환
-    // return a.description.localeCompare(b.description, "ko"); // name이 같으면 description 비교
-  });
-  let list = new Array()
-  for (let i=0; i<tmpData.length; i++) {
-    if (i >= 2) {
-      break;
-    }
-    list.push(tmpData[i])
-  }
-  return list
-}
-
 const getPostContent = (content) => {
   const plainText = content.replace(/<\/?[^>]+(>|$)/g, '');
   const cleanedContent = plainText.replace(/&nbsp;/g, ' ');
@@ -1095,14 +942,6 @@ const getPostContent = (content) => {
   return firstLine
 }
 
-// 인기 데이터 한글값 표기
-const getKrName = (content) => {
-  if (content == 'bestDataSortHits') return '조회수 높은 순'
-  if (content == 'bestDataSortNew') return '최신 데이터 순'
-  if (content == 'bestDataSortRec') return '추천수 높은 순'
-  return content
-}
-
 // 통합검색으로 이동
 const goToMetaDataList = () => {
   router.push(`/search/keyword`)
@@ -1111,26 +950,6 @@ const goToMetaDataList = () => {
 // 메타데이터 상세 페이지로 이동
 const goToMetaDataDetail = (id) => {
   router.push(`/search/detail?guid=${id}`)
-}
-
-// 데이터 요청 상태 스타일 지정
-const getClassFromStatus = (status) => {
-  let className = 'step-process'
-  if (status == 0) return 'apply ' + className
-  if (status == 1) return 'review ' + className
-  if (status == 2) return 'ing ' + className
-  if (status == 3) return 'supply ' + className
-  if (status == 4) return 'unsupply ' + className
-  else return className
-}
-
-const getProcessStatus = (status) => {
-  if (status == 0) return '신청'
-  if (status == 1) return '검토중'
-  if (status == 2) return '진행중'
-  if (status == 3) return '제공'
-  if (status == 4) return '미제공'
-  if (status == 5) return '-'
 }
 
 // My Catalog > 데이터 요청 내역
@@ -1200,52 +1019,55 @@ const yyyyMMdddot = (value) => {
   let year = date.getFullYear();
   let month = String(date.getMonth() + 1).padStart(2, "0");
   let day = String(date.getDate()).padStart(2, "0");
-  // let hours = String(date.getHours()).padStart(2, "0");
-  // let min = String(date.getMinutes()).padStart(2, "0");
-  // let sec = String(date.getSeconds()).padStart(2, "0");
   if (value == null || value == undefined) {
     return "";
   }
-  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
   return year + "." + month + "." + day;
 };
 </script>
 <style scoped>
 .right-channel {
-  padding-bottom:10px !important;
+  padding-bottom: 10px !important;
 }
+
 .swiper-container {
-  height:227px;
+  height: 227px;
 }
 
 .data-banner {
-    position: relative; /* 가상 요소를 배치하기 위한 기준 */
-    background-color: #d9e3ef; /* 배경색은 그대로 적용 */
-    height: 290px;
-    padding: 55px 50px;
-    border-radius: 26px;
-    color: #0a2469;
+  position: relative;
+  /* 가상 요소를 배치하기 위한 기준 */
+  background-color: #d9e3ef;
+  /* 배경색은 그대로 적용 */
+  height: 290px;
+  padding: 55px 50px;
+  border-radius: 26px;
+  color: #0a2469;
 }
+
 .wish-banner {
-    position: relative; /* 가상 요소를 배치하기 위한 기준 */
-    background-color: #ecdfe0; /* 배경색은 그대로 적용 */
-    height: 290px;
-    padding: 55px 50px;
-    border-radius: 26px;
-    color: #530012;
+  position: relative;
+  /* 가상 요소를 배치하기 위한 기준 */
+  background-color: #ecdfe0;
+  /* 배경색은 그대로 적용 */
+  height: 290px;
+  padding: 55px 50px;
+  border-radius: 26px;
+  color: #530012;
 }
+
 .data-banner strong,
-.wish-banner strong{
-    display: block;
-    margin-bottom: 10px;
-    font-size: 32px;
-    font-weight: bold;
-    color: inherit;
-}
-.data-banner p,
-.wish-banner p{
-  font-size: 16px;
+.wish-banner strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 32px;
+  font-weight: bold;
   color: inherit;
 }
 
+.data-banner p,
+.wish-banner p {
+  font-size: 16px;
+  color: inherit;
+}
 </style>

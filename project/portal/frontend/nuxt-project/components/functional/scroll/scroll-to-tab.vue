@@ -3,14 +3,17 @@
     <div class="mu-tab-box-2">
       <ul class="mu-tab">
         <li :class="activeTab == index ? 'active' : ''" v-for="(tab, index) in props.tabs" :key="index">
-          <a class="mu-switch" @click="scrollToSection(tab, index)" :title="activeTab == index ? '선택됨' : ''">{{ getKrTabName(tab) }}</a>
+          <a class="mu-switch" @click="scrollToSection(tab, index)" :title="activeTab == index ? '선택됨' : ''">{{
+            getKrTabName(tab) }}</a>
         </li>
       </ul>
     </div>
-    <div v-if="props.isSticky" :class="!props.isAdmin ? 'mu-tab-box-2 fixed-mu-tab-box-2' : 'mu-tab-box-2 fixed-mu-tab-box-3'">
+    <div v-if="props.isSticky"
+      :class="!props.isAdmin ? 'mu-tab-box-2 fixed-mu-tab-box-2' : 'mu-tab-box-2 fixed-mu-tab-box-3'">
       <ul class="mu-tab">
         <li :class="activeTab == index ? 'active' : ''" v-for="(tab, index) in tabs" :key="index">
-          <a class="mu-switch" @click="scrollToSection(tab, index)" :title="activeTab == index ? '선택됨' : ''">{{ getKrTabName(tab) }}</a>
+          <a class="mu-switch" @click="scrollToSection(tab, index)" :title="activeTab == index ? '선택됨' : ''">{{
+            getKrTabName(tab) }}</a>
         </li>
       </ul>
     </div>
@@ -18,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 
 const emit = defineEmits(['scrollToSection'])
 const props = defineProps(['isAdmin', 'tabs', 'isSticky', 'sectionRefs'])
@@ -49,6 +52,4 @@ const getKrTabName = (tab) => {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

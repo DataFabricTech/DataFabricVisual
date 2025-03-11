@@ -17,10 +17,7 @@
 
           <div class="mu-heading">
             <!-- board-list-search -->
-            <request-border-list-search
-              :searchObj.sync="searchObj"
-              @searchMethod="getDataRequestList"
-            />
+            <request-border-list-search :searchObj.sync="searchObj" @searchMethod="getDataRequestList" />
             <div class="mu-item-group">
               <div class="mu-selectbox w120">
                 <select name="searchType3" :value="searchObj.searchStatus" @change="onChangeProcessStatus">
@@ -57,20 +54,19 @@
                   <td class="tl">
                     <a v-on:click="onClickDetail(item.id, item.writer)">{{
                       item.title
-                    }}</a>
+                      }}</a>
                     <i v-if="item.new_yn" class="mu-icon-svg new">새로운글</i>
                   </td>
-                  <!-- 왼쪽정렬시 .tl 추가 -->
                   <td>
                     <i v-if="item.file_cnt > 0" class="mu-icon-svg file">첨부파일 있음</i>
-                    <i v-if="item.file_cnt === 0" >-</i>
+                    <i v-if="item.file_cnt === 0">-</i>
                   </td>
                   <td>{{ item.user_nm ? item.user_nm : "-" }}</td>
                   <td>{{ $yyyyMMdd(item.create_date) }}</td>
                   <td>{{ $yyyyMMdd(item.finish_date) }}</td>
                   <td>
-                    <em :class="getProcessStyle(item.process_status)" >{{ getProcessStatus(item.process_status) }}</em
-                    ><!-- 신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply -->
+                    <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status)
+                      }}</em><!-- 신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply -->
                   </td>
                 </tr>
                 <tr v-if="dataRequestList.length == 0">
@@ -118,18 +114,18 @@ interface PagingObj {
 
 interface DataRequest {
   id: number
-	writer: string
-	request_type: number
-	title: string
-	data_name: string
-	contents: string
-	request_start: string
-	request_end: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: number
+  title: string
+  data_name: string
+  contents: string
+  request_start: string
+  request_end: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface SearchObj {

@@ -1,18 +1,10 @@
 <template>
-  <div
-    class="detail-box"
-    v-if="props.isAdmin ? true : props.attributes.length > 0 ? true : false"
-  >
+  <div class="detail-box" v-if="props.isAdmin ? true : props.attributes.length > 0 ? true : false">
     <div class="mu-heading">
       <h5>비지니스 속성</h5>
       <!--        <div class="mu-item-group">-->
       <div v-show="props.isAdmin" class="mu-item-group">
-        <button
-          type="button"
-          class="mu-btn mu-btn-primary"
-          title="비지니스 속성 추가"
-          @click="onClickAdd"
-        >
+        <button type="button" class="mu-btn mu-btn-primary" title="비지니스 속성 추가" @click="onClickAdd">
           <i class="mu-icon-svg add"></i>
           <span>비지니스 속성 추가</span>
         </button>
@@ -33,30 +25,15 @@
         <tbody>
           <tr v-for="(item, index) in props.attributes" :key="index">
             <td v-if="props.isAdmin">
-              <input
-                type="text"
-                id="businessName01"
-                placeholder="Key값을 입력하세요"
-                :class="inputClass('key', item)"
-                v-model="item.key"
-              />
+              <input type="text" id="businessName01" placeholder="Key값을 입력하세요" :class="inputClass('key', item)"
+                v-model="item.key" />
             </td>
             <td v-else>{{ item.key }}</td>
             <td v-if="props.isAdmin">
               <div class="mu-item-group">
-                <input
-                  type="text"
-                  id="businessValue01"
-                  placeholder="Value값을 입력하세요"
-                  :class="inputClass('value', item)"
-                  v-model="item.value"
-                />
-                <button
-                  type="button"
-                  class="mu-btn mu-btn-icon-only"
-                  title="비지니스 속성 삭제"
-                  @click="onClickDel(index)"
-                >
+                <input type="text" id="businessValue01" placeholder="Value값을 입력하세요" :class="inputClass('value', item)"
+                  v-model="item.value" />
+                <button type="button" class="mu-btn mu-btn-icon-only" title="비지니스 속성 삭제" @click="onClickDel(index)">
                   <i class="mu-icon-svg minus"></i><span>비지니스 속성 삭제</span>
                 </button>
               </div>

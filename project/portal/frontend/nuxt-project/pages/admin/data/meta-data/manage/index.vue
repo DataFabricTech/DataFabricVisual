@@ -3,25 +3,12 @@
     <div class="inner">
       <div class="mu-section">
         <!-- 카테고리 관리 & 더보기 툴팁 -->
-        <meta-data-tooltip
-          :tooltip-obj="tooltipObj"
-          :selected-category="selectedCategory"
-          @onClickMenu="onClickCategoryManageMenu"
-        />
+        <meta-data-tooltip :tooltip-obj="tooltipObj" :selected-category="selectedCategory"
+          @onClickMenu="onClickCategoryManageMenu" />
 
         <!-- 카테고리 목록 -->
-        <left-menu-list
-          @onClickMenuItem="onClickMenuItem"
-          @onClickOptionalButtons="onClickOptionalButtons"
-          @onClickCategoryOrderChange="onClickCategoryOrderChange"
-        />
-
-        <!-- <classification-ord-update-modal
-          ref="classificationOrdupdateModal"
-          :visible.sync="visible"
-          @searchMethod="getCategoryList"
-          @onSearchCategories="onSearchCategories"
-        /> -->
+        <left-menu-list @onClickMenuItem="onClickMenuItem" @onClickOptionalButtons="onClickOptionalButtons"
+          @onClickCategoryOrderChange="onClickCategoryOrderChange" />
 
         <!-- 카테고리 리스트 사이즈 조절 바 -->
         <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)"></div>
@@ -39,16 +26,6 @@
                   <fieldset>
                     <legend>게시물검색</legend>
                     <div class="inner-search">
-                      <!-- <div class="mu-selectbox w120">
-              <select
-                name="searchType1"
-                :value="props.filterSearchObj.searchType1"
-                @change="onChange"
-              >
-                <option value="all">전체</option>
-                <option v-for="(item, idx) in filterOptions" :value="item">{{ item }}</option>
-              </select>
-            </div> -->
                       <div class="mu-selectbox w120">
                         <select name="searchType2" :value="filterSearchObj.searchType2" @change="onChange">
                           <option v-for="(option, index) in filterSearchObj.options" :key="index" :value="option.value">
@@ -57,15 +34,8 @@
                         </select>
                       </div>
                       <div class="mu-input-icon">
-                        <input
-                          type="text"
-                          class="mu-input"
-                          placeholder="Search"
-                          title="검색어입력"
-                          name="word"
-                          :value="filterSearchObj.word"
-                          @keyup="onChange"
-                        />
+                        <input type="text" class="mu-input" placeholder="Search" title="검색어입력" name="word"
+                          :value="filterSearchObj.word" @keyup="onChange" />
                         <button type="button" class="mu-btn mu-btn-sch" @click.prevent="onFilterSearch">
                           <i class="mu-icon-svg search"></i><span>검색</span>
                         </button>
@@ -113,13 +83,8 @@
                   <tr>
                     <th scope="col">
                       <div class="mu-checkbox">
-                        <input
-                          type="checkbox"
-                          id="ckb1"
-                          title="전체선택"
-                          :checked="isAllChecked()"
-                          @click.stop="(e) => onToggleCheckbox(e, true)"
-                        />
+                        <input type="checkbox" id="ckb1" title="전체선택" :checked="isAllChecked()"
+                          @click.stop="(e) => onToggleCheckbox(e, true)" />
                         <label for="ckb1"><span class="blind">전체선택</span></label>
                       </div>
                     </th>
@@ -135,13 +100,8 @@
                   <tr v-for="(item, index) in dataList" :key="index">
                     <td>
                       <div class="mu-checkbox">
-                        <input
-                          type="checkbox"
-                          title="행선택"
-                          :id="`checkbox${index}`"
-                          :checked="isChecked(item)"
-                          @click.stop="(e) => onToggleCheckbox(e, false, item)"
-                        />
+                        <input type="checkbox" title="행선택" :id="`checkbox${index}`" :checked="isChecked(item)"
+                          @click.stop="(e) => onToggleCheckbox(e, false, item)" />
                         <label :for="`checkbox${index}`"><span class="blind">행선택</span></label>
                       </div>
                     </td>
@@ -149,13 +109,13 @@
                       <!-- 데이터설명 -->
                       <a :title="item.description ? item.description : '-'" @click="onClickDataName(item)">{{
                         item.description ? item.description : "-"
-                      }}</a>
+                        }}</a>
                     </td>
                     <td>
                       <!-- 데이터명 -->
                       <a :title="item.meta_name ? item.meta_name : '-'" @click="onClickDataName(item)">{{
                         item.meta_name ? item.meta_name : "-"
-                      }}</a>
+                        }}</a>
                     </td>
                     <td :title="item.system_name ? item.system_name : '-'">
                       <!-- 시스템명 -->
@@ -190,20 +150,12 @@
       </div>
 
       <!-- 카테고리 추가/수정/매핑 처리 모달 -->
-      <manage-classification-modal
-        ref="refManageModal"
-        :manage-modal="manageModalObj"
-        @onCloseModal="onToggleManageModal"
-        @onSubmit="onSubmitCategory"
-      />
+      <manage-classification-modal ref="refManageModal" :manage-modal="manageModalObj"
+        @onCloseModal="onToggleManageModal" @onSubmit="onSubmitCategory" />
 
       <!-- 공개설정 처리 모달 -->
-      <manage-role-mapping-modal
-        ref="refManageRoleMappingModal"
-        :auth-modal="authModalObj"
-        @onCloseModal="onToggleAuthModal"
-        @onSubmit="onSubmitAuth"
-      />
+      <manage-role-mapping-modal ref="refManageRoleMappingModal" :auth-modal="authModalObj"
+        @onCloseModal="onToggleAuthModal" @onSubmit="onSubmitAuth" />
     </div>
   </div>
 </template>
@@ -218,14 +170,13 @@ import ClassificationInfo from "@organisms/metaDataManage/classification-info";
 import MetaDataTooltip from "@molecules/metaDataManage/meta-data-tooltip";
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
 import ManageRoleMappingModal from "@functional/roleMappingModal/manage-role-mapping-modal";
-import ClassificationOrdUpdateModal from "@organisms/metaDataManage/classification-ord-update-modal";
 import ObjectUtils from "@utils/ObjectUtils";
 import Pagination from "@functional/pagination/pagination";
 import { useNuxtApp, useRoute, useRouter, useRuntimeConfig } from "nuxt/app";
 import { onMounted, onUnmounted, ref } from "vue";
 import portalConfirm from "@functional/confirm/portal-confirm";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
-import { $R, isEmpties } from "@composables/ramda";
+import { isEmpties } from "@composables/ramda";
 import { storeToRefs } from "pinia";
 import { useApi } from "@composables/useApi";
 import { useConstants } from "@composables/useConstants";
@@ -238,20 +189,14 @@ definePageMeta({
 });
 
 const { $ofetch } = useNuxtApp();
-const { setEventLog, setMetaSync } = useApi();
-const { CONSTANT } = useConstants();
-const runConfig = useRuntimeConfig().public;
 
 // route
-const route = useRoute();
 const router = useRouter();
 
 const userStore = useUserStore();
-const user = userStore.getUser;
 
 const categoryStore = useCategoryStore();
 const categoryTreeStore = useCategoryTreeStore();
-const getOriginalList = categoryStore.getOriginalList;
 const selectedId = categoryStore.getSelectedItemId;
 
 const eventStore = useEventStore();
@@ -358,9 +303,6 @@ const rightSide = ref<Element>(null); // 오른쪽 DOM
 const x = ref<number>(0); // 현재 마우스 X 좌표
 const leftWidth = ref<number>(0); // 왼쪽 DOM 너비
 const visible = ref<boolean>(false); // 순서 변경 모달 flag
-const ordCategoryList = ref<any>([]); // 순서 변경을 위한 카테고리 목록
-
-const classification = ref<string>(""); // 카테고리
 
 const dataList = ref<any[]>([]); // 테이블 데이터
 const selectedData = ref<any>([]); // 테이블 내 체크박스 체크한 데이터 목록
@@ -455,7 +397,6 @@ const refManageRoleMappingModal = ref<any>(null); // 공개설정 모달 ref
 
 await categoryStore.fetchCategories();
 await categoryTreeStore.fetchCategories()
-const { _categoryMap } = storeToRefs(categoryStore);
 
 onMounted(() => {
   // 필터옵션 조회
@@ -1249,7 +1190,6 @@ const onDeleteCategoryMap = async (target) => {
         errorAlert(msg);
       } else {
         onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
-        // onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
       }
     });
   }

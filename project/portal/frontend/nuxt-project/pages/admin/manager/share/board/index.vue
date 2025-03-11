@@ -4,10 +4,7 @@
       <div class="board-list-wrap">
         <div class="mu-heading">
           <!-- board-list-search -->
-          <share-border-list-search
-            :searchObj.sync="searchObj"
-            @searchMethod="getShareList"
-          />
+          <share-border-list-search :searchObj.sync="searchObj" @searchMethod="getShareList" />
           <div class="mu-item-group">
             <button @click="onClickRegisterButton" type="button" class="mu-btn mu-btn mu-btn-primary">
               <i class="mu-icon-svg add"></i>
@@ -21,17 +18,9 @@
           <li v-for="(item, index) in shareList" :key="index" class="card-box">
             <div class="actions">
               <div class="mu-checkbox">
-                <input
-                  type="checkbox"
-                  :id="'check_' + item.id"
-                  title="행선택"
-                  :value="item.id"
-                  v-model="item.selected"
-                  @change="selected(item.id)"
-                />
-                <label :for="'check_' + item.id"
-                  ><span class="blind">행선택</span></label
-                >
+                <input type="checkbox" :id="'check_' + item.id" title="행선택" :value="item.id" v-model="item.selected"
+                  @change="selected(item.id)" />
+                <label :for="'check_' + item.id"><span class="blind">행선택</span></label>
               </div>
             </div>
 
@@ -41,9 +30,8 @@
               </div>
               <div class="inner-data">
                 <div class="card-category">
-                    <strong class="data-title share">{{ item.title }}</strong
-                    ><!-- 게시물 제목(1줄까지 출력) -->
-                    <p class="card-desc" v-html="limitedContent(item.contents)"></p>
+                  <strong class="data-title share">{{ item.title }}</strong><!-- 게시물 제목(1줄까지 출력) -->
+                  <p class="card-desc" v-html="limitedContent(item.contents)"></p>
                 </div>
                 <div class="data-info">
                   <dl>
@@ -135,12 +123,9 @@ const limitedContent = (contents: string): string => {
   images.forEach(img => img.remove())
 
   const textWithLineBreaks = contents
-        .replace(/<[^>]+>/g, '') // HTML 태그 제거
-        // .replace(/<p><\/p>/g, '') // p 태그 제거
-        // .replace(/<\/[^>]+>/g, '\n') // 닫는 태그 뒤에 줄바꿈 추가
-        // .replace(/<\/?span>/g, '') // span 태그 제거
-        .replace(/\n+/g, '\n') // 연속된 줄바꿈을 하나로 줄임
-        .replace(/^\s*[\r\n]/gm, "") // 빈 줄바꿈만 제거
+    .replace(/<[^>]+>/g, '') // HTML 태그 제거
+    .replace(/\n+/g, '\n') // 연속된 줄바꿈을 하나로 줄임
+    .replace(/^\s*[\r\n]/gm, "") // 빈 줄바꿈만 제거
 
   // 줄바꿈으로 나누고, 첫 1줄만 가져오기
   const lines = textWithLineBreaks.split('\n');
@@ -195,20 +180,6 @@ const getShareList = async (offset: number = 1): Promise<void> => {
 
     // 버그로 인해 forEach 대신 for...of 사용
     for (const element of shareList.value) {
-
-      // const modifiedText = text.replace(/<img\b[^>]*>/g, '');
-      // const regex = /<img[^>]+src=[\"']?([^>\"']+)[\"']?[^>]*>/g;
-
-      // let imgTag;
-      // while ((imgTag = regex.exec(element.contents))) {
-      //   if (imgTag[1].indexOf("http://") == -1 && imgTag[1].indexOf("https://") == -1) {
-      //     element.image = imgTag[0];
-      //     break;
-      //   } else {
-      //     continue;
-      //   }
-      // }
-
       // 썸네일 없는 경우 기본값 설정
       if (!element.image) {
         element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 300px; height: 200px;'></img>"
@@ -219,25 +190,25 @@ const getShareList = async (offset: number = 1): Promise<void> => {
         // 백엔드에서 서빙되는 이미지 경로로 변경
         let response = null
         try {
-            // 백엔드에서 서빙되는 이미지 경로로 변경
-            response = await $ofetch(`/api/images?path=${encodeURIComponent(element.image)}`, {
-                responseType: 'blob' // 응답을 Blob 형태로 요청
-              });
-            // 응답이 유효한 경우에만 Blob 생성
-            if (response) {
-                const imageBlob = new Blob([response], {
-                    type: response.type
-                });
-                const imageUrl = URL.createObjectURL(imageBlob);
-                element.image_html = `<img alt='활용사례' src='${imageUrl}' style='width: 300px; height: 200px;'/>`;
-            } else {
-                // 응답이 유효하지 않은 경우 기본 이미지로 설정
-                element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 300px; height: 200px;'></img>";
-            }
+          // 백엔드에서 서빙되는 이미지 경로로 변경
+          response = await $ofetch(`/api/images?path=${encodeURIComponent(element.image)}`, {
+            responseType: 'blob' // 응답을 Blob 형태로 요청
+          });
+          // 응답이 유효한 경우에만 Blob 생성
+          if (response) {
+            const imageBlob = new Blob([response], {
+              type: response.type
+            });
+            const imageUrl = URL.createObjectURL(imageBlob);
+            element.image_html = `<img alt='활용사례' src='${imageUrl}' style='width: 300px; height: 200px;'/>`;
+          } else {
+            // 응답이 유효하지 않은 경우 기본 이미지로 설정
+            element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 300px; height: 200px;'></img>";
+          }
         } catch (error) {
-            // console.error("파일 등록 API 호출 중 오류 발생:", error);
-            // 썸네일 파일 못 찾는 경우 기본값 설정
-            element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 300px; height: 200px;'></img>"
+          // console.error("파일 등록 API 호출 중 오류 발생:", error);
+          // 썸네일 파일 못 찾는 경우 기본값 설정
+          element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 300px; height: 200px;'></img>"
         }
       }
 
@@ -296,20 +267,6 @@ const onClickDeleteButton = async (): Promise<void> => {
       }
     }
   });
-};
-
-// 전체선택 체크박스 클릭 이벤트
-const checkedAll = (checked: boolean): void => {
-  allChecked.value = checked;
-  for (let i in shareList.value) {
-    shareList.value[i].selected = allChecked.value;
-    if (allChecked.value) {
-      if (checkedList.value.findIndex((v) => v == shareList.value[i].id) >= 0) continue;
-      checkedList.value.push(shareList.value[i].id);
-    } else {
-      checkedList.value = [];
-    }
-  }
 };
 
 // 체크박스 클릭 이벤트

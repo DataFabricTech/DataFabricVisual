@@ -1,20 +1,8 @@
 <template>
-  <vue-final-modal
-    class="vue-final-modal"
-    :modal-id="name"
-    @opend="onOpen"
-    :click-to-close="false"
-    :esc-to-close="false"
-  >
-    <div
-      class="modal"
-      tabindex="0"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modalTitle"
-      aria-describedby="modalDescription"
-      :style="{ width, height }"
-    >
+  <vue-final-modal class="vue-final-modal" :modal-id="name" @opend="onOpen" :click-to-close="false"
+    :esc-to-close="false">
+    <div class="modal" tabindex="0" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+      aria-describedby="modalDescription" :style="{ width, height }">
       <div class="modal__head">
         <div class="modal__head-title">
           <span id="modalTitle" class="modal__head-title-text">
@@ -24,30 +12,18 @@
       </div>
 
       <div id="modalDescription" name="body" class="modal__body">
-        <slot/>
+        <slot />
       </div>
       <div name="foot" class="modal__foot">
         <div class="modal__foot-main-buttons">
-          <button
-            v-if="viewDeleteButton"
-            class="button button--negative button--lg"
-            @click="onDelete"
-          >
+          <button v-if="viewDeleteButton" class="button button--negative button--lg" @click="onDelete">
             <span class="button__text"> {{ deleteButtonText }} </span>
           </button>
-          <button
-            class="button button--lg"
-            @click="onClose"
-            aria-label="Close modal"
-          >
+          <button class="button button--lg" @click="onClose" aria-label="Close modal">
             <span class="button__text"> {{ cancelButtonText }} </span>
           </button>
-          <button
-            v-if="viewConfirmButton"
-            :disabled="confirmButtonDisabled"
-            class="button button--primary button--lg"
-            @click="onConfirm"
-          >
+          <button v-if="viewConfirmButton" :disabled="confirmButtonDisabled" class="button button--primary button--lg"
+            @click="onConfirm">
             <span class="button__text"> {{ confirmButtonText }} </span>
           </button>
         </div>
@@ -57,8 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import {useVfm, VueFinalModal} from "vue-final-modal";
-import {confirmAlert} from "@/components/functional/alert/alert-default";
+import { useVfm, VueFinalModal } from "vue-final-modal";
+import { confirmAlert } from "@/components/functional/alert/alert-default";
 
 const vfm = useVfm();
 

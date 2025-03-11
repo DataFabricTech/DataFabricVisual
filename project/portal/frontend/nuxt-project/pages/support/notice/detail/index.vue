@@ -9,11 +9,7 @@
 
         <!-- mu-button-wrap -->
         <div class="mu-button-wrap">
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
-            @click="onClickListButton"
-          >
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton">
             <span>목록</span>
           </button>
         </div>

@@ -15,11 +15,7 @@
 
         <!-- mu-button-wrap -->
         <div class="mu-button-wrap">
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
-            @click="onClickListButton"
-          >
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton">
             <span>목록</span>
           </button>
         </div>
@@ -31,7 +27,6 @@
 
 <script setup lang="ts">
 import BoardWrap from "@organisms/share/share-detail-board-wrap";
-import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useUserStore } from "@/store/user";
 import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
@@ -92,52 +87,29 @@ const getShareOne = async (pid: number = 1): Promise<void> => {
     // 백엔드에서 서빙되는 이미지 경로로 변경
     let response = null
     try {
-        // 백엔드에서 서빙되는 이미지 경로로 변경
-        response = await $ofetch(`/api/images?path=${encodeURIComponent(share.value.image)}`, {
-            responseType: 'blob' // 응답을 Blob 형태로 요청
-          });
-        // 응답이 유효한 경우에만 Blob 생성
-        if (response) {
-            const imageBlob = new Blob([response], {
-                type: response.type
-            });
-            const imageUrl = URL.createObjectURL(imageBlob);
-            share.value.image_html = `<img alt='활용 사례 썸네일 이미지' src='${imageUrl}' style='width:335px; height:220px;'/>`;
-        } else {
-            // 응답이 유효하지 않은 경우 기본 이미지로 설정
-            // share.value.image_html = "<img alt='활용사례' src='/share_basic.png'></img>";
-        }
+      // 백엔드에서 서빙되는 이미지 경로로 변경
+      response = await $ofetch(`/api/images?path=${encodeURIComponent(share.value.image)}`, {
+        responseType: 'blob' // 응답을 Blob 형태로 요청
+      });
+      // 응답이 유효한 경우에만 Blob 생성
+      if (response) {
+        const imageBlob = new Blob([response], {
+          type: response.type
+        });
+        const imageUrl = URL.createObjectURL(imageBlob);
+        share.value.image_html = `<img alt='활용 사례 썸네일 이미지' src='${imageUrl}' style='width:335px; height:220px;'/>`;
+      } else {
+        // 응답이 유효하지 않은 경우 기본 이미지로 설정
+        // share.value.image_html = "<img alt='활용사례' src='/share_basic.png'></img>";
+      }
     } catch (error) {
-        // console.error("파일 등록 API 호출 중 오류 발생:", error);
-        // 썸네일 파일 못 찾는 경우 기본값 설정
-        // share.value.image_html = "<img alt='활용사례' src='/share_basic.png'></img>"
+      // console.error("파일 등록 API 호출 중 오류 발생:", error);
+      // 썸네일 파일 못 찾는 경우 기본값 설정
+      // share.value.image_html = "<img alt='활용사례' src='/share_basic.png'></img>"
     }
   } catch (error) {
     console.log(error);
   }
-};
-
-// 삭제버튼 클릭 이벤트
-const onClickDeleteButton = async (): Promise<void> => {
-  if (!(await confirmAlert("정말로 삭제하시겠습니까?"))) return;
-
-  let param = {
-    deleteList: [share.value.id]
-  };
-
-  $ofetch("/api/share/delete", {
-    method: "POST",
-    body: param,
-  }).then(async (res: { errorMessage: string }) => {
-    if (res) {
-      if (res.errorMessage && res.errorMessage != "") {
-        await errorAlert("삭제에 실패하였습니다.");
-      } else {
-        await successAlert("삭제되었습니다.");
-        router.push("/share/board");
-      }
-    }
-  });
 };
 
 // 목록 버튼 클릭 이벤트 핸들러
@@ -145,8 +117,4 @@ const onClickListButton = (): void => {
   router.push("/share/board");
 };
 
-// 수정버튼 클릭 이벤트 핸들러
-const onClickUpdateButton = (): void => {
-  router.push("/share/board/update?id=" + share.value.id);
-};
 </script>

@@ -4,23 +4,14 @@
       <div class="board-list-wrap">
         <div class="mu-heading">
           <div class="mu-checkbox">
-            <input
-              type="checkbox"
-              id="chkAll"
-              title="행선택"
-              v-model="allChecked"
-              @click="checkedAll($event.target.checked)"
-            />
+            <input type="checkbox" id="chkAll" title="행선택" v-model="allChecked"
+              @click="checkedAll($event.target.checked)" />
             <label for="chkAll"><span class="blind">전체선택</span></label>
           </div>
           <!-- board-list-search -->
           <faq-border-list-search :searchObj.sync="searchObj" @searchMethod="getPost" />
 
-          <faq-ord-update-modal
-            ref="faqOrdupdateModal"
-            v-model:visible="visible"
-            @searchMethod="getPost"
-          />
+          <faq-ord-update-modal ref="faqOrdupdateModal" v-model:visible="visible" @searchMethod="getPost" />
 
           <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
         </div>
@@ -29,21 +20,13 @@
         <ul class="mu-accordion">
           <li v-for="(item, index) in postList" :key="index" class="mu-accordion-item">
             <div class="mu-checkbox">
-              <input
-                type="checkbox"
-                :id="'check_' + item.id"
-                title="행선택"
-                :value="item.id"
-                v-model="item.selected"
-                @change="selected(item.id)"
-              />
+              <input type="checkbox" :id="'check_' + item.id" title="행선택" :value="item.id" v-model="item.selected"
+                @change="selected(item.id)" />
               <label :for="'check_' + item.id"><span class="blind">행선택</span></label>
             </div>
 
-            <div
-              v-bind:class="[item.showAnswer ? 'active' : '', 'mu-accordion-head']"
-              @click="onClickShowAnswerButton(index)"
-            >
+            <div v-bind:class="[item.showAnswer ? 'active' : '', 'mu-accordion-head']"
+              @click="onClickShowAnswerButton(index)">
               <!-- active시 mu-accordion-body 가 block -->
               <div class="question">
                 <span class="ico-question">질문</span>
@@ -73,18 +56,10 @@
         <button type="button" class="mu-btn mu-btn-lg" @click="onClickOrdUpdateButton">
           <span>순서변경</span>
         </button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickUpdateButton"
-        >
+        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickUpdateButton">
           <span>수정</span>
         </button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickRegisterButton"
-        >
+        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickRegisterButton">
           <span>등록</span>
         </button>
       </div>
@@ -289,14 +264,15 @@ const onClickPage = (page: number): void => {
 };
 </script>
 <style scoped>
-  /* FAQ 체크박스 덮어쓰는 부분 수정 */
-  .mu-checkbox {
-    width: 40px;              /* 체크박스의 너비를 명확하게 설정 */
-  }
+/* FAQ 체크박스 덮어쓰는 부분 수정 */
+.mu-checkbox {
+  width: 40px;
+  /* 체크박스의 너비를 명확하게 설정 */
+}
 
-  .mu-accordion-head {
-    flex-grow: 1;             /* 나머지 공간을 모두 차지 */
-    margin-left: 20px;
-  }
-
+.mu-accordion-head {
+  flex-grow: 1;
+  /* 나머지 공간을 모두 차지 */
+  margin-left: 20px;
+}
 </style>

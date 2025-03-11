@@ -12,15 +12,8 @@
             </select>
           </div>
           <div class="mu-input-icon">
-            <input
-              type="text"
-              class="mu-input"
-              style="min-width: 300px;"
-              placeholder="Search"
-              title="검색어입력"
-              v-model="props.searchObj.searchWord"
-              @keypress.enter.prevent="onSearch()"
-            />
+            <input type="text" class="mu-input" style="min-width: 300px;" placeholder="Search" title="검색어입력"
+              v-model="props.searchObj.searchWord" @keypress.enter.prevent="onSearch()" />
             <button type="button" class="mu-btn mu-btn-sch" @click="onSearch()">
               <i class="mu-icon-svg search"></i>
               <span>검색</span>
@@ -28,23 +21,27 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <div class="mu-search-item">
               <div class="mu-item-group item-ml-auto">
-                  <!-- period-set : 기간 -->
-                  <div class="period-set">
-                    <date-picker v-model:date="startDate" :disabledMaxDate="endDate" :type="props.datetimeType"  :clearable="false" placeholder="시작일" :confirm="false"></date-picker>
-                    <span>~</span>
-                    <date-picker v-model:date="endDate" :disabledMinDate="startDate" :type="props.datetimeType" :clearable="false" placeholder="종료일" :confirm="false"></date-picker>
-                  </div>
-                  <button type="button" class="mu-btn mu-btn-icon-only" title="초기화" @click="onClickClearButton">
-                      <i class="mu-icon-svg refresh"></i>
-                      <span>초기화</span>
-                  </button>
-                  <div class="mu-search-btn">
-                      <button type="button" class="mu-btn mu-btn-primary" @click="onSearch"><i class="mu-icon-svg search"></i><span>검색</span></button>
-                  </div>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <div class="mu-search-btn">
-                      <button type="button" class="mu-btn mu-btn" @click="downloadCsvFile(props.historyType)"><span>CSV 다운로드</span></button>
-                  </div>
+                <!-- period-set : 기간 -->
+                <div class="period-set">
+                  <date-picker v-model:date="startDate" :disabledMaxDate="endDate" :type="props.datetimeType"
+                    :clearable="false" placeholder="시작일" :confirm="false"></date-picker>
+                  <span>~</span>
+                  <date-picker v-model:date="endDate" :disabledMinDate="startDate" :type="props.datetimeType"
+                    :clearable="false" placeholder="종료일" :confirm="false"></date-picker>
+                </div>
+                <button type="button" class="mu-btn mu-btn-icon-only" title="초기화" @click="onClickClearButton">
+                  <i class="mu-icon-svg refresh"></i>
+                  <span>초기화</span>
+                </button>
+                <div class="mu-search-btn">
+                  <button type="button" class="mu-btn mu-btn-primary" @click="onSearch"><i
+                      class="mu-icon-svg search"></i><span>검색</span></button>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="mu-search-btn">
+                  <button type="button" class="mu-btn mu-btn" @click="downloadCsvFile(props.historyType)"><span>CSV
+                      다운로드</span></button>
+                </div>
               </div>
             </div>
           </div>
@@ -55,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import DatePicker  from "@functional/datepicker/date-picker";
+import DatePicker from "@functional/datepicker/date-picker";
 import moment from "moment";
 
 const emit = defineEmits(["update:searchObj", "searchMethod", "onClickClearButton", "updateStartDate", "updateEndDate", "onClickCsvDownload"]);

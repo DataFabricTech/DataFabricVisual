@@ -15,46 +15,46 @@
               <col />
             </colgroup>
             <tbody>
-            <tr>
-              <th scope="row"> 대표어 </th>
-              <td>{{ props.synonymOneList[0].term }}</td>
-            </tr>
-            <tr>
-              <th scope="row"> 동의어 </th>
-              <td>
-                <div class="mu-item-group">
-                  <div class="mu-input-icon">
-                    <input type="text" placeholder="" :class="synonym_add_error ? 'mu-input error' : 'mu-input'" title="동의어 입력" v-model="inputSynonym" @keypress.enter.prevent="onClickAddSynonym"><!-- .error추가 : 에러시 에러문구와 같이  -->
-                    <button v-if="inputSynonym" type="button" class="mu-btn mu-btn-delete" @click="clearInputSynonym"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
-                  </div>
-                  <button type="button" class="mu-btn" @click="onClickAddSynonym()"><span>추가</span></button>
-                </div>
-                <p v-if="synonym_add_error" class="complete-msg error">{{ synonym_error_msg }}</p><!-- 에러문구노출 -->
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">동의어 목록</th>
-              <td>
-                <div class="mu-area h125">
-                  <div class="synonym-keyword tags-group">
-                    <div class="tag" v-for="synonymInfo in props.synonymOneList">
-                      <span class="tag-label">{{ synonymInfo.synonym }}</span>
+              <tr>
+                <th scope="row"> 대표어 </th>
+                <td>{{ props.synonymOneList[0].term }}</td>
+              </tr>
+              <tr>
+                <th scope="row"> 동의어 </th>
+                <td>
+                  <div class="mu-item-group">
+                    <div class="mu-input-icon">
+                      <input type="text" placeholder="" :class="synonym_add_error ? 'mu-input error' : 'mu-input'"
+                        title="동의어 입력" v-model="inputSynonym"
+                        @keypress.enter.prevent="onClickAddSynonym"><!-- .error추가 : 에러시 에러문구와 같이  -->
+                      <button v-if="inputSynonym" type="button" class="mu-btn mu-btn-delete"
+                        @click="clearInputSynonym"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
                     </div>
-                    <div class="tag" v-for="(synonymInfo, a_index) in addedSynonymList">
-                      <span class="tag-label">{{ synonymInfo.synonym }}</span>
-                      <button
-                        type="button"
-                        class="mu-btn mu-btn-delete"
-                        title="해당 동의어 삭제"
-                        @click="removeAddedSynonym(a_index)">
-                        <i class="mu-icon-svg item-delete"></i>
-                        <span>동의어 삭제</span>
-                      </button>
+                    <button type="button" class="mu-btn" @click="onClickAddSynonym()"><span>추가</span></button>
+                  </div>
+                  <p v-if="synonym_add_error" class="complete-msg error">{{ synonym_error_msg }}</p><!-- 에러문구노출 -->
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">동의어 목록</th>
+                <td>
+                  <div class="mu-area h125">
+                    <div class="synonym-keyword tags-group">
+                      <div class="tag" v-for="synonymInfo in props.synonymOneList">
+                        <span class="tag-label">{{ synonymInfo.synonym }}</span>
+                      </div>
+                      <div class="tag" v-for="(synonymInfo, a_index) in addedSynonymList">
+                        <span class="tag-label">{{ synonymInfo.synonym }}</span>
+                        <button type="button" class="mu-btn mu-btn-delete" title="해당 동의어 삭제"
+                          @click="removeAddedSynonym(a_index)">
+                          <i class="mu-icon-svg item-delete"></i>
+                          <span>동의어 삭제</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -63,20 +63,13 @@
           <button type="button" class="mu-btn" @click="onClose()">
             <span>취소</span>
           </button>
-          <button
-            type="button"
-            class="mu-btn mu-btn-primary"
-            @click="onClickConfirm()">
+          <button type="button" class="mu-btn mu-btn-primary" @click="onClickConfirm()">
             <span>확인</span>
           </button>
         </div>
         <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다 -->
         <div class="mu-dialog-close-btn">
-          <button
-            type="button"
-            class="mu-btn mu-btn-close"
-            title="해당 팝업 닫기"
-            @click="onClose()">
+          <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose()">
             <i class="mu-icon-svg close"></i>
             <span>팝업닫기</span>
           </button>
@@ -144,7 +137,7 @@ const onClickAddSynonym = () => {
     }
 
     // 중복되지 않은 경우 동의어 목록에 추가
-    if ( !duplicated ) {
+    if (!duplicated) {
       const newSynonym = {
         "id": null,
         "synonym": inputSynonym.value
@@ -211,5 +204,4 @@ const onClose = async () => {
 }
 </script>
 
-<style>
-</style>
+<style></style>

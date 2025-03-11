@@ -20,7 +20,7 @@ import * as d3Dag from "d3-dag";
 import ObjectUtils from "@/utils/ObjectUtils";
 import D3DiagramTooltip from "@functional/dataLineage/d3-diagram-tooltip";
 import { errorAlert } from "@functional/alert/alert-default";
-import { useEventStore  } from "~/store/event.ts";
+import { useEventStore } from "~/store/event.ts";
 import { onMounted, onBeforeUnmount, ref } from 'vue';
 
 const roots = shallowRef(null);
@@ -48,7 +48,6 @@ const zoom = ref(null);
 const duration = ref(300);
 const screen_width = ref(0);
 const screen_height = ref(0);
-const isCircular = ref(false);
 
 watch(
   () => props.startNode,
@@ -75,10 +74,6 @@ const draw = async () => {
     await getInitData();
     drawInitData();
 
-    // svg.value
-    //   .transition()
-    //   .duration(duration.value)
-    //   .call(zoom.value.transform, d3.zoomTransform(g.value.node()));
     svg.value
       .transition()
       .duration(duration.value)
@@ -209,8 +204,6 @@ const drawInitData = () => {
     root.value = all_nodes.find((n) => n.id === data.value.start);
     root.value.x0 = screen_height.value / 2;
     root.value.y0 = screen_width.value / 2;
-    // root.value.x0 = 1000;
-    // root.value.y0 = 600;
     dag.value.children = [root.value];
     update(root.value);
   }
@@ -764,7 +757,6 @@ const getLetterByteLength = (decimal) => {
 // node_name byte 기준으로 자르기
 const getLimitedByteText = (inputText, maxByte) => {
   const characters = inputText.split("");
-  // const characters = "aa_aa_aaa_aaa_aaa_aaaaaa_aaaaaa_aa".split('')
   let validText = "";
   let totalByte = 0;
 

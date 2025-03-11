@@ -1,36 +1,18 @@
 <template>
   <ul v-if="props.list" class="sub-category-menu">
-    <li
-      v-for="(item, index) in props.list"
-      :key="index"
-      :class="getTagStyle('li', item)"
-      style="min-width: 186px; width: max-content"
-    >
+    <li v-for="(item, index) in props.list" :key="index" :class="getTagStyle('li', item)"
+      style="min-width: 186px; width: max-content">
       <div>{{ item.checked }}</div>
 
       <button type="button" :class="getTagStyle('button', item)" @click="onToggle(item)">
         <span>펼치기</span>
       </button>
-      <a
-        href="javascript:void(0);"
-        :class="getTagStyle('a', item)"
-        style="overflow: visible; max-width: max-content"
-        :title="item.description"
-        :id="item.id"
-        @click="() => onClick(item)"
-      >
-      <!-- {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}] -->
-      {{ item.description }}
+      <a href="javascript:void(0);" :class="getTagStyle('a', item)" style="overflow: visible; max-width: max-content"
+        :title="item.description" :id="item.id" @click="() => onClick(item)">
+        {{ item.description }}
       </a>
-      <category-item
-        v-if="item.subTypes"
-        :list="item.subTypes"
-        :toggle-targets="toggleTargets"
-        :selected-id="selectedId"
-        @onToggleNode="onToggle"
-        @onClickMenuItem="onClick"
-        @onClickSetup="onToggleTooltip"
-      />
+      <category-item v-if="item.subTypes" :list="item.subTypes" :toggle-targets="toggleTargets"
+        :selected-id="selectedId" @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
     </li>
   </ul>
 </template>
@@ -47,7 +29,7 @@ const props = defineProps({
   },
   toggleTargets: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   selectedId: {
     type: String,
@@ -71,10 +53,8 @@ const categoryTreeStore = useCategoryTreeStore();
 const eventStore = useEventStore();
 
 // data
-const selectedData = ref([]);
 
 // computed
-const calledFrom = categoryTreeStore.getCalledFrom; // 카테고리 목록 컴포넌트 호출 페이지
 const getSelectedItemId = categoryTreeStore.getSelectedItemId; // 선택된 메뉴 id
 
 // 하위 메뉴 토글 버튼 클릭 이벤트 핸들러
@@ -87,21 +67,6 @@ const onClick = (item) => {
   categoryTreeStore.setSelectedItemId(item && item.id ? item.id : "");
   emit("onClickMenuItem", item);
 };
-
-const onClickFromTreeMap = (item) => {
-  const styles = [];
-
-  // 선택한 카테고리명 bold
-  let guid = "";
-  if (item.guid) guid = item.guid;
-  else if (item.id) guid = item.id;
-  let a = document.getElementById(guid);
-  styles.push("active");
-  styles.push("item-label");
-  let adjustStyles = styles.join(" ");
-  a.className = adjustStyles;
-};
-// defineExpose({onClickFromTreeMap})
 
 // 카테고리 설정 툴팁 토글 핸들러
 const onToggleTooltip = (e, item, type) => {

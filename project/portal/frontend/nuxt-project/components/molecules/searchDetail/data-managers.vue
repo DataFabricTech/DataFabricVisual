@@ -7,11 +7,7 @@
       </div>
       <!-- connect-info -->
       <div style="flex-direction: column">
-        <div
-          class="connect-info"
-          v-for="(item, index) in props.dataManagerInfo"
-          :key="index"
-        >
+        <div class="connect-info" v-for="(item, index) in props.dataManagerInfo" :key="index">
           <dl>
             <dt> 담당부서 </dt>
             <dd>

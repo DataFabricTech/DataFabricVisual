@@ -5,10 +5,7 @@
         <div class="board-list-wrap">
           <div class="mu-heading">
             <!-- board-list-search -->
-            <notice-border-list-search
-              :searchObj.sync="searchObj"
-              @searchMethod="getPost"
-            />
+            <notice-border-list-search :searchObj.sync="searchObj" @searchMethod="getPost" />
 
             <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
           </div>
@@ -36,22 +33,19 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="{
-                    rownum,
-                    category,
-                    is_open,
-                    id,
-                    title,
-                    new_yn,
-                    file_cnt,
-                    user_nm,
-                    upload_date,
-                    index,
-                    view_count
-                  } in postList"
-                  :key="index"
-                >
+                <tr v-for="{
+                  rownum,
+                  category,
+                  is_open,
+                  id,
+                  title,
+                  new_yn,
+                  file_cnt,
+                  user_nm,
+                  upload_date,
+                  index,
+                  view_count
+                } in postList" :key="index">
                   <td>{{ rownum }}</td>
                   <td>
                     <em class="data-label">{{ category }}</em>
@@ -59,16 +53,15 @@
                   <td class="tl">
                     <NuxtLink :to="'/support/notice/detail?id=' + id">{{
                       title
-                    }}</NuxtLink
-                    ><i v-if="new_yn" class="mu-icon-svg new">새로운글</i>
+                      }}</NuxtLink><i v-if="new_yn" class="mu-icon-svg new">새로운글</i>
                   </td>
                   <!-- 왼쪽정렬시 .tl 추가 -->
                   <td>
                     <i v-if="file_cnt > 0" class="mu-icon-svg file">첨부파일 있음</i>
                   </td>
-                  <td>{{user_nm}}</td>
-                  <td>{{upload_date }}</td>
-                  <td>{{view_count}}</td>
+                  <td>{{ user_nm }}</td>
+                  <td>{{ upload_date }}</td>
+                  <td>{{ view_count }}</td>
                 </tr>
                 <tr v-if="postList.length === 0">
                   <td colspan="7">
@@ -90,7 +83,7 @@
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
 import NoticeBorderListSearch from "@organisms/post/notice-border-list-search";
-import { useNuxtApp, useRouter } from "nuxt/app";
+import { useNuxtApp } from "nuxt/app";
 import { onMounted, ref } from "vue";
 
 definePageMeta({
@@ -170,9 +163,4 @@ const onClickPage = (page: number): void => {
   getPost(page);
 };
 
-// 메인 롤링 여부 표기
-const getIsRolling = (is_open) => {
-  if (is_open) return "사용"
-  else return "미사용"
-}
 </script>

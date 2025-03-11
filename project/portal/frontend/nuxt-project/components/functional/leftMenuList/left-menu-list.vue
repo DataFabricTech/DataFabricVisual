@@ -5,18 +5,13 @@
       <button class="mu-btn mu-btn-sm mu-btn-icon-only" title="카테고리 추가" @click.stop="() => onClickButton('add')">
         <i class="mu-icon-svg add"></i><span>추가</span>
       </button>
-      <button
-        class="mu-btn mu-btn-sm mu-btn-icon-only"
-        title="카테고리 초기화"
-        @click.stop="() => onClickButton('refresh')"
-      >
+      <button class="mu-btn mu-btn-sm mu-btn-icon-only" title="카테고리 초기화" @click.stop="() => onClickButton('refresh')">
         <i class="mu-icon-svg refresh"></i><span>초기화</span>
       </button>
     </div>
 
     <div class="category-head">
       <h4>카테고리</h4>
-      <!-- &nbsp; &nbsp; &nbsp; <button v-if="calledFrom === 'metaDataManage'" type="button" @click="onClickCategoryOrderChange()">순서 변경</button> -->
     </div>
     <div class="category-body">
       <ul class="category-menu slim-scroll">
@@ -24,22 +19,12 @@
           <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggle('all')">
             <span>펼치기</span>
           </button>
-          <a
-            href="javascript:void(0);"
-            :class="['' === selectedId ? 'active' : '', 'item-label']"
-            title="카테고리 전체"
-            @click="() => onClick()"
-          >
+          <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']" title="카테고리 전체"
+            @click="() => onClick()">
             카테고리 전체
           </a>
-          <menu-item
-            :list="categoryList"
-            :toggle-targets="toggleTargets"
-            :selected-id="selectedId"
-            @onToggleNode="onToggle"
-            @onClickMenuItem="onClick"
-            @onClickSetup="onToggleTooltip"
-          />
+          <menu-item :list="categoryList" :toggle-targets="toggleTargets" :selected-id="selectedId"
+            @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
         </li>
       </ul>
     </div>
@@ -72,11 +57,6 @@ const eventStore = useEventStore();
 const onClick = (item) => {
   categoryStore.setSelectedItemId(item && item.id ? item.id : "");
   emit("onClickMenuItem", item);
-};
-
-// 카테고리 순서 변경 클릭 이벤트 핸들러
-const onClickCategoryOrderChange = () => {
-  emit("onClickCategoryOrderChange");
 };
 
 // 카테고리 세팅 버튼 클릭 이벤트 핸들러

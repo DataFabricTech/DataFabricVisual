@@ -1,10 +1,7 @@
 <template>
   <div class="comment-btn">
-    <button
-      type="button"
-      :class="['mu-btn', { active: isFavorite }]"
-      @click="onToggleUserDescriptionFavorite(favoriteId)"
-    >
+    <button type="button" :class="['mu-btn', { active: isFavorite }]"
+      @click="onToggleUserDescriptionFavorite(favoriteId)">
       <i class="mu-icon-svg like"></i><span class="blind">추천</span>
       <em class="view-count">{{ favoriteCounts }}</em>
     </button>

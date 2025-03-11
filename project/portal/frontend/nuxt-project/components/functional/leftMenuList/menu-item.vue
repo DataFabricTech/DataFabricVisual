@@ -1,60 +1,30 @@
 <template>
   <ul v-if="props.list" class="sub-category-menu">
-    <li
-      v-for="(item, index) in props.list"
-      :key="index"
-      :class="getTagStyle('li', item)"
-      style="min-width: 186px; width: max-content"
-    >
+    <li v-for="(item, index) in props.list" :key="index" :class="getTagStyle('li', item)"
+      style="min-width: 186px; width: max-content">
       <div>{{ item.checked }}</div>
 
       <button type="button" :class="getTagStyle('button', item)" @click="onToggle(item.id)">
         <span>펼치기</span>
       </button>
-      <a
-        v-if="item.id === '_NOT_CLASSIFIED'"
-        href="javascript:void(0);"
-        :class="getTagStyle('a', item)"
-        style="overflow: visible"
-        :title="item.description"
-        @click="() => onClick(item)"
-      >
+      <a v-if="item.id === '_NOT_CLASSIFIED'" href="javascript:void(0);" :class="getTagStyle('a', item)"
+        style="overflow: visible" :title="item.description" @click="() => onClick(item)">
         {{ item.description }}
       </a>
-      <a
-        v-else
-        href="javascript:void(0);"
-        :class="getTagStyle('a', item)"
-        style="overflow: visible; max-width: max-content"
-        :title="item.description"
-        :id="item.id"
-        @click="() => onClick(item)"
-      >
-      <!-- {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}] -->
-      {{ item.description }}
+      <a v-else href="javascript:void(0);" :class="getTagStyle('a', item)"
+        style="overflow: visible; max-width: max-content" :title="item.description" :id="item.id"
+        @click="() => onClick(item)">
+        {{ item.description }}
       </a>
       <!-- 메타 데이터 통합 관리 페이지에서 호출 시에만 추가 버튼 세팅 -->
-      <button
-        style="width: max-content"
-        v-if="calledFrom === 'metaDataManage' && item.id !== '_NOT_CLASSIFIED'"
-        v-show="selectedId === item.id"
-        type="button"
-        class="item-set"
-        :id="`setup_${item.id}`"
-        @click.stop="(e) => onToggleTooltip(e, item, 'setup')"
-      >
+      <button style="width: max-content" v-if="calledFrom === 'metaDataManage' && item.id !== '_NOT_CLASSIFIED'"
+        v-show="selectedId === item.id" type="button" class="item-set" :id="`setup_${item.id}`"
+        @click.stop="(e) => onToggleTooltip(e, item, 'setup')">
         <span>설정</span>
       </button>
 
-      <menu-item
-        v-if="item.subTypes"
-        :list="item.subTypes"
-        :toggle-targets="toggleTargets"
-        :selected-id="selectedId"
-        @onToggleNode="onToggle"
-        @onClickMenuItem="onClick"
-        @onClickSetup="onToggleTooltip"
-      />
+      <menu-item v-if="item.subTypes" :list="item.subTypes" :toggle-targets="toggleTargets" :selected-id="selectedId"
+        @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
     </li>
   </ul>
 </template>
@@ -71,7 +41,7 @@ const props = defineProps({
   },
   toggleTargets: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   selectedId: {
     type: String,
@@ -111,21 +81,6 @@ const onClick = (item) => {
   categoryStore.setSelectedItemId(item && item.id ? item.id : "");
   emit("onClickMenuItem", item);
 };
-
-const onClickFromTreeMap = (item) => {
-  const styles = [];
-
-  // 선택한 카테고리명 bold
-  let guid = "";
-  if (item.guid) guid = item.guid;
-  else if (item.id) guid = item.id;
-  let a = document.getElementById(guid);
-  styles.push("active");
-  styles.push("item-label");
-  let adjustStyles = styles.join(" ");
-  a.className = adjustStyles;
-};
-// defineExpose({onClickFromTreeMap})
 
 // 카테고리 설정 툴팁 토글 핸들러
 const onToggleTooltip = (e, item, type) => {

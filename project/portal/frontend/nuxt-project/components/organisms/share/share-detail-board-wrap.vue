@@ -1,17 +1,17 @@
 <template>
   <div class="board-wrap">
     <div class="board-head">
-        <strong v-if="props.isAdmin" class="board-title">{{ props.share.title }}</strong>
-        <div class="board-desc">
-            <div class="data-info">
-              <dl>
-                <dt v-if="props.isAdmin">등록자</dt>
-                <dd v-if="props.isAdmin">{{ props.share.user_nm }}</dd>
-                <dt>등록일</dt>
-                <dd>{{ props.share.create_date }}</dd>
-              </dl>
-            </div>
+      <strong v-if="props.isAdmin" class="board-title">{{ props.share.title }}</strong>
+      <div class="board-desc">
+        <div class="data-info">
+          <dl>
+            <dt v-if="props.isAdmin">등록자</dt>
+            <dd v-if="props.isAdmin">{{ props.share.user_nm }}</dd>
+            <dt>등록일</dt>
+            <dd>{{ props.share.create_date }}</dd>
+          </dl>
         </div>
+      </div>
     </div>
     <div class="board-body">
       <!-- inner-cms : cms영역 -->
@@ -19,8 +19,7 @@
         <p class="inner-cms-share" v-html="props.share.contents"></p>
       </div>
       <!-- //inner-cms : cms영역 -->
-      <!-- <slot name="thumb"></slot> -->
-      <div v-if=" props.fileList.length " class="file-sch-box">
+      <div v-if="props.fileList.length" class="file-sch-box">
         <ul class="file-sch-list">
           <li v-for="(item, index) in props.fileList" :key="index">
             <a @click="fileDownload(item.file_id)">
@@ -39,7 +38,6 @@ import { useNuxtApp, useRuntimeConfig } from "nuxt/app";
 import { useUserStore } from "~/store/user";
 
 const { $ofetch } = useNuxtApp();
-const userStore = useUserStore();
 
 const props = defineProps(["share", "fileList", "isAdmin"]);
 

@@ -26,15 +26,16 @@
             </colgroup>
             <tbody>
               <tr>
-                  <th scope="row">분류</th>
-                  <td>
-                    <span>{{ getClassification(dataRequest) }}</span>
-                  </td>
-                </tr>
+                <th scope="row">분류</th>
+                <td>
+                  <span>{{ getClassification(dataRequest) }}</span>
+                </td>
+              </tr>
               <tr>
                 <th scope="row">신청 상태</th>
                 <td>
-                  <span :class="getProcessStyle(dataRequest.process_status)">{{ getProcessStatus(dataRequest.process_status) }}</span>
+                  <span :class="getProcessStyle(dataRequest.process_status)">{{
+                    getProcessStatus(dataRequest.process_status) }}</span>
                 </td>
               </tr>
               <tr>
@@ -45,8 +46,8 @@
                 <th scope="row">신청자</th>
                 <td>
                   <div class="user-info">
-                    <span class="name">{{ dataRequest.user_nm }}</span
-                    ><span class="team">({{ getDeptNm(dataRequest) }})</span>
+                    <span class="name">{{ dataRequest.user_nm }}</span><span class="team">({{ getDeptNm(dataRequest)
+                    }})</span>
                   </div>
                 </td>
               </tr>
@@ -91,13 +92,8 @@
           <!-- //mu-formbox -->
           <!-- mu-button-wrap -->
           <div class="mu-button-wrap">
-            <button
-              type="button"
-              class="mu-btn mu-btn-lg"
-              @click="onClickDeleteDataRequestButton"
-            >
-              <span>삭제</span></button
-            ><!-- 게시글 삭제용 -->
+            <button type="button" class="mu-btn mu-btn-lg" @click="onClickDeleteDataRequestButton">
+              <span>삭제</span></button><!-- 게시글 삭제용 -->
           </div>
         </div>
       </div>
@@ -123,7 +119,8 @@
                 <th scope="row">처리 상태</th>
                 <td>
                   <div class="reply-info">
-                    <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>&nbsp;
+                    <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status)
+                    }}</em>&nbsp;
                     <span class="name">{{ item.user_nm }}</span>
                     <span class="team">({{ getDeptNm(item) }})</span>&nbsp;
                     <span class="date"> {{ $yyyyMMddHHmmSS(item.create_date) }} </span>
@@ -144,34 +141,17 @@
 
           <!-- mu-button-wrap 이미 답변이 등록된 상태에서는 수정 / 삭제 기능만 수행 가능 -->
           <div class="modify-btn" style="margin-top: 5px;">
-            <button
-              type="button"
-              class="mu-btn"
-              @click="onClickUpdateReplyButton(item.data_request_id, item.id)"
-            >
+            <button type="button" class="mu-btn" @click="onClickUpdateReplyButton(item.data_request_id, item.id)">
               <span>답변 수정</span></button>&nbsp;
-            <button
-              type="button"
-              class="mu-btn"
-              @click="onClickDeleteReplyButton(item.id)"
-            >
+            <button type="button" class="mu-btn" @click="onClickDeleteReplyButton(item.id)">
               <span>답변 삭제</span>
             </button>
           </div>
 
           <div v-if="index === lastVisibleAnswerIndex" class="mu-button-wrap">
-            <button
-              type="button"
-              class="mu-btn mu-btn-lg"
-              @click="onClickRegisterReplyButton(item.data_request_id)"
-            >
-              <span>답변 추가</span></button
-            ><!-- 작성된 답변이 등록된 상태로 등록하기 페이지의 입력폼으로 이동 -->
-            <button
-              type="button"
-              class="mu-btn mu-btn-lg mu-btn-primary"
-              @click="onClickListButton()"
-            >
+            <button type="button" class="mu-btn mu-btn-lg" @click="onClickRegisterReplyButton(item.data_request_id)">
+              <span>답변 추가</span></button><!-- 작성된 답변이 등록된 상태로 등록하기 페이지의 입력폼으로 이동 -->
+            <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton()">
               <span>목록</span>
             </button>
           </div>
@@ -179,18 +159,9 @@
       </div>
 
       <div class="mu-button-wrap" v-if="hasDeletedAnswers">
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg"
-          @click="onClickRegisterReplyButton(dataRequest.id)"
-        >
-          <span>답변 추가</span></button
-        ><!-- 작성된 답변이 등록된 상태로 등록하기 페이지의 입력폼으로 이동 -->
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickListButton()"
-        >
+        <button type="button" class="mu-btn mu-btn-lg" @click="onClickRegisterReplyButton(dataRequest.id)">
+          <span>답변 추가</span></button><!-- 작성된 답변이 등록된 상태로 등록하기 페이지의 입력폼으로 이동 -->
+        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton()">
           <span>목록</span>
         </button>
       </div>
@@ -218,18 +189,18 @@ const userStore = useUserStore();
 
 interface DataRequest {
   id: number
-	writer: string
-	request_type: number
-	title: string
-	data_name: string
-	contents: string
-	request_start: string
-	request_end: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: number
+  title: string
+  data_name: string
+  contents: string
+  request_start: string
+  request_end: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface File {
@@ -433,5 +404,4 @@ const fileDownload = async (file_id: number): Promise<void> => {
     link.remove();
   }
 };
-
 </script>

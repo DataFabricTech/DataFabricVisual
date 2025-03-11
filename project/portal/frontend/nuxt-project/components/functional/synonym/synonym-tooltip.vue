@@ -31,7 +31,6 @@ const tooltipPosition = computed(() => {
   return `top: ${top}px; left: ${left}px; display: ${display}`;
 })
 const synonym = computed(() => ObjectUtils.getPropertyValue(props.synonymInfo, 'synonym', '')) // 툴팁 헤더 이름
-const create_user = computed(() => ObjectUtils.getPropertyValue(props.synonymInfo, 'create_user', '')) // 툴팁 내 표시할 등록자 계정
 const user_nm = computed(() => ObjectUtils.getPropertyValue(props.synonymInfo, 'user_nm', '')) // 툴팁 내 표시할 등록자명
 const create_date = computed(() => ObjectUtils.getPropertyValue(props.synonymInfo, 'create_date', '')) // 툴팁 내 표시할 카테고리 목록
 

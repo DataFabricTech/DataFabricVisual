@@ -3,18 +3,11 @@
     <div class="recommend-section">
       <p>이 데이터를 추천하시겠습니까?</p>
       <div class="recommend-group">
-        <button
-          type="button"
-          :class="['mu-btn', 'mu-btn-round', { active: isFavoriteData }]"
-          @click="onToggleFavorite"
-        >
+        <button type="button" :class="['mu-btn', 'mu-btn-round', { active: isFavoriteData }]" @click="onToggleFavorite">
           <i class="mu-icon-svg heart"></i><span>데이터 찜하기</span>
         </button>
-        <button
-          type="button"
-          :class="['mu-btn', 'mu-btn-round', { active: isRecommendedData }]"
-          @click="onToggleRecommend"
-        >
+        <button type="button" :class="['mu-btn', 'mu-btn-round', { active: isRecommendedData }]"
+          @click="onToggleRecommend">
           <i class="mu-icon-svg like"></i><span class="blind">추천</span>
           <em class="view-count">{{ recommendedCounts }}</em>
         </button>

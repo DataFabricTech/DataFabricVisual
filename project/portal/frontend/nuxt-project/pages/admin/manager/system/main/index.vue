@@ -16,7 +16,7 @@
             <dd><input type="text" v-model="recommendSearchList[1].search_word" :id="recommendSearchList[1].seq"
                 placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
             <dt>추천검색어 03</dt>
-            <dd><input type="text" v-model="recommendSearchList[2].search_word" :id="recommendSearchList[2].seq "
+            <dd><input type="text" v-model="recommendSearchList[2].search_word" :id="recommendSearchList[2].seq"
                 placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
             <dt>추천검색어 04</dt>
             <dd><input type="text" v-model="recommendSearchList[3].search_word" :id="recommendSearchList[3].seq"
@@ -28,7 +28,8 @@
           <!-- //recommend-keyword -->
           <!-- mu-button-wrap -->
           <div class="mu-button-wrap">
-            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSearchSaveButton()"><span>적용</span></button>
+            <button type="button" class="mu-btn mu-btn-primary"
+              @click="onClickSearchSaveButton()"><span>적용</span></button>
           </div>
           <!-- //mu-button-wrap -->
         </div>
@@ -41,12 +42,7 @@
           </div>
           <!-- tag-manage -->
           <div class="mu-item-group">
-            <input
-              type="text"
-              v-model="inputTagName"
-              placeholder="추가할 Tag를 입력하세요."
-              class="mu-input"
-            />
+            <input type="text" v-model="inputTagName" placeholder="추가할 Tag를 입력하세요." class="mu-input" />
             <button type="button" class="mu-btn mu-btn-primary" @click="add_tag_info()">
               <div class="mu-icon-svg add"></div>
               <span>추가</span>
@@ -66,7 +62,8 @@
           <div class="mu-heading mt20">
             <h5>태그목록</h5>
             <div class="mu-item-group">
-              <button type="button" title="태그목록 새로고침" class="mu-btn mu-btn-icon-only" @click="onClickRefreshButton()"><i class="mu-icon-svg refresh"></i></button>
+              <button type="button" title="태그목록 새로고침" class="mu-btn mu-btn-icon-only" @click="onClickRefreshButton()"><i
+                  class="mu-icon-svg refresh"></i></button>
             </div>
           </div>
           <div class="tags-setting">
@@ -94,23 +91,14 @@
                       <td></td>
                       <td style=" padding-left: 50px;">
                         <div class="mu-item-group">
-                          <img v-if="logoImageFile"
-                            :src="logoImageFile"
-                            style="width: 120px; height: 44px; background-size: cover"
-                          />
-                          <img v-else
-                            src="/logo-basic.png"
-                            style="visibility: hidden; width: 120px; height: 44px; background-size: cover"
-                          />
+                          <img v-if="logoImageFile" :src="logoImageFile"
+                            style="width: 120px; height: 44px; background-size: cover" />
+                          <img v-else src="/logo-basic.png"
+                            style="visibility: hidden; width: 120px; height: 44px; background-size: cover" />
                           &nbsp;
                           &nbsp;
-                          <input
-                            id="logoImageFileInput"
-                            type="file"
-                            name="categoryImage"
-                            @change="fileUpload"
-                            v-show="false"
-                          />
+                          <input id="logoImageFileInput" type="file" name="categoryImage" @change="fileUpload"
+                            v-show="false" />
                           <label for="logoImageFileInput" class="mu-btn" v-if="!logoImageFile">이미지업로드</label>
                           <label for="logoImageFileInput" class="mu-btn" v-if="logoImageFile">이미지수정</label>
                           &nbsp;
@@ -134,15 +122,18 @@
             </div>
             <div v-for="(layoutInfo, idx) in layoutList">
               <dt style="display: flex; justify-content: space-between; width: 100%;">{{ layoutInfo.description }}
-                <p v-if="layoutInfo.name.includes('MAIN_BANNER_SUBJECT')" class="bul-ast" style="font-weight: 400;">17자 이내 권고</p>
-                <p v-else-if="layoutInfo.name.includes('FOOTER_CONTENT')" class="bul-ast" style="font-weight: 400">100자 이내 권고</p>
+                <p v-if="layoutInfo.name.includes('MAIN_BANNER_SUBJECT')" class="bul-ast" style="font-weight: 400;">17자
+                  이내 권고</p>
+                <p v-else-if="layoutInfo.name.includes('FOOTER_CONTENT')" class="bul-ast" style="font-weight: 400">100자
+                  이내 권고</p>
               </dt>
-                <dd><input type="text" v-model="layoutInfo.value" :id="layoutInfo.name"
-                    :placeholder="layoutInfo.description" class="mu-input" :title="layoutInfo.description"/></dd>
+              <dd><input type="text" v-model="layoutInfo.value" :id="layoutInfo.name"
+                  :placeholder="layoutInfo.description" class="mu-input" :title="layoutInfo.description" /></dd>
             </div>
           </dl>
           <div class="mu-button-wrap">
-            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveLayoutManage()"><span>적용</span></button>
+            <button type="button" class="mu-btn mu-btn-primary"
+              @click="onClickSaveLayoutManage()"><span>적용</span></button>
           </div>
         </div>
         <div class="inner-column">
@@ -152,12 +143,13 @@
           <dl class="recommend-keyword">
             <div v-for="(em, idx) in emailManageList">
               <dt>{{ em.description }}</dt>
-                <dd><input type="text" v-model="em.value" :id="em.name"
-                    :placeholder="em.description" class="mu-input" :title="em.description" /></dd>
+              <dd><input type="text" v-model="em.value" :id="em.name" :placeholder="em.description" class="mu-input"
+                  :title="em.description" /></dd>
             </div>
           </dl>
           <div class="mu-button-wrap">
-            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveEmailManageList()"><span>적용</span></button>
+            <button type="button" class="mu-btn mu-btn-primary"
+              @click="onClickSaveEmailManageList()"><span>적용</span></button>
           </div>
         </div>
       </div>
@@ -177,12 +169,12 @@ definePageMeta({
 const { $ofetch } = useNuxtApp()
 
 const recommendSearchList = ref([
-    { seq: 1, search_word: "" },
-    { seq: 2, search_word: "" },
-    { seq: 3, search_word: "" },
-    { seq: 4, search_word: "" },
-    { seq: 5, search_word: "" },
-  ]
+  { seq: 1, search_word: "" },
+  { seq: 2, search_word: "" },
+  { seq: 3, search_word: "" },
+  { seq: 4, search_word: "" },
+  { seq: 5, search_word: "" },
+]
 )
 
 const inputTagName = ref('');
@@ -222,60 +214,60 @@ const layoutList = ref([
 
 const emailManageList = ref([
   {
-      name: "ADMIN_EMAIL",
-      value: "",
-      description: "관리자 이메일1",
-      type: "admin_email"
+    name: "ADMIN_EMAIL",
+    value: "",
+    description: "관리자 이메일1",
+    type: "admin_email"
   },
   {
-      name: "ADMIN_EMAIL2",
-      value: "",
-      description: "관리자 이메일2",
-      type: "admin_email"
+    name: "ADMIN_EMAIL2",
+    value: "",
+    description: "관리자 이메일2",
+    type: "admin_email"
   },
   {
-      name: "ADMIN_EMAIL3",
-      value: "",
-      description: "관리자 이메일3",
-      type: "admin_email"
+    name: "ADMIN_EMAIL3",
+    value: "",
+    description: "관리자 이메일3",
+    type: "admin_email"
   },
   {
-      name: "INIT_PASSWORD",
-      value: "",
-      description: "패스워드 초기화 이메일 템플릿 ID",
-      type: "email_template"
+    name: "INIT_PASSWORD",
+    value: "",
+    description: "패스워드 초기화 이메일 템플릿 ID",
+    type: "email_template"
   },
   {
-      name: "DATA_REQUEST",
-      value: "",
-      description: "데이터 요청 등록 이메일 템플릿 ID",
-      type: "email_template"
+    name: "DATA_REQUEST",
+    value: "",
+    description: "데이터 요청 등록 이메일 템플릿 ID",
+    type: "email_template"
   },
   {
-      name: "DATA_REQUEST_RESPONSE",
-      value: "",
-      description: "데이터 요청 답변 이메일 템플릿 ID",
-      type: "email_template"
+    name: "DATA_REQUEST_RESPONSE",
+    value: "",
+    description: "데이터 요청 답변 이메일 템플릿 ID",
+    type: "email_template"
   },
   {
-      name: "SYNONYM_DELETE_REQUEST",
-      value: "",
-      description: "동의어 삭제 요청 등록 이메일 템플릿 ID",
-      type: "email_template"
+    name: "SYNONYM_DELETE_REQUEST",
+    value: "",
+    description: "동의어 삭제 요청 등록 이메일 템플릿 ID",
+    type: "email_template"
   },
   {
-      name: "SYNONYM_DELETE_RESPONSE",
-      value: "",
-      description: "동의어 삭제 요청 처리 결과 이메일 템플릿 ID",
-      type: "email_template"
+    name: "SYNONYM_DELETE_RESPONSE",
+    value: "",
+    description: "동의어 삭제 요청 처리 결과 이메일 템플릿 ID",
+    type: "email_template"
   },
 ])
 
 const logoImageList = ref([{
-    name: "LOGO_IMAGE_FILE_ID",
-    value: "",
-    description: "포털 로고 이미지 파일 ID",
-    type: "portal_config"
+  name: "LOGO_IMAGE_FILE_ID",
+  value: "",
+  description: "포털 로고 이미지 파일 ID",
+  type: "portal_config"
 }]);
 
 const logoImageFileId = ref(""); // 로고 이미지 파일 아이디
@@ -296,7 +288,7 @@ const getRecommendList = async () => {
       if (res.data.length != 0) {
         if (res.data.length < 5) {
           res.data.forEach((el) => {
-            for (let i=0; i<recommendSearchList.value.length; i++) {
+            for (let i = 0; i < recommendSearchList.value.length; i++) {
               if (recommendSearchList.value[i].seq == el.seq) {
                 recommendSearchList.value[i] = el
               }
@@ -329,26 +321,26 @@ const onClickSearchSaveButton = async () => {
 
 // tag 입력
 const add_tag_info = async () => {
-  if ( checkInputValidate() ){
+  if (checkInputValidate()) {
     try {
 
       const params = {
-        tag_name : inputTagName.value
+        tag_name: inputTagName.value
       };
 
       await $ofetch(`/api/admin/system/tagManager/insert`, {
-          method: "POST",
-          body: params,
+        method: "POST",
+        body: params,
       }).then((res) => {
-          if (!res || res.isFailed) {
-            const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
-            errorAlert(msg);
-          }else {
-            if(res.data === 0){
-              errorAlert("이미 등록된 태그입니다.");
-            }
-            searchTagList();
+        if (!res || res.isFailed) {
+          const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+          errorAlert(msg);
+        } else {
+          if (res.data === 0) {
+            errorAlert("이미 등록된 태그입니다.");
           }
+          searchTagList();
+        }
       });
     } catch (error) {
       console.error(error);
@@ -360,17 +352,17 @@ const add_tag_info = async () => {
 //tag 입력값 검증
 //숫자 가능, 알파벳 가능, 완성형 한글 가능, 특수문자(_-) 가능
 const checkInputValidate = (): boolean => {
-  if(inputTagName.value === ''){
+  if (inputTagName.value === '') {
     errorAlert('추가할 tag를 입력하세요.');
     return false
   }
 
   const regex = /^[a-zA-Z0-9가-힣_-]+$/;
 
-  if(!regex.test(inputTagName.value)){
+  if (!regex.test(inputTagName.value)) {
     errorAlert('입력한 값이 올바르지 않습니다.');
     return false;
-  }else{
+  } else {
     return true;
   }
 }
@@ -381,24 +373,24 @@ const onClickRefreshButton = async () => {
 }
 
 //tag 조회
-const searchTagList = async (offset = 1) =>{
+const searchTagList = async (offset = 1) => {
   try {
     // 관리 페이지이기 때문에 페이징 없이 전체 보여지도록 임시로 1000개
     let limit = 1000;
     await $ofetch(`/api/admin/system/tagManager/list?pageSize=${limit}&pnum=${offset}`)
-    .then((res) => {
-      if (res && !res.errorMessage) {
-        const list = res.data.list;
-        clearTagContaioner();
-        list.forEach(item => {
-          tagList.value.push(item.tag_name);
-          addTag(item.tag_name);
-        });
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    });
+      .then((res) => {
+        if (res && !res.errorMessage) {
+          const list = res.data.list;
+          clearTagContaioner();
+          list.forEach(item => {
+            tagList.value.push(item.tag_name);
+            addTag(item.tag_name);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      });
 
   } catch (error) {
     console.log(error);
@@ -421,7 +413,7 @@ const addTag = (tagName: string) => {
   const closeButton = document.createElement('button');
   closeButton.type = 'button';
   closeButton.className = 'mu-btn mu-btn-delete';
-  closeButton.setAttribute('data-tag',tagName);
+  closeButton.setAttribute('data-tag', tagName);
 
   // <i> 아이콘 생성
   const closeIcon = document.createElement('i');
@@ -433,7 +425,7 @@ const addTag = (tagName: string) => {
 
   // 닫기 버튼 클릭 이벤트
   closeButton.addEventListener('click', (event) => {
-      onClickdeleteTag(event);
+    onClickdeleteTag(event);
   });
 
   // 구성 요소들을 트리 구조로 결합
@@ -454,7 +446,7 @@ const clearTagContaioner = () => {
 }
 
 const onClickdeleteTag = async (event) => {
-  const target = event.currentTarget  as HTMLElement;
+  const target = event.currentTarget as HTMLElement;
   const tagName = target.getAttribute('data-tag');
 
   if (await confirmAlert(`선택한 태그( <b>${tagName}</b> )를 삭제 해도 기 등록된 태그 정보는 유지됩니다. 정말 삭제 하시겠습니까?`)) {
@@ -465,19 +457,19 @@ const onClickdeleteTag = async (event) => {
 const deleteTaginfo = async (tagName) => {
   try {
     const params = {
-      tag_name : tagName
+      tag_name: tagName
     };
 
     await $ofetch(`/api/admin/system/tagManager/delete`, {
-        method: "POST",
-        body: params,
+      method: "POST",
+      body: params,
     }).then((res) => {
-        if (!res || res.isFailed) {
-          const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
-          errorAlert(msg);
-        }else {
-          searchTagList();
-        }
+      if (!res || res.isFailed) {
+        const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+        errorAlert(msg);
+      } else {
+        searchTagList();
+      }
     });
   } catch (error) {
     console.error(error);
@@ -491,7 +483,7 @@ const getLayoutList = async () => {
     if (res && res.data) {
       if (res.data.layoutList && res.data.layoutList.length > 1) {
         res.data.layoutList.forEach((el, idx) => {
-          for (let i=0; i<layoutList.value.length; i++) {
+          for (let i = 0; i < layoutList.value.length; i++) {
             if (layoutList.value[i].name == el.name) {
               layoutList.value[i] = el
             }
@@ -537,7 +529,7 @@ const getEmailManageList = async () => {
     if (res && res.data) {
       if (res.data.emailManageList && res.data.emailManageList.length > 1) {
         res.data.emailManageList.forEach((el, idx) => {
-          for (let i=0; i<emailManageList.value.length; i++) {
+          for (let i = 0; i < emailManageList.value.length; i++) {
             if (emailManageList.value[i].name == el.name) {
               emailManageList.value[i] = el
             }
@@ -576,7 +568,7 @@ const getLogoImageList = async () => {
     if (res && res.data) {
       if (res.data.logoImageList && res.data.logoImageList.length > 0) {
         res.data.logoImageList.forEach((el, idx) => {
-          for (let i=0; i<logoImageList.value.length; i++) {
+          for (let i = 0; i < logoImageList.value.length; i++) {
             if (logoImageList.value[i].name == el.name) {
               logoImageList.value[i] = el
               logoImageFileId.value = el.value
@@ -631,10 +623,5 @@ const fileUpload = (e) => {
     }
   });
 };
-
-// 로고 이미지 관리 적용 버튼 클릭
-const onClickSaveLogoImage = () => {
-  console.log('onClickSaveLogoImage')
-}
 
 </script>

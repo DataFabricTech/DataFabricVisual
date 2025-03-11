@@ -19,20 +19,10 @@
                   <tr>
                     <th scope="row">카테고리 명</th>
                     <td>
-                      <input
-                        type="text"
-                        placeholder="검색어를 입력하세요."
-                        class="mu-input w200"
-                        title="검색어입력"
-                        v-model="word"
-                        @keypress.enter.prevent="onSearch"
-                      />
-                      <button
-                        type="button"
-                        class="mu-btn mu-btn-primary"
-                        @click.prevent="onSearch"
-                        style="margin-left:10px"
-                      >
+                      <input type="text" placeholder="검색어를 입력하세요." class="mu-input w200" title="검색어입력" v-model="word"
+                        @keypress.enter.prevent="onSearch" />
+                      <button type="button" class="mu-btn mu-btn-primary" @click.prevent="onSearch"
+                        style="margin-left:10px">
                         <i class="mu-icon-svg search"></i><span>검색</span>
                       </button>
                     </td>
@@ -47,13 +37,8 @@
             <h4>카테고리 목록</h4>
             <div class="detail-section" :class="showData ? 'open' : 'close'" style="height: auto;">
               <div class="mu-item-group">
-                <button
-                  type="button"
-                  class="mu-btn mu-btn-bg-non btn-section-toggle"
-                  :title="toggleShowDataText"
-                  @click="toggleShowData()"
-                  style="margin-left: 10px"
-                >
+                <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" :title="toggleShowDataText"
+                  @click="toggleShowData()" style="margin-left: 10px">
                   <span>{{ toggleShowDataText }}</span>
                 </button>
               </div>
@@ -66,22 +51,12 @@
                 <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggleAll">
                   <span>펼치기</span>
                 </button>
-                <a
-                  href="javascript:void(0);"
-                  :class="['' === selectedId ? 'active' : '', 'item-label']"
-                  title="카테고리 전체"
-                  @click="() => onClick('all')"
-                >
+                <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']" title="카테고리 전체"
+                  @click="() => onClick('all')">
                   카테고리 전체
                 </a>
-                <category-item
-                  v-if="toggleTargets.all"
-                  :list="searchedCategoryList"
-                  :toggle-targets="toggleTargets"
-                  :selected-id="selectedId"
-                  @onToggleNode="onToggle"
-                  @onClickMenuItem="onClick"
-                />
+                <category-item v-if="toggleTargets.all" :list="searchedCategoryList" :toggle-targets="toggleTargets"
+                  :selected-id="selectedId" @onToggleNode="onToggle" @onClickMenuItem="onClick" />
               </li>
             </ul>
           </div>
@@ -119,12 +94,7 @@
       </div>
 
       <div class="mu-dialog-close-btn">
-        <button
-          type="button"
-          class="mu-btn mu-btn-close"
-          title="해당 팝업 닫기"
-          @click="onClose"
-        >
+        <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose">
           <i class="mu-icon-svg close"></i><span>팝업닫기</span>
         </button>
       </div>
@@ -133,9 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useNuxtApp } from "nuxt/app";
-import { onMounted, onBeforeUnmount, ref, computed } from 'vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 import { useCategoryTreeStore } from "@store/categoryTree.ts";
 import CategoryItem from "@functional/classificationModal/category-item";
 
@@ -147,7 +115,6 @@ interface SelectedCategory {
   id: string;
 }
 
-const { $ofetch } = useNuxtApp();
 const emit = defineEmits(["onCloseModal", "onSelect"]);
 const props = defineProps([
   "toggleSelectCategoryModal",
@@ -296,7 +263,7 @@ const collapseAll = () => {
 const openModal = () => {
   word.value = ""
   searchedCategoryList.value = categoryTreeStore.getCategoryList
-  if(props.upperCategory) {
+  if (props.upperCategory) {
     selected.value = props.upperCategory
     categoryTreeStore.setSelectedItemId(props.upperCategory.id);
     // 현재 선택된 카테고리의 상위 메뉴 열기 처리
@@ -376,6 +343,7 @@ const getNextZIndex = () => {
 <style scoped>
 .mu-modal {
   position: fixed;
-  z-index: 101; /* 기본 z-index 값 */
+  z-index: 101;
+  /* 기본 z-index 값 */
 }
 </style>

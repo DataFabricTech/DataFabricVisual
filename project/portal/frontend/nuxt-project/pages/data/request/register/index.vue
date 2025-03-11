@@ -1,48 +1,26 @@
 <template>
   <div class="contents">
     <div>
-      <request-edit-inner
-        :dataRequest="dataRequest"
-        @cancelMethod="onClickCancelButton"
-        @saveMethod="onClickSaveButton"
-        :isUpdate="false"
-      >
+      <request-edit-inner :dataRequest="dataRequest" @cancelMethod="onClickCancelButton" @saveMethod="onClickSaveButton"
+        :isUpdate="false">
         <template v-slot:file>
           <div class="mu-item-vgroup">
             <!-- 첨부파일 : 파일찾기 , 삭제 편집모드 -->
             <div class="mu-file-attach">
-              <input
-                type="text"
-                id="file-name"
-                class="mu-input"
-                placeholder="파일 첨부 크기는 최대 100MB까지 가능합니다."
-                readonly
-              />
+              <input type="text" id="file-name" class="mu-input" placeholder="파일 첨부 크기는 최대 100MB까지 가능합니다." readonly />
               <div class="mu-file-btn" style="margin-left: 10px">
                 <button type="button" class="mu-btn">
                   <label for="file-find">파일찾기</label>
                 </button>
-                <input
-                  type="file"
-                  id="file-find"
-                  class="mu-btn-hide"
-                  @change="onChange"
-                />
+                <input type="file" id="file-find" class="mu-btn-hide" @change="onChange" />
               </div>
             </div>
             <!-- 첨부파일 : 리스트 개발삭제 가능함 -->
             <ul class="file-sch-list">
               <li v-for="(item, index) in files" :key="index">
-                <a href="#none" title="첨부파일다운로드"
-                  ><i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}</a
-                >
-                <button
-                  type="button"
-                  class="mu-btn mu-btn-delete"
-                  @click="onClickDeleteButton"
-                >
-                  <i class="mu-icon-svg item-delete" :id="index"></i
-                  ><span>첨부파일 삭제</span>
+                <a href="#none" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}</a>
+                <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButton">
+                  <i class="mu-icon-svg item-delete" :id="index"></i><span>첨부파일 삭제</span>
                 </button>
               </li>
             </ul>
@@ -73,18 +51,18 @@ const router = useRouter();
 
 interface DataRequest {
   id: number
-	writer: string
-	request_type: string
-	title: string
-	data_name: string
-	contents: string
-	request_start?: string
-	request_end?: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: string
+  title: string
+  data_name: string
+  contents: string
+  request_start?: string
+  request_end?: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface File {
@@ -103,18 +81,18 @@ const files = ref<Array<File>>([]);
 const sample_files = ref<Array<File>>([]);
 const dataRequest = ref<DataRequest>({
   id: 0,
-	writer: "",
-	request_type: 0,
-	title: "",
-	data_name: "",
-	contents: "",
-	request_start: "",
-	request_end: "",
-	benefit_content: "",
-	create_date: "",
-	update_date: "",
-	process_status: 0,
-	finish_date: ""
+  writer: "",
+  request_type: 0,
+  title: "",
+  data_name: "",
+  contents: "",
+  request_start: "",
+  request_end: "",
+  benefit_content: "",
+  create_date: "",
+  update_date: "",
+  process_status: 0,
+  finish_date: ""
 });
 
 onMounted(() => getSampleFileList());

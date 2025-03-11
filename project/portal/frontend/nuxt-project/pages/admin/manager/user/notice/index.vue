@@ -4,10 +4,7 @@
       <div class="board-list-wrap">
         <div class="mu-heading">
           <!-- board-list-search -->
-          <notice-border-list-search
-            :searchObj.sync="searchObj"
-            @searchMethod="getPost"
-          />
+          <notice-border-list-search :searchObj.sync="searchObj" @searchMethod="getPost" />
 
           <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
         </div>
@@ -24,19 +21,13 @@
               <col style="width: 10%" />
               <col style="width: 8%" />
               <col style="width: 6%" />
-              <!-- <col style="width: 80px" /> -->
             </colgroup>
             <thead>
               <tr>
                 <th scope="col">
                   <div class="mu-checkbox">
-                    <input
-                      type="checkbox"
-                      id="chkAll"
-                      title="전체선택"
-                      v-model="allChecked"
-                      @click="checkedAll($event.target.checked)"
-                    />
+                    <input type="checkbox" id="chkAll" title="전체선택" v-model="allChecked"
+                      @click="checkedAll($event.target.checked)" />
                     <label for="chkAll"><span class="blind">전체선택</span></label>
                   </div>
                 </th>
@@ -54,17 +45,9 @@
               <tr v-for="(item, index) in postList" :key="index">
                 <td>
                   <div class="mu-checkbox">
-                    <input
-                      type="checkbox"
-                      :id="'check_' + item.id"
-                      title="행선택"
-                      :value="item.id"
-                      v-model="item.selected"
-                      @change="selected(item.id)"
-                    />
-                    <label :for="'check_' + item.id"
-                      ><span class="blind">행선택</span></label
-                    >
+                    <input type="checkbox" :id="'check_' + item.id" title="행선택" :value="item.id" v-model="item.selected"
+                      @change="selected(item.id)" />
+                    <label :for="'check_' + item.id"><span class="blind">행선택</span></label>
                   </div>
                 </td>
                 <td>{{ item.rownum }}</td>
@@ -83,9 +66,9 @@
                 <td>
                   <i v-if="item.file_cnt > 0" class="mu-icon-svg file">첨부파일 있음</i>
                 </td>
-                <td>{{item.user_nm}}</td>
+                <td>{{ item.user_nm }}</td>
                 <td>{{ item.upload_date }}</td>
-                <td>{{item.view_count}}</td>
+                <td>{{ item.view_count }}</td>
               </tr>
               <tr v-if="postList.length === 0">
                 <td colspan="8">
@@ -104,11 +87,7 @@
         <button type="button" class="mu-btn mu-btn-lg" @click="onClickDeleteButton">
           <span>삭제</span>
         </button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickRegisterButton"
-        >
+        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickRegisterButton">
           <span>등록</span>
         </button>
       </div>

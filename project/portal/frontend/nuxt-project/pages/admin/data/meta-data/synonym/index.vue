@@ -4,7 +4,7 @@
       <div class="inner">
         <div class="board-list-wrap">
           <div class="mu-heading">
-            <synonym-border-list-search v-model:searchObj="searchObj" @searchMethod="getSynonym"  />
+            <synonym-border-list-search v-model:searchObj="searchObj" @searchMethod="getSynonym" />
 
             <div class="mu-item-group">
               <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getSynonym" />
@@ -21,99 +21,73 @@
                 <col style="width:160px">
               </colgroup>
               <thead>
-              <tr>
-                <th scope="col">
-                  <div class="mu-checkbox">
-                    <input
-                      type="checkbox"
-                      id="ckb1"
-                      title="전체선택"
-                      :checked="synonymList.length > 0 && selectedData.length === synonymList.length"
-                      @click.stop="e => onToggleCheckbox(e, true)"
-                    >
-                    <label for="ckb1"><span class="blind">전체선택</span></label>
-                  </div>
-                </th>
-                <th scope="col">No.</th>
-                <th scope="col">대표어</th>
-                <th scope="col">동의어</th>
-                <th scope="col">관리</th>
-              </tr>
+                <tr>
+                  <th scope="col">
+                    <div class="mu-checkbox">
+                      <input type="checkbox" id="ckb1" title="전체선택"
+                        :checked="synonymList.length > 0 && selectedData.length === synonymList.length"
+                        @click.stop="e => onToggleCheckbox(e, true)">
+                      <label for="ckb1"><span class="blind">전체선택</span></label>
+                    </div>
+                  </th>
+                  <th scope="col">No.</th>
+                  <th scope="col">대표어</th>
+                  <th scope="col">동의어</th>
+                  <th scope="col">관리</th>
+                </tr>
               </thead>
               <tbody>
-              <tr v-if="synonymList.length != 0" v-for="(item, index) in synonymList" :key="index">
-                <td>
-                  <div class="mu-checkbox">
-                    <input
-                      type="checkbox"
-                      title="행선택"
-                      :id="index"
-                      :checked="isChecked(item)"
-                      @click.stop="e => onToggleCheckbox(e, false, item)"
-                    />
-                    <label :for="index"><span class="blind">행선택</span></label>
-                  </div>
-                </td>
-                <td>{{ (pagingObj.total - (pagingObj.currentPage - 1) * pagingObj.limit) - index }}</td>
-                <td>{{ item.term }}</td>
-                <td class="tl">
+                <tr v-if="synonymList.length != 0" v-for="(item, index) in synonymList" :key="index">
+                  <td>
+                    <div class="mu-checkbox">
+                      <input type="checkbox" title="행선택" :id="index" :checked="isChecked(item)"
+                        @click.stop="e => onToggleCheckbox(e, false, item)" />
+                      <label :for="index"><span class="blind">행선택</span></label>
+                    </div>
+                  </td>
+                  <td>{{ (pagingObj.total - (pagingObj.currentPage - 1) * pagingObj.limit) - index }}</td>
+                  <td>{{ item.term }}</td>
+                  <td class="tl">
                     <div class="tags-group">
-                      <div class="tag" v-for="synonymInfo in item.synonyms"  @mouseover="mouseEnter($event, synonymInfo)" @mouseleave="mouseLeave($event, synonymInfo)">
-                        <span class="tag-label" @mouseover="mouseEnter($event, synonymInfo)" @mouseleave="mouseLeave($event, synonymInfo)">{{ synonymInfo.synonym }}</span>
+                      <div class="tag" v-for="synonymInfo in item.synonyms" @mouseover="mouseEnter($event, synonymInfo)"
+                        @mouseleave="mouseLeave($event, synonymInfo)">
+                        <span class="tag-label" @mouseover="mouseEnter($event, synonymInfo)"
+                          @mouseleave="mouseLeave($event, synonymInfo)">{{ synonymInfo.synonym }}</span>
                         <synonym-tooltip :synonymInfo="synonymInfo" />
                       </div>
                     </div>
-                </td>
-                <td>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="onToggleSynonymModifySetModal(item.term)"><span>세트수정</span></button>
-                </td>
-              </tr>
-              <tr v-if="synonymList.length == 0">
-                <td colspan="5">
-                  <p class="nodata">동의어가 존재하지 않습니다.</p>
-                </td>
-              </tr>
+                  </td>
+                  <td>
+                    <button type="button" class="mu-btn mu-btn-sm"
+                      @click="onToggleSynonymModifySetModal(item.term)"><span>세트수정</span></button>
+                  </td>
+                </tr>
+                <tr v-if="synonymList.length == 0">
+                  <td colspan="5">
+                    <p class="nodata">동의어가 존재하지 않습니다.</p>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <!-- <div class="mu-item-group">
-            <p class="bul-ast">동의어 안내 문구 </p>
-          </div> -->
 
           <!-- 동의어 세트수정 모달 -->
-          <synonym-modify-set-modal
-            :isAdmin=true
-            :toggle="toggleSynonymModifySetModal"
-            :synonymList="synonymList"
-            :synonymOneList="synonymOneList"
-            @reloadSynonymListOne="getSynonymOneList"
-            @reloadSynonymList="getSynonym"
-            @onCloseModal="onToggleSynonymModifySetModal"
-          />
+          <synonym-modify-set-modal :isAdmin=true :toggle="toggleSynonymModifySetModal" :synonymList="synonymList"
+            :synonymOneList="synonymOneList" @reloadSynonymListOne="getSynonymOneList" @reloadSynonymList="getSynonym"
+            @onCloseModal="onToggleSynonymModifySetModal" />
 
           <!-- 동의어 세트추가 모달 -->
-          <synonym-add-set-modal
-            :isAdmin=true
-            :toggle="toggleSynonymAddSetModal"
-            :synonymList="synonymList"
-            @reloadSynonymListOne="getSynonymOneList"
-            @reloadSynonymList="getSynonym"
-            @onCloseModal="onToggleSynonymAddSetModal"
-          />
+          <synonym-add-set-modal :isAdmin=true :toggle="toggleSynonymAddSetModal" :synonymList="synonymList"
+            @reloadSynonymListOne="getSynonymOneList" @reloadSynonymList="getSynonym"
+            @onCloseModal="onToggleSynonymAddSetModal" />
 
-          <Pagination
-            :paging="pagingObj"
-            @onClickPage="onClickPage"
-          />
+          <Pagination :paging="pagingObj" @onClickPage="onClickPage" />
         </div>
         <div class="mu-button-wrap">
           <button type="button" class="mu-btn mu-btn-lg" @click="onClickSynonymDelete">
             <span>삭제</span>
           </button>
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
-            @click="onToggleSynonymAddSetModal">
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onToggleSynonymAddSetModal">
             <span>세트 추가</span>
           </button>
         </div>
@@ -176,15 +150,15 @@ const isChecked = (item) => {
 
 // 체크박스 클릭 이벤트 핸들러
 const onToggleCheckbox = (e, isAll, item) => {
-  const { target: { checked }} = e;
-  let newItems = [ ...selectedData.value ];
+  const { target: { checked } } = e;
+  let newItems = [...selectedData.value];
 
-  if ( isAll ) {
+  if (isAll) {
     // 테이블 최상단 체크박스 클릭 시 전체 선택/해제
     newItems = checked ? synonymList.value : [];
   } else {
     // 각 행별 체크박스 클릭 시
-    if ( checked ) {
+    if (checked) {
       newItems.push(item);
     } else {
       const targetIndex = newItems.findIndex(el => el.rownum === item.rownum);

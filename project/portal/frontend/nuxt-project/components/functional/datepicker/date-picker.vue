@@ -1,20 +1,9 @@
 <template>
   <div>
-    <Picker
-      v-model="dateValue"
-      :type="props.type"
-      :range="props.range"
-      :format="dateFormat"
-      value-type="format"
-      :confirm="props.confirm"
-      :confirm-text="props.confirmText"
-      :disabled="props.disabled"
-      :placeholder="props.placeholder"
-      :disabledDates="{ predicate: disabledDate }"
-      :lang="props.lang"
-      :minimumView="props.minimumView"
-      @change="emit('change', $event)"
-    />
+    <Picker v-model="dateValue" :type="props.type" :range="props.range" :format="dateFormat" value-type="format"
+      :confirm="props.confirm" :confirm-text="props.confirmText" :disabled="props.disabled"
+      :placeholder="props.placeholder" :disabledDates="{ predicate: disabledDate }" :lang="props.lang"
+      :minimumView="props.minimumView" @change="emit('change', $event)" />
   </div>
 </template>
 
@@ -137,26 +126,22 @@ const disabledDate = (date: any) => {
   return props.disabledMaxDate
     ? date > moment(props.disabledMaxDate)
     : props.disabledMinDate
-    ? date < moment(props.disabledMinDate)
-    : false;
+      ? date < moment(props.disabledMinDate)
+      : false;
 };
 
-// 다국어 처리
-// const locale = $i18n.locale;
-// require(`vue3-datepicker/locale/${locale}`);
 </script>
 
 <style lang="scss">
 @import "date-picker";
 
 .v3dp__input_wrapper input {
-  width:100%;
-  height:36px;
-  line-height:36px;
-  padding:0 15px;
-  border:1px solid #d6dce2;
-  border-radius:8px;
-  background:#fff;
+  width: 100%;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 15px;
+  border: 1px solid #d6dce2;
+  border-radius: 8px;
+  background: #fff;
 }
-
 </style>

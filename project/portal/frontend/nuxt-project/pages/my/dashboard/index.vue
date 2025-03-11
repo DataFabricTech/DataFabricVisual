@@ -13,12 +13,15 @@
               <!-- profile-box -->
               <div class="profile-box">
                 <div class="profile">
-                  <strong class="name">{{ userStore.getUser.username }}<span>({{ userStore.getUser.dept_nm }})</span></strong>
+                  <strong class="name">{{ userStore.getUser.username }}<span>({{ userStore.getUser.dept_nm
+                      }})</span></strong>
                   <div class="profile-info">
                     <span class="use"><i class="mu-icon-svg use"></i>{{ userStore.getUser.user_role_name }}</span>
                     <span class="email"><i class="mu-icon-svg email"></i>{{ userStore.getUser.user_email }}</span>
-                    <span class="date"><i class="mu-icon-svg time"></i>최종접속시간 {{ $yyyyMMddHHmmSS(userStore.getUser.last_login) }}</span>
-                    <span class="date" style="cursor:pointer;" @click="onPasswordInitModalCall"><i class="mu-icon-svg refresh"></i>패스워드 변경</span>
+                    <span class="date"><i class="mu-icon-svg time"></i>최종접속시간 {{
+                      $yyyyMMddHHmmSS(userStore.getUser.last_login) }}</span>
+                    <span class="date" style="cursor:pointer;" @click="onPasswordInitModalCall"><i
+                        class="mu-icon-svg refresh"></i>패스워드 변경</span>
                   </div>
                 </div>
               </div>
@@ -31,9 +34,7 @@
 
                 <my-request-data :dataList_s="myDataRequestList"> </my-request-data>
 
-                <my-synonym-delete-request-data
-                  :dataList_s="mySynonymDeleteRequestList"
-                >
+                <my-synonym-delete-request-data :dataList_s="mySynonymDeleteRequestList">
                 </my-synonym-delete-request-data>
               </div>
               <div class="mu-row gap-20">
@@ -51,10 +52,7 @@
     </main>
   </div>
 
-  <user-password-change-modal
-    v-model:visibleUpdateModal="visibleUpdateModal"
-    v-model:modalParam="modalParam"
-  />
+  <user-password-change-modal v-model:visibleUpdateModal="visibleUpdateModal" v-model:modalParam="modalParam" />
 </template>
 <script setup lang="ts">
 import MySearchData from "@organisms/myCatalog/my-search-data";
@@ -94,18 +92,18 @@ interface MySearchData {
 
 interface MyDataRequest {
   id: number
-	writer: string
-	request_type: string
-	title: string
-	data_name: string
-	contents: string
-	request_start?: string
-	request_end?: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: string
+  title: string
+  data_name: string
+  contents: string
+  request_start?: string
+  request_end?: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface MyAllExtractedDataList {
@@ -255,4 +253,3 @@ const onPasswordInitModalCall = async () => {
   }
 }
 </script>
-<!--  -->

@@ -4,11 +4,7 @@
       <button class="mu-btn mu-btn-sm mu-btn-icon-only" title="조직 추가" @click.stop="() => onClickButton('add')">
         <i class="mu-icon-svg add"></i><span>추가</span>
       </button>
-      <button
-        class="mu-btn mu-btn-sm mu-btn-icon-only"
-        title="조직 초기화"
-        @click.stop="() => onClickButton('refresh')"
-      >
+      <button class="mu-btn mu-btn-sm mu-btn-icon-only" title="조직 초기화" @click.stop="() => onClickButton('refresh')">
         <i class="mu-icon-svg refresh"></i><span>초기화</span>
       </button>
     </div>
@@ -22,22 +18,12 @@
           <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggle('all')">
             <span>펼치기</span>
           </button>
-          <a
-            href="javascript:void(0);"
-            :class="['' === selectedId ? 'active' : '', 'item-label']"
-            title="조직 전체"
-            @click="() => onClick()"
-          >
+          <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']" title="조직 전체"
+            @click="() => onClick()">
             조직 전체
           </a>
-          <menu-item
-            :list="deptList"
-            :toggle-targets="toggleTargets"
-            :selected-id="selectedId"
-            @onToggleNode="onToggle"
-            @onClickMenuItem="onClick"
-            @onClickSetup="onToggleTooltip"
-          />
+          <menu-item :list="deptList" :toggle-targets="toggleTargets" :selected-id="selectedId" @onToggleNode="onToggle"
+            @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
         </li>
       </ul>
     </div>
@@ -62,7 +48,6 @@ const deptStore = useDeptStore();
 const deptList = computed(() => deptStore.getDeptList);
 const toggleTargets = deptStore.getToggleTargets;
 const selectedId = deptStore.getSelectedItemId;
-const calledFrom = deptStore.getCalledFrom;
 
 const eventStore = useEventStore();
 
@@ -90,7 +75,7 @@ const findMaxOrdNo = (item, deptList, isSubDept = false) => {
   return maxOrdNo;
 };
 
-// 
+//
 const onClick = (item) => {
   if (item) {
     onSelectedDeptMaxNo(item);
@@ -109,26 +94,21 @@ const onSelectedDeptMaxNo = (item) => {
   deptStore.setSelectedSubDeptLevelMaxOrdNo(maxSubDeptOrdNo);
 };
 
-// 
-const onClickCategoryOrderChange = () => {
-  emit("onClickCategoryOrderChange");
-};
-
-// 
+//
 const onToggleTooltip = (e, item, type) => {
   eventStore.emit("onToggleMetaDataTooltip", e, item, type);
 };
 
-// 
+//
 const onClickButton = (type) => {
-  if(deptList.value.length != 0 && type === "add") {
+  if (deptList.value.length != 0 && type === "add") {
     onSelectedDeptMaxNo(deptList.value[0]);
   }
 
   emit("onClickOptionalButtons", type);
 };
 
-// 
+//
 const onToggle = (value) => {
   deptStore.setToggleTargetOnClick(value);
 };

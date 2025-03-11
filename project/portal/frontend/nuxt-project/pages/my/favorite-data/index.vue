@@ -5,7 +5,7 @@
         <div class="board-list-wrap">
           <div class="mu-heading">
             <!-- board-list-search -->
-            <Border-list-search :searchObj="searchObj" @searchMethod="getPost" :searchList="searchList" />
+            <border-list-search :searchObj="searchObj" @searchMethod="getPost" :searchList="searchList" />
             <div class="mu-item-group">
               <!-- mu-selectbox / 10개씩 보기(Default) -->
               <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
@@ -39,7 +39,7 @@
                   </td>
                   <td>{{ item.meta_name ? item.meta_name : '-' }}</td>
                   <td>{{ item.system_name ? item.system_name : '-' }}</td>
-                  <td>{{ formatDate(item.favorite_date)}}</td>
+                  <td>{{ formatDate(item.favorite_date) }}</td>
                 </tr>
                 <tr v-if="postList.length === 0">
                   <td colspan="5">
@@ -60,10 +60,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, computed} from "vue";
+import { ref, onMounted, computed } from "vue";
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
-import DatePicker from "@functional/datepicker/date-picker";
 import BorderListSearch from "@functional/border-list-search/border-list-search.vue";
 import { useRouter, useRoute } from 'vue-router';
 
@@ -108,21 +107,20 @@ const searchObj = ref<SearchObj>({
 })
 const searchList = ref([
   {
-    value : "description",
-    text : "데이터 설명"
+    value: "description",
+    text: "데이터 설명"
   },
   {
-    value : "meta_name",
-    text : "데이터 명"
+    value: "meta_name",
+    text: "데이터 명"
   },
   {
-    value : "system_name",
-    text : "시스템 명"
+    value: "system_name",
+    text: "시스템 명"
   },
 ])
 
 const postList = ref<Post[]>([]);
-const guid = computed(() => route.query.guid);
 
 const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr);
@@ -134,7 +132,6 @@ const formatDate = (dateStr: string): string => {
   const seconds = date.getSeconds().toString().padStart(2, '0');
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  // return `${year}-${month}-${day}`;
 };
 
 const postApiData = async (urlStr: string, param: any) => {
@@ -174,7 +171,7 @@ const getPost = async (offset: number = 1) => {
   }
 };
 
-const onClickPage = (page: any) =>{
+const onClickPage = (page: any) => {
   getPost(page);
 }
 

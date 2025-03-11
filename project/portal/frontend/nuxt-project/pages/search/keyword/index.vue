@@ -11,32 +11,19 @@
                   <div class="category">
                     <em class="category-label">
                       필터적용중<span>
-                      <button type="button" @click="deleteCategoryTag"><i class="mu-icon-svg item-delete"></i></button>
-                    </span>
+                        <button type="button" @click="deleteCategoryTag"><i
+                            class="mu-icon-svg item-delete"></i></button>
+                      </span>
                     </em>
                   </div>&nbsp;
                 </div>
-                <input
-                  type="text"
-                  class="mu-input"
-                  placeholder="테이블을 제외한 컬럼/타 메타 검색결과를 조회하려면 상세필터로 검색하세요"
-                  title="검색어를 입력해 주세요."
-                  @keypress.enter.prevent="getSearch(0)"
-                 v-model="word"
-                />
-                <button v-if="word"
-                  type="button"
-                  class="mu-btn mu-btn-delete"
-                  @click="onClickDeleteButton"
-                >
+                <input type="text" class="mu-input" placeholder="테이블을 제외한 컬럼/타 메타 검색결과를 조회하려면 상세필터로 검색하세요"
+                  title="검색어를 입력해 주세요." @keypress.enter.prevent="getSearch(0)" v-model="word" />
+                <button v-if="word" type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButton">
                   <i class="mu-icon-svg item-delete"></i>
                   <span>삭제</span>
                 </button>
-                <button
-                  type="button"
-                  class="mu-btn mu-btn-sch"
-                  @click="getSearch(0)"
-                >
+                <button type="button" class="mu-btn mu-btn-sch" @click="getSearch(0)">
                   <i class="mu-icon-svg search"></i>
                   <span>검색</span>
                 </button>
@@ -67,15 +54,17 @@
             </div>
             <div class="detail-search-form">
               <div class="mu-form mu-form-vertical">
-                <div class="mu-form-item" v-for="(df, idx) in detailFilters" >
+                <div class="mu-form-item" v-for="(df, idx) in detailFilters">
                   <div class="btn-category" v-if="df.content && df.content.length > 0">
                     <div class="mu-checkbox all">
-                      <input :type="df.allChecked ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_'+idx" value="ALL" @change="onChangeCheckBox(idx, $event);" :checked="df.allChecked">
-                      <label :for="'ckb_'+idx"> <span>{{ getRootDescription(idx) }}</span></label>
+                      <input :type="df.allChecked ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_' + idx" value="ALL"
+                        @change="onChangeCheckBox(idx, $event);" :checked="df.allChecked">
+                      <label :for="'ckb_' + idx"> <span>{{ getRootDescription(idx) }}</span></label>
                     </div>
                     <div v-for="(tg, idx2) in df.content" class="mu-checkbox">
-                      <input :type="'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="tg.checked">
-                      <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}</span></label>
+                      <input :type="'checkbox'" :name="idx" :id="'ckbox_' + tg.name" :value="tg.name"
+                        @change="onChangeCheckBox(idx, $event)" :checked="tg.checked">
+                      <label :for="'ckbox_' + tg.name"><span>{{ tg.description }}</span></label>
                     </div>
                   </div>
                 </div>
@@ -83,47 +72,27 @@
             </div>
             <div class="on tab-content">
               <div class="mu-search-group">
-                <div
-                  class="attribute-filter-item"
-                  v-show="showFilterWrap2"
-                  style="display: block;"
-                >
-                  <searchfilter
-                    :filterCnt="filterCnt"
-                    :entityFiltersList="entityFiltersList"
-                    :entityFilterCondition="entityFilterCondition"
-                    :entityFilterCriterion="entityFilterCriterion"
-                    @deleteGroupNothing="deleteGroupNothing()"
-                  />
+                <div class="attribute-filter-item" v-show="showFilterWrap2" style="display: block;">
+                  <searchfilter :filterCnt="filterCnt" :entityFiltersList="entityFiltersList"
+                    :entityFilterCondition="entityFilterCondition" :entityFilterCriterion="entityFilterCriterion"
+                    @deleteGroupNothing="deleteGroupNothing()" />
                 </div>
                 <div class="mu-search-btn">
-                  <button
-                    type="button"
-                    class="mu-btn mu-btn-lg"
-                    @click="resetSearchParam"
-                  >
+                  <button type="button" class="mu-btn mu-btn-lg" @click="resetSearchParam">
                     <span>초기화</span>
                   </button>
-                  <button
-                    type="button"
-                    class="mu-btn mu-btn-lg mu-btn-primary"
-                    @click="getSearch(0)"
-                  >
+                  <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="getSearch(0)">
                     <span>검색</span>
                   </button>
                 </div>
-              </div><div class="open-attribute-filter">
-                  <button
-                    type="button"
-                    title="추가속성필터 열기"
-                    @click="showSearchOptionSub()"
-                    :class="searchOptionSub"
-                    class="mu-btn mu-btn-bg-non btn-attribute-filter-toggle"
-                  >
-                    <i class="mu-icon-svg chevron-down"></i>
-                    <span>추가속성필터</span>
-                  </button>
-                </div>
+              </div>
+              <div class="open-attribute-filter">
+                <button type="button" title="추가속성필터 열기" @click="showSearchOptionSub()" :class="searchOptionSub"
+                  class="mu-btn mu-btn-bg-non btn-attribute-filter-toggle">
+                  <i class="mu-icon-svg chevron-down"></i>
+                  <span>추가속성필터</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -138,10 +107,7 @@
           <div class="data-result-wrap">
             <div class="mu-heading">
               <h4>
-                총<span
-                  ><strong>{{ pagingObj.total }}</strong
-                  >개</span
-                >
+                총<span><strong>{{ pagingObj.total }}</strong>개</span>
               </h4>
               <div class="mu-item-group">
                 <div class="mu-selectbox w160">
@@ -154,7 +120,7 @@
                 </div>
               </div>
             </div>
-            <div class="data-results" >
+            <div class="data-results">
               <ul class="data-box-list" v-if="listData && listData.length > 0">
                 <li class="data-box" v-for="data in listData">
                   <div class="inner-data visual" @click="onSelectDetailPage(data)">
@@ -174,8 +140,8 @@
                     <div class="title-group">
                       <a @click="onSelectDetailPage(data)">
                         <strong class="data-title">{{ data && data.description ? data.description : '' }}</strong>
-                        <p class="data-name"> {{ data && data.meta_name ? data.meta_name : ''}} </p>
-                        <p class="data-desc">{{data && data.user_description ? data.user_description : ''}}</p>
+                        <p class="data-name"> {{ data && data.meta_name ? data.meta_name : '' }} </p>
+                        <p class="data-desc">{{ data && data.user_description ? data.user_description : '' }}</p>
                       </a>
                     </div>
                     <!-- TAGS -->
@@ -186,15 +152,22 @@
                     </div>
                   </div>
                   <div class="inner-data option">
-                    <p >시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
-                    <p v-if="data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
-                    <p v-if="data.system_type && data.qualified_name && data.qualified_name.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualified_name) }}</strong></p>
-                    <p >최종 수집일 : <strong>{{ $yyyyMMddHHmmSS(data.meta_sync_time ? data.meta_sync_time : null) }}</strong></p>
+                    <p>시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
+                    <p
+                      v-if="data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
+                      데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
+                    <p v-if="data.system_type && data.qualified_name && data.qualified_name.split('.')[2]">스키마 :
+                      <strong>{{ getSchemaName(data.qualified_name) }}</strong>
+                    </p>
+                    <p>최종 수집일 : <strong>{{ $yyyyMMddHHmmSS(data.meta_sync_time ? data.meta_sync_time : null) }}</strong>
+                    </p>
                   </div>
                 </li>
               </ul>
               <ul v-else class="data-box-list">
-                <li style="height: 867px; align-content: center;"><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
+                <li style="height: 867px; align-content: center;">
+                  <p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p>
+                </li>
               </ul>
             </div>
             <pagination :paging="pagingObj" @onClickPage="onClickPage" />
@@ -211,7 +184,7 @@ import { useUserStore } from "~/store/user.ts";
 import { useCategoryStore } from "~/store/category.ts";
 import { errorAlert } from "@functional/alert/alert-default.ts";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
-import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
+import { useNuxtApp, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import { useSearchStore } from "@/store/search";
 import searchfilter from "./searchfilter.vue";
@@ -223,14 +196,11 @@ definePageMeta({
 const { $ofetch } = useNuxtApp();
 
 // route
-const route = useRoute();
 const router = useRouter();
 
 // store
 const userStore = useUserStore();
-const user = userStore.getUser;
 const fromPath = userStore.getFromPath;
-const params = userStore.getParams;
 
 const categoryStore = useCategoryStore();
 const getOriginalList = categoryStore.getOriginalList;
@@ -263,7 +233,7 @@ const detailFilters = ref({
     name: '카테고리',
     level: "1",
     content: [
-    {
+      {
         "root": "CATEGORY",
         "rootDescription": "카테고리",
         "id": 1,
@@ -280,15 +250,15 @@ const detailFilters = ref({
     ord: 2,
     name: '시스템 타입',
     content: [
-    {
-      "root": "SYSTEMTYPE",
-      "rootDescription": "시스템 타입",
-      "id": 1,
-      "name": "Postgres",
-      "description": "Postgres",
-      "count": 0,
-      "checked": false,
-    },
+      {
+        "root": "SYSTEMTYPE",
+        "rootDescription": "시스템 타입",
+        "id": 1,
+        "name": "Postgres",
+        "description": "Postgres",
+        "count": 0,
+        "checked": false,
+      },
     ],
     checkedCount: 0
   },
@@ -331,7 +301,6 @@ const word = ref<string>(""); // 검색어
 
 const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
 const meta_type = ref<string>("table"); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미, TABLE만 조회
-const tag = ref<string>(""); // 태그
 const sortBy = ref<string>("create_time") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
@@ -464,7 +433,7 @@ const entityFilterCriterion = ref([
 const entityFilterCondition = ref({
   condition1: [
     { name: '=', description: '=' },
-    { name: '!=', description: '!='},
+    { name: '!=', description: '!=' },
     { name: 'contains', description: 'contains' },
     { name: 'startsWith', description: 'startsWith' },
     { name: 'endsWith', description: 'endsWith' },
@@ -656,7 +625,6 @@ onMounted(async () => {
             await searchStore.setSearchParamsDetailFilters(detailFilters.value)
           }
         }
-
       }
 
       // 추가속성 필터
@@ -683,9 +651,9 @@ const getDetailFilters = async () => {
 
       // 정렬된 순서에 따라 새로운 객체 생성
       keys.forEach(key => {
-          if (res.data[key]) {
-            reorderedObject[key] = res.data[key];
-          }
+        if (res.data[key]) {
+          reorderedObject[key] = res.data[key];
+        }
       });
       detailFilters.value = reorderedObject
 
@@ -841,7 +809,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
         // 1. 검색어에 대한 대표어, 동의어가 없는 경우 항목에서 제거
         let tmpOriginList = originList.filter((el) => el.synonyms && el.synonyms.length > 0)
 
-        for (let i=0; i<tmpOriginList.length; i++) {
+        for (let i = 0; i < tmpOriginList.length; i++) {
           const printSynonymSearchWord = {
             isTerm: true,
             name: tmpOriginList[i].searchWord
@@ -861,7 +829,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
           }
 
           // 중복 동의어 처리
-          for (let j=0; j<tmpOriginList[i].synonyms.length; j++) {
+          for (let j = 0; j < tmpOriginList[i].synonyms.length; j++) {
             const printSynonym = {
               isTerm: false,
               name: tmpOriginList[i].synonyms[j]
@@ -1051,12 +1019,12 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
 
   // 상세필터 항목 사용중인경우 처리
   if (detailFilters.value['CATEGORY']
-      && detailFilters.value['SYSTEMTYPE']
-      && detailFilters.value['ORDER']
-    ) {
+    && detailFilters.value['SYSTEMTYPE']
+    && detailFilters.value['ORDER']
+  ) {
     if (!detailFilters.value['CATEGORY'].allChecked
-        || !detailFilters.value['SYSTEMTYPE'].allChecked
-        || !detailFilters.value['ORDER'].allChecked) {
+      || !detailFilters.value['SYSTEMTYPE'].allChecked
+      || !detailFilters.value['ORDER'].allChecked) {
       return true
     }
   }
@@ -1076,7 +1044,7 @@ const resetSearchParam = (): void => {
   let filterKeys = Object.keys(detailFilters.value)
 
   // 2. 상세필터 내 체크박스상태 false 처리
-  for (let i=0; i<filterKeys.length; i++) {
+  for (let i = 0; i < filterKeys.length; i++) {
     clearFilter(filterKeys[i])
   }
 
@@ -1085,8 +1053,6 @@ const resetSearchParam = (): void => {
   initSubFilter();
   showFilterWrap2.value = true
   showSearchOptionSub();
-
-  // getSearch(0)
 };
 
 // 상세필터 내 카테고리 및 카테고리 초기화
@@ -1105,19 +1071,19 @@ const clearFilter = (key) => {
   } else {
     if (key == '_NOT_CLASSIFIED') {
       leftMenuToggleAndBold("_NOT_CLASSIFIED")
-      detailFilters.value['CATEGORY'].content.forEach((el) => {el.checked = false})
+      detailFilters.value['CATEGORY'].content.forEach((el) => { el.checked = false })
       detailFilters.value['CATEGORY'].allChecked = true
       detailFilters.value['CATEGORY'].checkedCount = 0
       classification.value = {
-      id: "",
-      name: "_NOT_CLASSIFIED",
-      description: "_NOT_CLASSIFIED"
-    };
+        id: "",
+        name: "_NOT_CLASSIFIED",
+        description: "_NOT_CLASSIFIED"
+      };
     }
     return
   }
 
-  detailFilters.value[key].content.forEach((el) => {el.checked = false})
+  detailFilters.value[key].content.forEach((el) => { el.checked = false })
   detailFilters.value[key].allChecked = true
   detailFilters.value[key].checkedCount = 0
 }
@@ -1268,7 +1234,7 @@ const onClickDeleteButton = (): void => {
 const deleteCategoryTag = async (): void => {
   let filterKeys = Object.keys(detailFilters.value)
   // 1. 상세필터 내 체크박스상태 false 처리
-  for (let i=0; i<filterKeys.length; i++) {
+  for (let i = 0; i < filterKeys.length; i++) {
     await clearFilter(filterKeys[i])
   }
 

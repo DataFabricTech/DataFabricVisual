@@ -1,26 +1,19 @@
 <template>
   <div>
-    <board-wrap
-      :post="post"
-      @cancelMethod="onClickListButton"
-      @saveMethod="onClickSaveButton"
-    >
-      <template v-slot:heading><h4>공지사항 수정</h4></template>
-      <template v-slot:caption
-        ><caption>
+    <board-wrap :post="post" @cancelMethod="onClickListButton" @saveMethod="onClickSaveButton">
+      <template v-slot:heading>
+        <h4>공지사항 수정</h4>
+      </template>
+      <template v-slot:caption>
+        <caption>
           공지사항 수정 게시판
-        </caption></template
-      >
+        </caption>
+      </template>
       <template v-slot:file>
         <!-- 첨부파일 : 파일찾기 , 삭제 편집모드 -->
         <div class="mu-file-attach">
-          <input
-            type="text"
-            id="file-name"
-            class="mu-input"
-            placeholder="파일 첨부 크기는 최대 1GB까지 가능합니다."
-            readonly="readonly"
-          />
+          <input type="text" id="file-name" class="mu-input" placeholder="파일 첨부 크기는 최대 1GB까지 가능합니다."
+            readonly="readonly" />
           <div class="mu-file-btn">
             <button type="button" class="mu-btn">
               <label for="file-find">파일찾기</label>
@@ -31,17 +24,10 @@
         <!-- 첨부파일 : 리스트 개발삭제 가능함 -->
         <ul class="file-sch-list">
           <li v-for="(item, index) in files" :key="index">
-            <a v-if="!item.delete_flag" href="#none" title="첨부파일다운로드"
-              ><i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}</a
-            >
-            <button
-              v-if="!item.delete_flag"
-              type="button"
-              class="mu-btn mu-btn-delete"
-              @click="onClickDeleteButton"
-            >
-              <i class="mu-icon-svg item-delete" :id="index"></i
-              ><span>첨부파일 삭제</span>
+            <a v-if="!item.delete_flag" href="#none" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>{{ item.name
+              }}</a>
+            <button v-if="!item.delete_flag" type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButton">
+              <i class="mu-icon-svg item-delete" :id="index"></i><span>첨부파일 삭제</span>
             </button>
           </li>
         </ul>

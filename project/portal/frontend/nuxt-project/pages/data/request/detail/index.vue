@@ -3,7 +3,8 @@
     <div>
       <!-- 제목위치가 컨텐츠 최상단에 위치해야함. -->
       <!-- 관리자에서 상태 변경 시, 상태 라벨(신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply) 변경 -->
-      <strong class="board-title"><em :class="getProcessStyle(dataRequest)">{{ getProcessStatus(dataRequest) }}</em> {{ dataRequest?.title }}</strong>
+      <strong class="board-title"><em :class="getProcessStyle(dataRequest)">{{ getProcessStatus(dataRequest) }}</em> {{
+        dataRequest?.title }}</strong>
 
       <div class="inner">
         <div class="board-wrap">
@@ -44,8 +45,8 @@
                   <th scope="row">신청자</th>
                   <td>
                     <div class="user-info">
-                      <span class="name">{{ dataRequest?.user_nm }}</span
-                      ><span class="team">({{ getDeptNm(dataRequest) }})</span>
+                      <span class="name">{{ dataRequest?.user_nm }}</span><span class="team">({{ getDeptNm(dataRequest)
+                        }})</span>
                     </div>
                   </td>
                 </tr>
@@ -78,7 +79,6 @@
                   <td>
                     <ul class="file-sch-list">
                       <li v-for="(item, index) in files" :key="index">
-                        <!-- <a :href="getDownloadUrl(item.file_id)">  -->
                         <a @click="fileDownload(item.file_id)">
                           <i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}
                         </a>
@@ -89,16 +89,10 @@
               </tbody>
             </table>
             <!-- //mu-formbox -->
-
-            <!-- 상태값이 신청이 아닌경우에만 -->
             <!-- mu-button-wrap -->
             <div v-if="!hasDeletedAnswers" class="mu-button-wrap mb40">
-              <button
-                type="button"
-                class="mu-btn mu-btn-lg"
-                :disabled="dataRequest?.writer !== userStore.getUser.user_id"
-                @click="onClickDeleteButton"
-              >
+              <button type="button" class="mu-btn mu-btn-lg"
+                :disabled="dataRequest?.writer !== userStore.getUser.user_id" @click="onClickDeleteButton">
                 <span>삭제</span>
               </button>
             </div>
@@ -123,34 +117,18 @@
               </div>
             </div>
             <!-- //reply-box -->
-            <!-- 상태값이 신청이 아닌경우에만 -->
           </div>
         </div>
         <!-- mu-button-wrap -->
         <div class="mu-button-wrap">
-          <button
-            v-if="hasDeletedAnswers"
-            type="button"
-            class="mu-btn mu-btn-lg"
-            @click="onClickUpdateButton"
-            :disabled="dataRequest?.writer !== userStore.getUser.user_id"
-          >
-            <span>수정</span></button
-          ><!-- 신청 상태일 경우에만 수정 가능 / 그 외, 삭제만 가능(수정 버튼 미생성) -->
-          <button
-            v-if="hasDeletedAnswers"
-            type="button"
-            class="mu-btn mu-btn-lg"
-            @click="onClickDeleteButton"
-            :disabled="dataRequest?.writer !== userStore.getUser.user_id"
-          >
+          <button v-if="hasDeletedAnswers" type="button" class="mu-btn mu-btn-lg" @click="onClickUpdateButton"
+            :disabled="dataRequest?.writer !== userStore.getUser.user_id">
+            <span>수정</span></button><!-- 신청 상태일 경우에만 수정 가능 / 그 외, 삭제만 가능(수정 버튼 미생성) -->
+          <button v-if="hasDeletedAnswers" type="button" class="mu-btn mu-btn-lg" @click="onClickDeleteButton"
+            :disabled="dataRequest?.writer !== userStore.getUser.user_id">
             <span>삭제</span>
           </button>
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
-            @click="onClickListButton"
-          >
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton">
             <span>목록</span>
           </button>
         </div>
@@ -183,18 +161,18 @@ interface Answer {
 
 interface DataRequest {
   id: number
-	writer: string
-	request_type: number
-	title: string
-	data_name: string
-	contents: string
-	request_start: string
-	request_end: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: number
+  title: string
+  data_name: string
+  contents: string
+  request_start: string
+  request_end: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface File {
@@ -226,15 +204,6 @@ const formatDate = (value: string | number | Date): string => {
 onMounted(() => {
   let id = route.query.id;
   getDataRequestOne(id);
-});
-
-const lastVisibleAnswerIndex = computed(() => {
-  // 마지막 답변 인덱스
-  let index = answerList.value.length - 1;
-  while (index >= 0 && answerList.value[index].process_status == 5) {
-    index--;
-  }
-  return index;
 });
 
 const hasDeletedAnswers = computed(() => {

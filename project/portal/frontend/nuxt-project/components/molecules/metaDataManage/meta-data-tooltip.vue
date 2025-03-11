@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="mu-tooltip arrow-ct"
-    v-show="props.tooltipObj.display"
-    :style="tooltipLocation"
-  >
+  <div class="mu-tooltip arrow-ct" v-show="props.tooltipObj.display" :style="tooltipLocation">
     <div class="mu-tooltip-inner">
       <!-- 좌측 카테고리 목록 컴포넌트 내에서 설정 버튼 클릭 시 -->
       <ul class="item-add-list" v-if="props.tooltipObj.display && props.tooltipObj.type === 'setup'">
@@ -26,12 +22,8 @@
 
       <!-- 테이블 내에서 카테고리 더보기 버튼 클릭 시 -->
       <div class="category-group slim-scroll" v-if="props.tooltipObj.display && props.tooltipObj.type === 'more'">
-        <category-more-label
-          v-for="(category, cIndex) in categories"
-          :category="category"
-          :item="props.tooltipObj.targets"
-          :key="cIndex"
-        />
+        <category-more-label v-for="(category, cIndex) in categories" :category="category"
+          :item="props.tooltipObj.targets" :key="cIndex" />
       </div>
     </div>
   </div>

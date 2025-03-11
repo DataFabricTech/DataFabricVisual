@@ -4,17 +4,10 @@
       <div class="board-list-wrap">
         <div class="mu-heading">
           <!-- board-list-search -->
-          <history-board-list-search
-            :searchObj.sync="searchObj"
-            :startDate="startDate"
-            :endDate="endDate"
-            :historyType="historyType"
-            @updateStartDate="updateStartDate"
-            @updateEndDate="updateEndDate"
-            @searchMethod="getHistoryList"
-            @onClickClearButton="onClickClearButton"
-            @onClickCsvDownload="onClickCsvDownload"
-          />
+          <history-board-list-search :searchObj.sync="searchObj" :startDate="startDate" :endDate="endDate"
+            :historyType="historyType" @updateStartDate="updateStartDate" @updateEndDate="updateEndDate"
+            @searchMethod="getHistoryList" @onClickClearButton="onClickClearButton"
+            @onClickCsvDownload="onClickCsvDownload" />
 
           <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getHistoryList" />
         </div>
@@ -58,7 +51,9 @@
                 <td>{{ item.meta_name ? item.meta_name : "-" }}</td>
                 <td>{{ item.description ? item.description : "-" }}</td>
                 <td>{{ item.download_type ? item.download_type : "-" }}</td>
-                <td><div v-html="yyyyMMddHHmmSSsep(item.download_date)"></div></td>
+                <td>
+                  <div v-html="yyyyMMddHHmmSSsep(item.download_date)"></div>
+                </td>
               </tr>
               <tr v-if="historyList.length === 0">
                 <td colspan="10">
@@ -80,7 +75,7 @@ import PageSize from "@/pages/admin/manager/user/page-size";
 import Pagination from "@functional/pagination/pagination";
 import moment from "moment";
 import { errorAlert } from "@functional/alert/alert-default";
-import {onMounted, watch, reactive, ref} from "vue";
+import { onMounted, watch, reactive, ref } from "vue";
 import HistoryBoardListSearch from "@organisms/history/history-board-list-search.vue";
 
 definePageMeta({
@@ -107,26 +102,26 @@ const historyType = ref("download")
 const historyList = ref([]);
 const searchObj = ref({
   searchTypeList: [
-  {
-    "name": "all",
-    "description": "전체"
-  },
-  {
-    "name": "user_id",
-    "description": "사용자ID"
-  },
-  {
-    "name": "user_name",
-    "description": "사용자명"
-  },
-  {
-    "name": "dept_id",
-    "description": "조직ID"
-  },
-  {
-    "name": "dept_name",
-    "description": "조직명"
-  }],
+    {
+      "name": "all",
+      "description": "전체"
+    },
+    {
+      "name": "user_id",
+      "description": "사용자ID"
+    },
+    {
+      "name": "user_name",
+      "description": "사용자명"
+    },
+    {
+      "name": "dept_id",
+      "description": "조직ID"
+    },
+    {
+      "name": "dept_name",
+      "description": "조직명"
+    }],
   searchType: "all",
   searchWord: "",
 });
@@ -138,16 +133,16 @@ const endDate = ref(moment().format('YYYY-MM-DD')); // 종료년도, 월, 일
 const getHistoryList = async (offset: number = 1): Promise<void> => {
   try {
     await $ofetch(`/api/datastat/history?pageSize=${pagingObj.value.limit}&pnum=${offset}&historyType=${historyType.value}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}&startDate=${startDate.value}&endDate=${endDate.value}`)
-    .then((res) => {
-      if (res && !res.errorMessage) {
-        historyList.value = res.data.list
-        pagingObj.value = {
-          ...pagingObj.value,
-          currentPage: offset,
-          total: res.data.total
+      .then((res) => {
+        if (res && !res.errorMessage) {
+          historyList.value = res.data.list
+          pagingObj.value = {
+            ...pagingObj.value,
+            currentPage: offset,
+            total: res.data.total
+          }
         }
-      }
-    })
+      })
   } catch (error) {
     console.log(error);
   }
@@ -205,25 +200,24 @@ const onClickCsvDownload = async (historyType) => {
 
   // 성공시 {}
   if (res && res.errorMessage && res.errorMessage != "") {
-      errorAlert("CSV 다운로드에 실패하였습니다.")
-      return;
-    }
+    errorAlert("CSV 다운로드에 실패하였습니다.")
+    return;
+  }
 
-    if (res.size && res.size > 0) {
-      await new Response(res).blob().then((data) => {
-        const url = URL.createObjectURL(data);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `${historyType}History` + ".csv");
-        link.style.cssText = "display:none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      })
-    }
+  if (res.size && res.size > 0) {
+    await new Response(res).blob().then((data) => {
+      const url = URL.createObjectURL(data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${historyType}History` + ".csv");
+      link.style.cssText = "display:none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    })
+  }
 }
 
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

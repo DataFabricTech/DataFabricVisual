@@ -12,16 +12,14 @@
           <!-- mu-accordion : 아코디언타입 FAQ리스트 타 질문 클릭 시, 확장된 본 답변 영역이 축소되며 선택된 질문에 대한 답변 영역이 확장됨 / 확장 가능한 답변 영역 총 1개 -->
           <ul class="mu-accordion">
             <li class="mu-accordion-item" v-for="(item, index) in postList" :key="index">
-              <div
-                v-bind:class="[item.showAnswer ? 'active' : '', 'mu-accordion-head']"
-                @click="onClickShowAnswerButton(index)"
-              >
+              <div v-bind:class="[item.showAnswer ? 'active' : '', 'mu-accordion-head']"
+                @click="onClickShowAnswerButton(index)">
                 <!-- <a href="#"> -->
-                  <div class="question">
-                    <span class="ico-question">질문</span>
-                    <em class="data-label">{{ item.category }}</em>
-                    <p class="inner-cms-share" v-html="item.post_content"></p>
-                  </div>
+                <div class="question">
+                  <span class="ico-question">질문</span>
+                  <em class="data-label">{{ item.category }}</em>
+                  <p class="inner-cms-share" v-html="item.post_content"></p>
+                </div>
                 <!-- </a> -->
               </div>
               <div v-if="item.showAnswer" class="mu-accordion-body">

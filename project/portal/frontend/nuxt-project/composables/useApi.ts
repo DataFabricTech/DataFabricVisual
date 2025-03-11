@@ -1,6 +1,6 @@
 // composables/useApi.js
 
-import {useNuxtApp, useRuntimeConfig} from "nuxt/app";
+import { useNuxtApp, useRuntimeConfig } from "nuxt/app";
 
 
 export function useApi() {

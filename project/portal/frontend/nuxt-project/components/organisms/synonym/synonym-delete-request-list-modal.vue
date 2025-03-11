@@ -16,40 +16,42 @@
             <col>
           </colgroup>
           <tbody>
-          <tr v-if="props.isAdmin">
-            <th> 요청자 </th>
-            <td>  {{ props.synonymDeleteRequestOne.user_nm }} </td>
-            <th> 요청일 </th>
-            <td> {{ $yyyyMMddHHmmSS(props.synonymDeleteRequestOne.req_date) }} </td>
-          </tr>
-          <tr>
-            <th scope="row"> 대표어 </th>
-            <td colspan="3">
-              <input type="text" placeholder="" class="mu-input" v-model="props.synonymDeleteRequestOne.term" :disabled="props.isAdmin"/>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">동의어 목록</th>
-            <td colspan="3">
-              <div class="mu-area h125 disabled">
-                <div class="tags-group">
-                  <button type="button" :class="synonymInfo.toggle == true ? 'tag tag-selected' : 'tag'" v-for="(synonymInfo, c_index) in props.synonymOneList" :key="c_index"><span class="tag-label">{{ synonymInfo.synonym }}</span></button>
+            <tr v-if="props.isAdmin">
+              <th> 요청자 </th>
+              <td> {{ props.synonymDeleteRequestOne.user_nm }} </td>
+              <th> 요청일 </th>
+              <td> {{ $yyyyMMddHHmmSS(props.synonymDeleteRequestOne.req_date) }} </td>
+            </tr>
+            <tr>
+              <th scope="row"> 대표어 </th>
+              <td colspan="3">
+                <input type="text" placeholder="" class="mu-input" v-model="props.synonymDeleteRequestOne.term"
+                  :disabled="props.isAdmin" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">동의어 목록</th>
+              <td colspan="3">
+                <div class="mu-area h125 disabled">
+                  <div class="tags-group">
+                    <button type="button" :class="synonymInfo.toggle == true ? 'tag tag-selected' : 'tag'"
+                      v-for="(synonymInfo, c_index) in props.synonymOneList" :key="c_index"><span class="tag-label">{{
+                        synonymInfo.synonym }}</span></button>
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">삭제 요청 사유</th>
-            <td colspan="3">
-              <textarea class="mu-area h100" title="삭제 사유" maxlength="100" v-model="props.synonymDeleteRequestOne.request" disabled />
-            </td>
-          </tr>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">삭제 요청 사유</th>
+              <td colspan="3">
+                <textarea class="mu-area h100" title="삭제 사유" maxlength="100"
+                  v-model="props.synonymDeleteRequestOne.request" disabled />
+              </td>
+            </tr>
           </tbody>
         </table>
         <div class="mu-button-wrap" v-if="props.isAdmin">
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary"
             @click="onClickRequestConfirm(props.synonymDeleteRequestOne)">
             <span>승인</span>
           </button>
@@ -69,7 +71,8 @@
             <tr>
               <th scope="row">반려 사유<strong class="required">필수</strong></th>
               <td>
-                <textarea class="mu-area h100" placeholder="반려 사유를 입력해주세요.(최대 100자)"  title="반려 사유 입력" v-model="response" maxlength="100"></textarea>
+                <textarea class="mu-area h100" placeholder="반려 사유를 입력해주세요.(최대 100자)" title="반려 사유 입력" v-model="response"
+                  maxlength="100"></textarea>
               </td>
             </tr>
           </tbody>
@@ -78,9 +81,7 @@
           <button type="button" class="mu-btn" @click="onClose">
             <span>취소</span>
           </button>
-          <button
-            type="button"
-            class="mu-btn mu-btn-primary"
+          <button type="button" class="mu-btn mu-btn-primary"
             @click="onClickRequestReject(props.synonymDeleteRequestOne)">
             <span>반려</span>
           </button>
@@ -90,9 +91,7 @@
           <button type="button" class="mu-btn" @click="onClose">
             <span>닫기</span>
           </button>
-          <button
-            type="button"
-            class="mu-btn mu-btn-primary"
+          <button type="button" class="mu-btn mu-btn-primary"
             @click="onClickRequestCancel(props.synonymDeleteRequestOne.req_id)">
             <span>요청 취소</span>
           </button>
@@ -100,11 +99,7 @@
 
         <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다 -->
         <div class="mu-dialog-close-btn">
-          <button
-            type="button"
-            class="mu-btn mu-btn-close"
-            title="닫기"
-            @click="onClose">
+          <button type="button" class="mu-btn mu-btn-close" title="닫기" @click="onClose">
             <i class="mu-icon-svg close"></i>
             <span>닫기</span>
           </button>

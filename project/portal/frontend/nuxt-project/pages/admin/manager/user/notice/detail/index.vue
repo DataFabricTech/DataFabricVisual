@@ -11,11 +11,7 @@
         <button type="button" class="mu-btn mu-btn-lg" @click="onClickUpdateButton">
           <span>수정</span>
         </button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickListButton"
-        >
+        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton">
           <span>목록</span>
         </button>
       </div>

@@ -16,28 +16,36 @@
               <col>
             </colgroup>
             <tbody>
-            <tr>
-              <th scope="row"> 대표어 </th>
-              <td>{{ props.synonymOneList[0].term }}</td>
-            </tr>
-            <tr>
-              <th scope="row">동의어 목록</th>
-              <td>
-                <div :class="synonym_delete_error ? 'mu-area h125 error' : 'mu-area h125'"><!-- .error추가 : 에러시 에러문구와 같이  -->
-                  <div class="synonym-keyword tags-group"> <!-- tag-selected 기능 구현 필요 -->
-                    <button v-for="(synonymInfo, c_index) in props.synonymOneList" :key="c_index" type="button" :class="synonymInfo.toggle ? 'tag tag-selected' : 'tag'" @click="toggleSynonym(synonymInfo)" ><span class="tag-label">{{ synonymInfo.synonym }}</span> <i v-if="avaliableDelete(synonymInfo)" class="mu-icon-svg del" @click="deleteMySynonym(synonymInfo)"></i></button>
+              <tr>
+                <th scope="row"> 대표어 </th>
+                <td>{{ props.synonymOneList[0].term }}</td>
+              </tr>
+              <tr>
+                <th scope="row">동의어 목록</th>
+                <td>
+                  <div :class="synonym_delete_error ? 'mu-area h125 error' : 'mu-area h125'">
+                    <!-- .error추가 : 에러시 에러문구와 같이  -->
+                    <div class="synonym-keyword tags-group"> <!-- tag-selected 기능 구현 필요 -->
+                      <button v-for="(synonymInfo, c_index) in props.synonymOneList" :key="c_index" type="button"
+                        :class="synonymInfo.toggle ? 'tag tag-selected' : 'tag'"
+                        @click="toggleSynonym(synonymInfo)"><span class="tag-label">{{ synonymInfo.synonym }}</span> <i
+                          v-if="avaliableDelete(synonymInfo)" class="mu-icon-svg del"
+                          @click="deleteMySynonym(synonymInfo)"></i></button>
+                    </div>
                   </div>
-                </div>
-                <p v-if="synonym_delete_error" class="complete-msg error">{{ synonym_error_msg }}</p> <!-- 에러문구노출 -->
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">삭제 요청 사유<strong class="required">필수</strong></th>
-              <td>
-                <textarea :class="synonym_error_msg2 != '' ? 'mu-area h100 error' : 'mu-area h100'" placeholder="삭제 사유를 입력해주세요.(최대 100자)" title="삭제 사유 입력" maxlength="100" v-model="deleteReason" ></textarea>
-                <p v-if="synonym_delete_error2" class="complete-msg error bul-refer">{{ synonym_error_msg2 }}</p> <!-- 에러문구노출 -->
-              </td>
-            </tr>
+                  <p v-if="synonym_delete_error" class="complete-msg error">{{ synonym_error_msg }}</p> <!-- 에러문구노출 -->
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">삭제 요청 사유<strong class="required">필수</strong></th>
+                <td>
+                  <textarea :class="synonym_error_msg2 != '' ? 'mu-area h100 error' : 'mu-area h100'"
+                    placeholder="삭제 사유를 입력해주세요.(최대 100자)" title="삭제 사유 입력" maxlength="100"
+                    v-model="deleteReason"></textarea>
+                  <p v-if="synonym_delete_error2" class="complete-msg error bul-refer">{{ synonym_error_msg2 }}</p>
+                  <!-- 에러문구노출 -->
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -46,20 +54,13 @@
           <button type="button" class="mu-btn" @click="onClose()">
             <span>취소</span>
           </button>
-          <button
-            type="button"
-            class="mu-btn mu-btn-primary"
-            @click="onClickRequest()">
+          <button type="button" class="mu-btn mu-btn-primary" @click="onClickRequest()">
             <span>요청</span>
           </button>
         </div>
         <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다 -->
         <div class="mu-dialog-close-btn">
-          <button
-            type="button"
-            class="mu-btn mu-btn-close"
-            title="해당 팝업 닫기"
-            @click="onClose()">
+          <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose()">
             <i class="mu-icon-svg close"></i>
             <span>팝업닫기</span>
           </button>
@@ -72,7 +73,7 @@
 <script setup lang="ts">
 import { successAlert } from "@/components/functional/alert/alert-default";
 import { errorAlert, confirmAlert } from "@functional/alert/alert-default";
-import {useUserStore} from "@/store/user";
+import { useUserStore } from "@/store/user";
 
 const { $ofetch } = useNuxtApp()
 
@@ -164,21 +165,21 @@ const onClickRequest = async () => {
     request: deleteReason.value,
   }
 
-    // 동의어 삭제 요청처리
-    await $ofetch('/api/synonym/requestDeleteSynonym', {
-      method: 'POST',
-      body: params
-    }).then(async (res) => {
-      if (res && res.errorMessage) {
-        await errorAlert('동의어 삭제요청에 실패하였습니다.')
-      } else {
-        await successAlert('동의어 삭제요청이 완료되었습니다.')
-      }
+  // 동의어 삭제 요청처리
+  await $ofetch('/api/synonym/requestDeleteSynonym', {
+    method: 'POST',
+    body: params
+  }).then(async (res) => {
+    if (res && res.errorMessage) {
+      await errorAlert('동의어 삭제요청에 실패하였습니다.')
+    } else {
+      await successAlert('동의어 삭제요청이 완료되었습니다.')
+    }
 
-    }).catch((error) => {
-      errorAlert('동의어 삭제요청에 실패하였습니다.')
-      console.log(error)
-    })
+  }).catch((error) => {
+    errorAlert('동의어 삭제요청에 실패하였습니다.')
+    console.log(error)
+  })
 
 
   // 초기화

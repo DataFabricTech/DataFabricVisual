@@ -1,31 +1,21 @@
 <template>
-  <div :class="props.isAdmin ? 'data-box-wrap' : ''" :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''"
+    :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
         <h4>태그/키워드</h4>
         <div class="mu-item-group">
-          <button
-            type="button"
-            class="mu-btn mu-btn-bg-non btn-section-toggle"
-            title="접기"
-            @click="toggleShowData()"
-            style="margin-left: 10px"
-          >
+          <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
+            style="margin-left: 10px">
             <span>{{ toggleShowDataText }}</span>
           </button>
         </div>
       </div>
       <div class="tags-setting" v-show="showData">
         <div v-if="props.list.length > 0" class="tags-group">
-          <div
-            v-if="props.list.length > 0"
-            v-for="(tag, index) in props.list"
-            :key="index"
-            class="tag"
-          >
+          <div v-if="props.list.length > 0" v-for="(tag, index) in props.list" :key="index" class="tag">
             <span class="tag-label">{{ tag }}</span>
-            <button type="button" class="mu-btn mu-btn-delete" v-if="props.isAdmin"
-              @click="onClickDeleteTag(tag)">
+            <button type="button" class="mu-btn mu-btn-delete" v-if="props.isAdmin" @click="onClickDeleteTag(tag)">
               <i class="mu-icon-svg item-delete"></i><span>삭제</span>
             </button>
           </div>
@@ -33,16 +23,8 @@
       </div>
       <div v-if="props.isAdmin" class="mt20 overflow-auto">
         <div class="mu-item-group fr">
-          <tag-auto-select
-            :disabled="false"
-            :options="props.allTagList"
-            @setData="onChangeTag"
-          />
-          <button
-            type="button"
-            class="mu-btn mu-btn-primary"
-            @click="addSelectedTag()"
-          >
+          <tag-auto-select :disabled="false" :options="props.allTagList" @setData="onChangeTag" />
+          <button type="button" class="mu-btn mu-btn-primary" @click="addSelectedTag()">
             <span>추가</span>
           </button>
         </div>
@@ -53,9 +35,8 @@
 
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
-import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import { errorAlert } from "@functional/alert/alert-default";
 import TagAutoSelect from "@functional/autoSelect/tag-auto-select";
-import { useUserStore } from "~/store/user";
 
 const { $ofetch } = useNuxtApp();
 
@@ -76,8 +57,6 @@ const toggleShowData = () => {
   }
 };
 
-// 랜더링 후 안보이도록 하기 위함
-// onMounted(() => { showData.value = false})
 onMounted(() => {
 })
 
@@ -92,20 +71,20 @@ const onClickDeleteTag = async (tag) => {
   try {
     const params = {
       guid: guid.value,
-      tagList : chgTagList,
-      deleteTagList : delTagList
+      tagList: chgTagList,
+      deleteTagList: delTagList
     };
 
     await $ofetch(`/api/admin/system/tagManager/map`, {
-        method: "POST",
-        body: params,
+      method: "POST",
+      body: params,
     }).then((res) => {
-        if (!res || res.isFailed) {
-          const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
-          errorAlert(msg);
-        }else {
-          emit("reload");
-        }
+      if (!res || res.isFailed) {
+        const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+        errorAlert(msg);
+      } else {
+        emit("reload");
+      }
     });
   } catch (error) {
     console.error(error);
@@ -114,26 +93,26 @@ const onClickDeleteTag = async (tag) => {
 }
 
 const addSelectedTag = async () => {
-  if(!validateTag()){
+  if (!validateTag()) {
     return;
   }
 
   try {
     const params = {
       guid: guid.value,
-      tagList : [selectedTagName.value]
+      tagList: [selectedTagName.value]
     };
 
     await $ofetch(`/api/admin/system/tagManager/map`, {
-        method: "PUT",
-        body: params,
+      method: "PUT",
+      body: params,
     }).then((res) => {
-        if (!res || res.isFailed) {
-          const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
-          errorAlert(msg);
-        }else {
-          emit("reload");
-        }
+      if (!res || res.isFailed) {
+        const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+        errorAlert(msg);
+      } else {
+        emit("reload");
+      }
     });
   } catch (error) {
     console.error(error);
@@ -141,8 +120,8 @@ const addSelectedTag = async () => {
   }
 }
 
-const validateTag = ():boolean => {
-  if(!selectedTagName.value){
+const validateTag = (): boolean => {
+  if (!selectedTagName.value) {
     errorAlert("추가할 태그를 입력하세요.");
     return false;
   }
@@ -158,12 +137,16 @@ const onChangeTag = (option) => {
 </script>
 <style lang="scss" scoped>
 .flex-container {
-  display: flex; /* 가로로 나란히 배치 */
-  justify-content: flex-end; /* 오른쪽 정렬 */
-  align-items: center; /* 세로로 가운데 정렬 */
+  display: flex;
+  /* 가로로 나란히 배치 */
+  justify-content: flex-end;
+  /* 오른쪽 정렬 */
+  align-items: center;
+  /* 세로로 가운데 정렬 */
 }
 
 .w260 {
-  margin-right: 10px; /* 여백 추가 */
+  margin-right: 10px;
+  /* 여백 추가 */
 }
 </style>

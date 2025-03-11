@@ -1,45 +1,21 @@
 <template>
   <div class="inner-search" id="parent-div" ref="parentDiv">
     <div class="mu-input-icon">
-      <input
-        type="text"
-        :class="inputClass"
-        :placeholder="props.placeholder"
-        :disabled="props.disabled"
-        :value="selectedOption.description"
-        @input="onChangeInput"
-        @focus="toggleOptionList(true)"
-        @blur="toggleOptionList(false)"
-        @keypress.enter="onEnterKeyUp"
-      />
-      <button
-        type="button"
-        class="mu-btn mu-btn-delete"
-        v-show="showDeleteButton"
-        @click="onClickDelete"
-      >
+      <input type="text" :class="inputClass" :placeholder="props.placeholder" :disabled="props.disabled"
+        :value="selectedOption.description" @input="onChangeInput" @focus="toggleOptionList(true)"
+        @blur="toggleOptionList(false)" @keypress.enter="onEnterKeyUp" />
+      <button type="button" class="mu-btn mu-btn-delete" v-show="showDeleteButton" @click="onClickDelete">
         <i class="mu-icon-svg item-delete"></i>
         <span>삭제</span>
       </button>
     </div>
-    <div
-      class="option-box slim-scroll"
-      v-show="showOptions"
-      :style="`width: ${width}px;`"
-    >
+    <div class="option-box slim-scroll" v-show="showOptions" :style="`width: ${width}px;`">
       <ul class="mu-list">
         <li v-if="noResult" :style="optionItemStyle">
           <div>검색 결과가 없습니다.</div>
         </li>
-        <li
-          v-else
-          v-for="(option, index) in optionList"
-          :key="index"
-          :value="option.value"
-          :style="optionItemStyle"
-          class="option-item"
-          @mousedown="setSelectedOption(option)"
-        >
+        <li v-else v-for="(option, index) in optionList" :key="index" :value="option.value" :style="optionItemStyle"
+          class="option-item" @mousedown="setSelectedOption(option)">
           <div v-if="!props.descOnly" class="item-container">
             <p class="item-value">{{ option.description }}</p>&nbsp;
             <p class="item-desc">({{ option.name }})</p>
@@ -82,8 +58,6 @@ const isInvalid = ref(false); // input 입력값 유효성 여부 flag
 
 onMounted(() => {
   // 옵션 목록 div에 대하여 width: inherit 속성이 유효하지 않아 아래와 같이 처리
-  // const parent = document.querySelector("#parent-div");
-  // width.value = parent.clientWidth;  
   nextTick(() => {
     if (parentDiv.value) {
       width.value = parentDiv.value.clientWidth;
@@ -120,7 +94,7 @@ const optionItemStyle = () => {
 
 // Input 값 변경 이벤트 핸들러
 const onChangeInput = (e) => {
-  const { target: { value } } = e;    
+  const { target: { value } } = e;
   let localIsInvalid = false;
 
   const localSelectedOption = JSON.parse(JSON.stringify(selectedOption.value));
@@ -134,8 +108,8 @@ const onChangeInput = (e) => {
     localIsInvalid = true;
 
     // 부모 컴포넌트의 validation 통과하지 않도록 value값 초기화
-    if (localSelectedOption.value) {      
-      localSelectedOption.value = "" ;
+    if (localSelectedOption.value) {
+      localSelectedOption.value = "";
     }
   }
 
@@ -151,7 +125,7 @@ const setOptionList = (newValue) => {
     const { description, value } = el;
 
     return description.includes(newValue) ||
-        value.toUpperCase().includes(newValue.toUpperCase());    
+      value.toUpperCase().includes(newValue.toUpperCase());
   });
 
   optionList.value = localOptionList;
@@ -238,7 +212,9 @@ const onEnterKeyUp = () => {
 }
 
 .item-container {
-  display: flex; /* 좌우 배치를 위한 flexbox 설정 */
-  align-items: center; /* 내용의 수직 정렬 (중앙 정렬) */
+  display: flex;
+  /* 좌우 배치를 위한 flexbox 설정 */
+  align-items: center;
+  /* 내용의 수직 정렬 (중앙 정렬) */
 }
 </style>

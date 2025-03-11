@@ -1,7 +1,5 @@
 <template>
-  <!-- <div class="contents"> -->
-      <search-detail :isAdmin="false" />
-  <!-- </div> -->
+  <search-detail :isAdmin="false" />
 </template>
 
 <script setup lang="ts">

@@ -4,19 +4,11 @@
       <h4 v-if="props.nodeField == 'from'">이전 노드 정보</h4>
       <h4 v-if="props.nodeField == 'to'">이후 노드 정보</h4>
       <div class="mu-item-group">
-        <button
-          v-if="props.selectedId"
-          @click="emit('addModalShow')"
-          type="button"
-          class="mu-btn mu-btn-sm mu-btn-primary"
-        >
+        <button v-if="props.selectedId" @click="emit('addModalShow')" type="button"
+          class="mu-btn mu-btn-sm mu-btn-primary">
           <span>추가</span>
         </button>
-        <div
-          v-if="selectedData.length > 0"
-          @click="deletenodelist()"
-          class="mu-btn mu-btn-sm"
-        >
+        <div v-if="selectedData.length > 0" @click="deletenodelist()" class="mu-btn mu-btn-sm">
           <span>삭제</span>
         </div>
         <div v-if="selectedData.length == 0" class="mu-btn mu-btn-sm">
@@ -40,16 +32,9 @@
           <tr>
             <th scope="col">
               <div class="mu-checkbox">
-                <input
-                  type="checkbox"
-                  :id="'ckb-' + props.nodeField"
-                  title="전체선택"
-                  :checked="
-                    props.NodeLinks.length > 0 &&
-                    selectedData.length === props.NodeLinks.length
-                  "
-                  @click.stop="(e) => onToggleCheckbox(e, true)"
-                />
+                <input type="checkbox" :id="'ckb-' + props.nodeField" title="전체선택" :checked="props.NodeLinks.length > 0 &&
+                  selectedData.length === props.NodeLinks.length
+                  " @click.stop="(e) => onToggleCheckbox(e, true)" />
                 <label :for="'ckb-' + props.nodeField">
                   <span class="blind">전체선택</span>
                 </label>
@@ -65,13 +50,8 @@
           <tr v-for="(node, index) in props.NodeLinks" :key="index">
             <td>
               <div class="mu-checkbox">
-                <input
-                  type="checkbox"
-                  title="행선택"
-                  :id="props.nodeField + '-checkbox-' + index"
-                  :checked="isChecked(node)"
-                  @click.stop="(e) => onToggleCheckbox(e, false, node)"
-                />
+                <input type="checkbox" title="행선택" :id="props.nodeField + '-checkbox-' + index"
+                  :checked="isChecked(node)" @click.stop="(e) => onToggleCheckbox(e, false, node)" />
                 <label :for="props.nodeField + '-checkbox-' + index">
                   <span class="blind">행선택</span>
                 </label>
@@ -79,8 +59,7 @@
             </td>
             <td>
               <span class="mu-ellipsis" :title="node[props.nodeField + '_node_id']">
-                {{ node[props.nodeField + "_node_id"] ? node[props.nodeField + "_node_id"] : "-" }}</span
-              >
+                {{ node[props.nodeField + "_node_id"] ? node[props.nodeField + "_node_id"] : "-" }}</span>
             </td>
             <td>
               <span class="mu-ellipsis" :title="node[props.nodeField + '_node_name']">
@@ -89,22 +68,14 @@
             </td>
             <td>
               <div class="mu-tooltip-icon">
-                <i
-                  :id="'img' + index"
-                  class="mu-icon-svg view"
-                  @mouseover="showTooltip(index)"
-                  @mouseleave="hideTooltip()"
-                ></i>
-                <div
-                  class="mu-tooltip arrow-ct w400"
-                  v-if="show && hoveredIndex == index"
-                  :style="{
-                    position: 'fixed',
-                    left: mouseX - 325 + 'px',
-                    top: mouseY + 'px',
-                    'z-index': 9999,
-                  }"
-                >
+                <i :id="'img' + index" class="mu-icon-svg view" @mouseover="showTooltip(index)"
+                  @mouseleave="hideTooltip()"></i>
+                <div class="mu-tooltip arrow-ct w400" v-if="show && hoveredIndex == index" :style="{
+                  position: 'fixed',
+                  left: mouseX - 325 + 'px',
+                  top: mouseY + 'px',
+                  'z-index': 9999,
+                }">
                   <div class="mu-tooltip-inner">
                     <div class="data-info2">
                       <dl>
@@ -121,7 +92,9 @@
                       <dl>
                         <dt>DB 명</dt>
                         <dd v-if="node.tooltip && node.tooltip.db_name">{{ node.tooltip.db_name }}</dd>
-                        <dd v-else-if="node.tooltip && node.tooltip.qualified_name">{{ node.tooltip.qualified_name.split(".")[1] ? node.tooltip.qualified_name.split(".")[1] : "-" }}</dd>
+                        <dd v-else-if="node.tooltip && node.tooltip.qualified_name">{{
+                          node.tooltip.qualified_name.split(".")[1] ? node.tooltip.qualified_name.split(".")[1] : "-" }}
+                        </dd>
                         <dd v-else>-</dd>
                       </dl>
                       <dl>
@@ -146,11 +119,7 @@
               </div>
             </td>
             <td>
-              <button
-                type="button"
-                class="mu-btn mu-btn-sm"
-                @click="emit('selectEntity', node)"
-              >
+              <button type="button" class="mu-btn mu-btn-sm" @click="emit('selectEntity', node)">
                 선택
               </button>
             </td>
@@ -159,7 +128,7 @@
         <tbody v-if="props.NodeLinks.length == 0">
           <tr>
             <td colspan="5">
-              <p class="nodata" >노드 정보가 없습니다.</p>
+              <p class="nodata">노드 정보가 없습니다.</p>
             </td>
           </tr>
         </tbody>

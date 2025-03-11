@@ -19,10 +19,8 @@
       <tbody>
         <tr>
           <th scope="col">행수</th>
-          <!-- <th scope="col">테이블 크기(Byte)</th> -->
           <td>{{ comman(table.num_rows) }}</td>
           <th scope="col">테이블프로파일링 일시</th>
-          <!-- <td>{{ table.total_size | numberComma }}</td> -->
           <td>{{ $yyyyMMddHHmmSS(table.update_date) }}</td>
         </tr>
       </tbody>
@@ -46,13 +44,9 @@ const toggleShowData = () => {
   }
 };
 
-// 랜더링 후 안보이도록 하기 위함
-// onMounted(() => { showData.value = false})
-
 const table = computed(() =>
   ObjectUtils.getPropertyValue(props.dataProfile, "table", {})
 );
-const showArea = computed(() => Object.keys(table.value).length > 0);
 
 const comman = (val) => {
   if (val !== undefined) {

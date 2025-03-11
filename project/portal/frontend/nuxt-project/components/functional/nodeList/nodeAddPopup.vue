@@ -8,16 +8,10 @@
       <div class="tab-area">
         <div class="mu-tab-box sub-tab">
           <ul class="mu-tab">
-            <li
-              v-bind:class="{ active: currentTab == '데이터베이스' }"
-              @click="changeTab1('데이터베이스')"
-            >
+            <li v-bind:class="{ active: currentTab == '데이터베이스' }" @click="changeTab1('데이터베이스')">
               <a>데이터베이스</a>
             </li>
-            <li
-              v-bind:class="{ active: currentTab == '직접입력' }"
-              @click="changeTab1('직접입력')"
-            >
+            <li v-bind:class="{ active: currentTab == '직접입력' }" @click="changeTab1('직접입력')">
               <a>직접입력</a>
             </li>
           </ul>
@@ -40,19 +34,9 @@
                       </select>
                     </div>
                     <div class="mu-input-icon">
-                      <input
-                        type="text"
-                        v-model="searchWord"
-                        placeholder="Search"
-                        title="검색어입력"
-                        class="mu-input"
-                        @keypress.enter.prevent="searchNode(0)"
-                      />
-                      <button
-                        type="button"
-                        class="mu-btn mu-btn-sch"
-                        @click="searchNode(0)"
-                      >
+                      <input type="text" v-model="searchWord" placeholder="Search" title="검색어입력" class="mu-input"
+                        @keypress.enter.prevent="searchNode(0)" />
+                      <button type="button" class="mu-btn mu-btn-sch" @click="searchNode(0)">
                         <i class="mu-icon-svg search"></i>
                         <span>검색</span>
                       </button>
@@ -64,11 +48,7 @@
             <div class="mu-heading">
               <h4>노드 선택</h4>
             </div>
-            <div
-              class="board-list table-scroll h490 slim-scroll"
-              ref="tableWrapper"
-              @scroll="handleScroll"
-            >
+            <div class="board-list table-scroll h490 slim-scroll" ref="tableWrapper" @scroll="handleScroll">
               <table class="mu-grid">
                 <colgroup>
                   <col style="width: 40px" />
@@ -79,16 +59,9 @@
                   <tr>
                     <th scope="col">
                       <div class="mu-checkbox">
-                        <input
-                          type="checkbox"
-                          id="ckbAdd"
-                          title="전체선택"
-                          :checked="
-                            nodeList.length > 0 &&
-                            selectedAddData.length === nodeList.length
-                          "
-                          @click.stop="(e) => onToggleAddCheckbox(e, true, null)"
-                        />
+                        <input type="checkbox" id="ckbAdd" title="전체선택" :checked="nodeList.length > 0 &&
+                          selectedAddData.length === nodeList.length
+                          " @click.stop="(e) => onToggleAddCheckbox(e, true, null)" />
                         <label for="ckbAdd">
                           <span class="blind">전체선택</span>
                         </label>
@@ -100,19 +73,11 @@
                   </tr>
                 </thead>
                 <tbody v-if="nodeList && nodeList.length > 0">
-                  <tr
-                    v-for="(node, index) in nodeList"
-                    :key="index"
-                  >
+                  <tr v-for="(node, index) in nodeList" :key="index">
                     <td v-if="isNodeValid(node)">
                       <div class="mu-checkbox">
-                        <input
-                          type="checkbox"
-                          title="행선택"
-                          :id="'chkAdd_' + index"
-                          :checked="isAddChecked(node)"
-                          @click.stop="(e) => onToggleAddCheckbox(e, false, node)"
-                        />
+                        <input type="checkbox" title="행선택" :id="'chkAdd_' + index" :checked="isAddChecked(node)"
+                          @click.stop="(e) => onToggleAddCheckbox(e, false, node)" />
                         <label :for="'chkAdd_' + index">
                           <span class="blind">행선택</span>
                         </label>
@@ -130,21 +95,14 @@
                     </td>
                     <td>
                       <div class="mu-tooltip-icon">
-                        <i
-                          :id="'img' + index"
-                          class="mu-icon-svg view"
-                          @mouseover="showTooltip(index)"
-                          @mouseleave="hideTooltip()"
-                        ></i>
-                        <div
-                          class="mu-tooltip arrow-ct w400"
-                          v-if="isTooltipVisible && hoveredAddIndex == index"
+                        <i :id="'img' + index" class="mu-icon-svg view" @mouseover="showTooltip(index)"
+                          @mouseleave="hideTooltip()"></i>
+                        <div class="mu-tooltip arrow-ct w400" v-if="isTooltipVisible && hoveredAddIndex == index"
                           :style="{
                             position: 'fixed',
                             left: mouseX - 400 + 'px',
                             top: mouseY + 'px',
-                          }"
-                        >
+                          }">
                           <div class="mu-tooltip-inner">
                             <div class="data-info2">
                               <dl>
@@ -157,7 +115,8 @@
                               </dl>
                               <dl>
                                 <dt>DB 명</dt>
-                                <dd>{{ node.qualified_name ? (node.qualified_name.split(".")[1] ? node.qualified_name.split(".")[1] : "-") : "-" }}</dd>
+                                <dd>{{ node.qualified_name ? (node.qualified_name.split(".")[1] ?
+                                  node.qualified_name.split(".")[1] : "-") : "-" }}</dd>
                               </dl>
                               <dl>
                                 <dt>DB 종류</dt>
@@ -203,14 +162,10 @@
                 <th scope="row">노드 ID<strong class="required">필수</strong></th>
                 <td>
                   <div class="mu-item-group">
-                    <input
-                      type="text"
-                      v-model="add_node_id"
-                      placeholder="노드ID를 입력하세요."
-                      @input="resetCheckDuplicate"
-                      class="mu-input"
-                    />
-                    <button v-if="add_node_id && add_node_id.length > 0" type="button" class="mu-btn" @click="searchSameThing()">
+                    <input type="text" v-model="add_node_id" placeholder="노드ID를 입력하세요." @input="resetCheckDuplicate"
+                      class="mu-input" />
+                    <button v-if="add_node_id && add_node_id.length > 0" type="button" class="mu-btn"
+                      @click="searchSameThing()">
                       <span>중복확인</span>
                     </button>
                     <button v-else type="button" class="mu-btn" @click="createNewSystemId()">
@@ -231,25 +186,13 @@
               <tr>
                 <th scope="row">노드 이름</th>
                 <td>
-                  <input
-                    type="text"
-                    value=""
-                    v-model="add_node_name"
-                    placeholder="노드이름을 입력하세요."
-                    class="mu-input"
-                  />
+                  <input type="text" value="" v-model="add_node_name" placeholder="노드이름을 입력하세요." class="mu-input" />
                 </td>
               </tr>
               <tr>
                 <th scope="row">DB 이름</th>
                 <td>
-                  <input
-                    type="text"
-                    value=""
-                    v-model="add_db_name"
-                    placeholder="DB 이름을 입력하세요."
-                    class="mu-input"
-                  />
+                  <input type="text" value="" v-model="add_db_name" placeholder="DB 이름을 입력하세요." class="mu-input" />
                 </td>
               </tr>
               <tr>
@@ -265,16 +208,8 @@
               <tr>
                 <th scope="row">테이블 설명<br />(데이터 설명)</th>
                 <td>
-                  <textarea
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="6"
-                    class="mu-area h100"
-                    maxlength="50"
-                    v-model="add_table_description"
-                    placeholder="테이블 설명을 입력하세요. (최대 50자)"
-                  ></textarea>
+                  <textarea name="" id="" cols="30" rows="6" class="mu-area h100" maxlength="50"
+                    v-model="add_table_description" placeholder="테이블 설명을 입력하세요. (최대 50자)"></textarea>
                 </td>
               </tr>
             </tbody>
@@ -285,51 +220,28 @@
     <pagination v-show="currentTab == '데이터베이스'" :paging="pagingObj" @onClickPage="onClickPage" />
 
     <div class="mu-dialog-foot">
-      <button
-        v-if="props.addValue == 'from' && currentTab == '데이터베이스'"
-        @click="AddFromNode()"
-        type="button"
-        class="mu-btn mu-btn-primary"
-      >
+      <button v-if="props.addValue == 'from' && currentTab == '데이터베이스'" @click="AddFromNode()" type="button"
+        class="mu-btn mu-btn-primary">
         <span>추가</span>
       </button>
-      <button
-        v-if="props.addValue == 'to' && currentTab == '데이터베이스'"
-        @click="AddToNode()"
-        type="button"
-        class="mu-btn mu-btn-primary"
-      >
+      <button v-if="props.addValue == 'to' && currentTab == '데이터베이스'" @click="AddToNode()" type="button"
+        class="mu-btn mu-btn-primary">
         <span>추가</span>
       </button>
-      <button
-        v-if="props.addValue == 'from' && currentTab == '직접입력'"
-        @click="addSelfFromNode()"
-        class="mu-btn mu-btn-primary"
-        :disabled="
-          !(!isDuplicate && add_node_id != '' && checkDuplicate)
-        "
-      >
+      <button v-if="props.addValue == 'from' && currentTab == '직접입력'" @click="addSelfFromNode()"
+        class="mu-btn mu-btn-primary" :disabled="!(!isDuplicate && add_node_id != '' && checkDuplicate)
+          ">
         추가
       </button>
-      <button
-        v-if="props.addValue == 'to' && currentTab == '직접입력'"
-        @click="addSelfToNode()"
-        class="mu-btn mu-btn-primary"
-        :disabled="
-          !(!isDuplicate && add_node_id != '' && checkDuplicate)
-        "
-      >
+      <button v-if="props.addValue == 'to' && currentTab == '직접입력'" @click="addSelfToNode()"
+        class="mu-btn mu-btn-primary" :disabled="!(!isDuplicate && add_node_id != '' && checkDuplicate)
+          ">
         추가
       </button>
     </div>
     <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
     <div class="mu-dialog-close-btn">
-      <button
-        type="button"
-        class="mu-btn mu-btn-close"
-        title="해당 팝업 닫기"
-        @click="onAddClose()"
-      >
+      <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onAddClose()">
         <i class="mu-icon-svg close"></i><span>팝업닫기</span>
       </button>
     </div>
@@ -338,7 +250,7 @@
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
 import pagination from "@functional/pagination/pagination.vue";
-import { onBeforeMount, onMounted, onUnmounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useNuxtApp } from "nuxt/app";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -378,7 +290,6 @@ const checkDuplicate = ref<boolean>(false);
 const newListLength = ref<number>(1);
 const dbList = ref(["Postgres"])
 const add_db_type = ref<string>('Postgres');
-const tooltipStyle = ref<any>(null);
 const mouseX = ref<number>(0);
 const mouseY = ref<number>(0);
 
@@ -405,8 +316,9 @@ const getDbType = async () => {
   await $ofetch(`/api/node/getDbList`).then((res) => {
     if (res && !res.errorMessage) {
       dbList.value = res.data
-    }}).catch((err) => {
-      console.log(err)
+    }
+  }).catch((err) => {
+    console.log(err)
   });
 }
 
@@ -453,7 +365,7 @@ const isNodeValid = async (node) => {
   } else {
     let id = ObjectUtils.getPropertyValue(node, "id", '');
 
-    if(id !== ''){
+    if (id !== '') {
       return id !== props.selectedId;
     } else {
       return true;

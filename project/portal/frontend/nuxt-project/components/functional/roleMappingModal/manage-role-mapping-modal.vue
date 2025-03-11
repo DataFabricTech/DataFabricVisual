@@ -21,7 +21,8 @@
                 </th>
                 <td>
                   <div class="mu-radio" v-for="(authType, idx) in authTypeList">
-                    <input type="radio" :id="'rd_' + idx" name="authTypeSelect" :value="authType.id" v-model="currentAuthType"/>
+                    <input type="radio" :id="'rd_' + idx" name="authTypeSelect" :value="authType.id"
+                      v-model="currentAuthType" />
                     <label :for="'rd_' + idx"><span>{{ authType.description }}</span></label>
                   </div>
                 </td>
@@ -33,11 +34,7 @@
       </div>
       <div class="mu-dialog-foot">
         <button type="button" class="mu-btn" @click="onCancel"><span>취소</span></button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-primary"
-          @click="onConfirm"
-        >
+        <button type="button" class="mu-btn mu-btn-primary" @click="onConfirm">
           <span>확인</span>
         </button>
       </div>
@@ -52,11 +49,9 @@
 </template>
 
 <script setup lang="ts">
-import { errorAlert } from "@functional/alert/alert-default";
 import { useNuxtApp } from "nuxt/app";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
-const { $ofetch } = useNuxtApp();
 const emit = defineEmits(["onCloseModal", "onSubmit"]);
 const props = defineProps(["authModal", "currentAuthType"]);
 
@@ -65,10 +60,10 @@ const authTypeList = ref([
   {
     id: 0,
     description: "secret"
-  },{
+  }, {
     id: 1,
     description: "public"
-  },{
+  }, {
     id: 2,
     description: "private"
   },

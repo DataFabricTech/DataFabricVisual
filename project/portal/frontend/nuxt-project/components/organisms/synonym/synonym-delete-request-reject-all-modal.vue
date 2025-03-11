@@ -22,7 +22,8 @@
             <tr v-if="isAdmin">
               <th scope="row">반려 사유<strong class="required">필수</strong></th>
               <td>
-                <textarea class="mu-area h100" title="동의어 삭제 요청 반려 사유" placeholder="반려 사유를 작성해 주세요.(최대 100자)" v-model="response"/>
+                <textarea class="mu-area h100" title="동의어 삭제 요청 반려 사유" placeholder="반려 사유를 작성해 주세요.(최대 100자)"
+                  v-model="response" />
               </td>
             </tr>
           </tbody>
@@ -36,13 +37,9 @@
           <span>반려</span>
         </button>
       </div>
-        <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다 -->
+      <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다 -->
       <div class="mu-dialog-close-btn">
-        <button
-          type="button"
-          class="mu-btn mu-btn-close"
-          title="닫기"
-          @click="onClose">
+        <button type="button" class="mu-btn mu-btn-close" title="닫기" @click="onClose">
           <i class="mu-icon-svg close"></i>
           <span>닫기</span>
         </button>

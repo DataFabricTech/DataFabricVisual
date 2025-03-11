@@ -1,25 +1,18 @@
 <template>
   <div>
-    <board-wrap
-      :share="share"
-      @cancelMethod="onClickListButton"
-      @saveMethod="onClickSaveButton"
-    >
-      <template v-slot:heading><h4>활용사례 등록</h4></template>
-      <template v-slot:caption
-        ><caption>
+    <board-wrap :share="share" @cancelMethod="onClickListButton" @saveMethod="onClickSaveButton">
+      <template v-slot:heading>
+        <h4>활용사례 등록</h4>
+      </template>
+      <template v-slot:caption>
+        <caption>
           활용사례 등록 게시판
-        </caption></template
-      >
+        </caption>
+      </template>
       <template v-slot:thumb>
         <div class="mu-file-attach">
-          <input
-            type="text"
-            id="thumb-file-name"
-            class="mu-input"
-            placeholder="썸네일 이미지 크기는 최대 10MB까지 가능합니다. 335px * 220px를 권장합니다."
-            readonly="readonly"
-          />
+          <input type="text" id="thumb-file-name" class="mu-input"
+            placeholder="썸네일 이미지 크기는 최대 10MB까지 가능합니다. 335px * 220px를 권장합니다." readonly="readonly" />
           <div class="mu-file-btn">
             <button type="button" class="mu-btn">
               <label for="thumb-file-find">파일찾기</label>
@@ -30,13 +23,8 @@
         <ul class="file-sch-list">
           <li v-for="(item, index) in thumbFiles" :key="index">
             <i class="mu-icon-svg file">썸네일있음</i>{{ item.name }}
-            <button
-              type="button"
-              class="mu-btn mu-btn-delete"
-              @click="onClickDeleteButtonThumb"
-            >
-              <i class="mu-icon-svg item-delete" :id="index"></i
-              ><span>썸네일 삭제</span>
+            <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButtonThumb">
+              <i class="mu-icon-svg item-delete" :id="index"></i><span>썸네일 삭제</span>
             </button>
           </li>
         </ul>
@@ -44,13 +32,8 @@
       </template>
       <template v-slot:file>
         <div class="mu-file-attach">
-          <input
-            type="text"
-            id="file-name"
-            class="mu-input"
-            placeholder="파일 첨부 크기는 최대 1GB까지 가능합니다."
-            readonly="readonly"
-          />
+          <input type="text" id="file-name" class="mu-input" placeholder="파일 첨부 크기는 최대 1GB까지 가능합니다."
+            readonly="readonly" />
           <div class="mu-file-btn">
             <button type="button" class="mu-btn">
               <label for="file-find">파일찾기</label>
@@ -61,13 +44,8 @@
         <ul class="file-sch-list">
           <li v-for="(item, index) in files" :key="index">
             <i class="mu-icon-svg file">파일있음</i>{{ item.name }}
-            <button
-              type="button"
-              class="mu-btn mu-btn-delete"
-              @click="onClickDeleteButton"
-            >
-              <i class="mu-icon-svg item-delete" :id="index"></i
-              ><span>썸네일 삭제</span>
+            <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButton">
+              <i class="mu-icon-svg item-delete" :id="index"></i><span>썸네일 삭제</span>
             </button>
           </li>
         </ul>
@@ -80,7 +58,6 @@
 
 <script setup lang="ts">
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
-// import { component as ckeditor } from "@mayasabha/ckeditor4-vue3";
 import { useUserStore } from "@/store/user";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { ref, computed, ComputedRef } from "vue";
@@ -91,8 +68,7 @@ definePageMeta({
   layout: "admin",
 });
 
-const { $ofetch, $ckeditor5  } = useNuxtApp();
-const editor = $ckeditor5.customEditor5;
+const { $ofetch } = useNuxtApp();
 const router = useRouter();
 const userStore = useUserStore();
 
@@ -138,102 +114,6 @@ const share = ref<Share>({
   title: "",
   contents: "",
 });
-const required_flag = ref<boolean>(false);
-
-const titleValid: ComputedRef<boolean> = computed(() => {
-  // 필수값체크
-  if (!required_flag.value) return true;
-  else return share.value.title.length > 0 ? true : false;
-});
-const shareContentReplyValid: ComputedRef<boolean> = computed(() => {
-  //필수값체크
-  if (!required_flag.value) return true;
-  else return share.value.contents.length > 0 ? true : false;
-});
-
-const isLocal = (): boolean => {
-  const isLocalhost = location.hostname === "localhost";
-  return isLocalhost;
-};
-
-const editorConfig = ref<EditorConfig>({
-  height: 400,
-  enterMode: "ENTER_BR",
-  uploadUrl: isLocal()
-    ? "http://localhost:38080/api/ckeditor/attachFile"
-    : "/api/ckeditor/attachFile",
-  filebrowserUploadUrl: isLocal()
-    ? "http://localhost:38080/api/ckeditor/attachFile"
-    : "/api/ckeditor/attachFile",
-  filebrowserUploadMethod: "POST",
-  // localhost:3000으로 테스트할 시 38080 서버와 쿠키의 값이 달라서 안됩니다.
-  // npm run generate -> npm install 후 localhost:38080 으로 접속하여 테스트 해야합니다.
-  withCredentials: true,
-  extraPlugins: "image2,clipboard,pastefromword,colorbutton,font,codesnippet",
-  toolbarGroups: [
-    {
-      name: "clipboard",
-      groups: ["clipboard", "undo"],
-    },
-    {
-      name: "editing",
-      groups: ["find", "selection", "spellchecker", "editing"],
-    },
-    {
-      name: "document",
-      groups: ["mode", "document", "doctools"],
-    },
-    {
-      name: "forms",
-      groups: ["forms"],
-    },
-    {
-      name: "basicstyles",
-      groups: ["basicstyles", "cleanup"],
-    },
-    {
-      name: "paragraph",
-      groups: ["list", "indent", "blocks", "align", "bidi", "paragraph"],
-    },
-    {
-      name: "links",
-      groups: ["links"],
-    },
-    {
-      name: "insert",
-      groups: ["insert"],
-    },
-    {
-      name: "styles",
-      groups: ["styles"],
-    },
-    {
-      name: "colors",
-      groups: ["colors"],
-    },
-    {
-      name: "tools",
-      groups: ["tools"],
-    },
-    {
-      name: "others",
-      groups: ["others"],
-    },
-    {
-      name: "about",
-      groups: ["about"],
-    },
-  ],
-  removePlugins:
-    "save,newpage,preview,print,templates,find,selectall,forms,div,bidi,indentblock" +
-    ",flash,smiley,pagebreak,iframe,image,elementspath,specialchar,horizontalrule",
-  removeButtons:
-    "Print,Preview,NewPage,Save,Templates,Cut,Paste,PasteText,PasteFromWord,Copy,Re" +
-    "place,SelectAll,Find,Scayt,Form,Checkbox,ShowBlocks,Anchor,HiddenField,ImageBu" +
-    "tton,Button,Select,Textarea,TextField,Radio,BidiLtr,BidiRtl,Language,Unlink,Pa" +
-    "geBreak,Iframe,SpecialChar,Subscript,Superscript,CreateDiv,JustifyLeft,Justify" +
-    "Center,JustifyRight,JustifyBlock,Flash,HorizontalRule,Styles",
-});
 
 // 취소버튼 클릭 이벤트
 const onClickListButton = (): void => {
@@ -243,10 +123,10 @@ const onClickListButton = (): void => {
 // 저장버튼 클릭 이벤트
 const onClickSaveButton = async (): Promise<void> => {
 
-if (!(await confirmAlert("저장하시겠습니까?"))) return;
+  if (!(await confirmAlert("저장하시겠습니까?"))) return;
 
 
-let formData = new FormData();
+  let formData = new FormData();
   files.value.forEach((file) => {
     formData.append("files", file);
   });

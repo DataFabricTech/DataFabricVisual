@@ -1,25 +1,18 @@
 <template>
   <div>
-    <board-wrap
-      :share="share"
-      @cancelMethod="onClickListButton"
-      @saveMethod="onClickSaveButton"
-    >
-      <template v-slot:heading><h4>활용사례 등록</h4></template>
-      <template v-slot:caption
-        ><caption>
+    <board-wrap :share="share" @cancelMethod="onClickListButton" @saveMethod="onClickSaveButton">
+      <template v-slot:heading>
+        <h4>활용사례 등록</h4>
+      </template>
+      <template v-slot:caption>
+        <caption>
           활용사례 등록 게시판
-        </caption></template
-      >
+        </caption>
+      </template>
       <template v-slot:thumb>
         <div class="mu-file-attach">
-          <input
-            type="text"
-            id="thumb-file-name"
-            class="mu-input"
-            placeholder="썸네일 이미지 크기는 최대 10MB까지 가능합니다. 335px * 220px를 권장합니다."
-            readonly="readonly"
-          />
+          <input type="text" id="thumb-file-name" class="mu-input"
+            placeholder="썸네일 이미지 크기는 최대 10MB까지 가능합니다. 335px * 220px를 권장합니다." readonly="readonly" />
           <div class="mu-file-btn">
             <button type="button" class="mu-btn">
               <label for="thumb-file-find">파일찾기</label>
@@ -30,13 +23,8 @@
         <ul class="file-sch-list">
           <li v-for="(item, index) in thumbFiles" :key="index">
             <i class="mu-icon-svg file">썸네일있음</i>{{ item.name }}
-            <button
-              type="button"
-              class="mu-btn mu-btn-delete"
-              @click="onClickDeleteButtonThumb"
-            >
-              <i class="mu-icon-svg item-delete" :id="index"></i
-              ><span>썸네일 삭제</span>
+            <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButtonThumb">
+              <i class="mu-icon-svg item-delete" :id="index"></i><span>썸네일 삭제</span>
             </button>
           </li>
         </ul>
@@ -44,13 +32,8 @@
       </template>
       <template v-slot:file>
         <div class="mu-file-attach">
-          <input
-            type="text"
-            id="file-name"
-            class="mu-input"
-            placeholder="파일 첨부 크기는 최대 1GB까지 가능합니다."
-            readonly="readonly"
-          />
+          <input type="text" id="file-name" class="mu-input" placeholder="파일 첨부 크기는 최대 1GB까지 가능합니다."
+            readonly="readonly" />
           <div class="mu-file-btn">
             <button type="button" class="mu-btn">
               <label for="file-find">파일찾기</label>
@@ -61,13 +44,8 @@
         <ul class="file-sch-list">
           <li v-for="(item, index) in files" :key="index">
             <i class="mu-icon-svg file">파일있음</i>{{ item.name }}
-            <button
-              type="button"
-              class="mu-btn mu-btn-delete"
-              @click="onClickDeleteButton"
-            >
-              <i class="mu-icon-svg item-delete" :id="index"></i
-              ><span>썸네일 삭제</span>
+            <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButton">
+              <i class="mu-icon-svg item-delete" :id="index"></i><span>썸네일 삭제</span>
             </button>
           </li>
         </ul>
@@ -82,7 +60,7 @@
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useUserStore } from "@/store/user";
 import { useNuxtApp, useRouter } from "nuxt/app";
-import { ref, computed, ComputedRef } from "vue";
+import { ref } from "vue";
 import BoardWrap from "@organisms/share/share-board-edit-inner";
 
 definePageMeta({
@@ -90,8 +68,7 @@ definePageMeta({
   layout: "user",
 });
 
-const { $ofetch, $ckeditor5  } = useNuxtApp();
-const editor = $ckeditor5.customEditor5;
+const { $ofetch } = useNuxtApp();
 const router = useRouter();
 const userStore = useUserStore();
 
@@ -138,18 +115,6 @@ const share = ref<Share>({
   title: "",
   contents: "",
 });
-const required_flag = ref<boolean>(false);
-
-const titleValid: ComputedRef<boolean> = computed(() => {
-  // 필수값체크
-  if (!required_flag.value) return true;
-  else return share.value.title.length > 0 ? true : false;
-});
-const shareContentReplyValid: ComputedRef<boolean> = computed(() => {
-  //필수값체크
-  if (!required_flag.value) return true;
-  else return share.value.contents.length > 0 ? true : false;
-});
 
 // 취소버튼 클릭 이벤트
 const onClickListButton = (): void => {
@@ -163,32 +128,32 @@ const onClickSaveButton = async (): Promise<void> => {
 
 
   let formData = new FormData();
-    files.value.forEach((file) => {
-      formData.append("files", file);
-    });
+  files.value.forEach((file) => {
+    formData.append("files", file);
+  });
 
-    thumbFiles.value.forEach((thumb) => {
-      formData.append("thumb_img", thumb);
-    });
+  thumbFiles.value.forEach((thumb) => {
+    formData.append("thumb_img", thumb);
+  });
 
-    formData.append("share.title", share.value.title);
-    formData.append("share.contents", share.value.contents);
+  formData.append("share.title", share.value.title);
+  formData.append("share.contents", share.value.contents);
 
-    $ofetch("/api/share/add/saveFile", {
-      method: "POST",
-      body: formData,
-    }).then(async (res: { errorMessage: string }) => {
-      if (res) {
-        if (res.errorMessage && res.errorMessage != "") {
-          await errorAlert("저장에 실패하였습니다.");
-        } else {
-          await successAlert("글이 저장되었습니다.");
-          router.push("/share/board");
-        }
-      } else {
+  $ofetch("/api/share/add/saveFile", {
+    method: "POST",
+    body: formData,
+  }).then(async (res: { errorMessage: string }) => {
+    if (res) {
+      if (res.errorMessage && res.errorMessage != "") {
         await errorAlert("저장에 실패하였습니다.");
+      } else {
+        await successAlert("글이 저장되었습니다.");
+        router.push("/share/board");
       }
-    });
+    } else {
+      await errorAlert("저장에 실패하였습니다.");
+    }
+  });
 };
 
 // 파일 변경
@@ -250,6 +215,4 @@ const onClickDeleteButtonThumb = (e: Event) => {
 };
 
 </script>
-<style>
-
-</style>
+<style></style>

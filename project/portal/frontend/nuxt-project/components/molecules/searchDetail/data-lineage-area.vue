@@ -1,31 +1,20 @@
 <template>
-  <div :class="props.isAdmin ? 'data-box-wrap' : ''" :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''"
+    :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
         <h4>데이터 흐름조회</h4>
         <div class="mu-item-group">
-          <button
-            type="button"
-            class="mu-btn mu-btn-bg-non btn-section-toggle"
-            title="접기"
-            @click="toggleShowData()"
-            style="margin-left: 10px"
-          >
+          <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
+            style="margin-left: 10px">
             <span>{{ toggleShowDataText }}</span>
           </button>
         </div>
       </div>
       <div class="detail-box" v-show="showData">
-        <div
-          v-show="props.isAdmin"
-          class="mu-item-group"
-          style="display: block; margin-bottom: 20px; text-align: right;"
-        >
-          <button
-            type="button"
-            class="mu-btn mu-btn-primary"
-            @click="onToggleLineageModal"
-          >
+        <div v-show="props.isAdmin" class="mu-item-group"
+          style="display: block; margin-bottom: 20px; text-align: right;">
+          <button type="button" class="mu-btn mu-btn-primary" @click="onToggleLineageModal">
             <span>데이터 흐름 수정</span>
           </button>
         </div>
@@ -34,12 +23,8 @@
     </div>
 
     <!-- 데이터 흐름 수정 모달 -->
-    <data-lineage-modal
-        :toggle="toggleLineageModal"
-        :entity="props.entity"
-        @onCloseModal="onToggleLineageModal"
-        :userDataParam="props.userDataParam"
-      />
+    <data-lineage-modal :toggle="toggleLineageModal" :entity="props.entity" @onCloseModal="onToggleLineageModal"
+      :userDataParam="props.userDataParam" />
   </div>
 </template>
 

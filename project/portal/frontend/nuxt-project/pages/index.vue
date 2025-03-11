@@ -1,22 +1,11 @@
 <template>
   <div v-if="!shouldRender">
-    <Login
-      v-if="!showRegisterForm"
-      @login="onLogin"
-      @toggleRegisterForm="toggleRegisterForm"
-      :login_error="login_error"
-      :login_result_message="login_result_message"
-    />
-    <Register
-      v-else-if="showRegisterForm"
-      @register="onRegister"
-      @toggleRegisterForm="toggleRegisterForm"
-      @checkDupUserId="checkDupUserId"
-      @updateCheckedDupUserId="updateCheckedDupUserId"
-      :checkedDupUserId="checkedDupUserId"
-      :register_error="register_error"
-      :register_result_message="register_result_message"
-    />
+    <Login v-if="!showRegisterForm" @login="onLogin" @toggleRegisterForm="toggleRegisterForm" :login_error="login_error"
+      :login_result_message="login_result_message" />
+    <Register v-else-if="showRegisterForm" @register="onRegister" @toggleRegisterForm="toggleRegisterForm"
+      @checkDupUserId="checkDupUserId" @updateCheckedDupUserId="updateCheckedDupUserId"
+      :checkedDupUserId="checkedDupUserId" :register_error="register_error"
+      :register_result_message="register_result_message" />
   </div>
 </template>
 
@@ -55,7 +44,6 @@ const onLogin = async (param) => {
     }
 
     // Access Token, Refresh Token
-    // let tokenObject = await auth(param.user_id, password); // RSA PRIVATE KEY 오류 탐색중
     let result = await auth(param.user_id, param.password, param.authType);
 
     let xAccessToken = result["x-access-token"];
@@ -137,25 +125,25 @@ const checkDupUserId = async (reg_userid) => {
   if (reg_userid && reg_userid != "") {
     await $ofetch(`/api/checkDupUserId?reg_userid=${reg_userid}`).then(async (res) => {
       if (res && res.data) {
-          if (res.data.register_result == 'Y') {
-            await defaultAlert("사용 가능한 아이디입니다.")
-            checkedDupUserId.value = true
-          } else {
-            checkedDupUserId.value = false
-            if (res && res.data && res.data.register_result_message) {
-              errorAlert(res.data.register_result_message);
-            } else {
-              errorAlert("아이디 중복확인에 실패하였습니다.")
-            }
-          }
+        if (res.data.register_result == 'Y') {
+          await defaultAlert("사용 가능한 아이디입니다.")
+          checkedDupUserId.value = true
         } else {
           checkedDupUserId.value = false
-          if (res && res.data) {
-            register_result_message.value = res.data.register_result_message
+          if (res && res.data && res.data.register_result_message) {
+            errorAlert(res.data.register_result_message);
           } else {
-            register_result_message.value = "아이디 중복확인에 실패하였습니다."
+            errorAlert("아이디 중복확인에 실패하였습니다.")
           }
         }
+      } else {
+        checkedDupUserId.value = false
+        if (res && res.data) {
+          register_result_message.value = res.data.register_result_message
+        } else {
+          register_result_message.value = "아이디 중복확인에 실패하였습니다."
+        }
+      }
     })
   } else {
     errorAlert("아이디를 입력해주세요.")

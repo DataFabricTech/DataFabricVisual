@@ -24,19 +24,25 @@
             <tr>
               <th>시스템 ID</th>
               <td style="display: flex; align-items: center;">
-                <input type="text" maxlength="36" v-model="currentCollector.system_id" :title="currentCollector.system_id" placeholder="" class="mu-input" :readonly="isDetail || isUpdate"> &nbsp;&nbsp;&nbsp;
-                <button v-if="currentCollector.system_id" type="button" class="mu-btn mu-btn-sm" @click="systemIdDupCheck(currentCollector.system_id)" :disabled="isDetail || isUpdate">
+                <input type="text" maxlength="36" v-model="currentCollector.system_id"
+                  :title="currentCollector.system_id" placeholder="" class="mu-input" :readonly="isDetail || isUpdate">
+                &nbsp;&nbsp;&nbsp;
+                <button v-if="currentCollector.system_id" type="button" class="mu-btn mu-btn-sm"
+                  @click="systemIdDupCheck(currentCollector.system_id)" :disabled="isDetail || isUpdate">
                   <span>중복확인</span>
                 </button>
-                <button v-else type="button" class="mu-btn mu-btn-sm" @click="createNewSystemId()" :readonly="isDetail || isUpdate">
+                <button v-else type="button" class="mu-btn mu-btn-sm" @click="createNewSystemId()"
+                  :readonly="isDetail || isUpdate">
                   <span>ID 생성</span>
                 </button>
               </td>
 
               <th>Host</th>
-              <td><input type="text" maxlength="15" v-model="currentCollector.host" :title="currentCollector.host" class="mu-input" :readonly="isDetail"></td>
+              <td><input type="text" maxlength="15" v-model="currentCollector.host" :title="currentCollector.host"
+                  class="mu-input" :readonly="isDetail"></td>
               <th>Port</th>
-              <td><input type="number" min="0" max="65535" maxlength="5" v-model="currentCollector.port" :title="currentCollector.port" class="mu-input" :readonly="isDetail"></td>
+              <td><input type="number" min="0" max="65535" maxlength="5" v-model="currentCollector.port"
+                  :title="currentCollector.port" class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr>
               <th>시스템 타입</th>
@@ -49,19 +55,26 @@
                 </div>
               </td>
               <th>Database</th>
-              <td colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database" class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('HIVE') || currentCollector.system_type.toUpperCase().includes('MYSQL')"></td>
+              <td colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database"
+                  class="mu-input"
+                  :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('HIVE') || currentCollector.system_type.toUpperCase().includes('MYSQL')">
+              </td>
             </tr>
             <tr>
               <th>시스템 명</th>
-              <td><input type="text" v-model="currentCollector.system_name" :title="currentCollector.system_name" placeholder="" class="mu-input" :readonly="isDetail"></td>
+              <td><input type="text" v-model="currentCollector.system_name" :title="currentCollector.system_name"
+                  placeholder="" class="mu-input" :readonly="isDetail"></td>
               <th>Schema</th>
-              <td colspan="3"><input type="text" v-model="currentCollector.schema" :title="currentCollector.schema" class="mu-input" :readonly="isDetail"></td>
+              <td colspan="3"><input type="text" v-model="currentCollector.schema" :title="currentCollector.schema"
+                  class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr>
               <th>수집 주기</th>
-              <td><input type="text" v-model="currentCollector.interval" :title="currentCollector.interval" placeholder="ex) * * * * *" class="mu-input" :readonly="isDetail"></td>
+              <td><input type="text" v-model="currentCollector.interval" :title="currentCollector.interval"
+                  placeholder="ex) * * * * *" class="mu-input" :readonly="isDetail"></td>
               <th>Login</th>
-              <td colspan="3"><input type="text" v-model="currentCollector.login" :title="currentCollector.login" class="mu-input" :readonly="isDetail"></td>
+              <td colspan="3"><input type="text" v-model="currentCollector.login" :title="currentCollector.login"
+                  class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr>
               <th>수집 여부</th>
@@ -74,13 +87,15 @@
                 </div>
               </td>
               <th>Password</th>
-              <td colspan="3"><input type="text" v-model="currentCollector.password" :title="currentCollector.password" class="mu-input" :readonly="isDetail"></td>
+              <td colspan="3"><input type="text" v-model="currentCollector.password" :title="currentCollector.password"
+                  class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr v-if="currentCollector.system_type.toUpperCase().includes('HIVE')">
               <th></th>
               <td></td>
               <th>Thrift port</th>
-              <td colspan="3"><input type="number" v-model="currentCollector.hive_thrift_port" :title="currentCollector.hive_thrift_port" class="mu-input" :readonly="isDetail"></td>
+              <td colspan="3"><input type="number" v-model="currentCollector.hive_thrift_port"
+                  :title="currentCollector.hive_thrift_port" class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr v-if="currentCollector.system_type.toUpperCase().includes('HIVE') && !isDetail">
               <th></th>
@@ -90,39 +105,26 @@
                 <div class="mu-item-vgroup">
                   <!-- 첨부파일 : 파일찾기 , 삭제 편집모드 -->
                   <div class="mu-file-attach">
-                    <input
-                      type="text"
-                      id="file-name"
-                      class="mu-input"
-                      placeholder="최대 1MB"
-                      style="width: 300px;"
-                      readonly
-                    />
+                    <input type="text" id="file-name" class="mu-input" placeholder="최대 1MB" style="width: 300px;"
+                      readonly />
                     <div class="mu-file-btn" style="margin-left: 10px">
                       <button type="button" class="mu-btn">
                         <label for="file-find-1">파일찾기</label>
                       </button>
-                      <input
-                        type="file"
-                        id="file-find-1"
-                        class="mu-btn-hide"
-                        @change="onChange($event, 'core-site')"
-                      />
+                      <input type="file" id="file-find-1" class="mu-btn-hide" @change="onChange($event, 'core-site')" />
                     </div>
                   </div>
                   <!-- 첨부파일 : 리스트 개발삭제 가능함 -->
-                  <ul class="file-sch-list" v-if="currentCollector.core_site_file && currentCollector.core_site_file != null" style="width: 350px;">
+                  <ul class="file-sch-list"
+                    v-if="currentCollector.core_site_file && currentCollector.core_site_file != null"
+                    style="width: 350px;">
                     <li>
-                      <a href="#" title="첨부파일다운로드"
-                        ><i class="mu-icon-svg file">첨부파일있음</i>{{ currentCollector.core_site_file.name ? currentCollector.core_site_file.name : currentCollector.core_site_file.file_name }}</a
-                      >
-                      <button
-                        type="button"
-                        class="mu-btn mu-btn-delete"
-                        @click="onClickDeleteButton($event, 'core-site')"
-                      >
-                        <i class="mu-icon-svg item-delete"></i
-                        ><span>첨부파일 삭제</span>
+                      <a href="#" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>{{
+                        currentCollector.core_site_file.name ? currentCollector.core_site_file.name :
+                          currentCollector.core_site_file.file_name }}</a>
+                      <button type="button" class="mu-btn mu-btn-delete"
+                        @click="onClickDeleteButton($event, 'core-site')">
+                        <i class="mu-icon-svg item-delete"></i><span>첨부파일 삭제</span>
                       </button>
                     </li>
                   </ul>
@@ -138,37 +140,26 @@
                 <div class="mu-item-vgroup">
                   <!-- 첨부파일 : 파일찾기 , 삭제 편집모드 -->
                   <div class="mu-file-attach">
-                    <input
-                      type="text"
-                      id="file-name"
-                      class="mu-input"
-                      placeholder="최대 1MB"
-                      style="width: 300px;"
-                      readonly
-                    />
+                    <input type="text" id="file-name" class="mu-input" placeholder="최대 1MB" style="width: 300px;"
+                      readonly />
                     <div class="mu-file-btn" style="margin-left: 10px">
                       <button type="button" class="mu-btn">
                         <label for="file-find-2">파일찾기</label>
                       </button>
-                      <input
-                        type="file"
-                        id="file-find-2"
-                        class="mu-btn-hide"
-                        @change="onChange($event, 'hdfs-site')"
-                      />
+                      <input type="file" id="file-find-2" class="mu-btn-hide" @change="onChange($event, 'hdfs-site')" />
                     </div>
                   </div>
                   <!-- 첨부파일 : 리스트 개발삭제 가능함 -->
-                  <ul class="file-sch-list" v-if="currentCollector.hdfs_site_file && currentCollector.hdfs_site_file != null" style="width: 350px;">
+                  <ul class="file-sch-list"
+                    v-if="currentCollector.hdfs_site_file && currentCollector.hdfs_site_file != null"
+                    style="width: 350px;">
                     <li>
-                      <a href="#none" title="첨부파일다운로드"
-                        ><i class="mu-icon-svg file">첨부파일있음</i>{{ currentCollector.hdfs_site_file.name ? currentCollector.hdfs_site_file.name : currentCollector.hdfs_site_file.file_name }}</a>
-                      <button
-                        type="button"
-                        class="mu-btn mu-btn-delete"
+                      <a href="#none" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>{{
+                        currentCollector.hdfs_site_file.name ? currentCollector.hdfs_site_file.name :
+                          currentCollector.hdfs_site_file.file_name }}</a>
+                      <button type="button" class="mu-btn mu-btn-delete"
                         @click="onClickDeleteButton($event, 'hdfs-site')">
-                        <i class="mu-icon-svg item-delete"></i
-                        ><span>첨부파일 삭제</span>
+                        <i class="mu-icon-svg item-delete"></i><span>첨부파일 삭제</span>
                       </button>
                     </li>
                   </ul>
@@ -184,10 +175,6 @@
               <th>시스템 상태</th>
               <td colspan="5">{{ currentCollector.status_value ? currentCollector.status_value : '-' }}</td>
             </tr>
-            <!-- <tr v-if="isUpdate || isDetail">
-              <th>오류</th>
-              <td colspan="5">{{ currentCollector.err_description ? currentCollector.err_description : '-' }}</td>
-            </tr> -->
           </tbody>
         </table>
         <br>
@@ -208,13 +195,16 @@
               <th>시스템 등록일</th>
               <td>{{ currentCollector.create_date ? $yyyyMMddHHmmSS(currentCollector.create_date) : "-" }}</td>
               <th>시스템 수정일</th>
-              <td colspan="3">{{ currentCollector.update_date ? $yyyyMMddHHmmSS(currentCollector.update_date) : "-" }}</td>
+              <td colspan="3">{{ currentCollector.update_date ? $yyyyMMddHHmmSS(currentCollector.update_date) : "-" }}
+              </td>
             </tr>
             <tr>
               <th>시스템 등록자</th>
-              <td>{{ currentCollector.create_user ? (currentCollector.create_user_name ? currentCollector.create_user_name : currentCollector.create_user) : "-" }}</td>
+              <td>{{ currentCollector.create_user ? (currentCollector.create_user_name ?
+                currentCollector.create_user_name : currentCollector.create_user) : "-" }}</td>
               <th>시스템 수정자</th>
-              <td colspan="3">{{ currentCollector.update_user ? (currentCollector.update_user_name ? currentCollector.update_user_name : currentCollector.update_user) : "-" }}</td>
+              <td colspan="3">{{ currentCollector.update_user ? (currentCollector.update_user_name ?
+                currentCollector.update_user_name : currentCollector.update_user) : "-" }}</td>
             </tr>
           </tbody>
         </table>
@@ -235,12 +225,7 @@
       </div>
       <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
       <div class="mu-dialog-close-btn">
-        <button
-          type="button"
-          class="mu-btn mu-btn-close"
-          title="해당 팝업 닫기"
-          @click="onClose"
-        >
+        <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose">
           <i class="mu-icon-svg close"></i><span>팝업닫기</span>
         </button>
       </div>
@@ -475,13 +460,13 @@ const isValidInput = () => {
 
   // Hive의 경우 core-site.xml , hdfs-site.xml 파일 업로드 확인
   if (currentCollector.value.system_type.toUpperCase().includes('HIVE') && !currentCollector.value.core_site_file || currentCollector.value.core_site_file == '') { // core-site.xml
-      errorAlert("core-site.xml 설정파일을 추가해 주세요.")
-      return false
+    errorAlert("core-site.xml 설정파일을 추가해 주세요.")
+    return false
   }
 
   if (currentCollector.value.system_type.toUpperCase().includes('HIVE') && !currentCollector.value.hdfs_site_file || currentCollector.value.hdfs_site_file == '') { // hdfs-site.xml
     errorAlert("hdfs-site.xml 설정파일을 추가해 주세요.")
-      return false
+    return false
   }
 
   // 2. 시스템 ID 중복체크
@@ -532,10 +517,10 @@ const onClickDeleteButton = (e: any, type): void => {
 
 </script>
 <style scoped>
-  /* Chrome, Safari, Edge, Opera */
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>

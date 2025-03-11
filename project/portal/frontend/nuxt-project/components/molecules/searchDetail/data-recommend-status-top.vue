@@ -1,14 +1,10 @@
 <template>
   <div class="recommend-group">
-    <button type="button" title="데이터 찜하기"
-      :class="['mu-btn', { active: isFavoriteData }]"
-      @click="onToggleFavorite">
+    <button type="button" title="데이터 찜하기" :class="['mu-btn', { active: isFavoriteData }]" @click="onToggleFavorite">
       <i class="mu-icon-svg heart"></i>
       <em class="view-count">찜</em>
     </button>
-    <button type="button" title="데이터 추천"
-      :class="['mu-btn', { active: isRecommendedData }]"
-      @click="onToggleRecommend">
+    <button type="button" title="데이터 추천" :class="['mu-btn', { active: isRecommendedData }]" @click="onToggleRecommend">
       <i class="mu-icon-svg like"></i>
       <em class="view-count">{{ recommendedCounts }}</em>
     </button>

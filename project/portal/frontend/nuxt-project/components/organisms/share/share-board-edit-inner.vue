@@ -25,18 +25,11 @@
             <tr>
               <th scope="row">제목 <strong class="required">필수</strong></th>
               <td>
-                <input
-                    type="text"
-                    placeholder="제목은 40자 이내로 입력 가능합니다."
-                    title="제목 입력 필수"
-                    class="mu-input"
-                    v-model="props.share.title"
-                    v-bind:class="[!titleValid ? 'error' : '']"
-                    maxlength="40"
-                  />
-                  <p v-if="!titleValid" class="complete-msg error bul-refer">
-                    제목을 입력해주세요.
-                  </p>
+                <input type="text" placeholder="제목은 40자 이내로 입력 가능합니다." title="제목 입력 필수" class="mu-input"
+                  v-model="props.share.title" v-bind:class="[!titleValid ? 'error' : '']" maxlength="40" />
+                <p v-if="!titleValid" class="complete-msg error bul-refer">
+                  제목을 입력해주세요.
+                </p>
               </td>
             </tr>
             <tr>
@@ -75,11 +68,7 @@
       <button type="button" class="mu-btn mu-btn-lg" @click="onClickListButton">
         <span>취소</span>
       </button>
-      <button
-        type="button"
-        class="mu-btn mu-btn-lg mu-btn-primary"
-        @click="onClickSaveButton"
-      >
+      <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickSaveButton">
         <slot name="savebutton"></slot>
       </button>
     </div>
@@ -88,39 +77,16 @@
 </template>
 
 <script setup lang="ts">
-import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
-import { useUserStore } from "@/store/user";
-import { useNuxtApp, useRouter } from "nuxt/app";
+import { useNuxtApp } from "nuxt/app";
 import { ref, computed, ComputedRef } from "vue";
 
-const { $ofetch } = useNuxtApp();
-const { $ckeditor5  } = useNuxtApp();
+const { $ckeditor5 } = useNuxtApp();
 const editor = $ckeditor5.customEditor5;
 
-const radioList = ref<Array<string>>(["공지", "시스템", "이벤트", "안내", "기타"]);
 const required_flag = ref<boolean>(false);
 
 const emit = defineEmits(["cancelMethod", "update:share", "saveMethod"]);
 const props = defineProps(["share", "cancelMethod", "saveMethod"]);
-
-const files = ref<Array<File>>([]);
-  interface File {
-  lastModified: number;
-  lastModifiedDate: Date;
-  name: string;
-  size: number;
-  type: string;
-  webkitRelativePath: string;
-}
-
-interface Share {
-  id?: number;
-  writer: string;
-  title: string;
-  contents: string;
-  create_date?: string;
-  update_date?: string;
-}
 
 const shareContentReplyValid: ComputedRef<boolean> = computed(() => {
   // 필수값 체크

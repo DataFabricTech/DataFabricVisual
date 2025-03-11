@@ -1,147 +1,73 @@
 <template>
   <div>
-    <data-detail-head
-      :userDataAuth="userDataAuth"
-      :isAdmin="props.isAdmin"
-      :entity="entity"
-      :typeName="typeName"
-      @onOpenModal="onToggleCategoryModal"
-      @reload="getDetailDataByGuid"
-      @onOpenEliminateModal="onToggleEliminateModal"
-      :data="recommendStatus"
-      :params="userDataParam"
-      @reloadRecommendStatus="getRecommendStatus"
-    />
+    <data-detail-head :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :entity="entity" :typeName="typeName"
+      @onOpenModal="onToggleCategoryModal" @reload="getDetailDataByGuid" @onOpenEliminateModal="onToggleEliminateModal"
+      :data="recommendStatus" :params="userDataParam" @reloadRecommendStatus="getRecommendStatus" />
     <div class="inner">
-      <scroll-to-tab
-        :tabs="tabs"
-        :isAdmin="props.isAdmin"
-        :isSticky="isSticky"
-        :sectionRefs="sectionRefs"
-        @scrollToSection="scrollToSection"
-      />
+      <scroll-to-tab :tabs="tabs" :isAdmin="props.isAdmin" :isSticky="isSticky" :sectionRefs="sectionRefs"
+        @scrollToSection="scrollToSection" />
       <!-- data-detail-wrap : 통합검색리스트 > 상세 -->
       <div class="data-detail-wrap">
         <!-- detail-section : 데이터 정보 -->
-        <div
-          :ref="el => sectionRefs['data-info-area'] = el"
-          class="content-block">
-          <data-info-area
-            :entity="entity"
-            :referredEntitiesAttributes="referredEntitiesAttributes"
-            @onClickData="getAllDataByGuid"
-            :isAdmin="props.isAdmin"
-            :attributes="businessAttributes"
-            @onClickAddRow="onClickAddBusinessAttributes"
-            @onClickDelRow="onClickDelBusinessAttributes"
-          />
+        <div :ref="el => sectionRefs['data-info-area'] = el" class="content-block">
+          <data-info-area :entity="entity" :referredEntitiesAttributes="referredEntitiesAttributes"
+            @onClickData="getAllDataByGuid" :isAdmin="props.isAdmin" :attributes="businessAttributes"
+            @onClickAddRow="onClickAddBusinessAttributes" @onClickDelRow="onClickDelBusinessAttributes" />
         </div>
         <!-- tag-box : 태그/키워드 관리 -->
-        <div
-          :ref="el => sectionRefs['tag-keyword-area'] = el"
-          class="content-block">
-          <tag-keyword-area
-            ref="tag-keyword-area"
-            :list="labelList" :allTagList="allTagList" :entity="entity"
-            @onClickAddTag="onClickAddTag" :isAdmin="props.isAdmin"
-            @reload="getDetailDataByGuid"
-          />
+        <div :ref="el => sectionRefs['tag-keyword-area'] = el" class="content-block">
+          <tag-keyword-area ref="tag-keyword-area" :list="labelList" :allTagList="allTagList" :entity="entity"
+            @onClickAddTag="onClickAddTag" :isAdmin="props.isAdmin" @reload="getDetailDataByGuid" />
         </div>
         <!-- detail-section : 사용자 데이터 설명 -->
-        <div
-          :ref="el => sectionRefs['user-description-area'] = el"
-          class="content-block">
-          <user-description-area
-            :isAdmin="props.isAdmin"
-            :isUserDescriptionMenuAuth="isUserDescriptionMenuAuth"
-            :list="userDescriptionList"
-            :params="userDataParam"
-            :initUserDescription="initUserDescription"
-            @reloadUserDescriptionList="getUserDescriptionList"
-            @reload="getAllDataByGuid"
-          />
+        <div :ref="el => sectionRefs['user-description-area'] = el" class="content-block">
+          <user-description-area :isAdmin="props.isAdmin" :isUserDescriptionMenuAuth="isUserDescriptionMenuAuth"
+            :list="userDescriptionList" :params="userDataParam" :initUserDescription="initUserDescription"
+            @reloadUserDescriptionList="getUserDescriptionList" @reload="getAllDataByGuid" />
         </div>
         <!-- detail-section : 데이터 프로파일링 -->
-        <div
-          :ref="el => sectionRefs['data-profile-area'] = el"
-          class="content-block">
-          <data-profile-area :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :data-profile="dataProfile" :columnCommentMap="columnCommentMap"/>
+        <div :ref="el => sectionRefs['data-profile-area'] = el" class="content-block">
+          <data-profile-area :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :data-profile="dataProfile"
+            :columnCommentMap="columnCommentMap" />
         </div>
         <!-- detail-section : 샘플 데이터 -->
-        <div
-          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
-          :ref="el => sectionRefs['sample-data-area'] = el"
+        <div v-if="typeName && typeName.toUpperCase() == 'TABLE'" :ref="el => sectionRefs['sample-data-area'] = el"
           class="content-block">
-          <sample-data-area
-            v-if="typeName && typeName.toUpperCase() == 'TABLE'"
-            :isAdmin="props.isAdmin"
-            :list="sampleData"
-            :entity="entity"
-            :userDataAuth="userDataAuth"
-            :referredEntitiesAttributes="referredEntitiesAttributes"
-          />
+          <sample-data-area v-if="typeName && typeName.toUpperCase() == 'TABLE'" :isAdmin="props.isAdmin"
+            :list="sampleData" :entity="entity" :userDataAuth="userDataAuth"
+            :referredEntitiesAttributes="referredEntitiesAttributes" />
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
-        <div
-          :ref="el => sectionRefs['data-lineage-area'] = el"
-          class="content-block">
-          <data-lineage-area
-            :isAdmin="props.isAdmin"
-            :startNode="startNode"
-            :entity="entity"
-            :userDataParam="userDataParam"
-          />
+        <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
+          <data-lineage-area :isAdmin="props.isAdmin" :startNode="startNode" :entity="entity"
+            :userDataParam="userDataParam" />
         </div>
         <!-- detail-section : 연관 데이터 -->
-        <div
-          :ref="el => sectionRefs['related-data'] = el"
-          class="content-block">
-          <related-data
-            :isAdmin="props.isAdmin"
-            :classifications="classifications_data"
-            @onClickData="getAllDataByGuid"
-          />
+        <div :ref="el => sectionRefs['related-data'] = el" class="content-block">
+          <related-data :isAdmin="props.isAdmin" :classifications="classifications_data"
+            @onClickData="getAllDataByGuid" />
         </div>
         <!-- detail-section : 사용자 리뷰 -->
-        <div
-          :ref="el => sectionRefs['user-review-area'] = el"
-          class="content-block">
-          <user-review-area
-            v-if="!props.isAdmin"
-            :list="reviewDatalist"
-            :params="userDataParam"
-            :initUserReview="initUserReview"
-            @reload="getReviewDataList"
-          />
+        <div :ref="el => sectionRefs['user-review-area'] = el" class="content-block">
+          <user-review-area v-if="!props.isAdmin" :list="reviewDatalist" :params="userDataParam"
+            :initUserReview="initUserReview" @reload="getReviewDataList" />
         </div>
         <!-- recommend-section  -->
-        <data-recommend-status
-          v-if="!props.isAdmin"
-          :data="recommendStatus"
-          :params="userDataParam"
-          @reload="getRecommendStatus"
-        />
+        <data-recommend-status v-if="!props.isAdmin" :data="recommendStatus" :params="userDataParam"
+          @reload="getRecommendStatus" />
         <!-- //recommend-section  -->
         <!-- mu-button-wrap -->
         <div v-if="props.isAdmin" class="mu-button-wrap">
           <button type="button" class="mu-btn mu-btn-lg" @click="onCancel">
             <span>취소</span>
           </button>
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
-            @click="onClickConfirm"
-            :disabled="isConfirmDisabled"
-          >
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickConfirm"
+            :disabled="isConfirmDisabled">
             <span>적용</span>
           </button>
         </div>
         <div v-else class="mu-button-wrap">
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
-            @click="onClickListButton"
-          >
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton">
             <span>목록</span>
           </button>
         </div>
@@ -149,16 +75,10 @@
       </div>
       <!-- //data-detail-wrap -->
       <!-- 카테고리 맵핑 추가 모달 -->
-      <manage-classification-modal
-        :manage-modal="manageModalObj"
-        @onCloseModal="onToggleCategoryModal"
-        @onSubmit="onAddCategoryMapping"
-      />
+      <manage-classification-modal :manage-modal="manageModalObj" @onCloseModal="onToggleCategoryModal"
+        @onSubmit="onAddCategoryMapping" />
       <!-- 데이터추출 모달 -->
-      <eliminate-modal
-        :eliminate-modal="eliminateModalObj"
-        @onCloseModal="onToggleEliminateModal"
-      />
+      <eliminate-modal :eliminate-modal="eliminateModalObj" @onCloseModal="onToggleEliminateModal" />
     </div>
 
     <scroll-to-top />
@@ -168,15 +88,12 @@
 
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
-import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import DataInfoArea from "@molecules/searchDetail/data-info-area";
 import DataDetailHead from "@molecules/searchDetail/data-detail-head";
 import UserDescriptionArea from "@molecules/searchDetail/user-description-area";
 import TagKeywordArea from "@molecules/searchDetail/tag-keyword-area";
 import DataProfileArea from "@molecules/searchDetail/data-profile-area";
-import DbProfileArea from "@molecules/searchDetail/db-profile-area";
-import TableProfileArea from "@molecules/searchDetail/table-profile-area";
-import ColumnProfileArea from "@molecules/searchDetail/column-profile-area";
 import SampleDataArea from "@molecules/searchDetail/sample-data-area";
 import DataLineageArea from "@molecules/searchDetail/data-lineage-area"
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
@@ -190,10 +107,8 @@ import ScrollToBottom from "@functional/scroll/scroll-to-bottom";
 import { useUserStore } from "~/store/user.ts";
 import { useCategoryStore } from "~/store/category.ts";
 import { useCategoryTreeStore } from "~/store/categoryTree.ts";
-import {useConstants} from "@composables/useConstants";
 import { onBeforeRouteLeave } from "vue-router";
 import { ref } from "vue";
-import { useApi } from "@/composables/useApi";
 import { defaultAlert } from "@/components/functional/alert/alert-default";
 
 const { $ofetch } = useNuxtApp();
@@ -203,10 +118,7 @@ const router = useRouter();
 
 const props = defineProps(["isAdmin"]);
 
-const {setEventLog, setMetaSync} = useApi()
-const { CONSTANT } = useConstants();
 const userStore = useUserStore();
-const user = userStore.getUser;
 const categoryStore = useCategoryStore();
 const categoryTreeStore = useCategoryTreeStore();
 
@@ -220,9 +132,6 @@ const businessAttributes = ref([]);
 const currentGuid = ref("");
 const labelList = ref([]);
 const allTagList = ref([]);
-const metaDataInfoResult = ref({});  // 메타데이터정보
-const refComment = ref([]);     //한글명
-const columnNameList = ref([]);   //컬럼 영문
 const columnCommentMap = ref({}); //컬럼 영-한 매핑
 
 const initUserDescription = ref(false);
@@ -241,7 +150,6 @@ const classifications_data = ref([]); // 연관 데이터 목록
 const userDescriptionList = ref([]); // 사용자 데이터 설명 목록
 const reviewDatalist = ref({}); // 사용자 리뷰 목록
 const recommendStatus = ref({}); // 데이터 추천, 찜하기 관련 제어
-const isHistory = ref({})
 const manageModalObj = ref({
   // 카테고리 맵핑 추가 모달 제어
   type: "map",
@@ -264,8 +172,6 @@ const isConfirmDisabled = ref(true); // 적용 버튼 활성화 여부 제어 fl
 
 const userDataParam = ref({}); // 사용자 데이터 파라미터
 
-const showData = ref(true);
-const toggleShowDataText = ref("접기");
 const userDataAuth = ref(0) // 데이터 접근 권한
 const isUserDescriptionMenuAuth = ref(false) // 사용자 데이터 설명 권한
 
@@ -286,10 +192,10 @@ onMounted(async () => {
       await searchTagList();
     } else {
       if (route.query.guid == ""
-       || route.query.guid == null
-       || route.query.guid == undefined
-       || route.query.guid == 'undefined'
-       || route.query.guid == 'null') {
+        || route.query.guid == null
+        || route.query.guid == undefined
+        || route.query.guid == 'undefined'
+        || route.query.guid == 'null') {
         await defaultAlert("조회에 실패하였습니다.")
       } else {
         await defaultAlert("데이터 접근 권한이 없습니다.")
@@ -297,10 +203,10 @@ onMounted(async () => {
       history.go(-1)
     }
   })
-  .catch(async (err) => {
-    await errorAlert("조회에 실패하였습니다.")
-    history.go(-1)
-  });
+    .catch(async (err) => {
+      await errorAlert("조회에 실패하였습니다.")
+      history.go(-1)
+    });
 });
 
 // 엔티티 유형
@@ -464,7 +370,6 @@ watch(
 // 상세 화면 구성에 필요한 모든 API 호출
 const getAllDataByGuid = async (newGuid, favoriteEvent) => {
   // GUID 기준 데이터 상세 조회 API 호출 이벤트 종료 후 나머지 API 호출하도록 동기화 처리
-  // const guid = newGuid ? newGuid : await userStore.getParameterGuid();
   const guid = newGuid ? newGuid : route.query.guid;
 
   getDetailDataByGuid(guid).then(() => {
@@ -1055,19 +960,19 @@ const onClickAddTag = async (list) => {
 }
 
 //전체 tag 조회
-const searchTagList = async (offset = 1) =>{
+const searchTagList = async (offset = 1) => {
   try {
     // 관리 페이지이기 때문에 페이징 없이 전체 보여지도록 임시로 1000개
     let limit = 1000;
     await $ofetch(`/api/admin/system/tagManager/list?pageSize=${limit}&pnum=${offset}`)
-    .then((res) => {
-      if (res && !res.errorMessage) {
-        allTagList.value = res.data.list;
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    });
+      .then((res) => {
+        if (res && !res.errorMessage) {
+          allTagList.value = res.data.list;
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      });
 
   } catch (error) {
     console.log(error);
@@ -1106,7 +1011,4 @@ const getUserDataAuth = async () => {
 
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

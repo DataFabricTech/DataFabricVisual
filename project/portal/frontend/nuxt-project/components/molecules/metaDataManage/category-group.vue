@@ -1,20 +1,8 @@
 <template>
   <div class="category-group">
-    <category-label
-      v-for="(category, cIndex) in categories"
-      :key="cIndex"
-      :category="category"
-      :item="item"
-    />
-    <category-control-button
-      buttonType="more"
-      :item="item"
-    />
-    <category-control-button
-      v-if="item.id !== -1"
-      buttonType="add"
-      :item="item"
-    />
+    <category-label v-for="(category, cIndex) in categories" :key="cIndex" :category="category" :item="item" />
+    <category-control-button buttonType="more" :item="item" />
+    <category-control-button v-if="item.id !== -1" buttonType="add" :item="item" />
   </div>
 </template>
 

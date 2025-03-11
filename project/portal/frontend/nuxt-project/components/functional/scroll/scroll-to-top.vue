@@ -1,10 +1,6 @@
 <template>
   <div>
-    <button
-      v-show="showButton"
-      @click="scrollToTop"
-      class="mu-btn mu-btn-icon-only mu-btn-secondary scroll-to-top"
-    >
+    <button v-show="showButton" @click="scrollToTop" class="mu-btn mu-btn-icon-only mu-btn-secondary scroll-to-top">
       <i class="mu-icon-svg arrow-top"></i><span>이동</span>
     </button>
   </div>
@@ -44,5 +40,4 @@ onUnmounted(() => {
   transition: opacity 0.3s ease, visibility 0.3s ease;
   z-index: 999;
 }
-
 </style>

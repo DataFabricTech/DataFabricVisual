@@ -44,7 +44,6 @@
                     <tbody>
                       <tr v-for="(item2, idx) in value">
                         <td>{{ idx + 1 }}</td>
-                        <!-- <td><a @click="onClickDataName(key, item2)">{{ value[idx].name }}</a></td> -->
                         <td :title="value[idx].meta_name">{{ value[idx].meta_name }}</td>
                         <td :title="value[idx].description">{{ value[idx].description ? value[idx].description : "-" }}</td>
                         <td :title="value[idx].column_type">{{ value[idx].column_type }}</td>
@@ -198,12 +197,6 @@ const toggleShowField = () => {
 // 객체 키값에 값이 없는 데이터 제거
 const removeEmptyFields = (obj) => {
   for (let key in obj) {
-    // 지우면 안되는 필드는 지우지 않도록 조건 추가
-    // if (fixEntries.value && fixEntries.value.length > 0) {
-    //   let list = fixEntries.value.filter((el) => el == key)
-    //   if (list && list.length > 0) continue
-    // }
-
     if (obj[key] === undefined || obj[key] === null || obj[key] === '') {
         delete obj[key];
     }
@@ -290,10 +283,6 @@ const arrayToTextArea = (textVal) => {
 const onClickDataName = (item) => {
   console.log('go To Meta Page')
   return
-  // emit("onClickData", item.guid);
-  router.push(`/search/detail?guid=${item.guid}`);
-  userStore.setGuid(item.guid);
-  window.scrollTo(0, 0);
 };
 
 // DB명

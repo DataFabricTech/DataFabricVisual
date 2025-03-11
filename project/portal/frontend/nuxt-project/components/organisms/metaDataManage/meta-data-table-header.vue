@@ -6,41 +6,16 @@
         <fieldset>
           <legend>게시물검색</legend>
           <div class="inner-search">
-            <!-- <div class="mu-selectbox w120">
-              <select
-                name="searchType1"
-                :value="props.filterSearchObj.searchType1"
-                @change="onChange"
-              >
-                <option value="all">전체</option>
-                <option v-for="(item, idx) in filterOptions" :value="item">{{ item }}</option>
-              </select>
-            </div> -->
             <div class="mu-selectbox w120">
-              <select
-                name="searchType2"
-                :value="props.filterSearchObj.searchType2"
-                @change="onChange"
-              >
-                <option
-                  v-for="(option, index) in props.filterSearchObj.options"
-                  :key="index"
-                  :value="option.value"
-                >
+              <select name="searchType2" :value="props.filterSearchObj.searchType2" @change="onChange">
+                <option v-for="(option, index) in props.filterSearchObj.options" :key="index" :value="option.value">
                   {{ option.desc }}
                 </option>
               </select>
             </div>
             <div class="mu-input-icon">
-              <input
-                type="text"
-                class="mu-input"
-                placeholder="Search"
-                title="검색어입력"
-                name="word"
-                :value="props.filterSearchObj.word"
-                @keyup="onChange"
-              />
+              <input type="text" class="mu-input" placeholder="Search" title="검색어입력" name="word"
+                :value="props.filterSearchObj.word" @keyup="onChange" />
               <button type="button" class="mu-btn mu-btn-sch" @click.prevent="onSearch">
                 <i class="mu-icon-svg search"></i><span>검색</span>
               </button>
@@ -52,18 +27,10 @@
     <!-- //board-list-search -->
     <div class="mu-item-group">
       <page-size v-model:pageSize="props.pagingObj.limit" @searchMethod="onSearch" />
-      <button
-        type="button"
-        class="mu-btn"
-        @click.stop="onClickButton('roles')"
-      >
+      <button type="button" class="mu-btn" @click.stop="onClickButton('roles')">
         <span>공개설정</span>
       </button>
-      <button
-        type="button"
-        class="mu-btn mu-btn-primary"
-        @click.stop="onClickButton('category')"
-      >
+      <button type="button" class="mu-btn mu-btn-primary" @click.stop="onClickButton('category')">
         <span>분류맵핑</span>
       </button>
     </div>

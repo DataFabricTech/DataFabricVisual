@@ -16,7 +16,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   };
 
   // 권한 체크
-  const searchMenuPath = (roleMenuList : List) => {
+  const searchMenuPath = (roleMenuList: List) => {
     let isMenuExists = false;
 
     for (const menu of roleMenuList) {
@@ -54,7 +54,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     if (isTokenExpireYn === 'Y') {
       return navigateTo('/?err=expired')
-    }else{
+    } else {
       return navigateTo('/')
     }
   }
@@ -133,7 +133,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
                 regenerateAccessToken(currentUserId)
 
                 // 1.2.1. Refresh Token 만료가 임박한 경우 갱신 (10분 남음)
-                if (xRefreshTokenLeftTime < 10*60) {
+                if (xRefreshTokenLeftTime < 10 * 60) {
                   regenerateRefreshToken(currentUserId)
                 }
               } else {
@@ -205,7 +205,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
   if (to.path === '/') {
-    if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
+    if (cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
       return navigateTo('/main')
     } else {
       clearSession()
@@ -216,10 +216,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
   } else if (to.path === '/error') {
     console.log('에러 페이지')
   } else {
-    if(userStore._user.roleMenu && userStore._user.roleMenu != ""){
+    if (userStore._user.roleMenu && userStore._user.roleMenu != "") {
       let decodedRoleMenuList = jwtDecode(userStore._user.roleMenu);
 
-      if(!searchMenuPath(decodedRoleMenuList.roleMenuList)){
+      if (!searchMenuPath(decodedRoleMenuList.roleMenuList)) {
         errorAlert('접근 권한이 없습니다.');
         // cookies.set('redirected', 'true', { path: '/' });  // 리디렉션을 기록
         return navigateTo('/main')

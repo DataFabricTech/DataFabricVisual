@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="mu-tooltip arrow-ct"
-    v-show="props.tooltipObj.display"
-    :style="tooltipLocation"
-  >
+  <div class="mu-tooltip arrow-ct" v-show="props.tooltipObj.display" :style="tooltipLocation">
     <div class="mu-tooltip-inner">
       <ul class="item-add-list" v-if="props.tooltipObj.display && props.tooltipObj.type === 'setup'">
         <li>
@@ -23,12 +19,8 @@
         </li>
       </ul>
       <div class="category-group slim-scroll" v-if="props.tooltipObj.display && props.tooltipObj.type === 'more'">
-        <category-more-label
-          v-for="(category, cIndex) in categories"
-          :category="category"
-          :item="props.tooltipObj.targets"
-          :key="cIndex"
-        />
+        <category-more-label v-for="(category, cIndex) in categories" :category="category"
+          :item="props.tooltipObj.targets" :key="cIndex" />
       </div>
     </div>
   </div>

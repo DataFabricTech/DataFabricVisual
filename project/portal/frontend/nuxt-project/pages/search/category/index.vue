@@ -7,14 +7,8 @@
           <legend>통합검색</legend>
           <div class="inner-search">
             <div class="mu-input-icon">
-              <input
-                type="text"
-                :value="word"
-                @input="onInputWord"
-                class="mu-input"
-                placeholder="검색어를 입력해 주세요."
-                title="검색어입력"
-              />
+              <input type="text" :value="word" @input="onInputWord" class="mu-input" placeholder="검색어를 입력해 주세요."
+                title="검색어입력" />
               <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButton()">
                 <i class="mu-icon-svg item-delete"></i>
                 <span>삭제</span>
@@ -57,7 +51,6 @@ import LeftMenuList from "@functional/leftMenuList/left-menu-list";
 import { errorAlert } from "@functional/alert/alert-default";
 import { useCategoryStore } from "@/store/category";
 import { useSearchStore } from "@/store/search";
-import { useUserStore } from "@/store/user";
 
 definePageMeta({
   name: "SearchCategory",
@@ -69,7 +62,6 @@ const route = useRoute();
 const router = useRouter();
 const categoryStore = useCategoryStore();
 const searchStore = useSearchStore();
-const userStore = useUserStore();
 
 const heatmap = ref({});
 const currentClassification = ref({
@@ -89,19 +81,6 @@ const categoryIdMap = ref({});
 const categoryNameMap = ref([]);
 const rootCategory = ref({ id: "rootCategory", name: "Root Category", subTypes: [] });
 const categoryList = ref([]); // 카테고리 아이콘 렌더 위한 목록
-// const colorList = ref([ // 색상 로테이션 리스트
-//   'rgb(83,120,217)',  // #5378d9
-//   'rgb(136,169,255)',  // #88a9ff
-//   'rgb(35,209,222)',  // #23d1de
-//   'rgb(119,225,230)',  // #77e1e6
-//   'rgb(22,225,176)',  // #16e1b0
-//   'rgb(146,236,212)',  // #92ecd4
-//   'rgb(239,159,149)',  // #ef9f95
-//   'rgb(226,127,107)',  // #e27f6b
-//   'rgb(235,201,89)',  // #ebc959
-//   'rgb(44,76,161)',   // #2c4ca1
-// ])
-
 const colorList = ref([
   "rgb(136, 169, 255)", // 가장 연한 색
   "rgb(122, 156, 240)",
@@ -114,20 +93,6 @@ const colorList = ref([
   "rgb(52, 85, 164)",
   "rgb(44, 76, 161)"  // 가장 진한 색
 ]);
-
-// const colorList = ref([ // 색상 로테이션 리스트
-//   'rgb(255, 99, 71)',   // #FF6347 (Tomato)
-//   'rgb(30, 144, 255)',  // #1E90FF (DodgerBlue)
-//   'rgb(60, 179, 113)',  // #3CB371 (MediumSeaGreen)
-//   'rgb(255, 165, 0)',  // #FFA500 (Orange)
-//   'rgb(75, 0, 130)',  // #4B0082 (Indigo)
-//   'rgb(255, 192, 203)',  // #FFC0CB (Pink)
-//   'rgb(123, 104, 238)',  // #7B68EE (MediumSlateBlue)
-//   'rgb(34, 139, 34)',  // #228B22 (ForestGreen)
-//   'rgb(255, 215, 0)',  // #FFD700 (Gold)
-//   'rgb(255, 20, 147)',  // #FF1493 (DeepPink)
-//   'rgb(70, 130, 180)',  // #4682B4 (SteelBlue)
-// ])
 
 const chartOptions = ref({
   chart: { height: "850px", width: "1030" },
@@ -241,8 +206,6 @@ const chartOptions = ref({
       if (!this || !this.key) {
         return "";
       }
-      const text_overflow_style = `overflow: hidden; text-overflow: ellipsis; white-space: normal;`;
-
       return `<div>
                 <div id="diagram"></div>
                 <div id="tooltip" class="mu-tooltip-info w360">
@@ -430,8 +393,8 @@ const getCategoryData = async () => {
     categoryNameMap.value[el.name] = el;
     categoryIdMap.value[el.id] = {
       ...el,
-    superTypes: [],
-    subTypes: []
+      superTypes: [],
+      subTypes: []
     };
   });
 
@@ -537,7 +500,6 @@ const onClickMenuItem = (item) => {
     // 테이블 카운트가 0보다 큰 경우가 있는지 확인
     let matched = obj.subTypes.find((el) => el.tableCount > 0)
     if (matched) {
-      // categoryStore.setToggleTargetOnClick(obj.name) // 하위 메뉴 토글 이벤트 핸들러
       categoryStore.setToggleTargetOnClickTreemap(item.id)
 
       // 하위 카테고리에 매핑된 데이터가 있는 경우만 이동
@@ -579,7 +541,6 @@ const onClickTreeMapNode = (e) => {
     let matched = obj.subTypes.find((el) => el.tableCount > 0)
     if (matched) {
       // 하위가 있는 경우 왼쪽 메뉴가 열려있으면 그대로, 닫혀있으면 열기
-      // categoryStore.setToggleTargetOnClick(e.point.catName) // 하위 메뉴 토글 이벤트 핸들러
       categoryStore.setSelectedItemId(e.point.id); // 해당 카테고리 활성화
       categoryStore.setToggleTargetOnClickTreemap(e.point.id);
     } else {

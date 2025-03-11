@@ -15,8 +15,7 @@
         <tr>
           <th scope="col">
             <div class="mu-checkbox">
-              <input type="checkbox" id="ckb1" title="전체선택"
-                :checked="isAllChecked()"
+              <input type="checkbox" id="ckb1" title="전체선택" :checked="isAllChecked()"
                 @click.stop="e => onToggleCheckbox(e, true)">
               <label for="ckb1"><span class="blind">전체선택</span></label>
             </div>
@@ -40,11 +39,13 @@
           </td>
           <td>
             <!-- 데이터설명 -->
-            <a :title="item.description ? item.description : '-'" @click="onClickDataName(item)">{{ item.description ? item.description : '-' }}</a>
+            <a :title="item.description ? item.description : '-'" @click="onClickDataName(item)">{{ item.description ?
+              item.description : '-' }}</a>
           </td>
           <td>
             <!-- 데이터명 -->
-            <a :title="item.meta_name ? item.meta_name : '-'" @click="onClickDataName(item)">{{ item.meta_name ? item.meta_name : '-' }}</a>
+            <a :title="item.meta_name ? item.meta_name : '-'" @click="onClickDataName(item)">{{ item.meta_name ?
+              item.meta_name : '-' }}</a>
           </td>
           <td :title="item.system_name ? item.system_name : '-'">
             <!-- 시스템명 -->
@@ -73,13 +74,10 @@
 </template>
 
 <script setup lang="ts">
-import {useUserStore} from '@store/user';
 import CategoryGroup from "@molecules/metaDataManage/category-group";
-import {useRouter} from "nuxt/app";
-import {computed} from "vue";
-import {$R} from "@composables/ramda";
+import { useRouter } from "nuxt/app";
+import { $R } from "@composables/ramda";
 
-const userStore = useUserStore();
 const router = useRouter();
 
 // interface
@@ -89,12 +87,11 @@ interface Props {
 }
 
 // getters
-const user = userStore.getUser;
 
 const emit = defineEmits(["onSelectItems"]);
 const props = defineProps<Props>();
 
-const _selectedData = ref<Array<{[key:string]:any}>>([])
+const _selectedData = ref<Array<{ [key: string]: any }>>([])
 _selectedData.value = $R.clone(props.selectedData)
 
 // 전체 체크박스 체크 표시 여부 계산
@@ -109,7 +106,7 @@ const isChecked = (item: any): boolean => {
 };
 
 // 체크박스 클릭 이벤트 핸들러
-const onToggleCheckbox = (e, isAll:boolean, item: any) => {
+const onToggleCheckbox = (e, isAll: boolean, item: any) => {
   const { target: { checked } } = e;
   let newItems = [..._selectedData.value];
 
@@ -126,7 +123,7 @@ const onToggleCheckbox = (e, isAll:boolean, item: any) => {
     if (checked) {
       newItems.push(item);
     } else {
-      const targetIndex = newItems.findIndex((el:any) => el.meta_id === item.meta_id);
+      const targetIndex = newItems.findIndex((el: any) => el.meta_id === item.meta_id);
       newItems.splice(targetIndex, 1);
     }
   }

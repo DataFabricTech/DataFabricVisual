@@ -1,16 +1,12 @@
 <template>
-  <div :class="props.isAdmin ? 'data-box-wrap' : ''" :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''"
+    :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
         <h4>연관 데이터</h4>
         <div class="mu-item-group">
-          <button
-            type="button"
-            class="mu-btn mu-btn-bg-non btn-section-toggle"
-            title="접기"
-            @click="toggleShowData()"
-            style="margin-left: 10px"
-          >
+          <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
+            style="margin-left: 10px">
             <span>{{ toggleShowDataText }}</span>
           </button>
         </div>
@@ -36,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "~/store/user";
 
@@ -67,9 +62,4 @@ const onClickDataName = (item) => {
   });
 }
 
-// const onClickDataName = (item) => {
-//   emit("onClickData", item.guid);
-//   userStore.setGuid(item.guid);
-//   window.scrollTo(0, 0);
-// };
 </script>

@@ -7,21 +7,18 @@
       <div class="board-list-wrap">
         <div class="mu-heading">
           <!-- board-list-search -->
-          <request-border-list-search
-            :searchObj.sync="searchObj"
-            @searchMethod="getDataRequestList"
-          />
+          <request-border-list-search :searchObj.sync="searchObj" @searchMethod="getDataRequestList" />
 
           <div class="mu-item-group">
-              <div class="mu-selectbox w120">
-                <select name="searchType3" :value="searchObj.searchStatus" @change="onChangeProcessStatus">
-                  <option v-for="(item, index) in processStatusfilterList" :key="index" :value="item.value">
-                    {{ item.desc }}
-                  </option>
-                </select>
-              </div>
-              <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
+            <div class="mu-selectbox w120">
+              <select name="searchType3" :value="searchObj.searchStatus" @change="onChangeProcessStatus">
+                <option v-for="(item, index) in processStatusfilterList" :key="index" :value="item.value">
+                  {{ item.desc }}
+                </option>
+              </select>
             </div>
+            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
+          </div>
         </div>
         <div class="board-list">
           <table class="mu-grid">
@@ -35,13 +32,8 @@
               <tr>
                 <th scope="col">
                   <div class="mu-checkbox">
-                    <input
-                      type="checkbox"
-                      id="chkAll"
-                      title="전체선택"
-                      v-model="allChecked"
-                      @click="checkedAll($event.target.checked)"
-                    />
+                    <input type="checkbox" id="chkAll" title="전체선택" v-model="allChecked"
+                      @click="checkedAll($event.target.checked)" />
                     <label for="chkAll"><span class="blind">전체선택</span></label>
                   </div>
                 </th>
@@ -59,17 +51,9 @@
               <tr v-for="(item, index) in dataRequestList" :key="index">
                 <td>
                   <div class="mu-checkbox">
-                    <input
-                      type="checkbox"
-                      :id="'check_' + item.id"
-                      title="행선택"
-                      :value="item.id"
-                      v-model="item.selected"
-                      @change="selected(item.id)"
-                    />
-                    <label :for="'check_' + item.id"
-                      ><span class="blind">행선택</span></label
-                    >
+                    <input type="checkbox" :id="'check_' + item.id" title="행선택" :value="item.id" v-model="item.selected"
+                      @change="selected(item.id)" />
+                    <label :for="'check_' + item.id"><span class="blind">행선택</span></label>
                   </div>
                 </td>
                 <td>{{ item.rownum }}</td>
@@ -88,18 +72,11 @@
                   <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>
                 </td>
                 <td>
-                  <button
-                    v-if="item.admin_reply && item.admin_reply > 0"
-                    class="mu-btn mu-btn-sm"
-                    @click="onClickReplyUpdate(item.id)"
-                  >
+                  <button v-if="item.admin_reply && item.admin_reply > 0" class="mu-btn mu-btn-sm"
+                    @click="onClickReplyUpdate(item.id)">
                     <span>수정하기</span>
                   </button>
-                  <button
-                    v-else
-                    class="mu-btn mu-btn-sm"
-                    @click="onClickReplyRegister(item.id)"
-                  >
+                  <button v-else class="mu-btn mu-btn-sm" @click="onClickReplyRegister(item.id)">
                     <span>등록하기</span>
                   </button>
                 </td>
@@ -152,18 +129,18 @@ interface PagingObj {
 
 interface DataRequest {
   id: number
-	writer: string
-	request_type: number
-	title: string
-	data_name: string
-	contents: string
-	request_start: string
-	request_end: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: number
+  title: string
+  data_name: string
+  contents: string
+  request_start: string
+  request_end: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface SearchObj {
@@ -278,14 +255,14 @@ const checkedAll = (checked: boolean): void => {
 // 체크박스 클릭 이벤트
 const selected = (request_id: number): void => {
   const selectedItem = dataRequestList.value.find(v => v.id == request_id);
-  if(selectedItem.selected) {
+  if (selectedItem.selected) {
     checkedList.value.push(request_id);
   } else {
     checkedList.value.splice(checkedList.value.findIndex(v => v == request_id), 1);
   }
 
   for (let i in dataRequestList.value) {
-    if(! dataRequestList.value[i].selected) {
+    if (!dataRequestList.value[i].selected) {
       allChecked.value = false;
       return;
     } else {
@@ -296,11 +273,6 @@ const selected = (request_id: number): void => {
 
 const onClickDetail = (id: number): void => {
   router.push(`/admin/manager/user/response/detail?id=${id}`);
-};
-
-// 신청하기 버튼 클릭 이벤트
-const onClickRegisterButton = (): void => {
-  router.push("/data/request/register");
 };
 
 // 페이지 번호 클릭 이벤트 핸들러

@@ -3,13 +3,8 @@
     <div class="mu-heading">
       <h4>사용자 리뷰</h4>
       <div class="mu-item-group">
-        <button
-          type="button"
-          class="mu-btn mu-btn-bg-non btn-section-toggle"
-          title="접기"
-          @click="toggleShowData()"
-          style="margin-left: 10px"
-        >
+        <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
+          style="margin-left: 10px">
           <span>{{ toggleShowDataText }}</span>
         </button>
       </div>
@@ -19,13 +14,8 @@
         <div class="comment-write">
           <div class="comment-write-box">
             <div class="comment-form">
-              <textarea
-                class="mu-area"
-                placeholder="리뷰를 작성해주세요. (최대200자)"
-                title="리뷰 입력"
-                maxlength="200"
-                v-model="userReview"
-              />
+              <textarea class="mu-area" placeholder="리뷰를 작성해주세요. (최대200자)" title="리뷰 입력" maxlength="200"
+                v-model="userReview" />
               <button type="button" class="mu-btn mu-btn-primary" @click="saveUserReview">
                 <span>등록</span>
               </button>
@@ -39,10 +29,7 @@
         </div>
 
         <!-- 리뷰 뷰 폼-->
-        <div
-          v-for="(item, index) in props.list" :key="index"
-          class="comment-view"
-        >
+        <div v-for="(item, index) in props.list" :key="index" class="comment-view">
           <div class="user-image"><i class="mu-icon-svg user"></i></div>
           <div class="comment-cont">
             <div class="comment-info">
@@ -55,59 +42,35 @@
             </div>
             <!-- 댓글 수정 버튼 : 내 댓글에서만 수정 -->
             <div class="modify-btn" v-if="userStore.getUser.user_id === item.user_id">
-              <button
-                type="button"
-                class="mu-btn mu-btn-sm mu-btn-bg-non"
-                title="해당답변 수정"
-                @click="onClickEditUserReview(item)"
-              >
+              <button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non" title="해당답변 수정"
+                @click="onClickEditUserReview(item)">
                 <span>수정</span><i class="mu-icon-svg edit"></i>
               </button>
-              <button
-                type="button"
-                class="mu-btn mu-btn-sm mu-btn-bg-non"
-                title="해당답변 삭제"
-                @click="onClickDeleteUserReview(item.review_id)"
-              >
+              <button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non" title="해당답변 삭제"
+                @click="onClickDeleteUserReview(item.review_id)">
                 <span>삭제</span><i class="mu-icon-svg del"></i>
               </button>
             </div>
             <!-- 리뷰 수정 폼-->
-            <div
-              v-if="
-                editingReviewObj.display &&
-                editingReviewObj.review.review_id === item.review_id
-              "
-              class="comment-write"
-            >
+            <div v-if="
+              editingReviewObj.display &&
+              editingReviewObj.review.review_id === item.review_id
+            " class="comment-write">
               <div class="comment-write-box">
                 <form action="">
                   <fieldset>
                     <legend>내 답변 수정</legend>
-                    <textarea
-                      class="mu-area"
-                      placeholder="답변을 작성하실 수 있습니다. (200자 까지)"
-                      title="내 답변 수정"
-                      maxlength="200"
-                      v-model="editingUserReview"
-                    />
+                    <textarea class="mu-area" placeholder="답변을 작성하실 수 있습니다. (200자 까지)" title="내 답변 수정" maxlength="200"
+                      v-model="editingUserReview" />
                     <div class="comment-write-bottom">
                       <div class="letter-count">
                         <strong>{{ editingUserReviewTextCounts }}</strong> / 200
                       </div>
-                      <button
-                        type="button"
-                        class="mu-btn"
-                        @click="onCancelEditUserReview"
-                      >
+                      <button type="button" class="mu-btn" @click="onCancelEditUserReview">
                         <span>취소</span>
                       </button>
-                      <button
-                        type="button"
-                        class="mu-btn mu-btn-primary"
-                        @click="onSaveEditUserReview"
-                        :disabled="isUserReviewEdited"
-                      >
+                      <button type="button" class="mu-btn mu-btn-primary" @click="onSaveEditUserReview"
+                        :disabled="isUserReviewEdited">
                         <span>등록</span>
                       </button>
                     </div>
@@ -147,10 +110,6 @@ const toggleShowData = () => {
   }
 };
 
-// 랜더링 후 안보이도록 하기 위함
-// onMounted(() => { showData.value = false})
-
-const reviewList = ref([]); // 해당 엔티티에 대한 사용자 리뷰 목록
 const userReview = ref(""); // 작성 중인 사용자 리뷰 텍스트
 const editingReviewObj = ref({
   // 사용자 리뷰 수정 제어

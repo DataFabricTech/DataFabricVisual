@@ -15,14 +15,8 @@
             </select>
           </div>
           <div class="mu-input-icon">
-            <input
-              type="text"
-              v-model="props.searchObj.searchWord"
-              @keypress.enter.prevent="onSearch()"
-              class="mu-input"
-              placeholder="Search"
-              title="검색어입력"
-            />
+            <input type="text" v-model="props.searchObj.searchWord" @keypress.enter.prevent="onSearch()"
+              class="mu-input" placeholder="Search" title="검색어입력" />
             <button type="button" class="mu-btn mu-btn-sch" @click="onSearch()">
               <i class="mu-icon-svg search"></i>
               <span>검색</span>

@@ -4,10 +4,7 @@
       <div class="inner">
         <div class="board-list-wrap">
           <div class="mu-heading">
-            <synonym-border-list-search
-              v-model:searchObj="searchObj"
-              @searchMethod="getSynonym"
-              />
+            <synonym-border-list-search v-model:searchObj="searchObj" @searchMethod="getSynonym" />
 
             <div class="mu-item-group">
               <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getSynonym" />
@@ -30,58 +27,45 @@
                 </tr>
               </thead>
               <tbody>
-              <tr v-if="synonymList.length > 0" v-for="(item, index) in synonymList" :key="index">
-                <td>{{ (pagingObj.total - (pagingObj.currentPage - 1) * pagingObj.limit) - index }}</td>
-                <td class="tl">{{ item.term }}</td>
-                <td class="tl">
-                  <div class="synonym-keyword tags-group">
-                    <div class="tag" v-for="(synonymInfo, c_index) in item.synonyms" :key="c_index">
-                      <span class="tag-label" :title="synonymInfo.synonym">
-                        {{ synonymInfo.synonym }}
-                      </span>
+                <tr v-if="synonymList.length > 0" v-for="(item, index) in synonymList" :key="index">
+                  <td>{{ (pagingObj.total - (pagingObj.currentPage - 1) * pagingObj.limit) - index }}</td>
+                  <td class="tl">{{ item.term }}</td>
+                  <td class="tl">
+                    <div class="synonym-keyword tags-group">
+                      <div class="tag" v-for="(synonymInfo, c_index) in item.synonyms" :key="c_index">
+                        <span class="tag-label" :title="synonymInfo.synonym">
+                          {{ synonymInfo.synonym }}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="onToggleSynonymAddModal(item.term)"><i class="mu-icon-svg add"></i><span>추가</span></button>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="onToggleSynonymDeleteModal(item.term)"><i class="mu-icon-svg del"></i><span>삭제</span></button>
-                </td>
-              </tr>
-              <tr v-else>
-                <td colspan="4">
-                  <p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p>
-                </td>
-              </tr>
+                  </td>
+                  <td>
+                    <button type="button" class="mu-btn mu-btn-sm" @click="onToggleSynonymAddModal(item.term)"><i
+                        class="mu-icon-svg add"></i><span>추가</span></button>
+                    <button type="button" class="mu-btn mu-btn-sm" @click="onToggleSynonymDeleteModal(item.term)"><i
+                        class="mu-icon-svg del"></i><span>삭제</span></button>
+                  </td>
+                </tr>
+                <tr v-else>
+                  <td colspan="4">
+                    <p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <!-- <div class="mu-item-group" style="padding-top: 10px;">
-            <p class="bul-ast">동의어 안내 문구</p>
-          </div> -->
 
           <!-- 동의어 추가 모달 -->
-          <synonym-add-modal
-            :toggle="toggleSynonymAddModal"
-            :synonymOneList="synonymOneList"
-            @reloadSynonymListOne="getSynonymOneList"
-            @reloadSynonymList="getSynonym"
-            @onCloseModal="onToggleSynonymAddModal"
-          />
+          <synonym-add-modal :toggle="toggleSynonymAddModal" :synonymOneList="synonymOneList"
+            @reloadSynonymListOne="getSynonymOneList" @reloadSynonymList="getSynonym"
+            @onCloseModal="onToggleSynonymAddModal" />
 
           <!-- 동의어 삭제 요청 모달 -->
-          <synonym-delete-modal
-            :isAdmin=false
-            :toggle="toggleSynonymDeleteModal"
-            :synonymOneList="synonymOneList"
-            @reloadSynonymListOne="getSynonymOneList"
-            @reloadSynonymList="getSynonym"
-            @onCloseModal="onToggleSynonymDeleteModal"
-          />
+          <synonym-delete-modal :isAdmin=false :toggle="toggleSynonymDeleteModal" :synonymOneList="synonymOneList"
+            @reloadSynonymListOne="getSynonymOneList" @reloadSynonymList="getSynonym"
+            @onCloseModal="onToggleSynonymDeleteModal" />
 
-          <Pagination
-            :paging="pagingObj"
-            @onClickPage="onClickPage"
-          />
+          <Pagination :paging="pagingObj" @onClickPage="onClickPage" />
         </div>
       </div>
     </div>
@@ -126,7 +110,7 @@ const toggleSynonymDeleteModal = ref(false)
 
 // 동의어 목록 조회
 const getSynonym = async (page = 1) => {
- await $ofetch(`/api/synonym/list?pageSize=${pagingObj.value.limit}&pnum=${page}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`)
+  await $ofetch(`/api/synonym/list?pageSize=${pagingObj.value.limit}&pnum=${page}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`)
     .then((res) => {
       if (res && res.data && res.data.list) {
         pagingObj.value = {
@@ -147,7 +131,7 @@ const getSynonymOneList = async (term) => {
   await $ofetch(`/api/synonym/listOne?term=${encodeURIComponent(term)}`)
     .then((res) => {
       if (res && res.data)
-      synonymOneList.value = res.data
+        synonymOneList.value = res.data
     })
 }
 

@@ -2,15 +2,12 @@
   <div class="contents">
     <div>
       <div class="inner">
-        <select-tab
-          :tabs="tabs"
-          :activeTab="currentExtractTab"
-          @onSelectTab="onSelectCurrentTab"
-        />
+        <select-tab :tabs="tabs" :activeTab="currentExtractTab" @onSelectTab="onSelectCurrentTab" />
         <div class="board-list-wrap">
           <div class="mu-heading">
             <!-- board-list-search -->
-            <Border-list-search :searchObj="searchObj" @searchMethod="getMyExtractedDataList" :searchList="searchList"/>
+            <border-list-search :searchObj="searchObj" @searchMethod="getMyExtractedDataList"
+              :searchList="searchList" />
 
             <!-- //board-list-search -->
             <div class="mu-item-group">
@@ -21,10 +18,7 @@
                   </option>
                 </select>
               </div>
-              <page-size
-                v-model:pageSize="pagingObj.limit"
-                @searchMethod="getMyExtractedDataList"
-              />
+              <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getMyExtractedDataList" />
             </div>
           </div>
           <!-- 추출 데이터 -->
@@ -39,18 +33,18 @@
                 <col style="width: 180px" />
               </colgroup>
               <thead>
-              <tr>
-                <th scope="col">번호</th>
-                <th scope="col">데이터 설명</th>
-                <th scope="col">데이터 명</th>
-                <th scope="col">시스템 명</th>
-                <th scope="col">추출방법</th>
-                <th scope="col">추출 일시</th>
-              </tr>
+                <tr>
+                  <th scope="col">번호</th>
+                  <th scope="col">데이터 설명</th>
+                  <th scope="col">데이터 명</th>
+                  <th scope="col">시스템 명</th>
+                  <th scope="col">추출방법</th>
+                  <th scope="col">추출 일시</th>
+                </tr>
               </thead>
               <tbody>
 
-              <tr v-for="(item, index) in postList" :key="index">
+                <tr v-for="(item, index) in postList" :key="index">
                   <td>{{ item.rownum }}</td>
                   <td>
                     <a @click="onClickDataName(item)" :title="item.description ? item.description : '-'">
@@ -58,15 +52,16 @@
                     </a>
                   </td>
                   <td :title="item.meta_name ? item.meta_name : '-'">{{ item.meta_name ? item.meta_name : '-' }}</td>
-                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}</td>
+                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}
+                  </td>
                   <td>{{ getDownloadType(item.download_type) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
-              </tr>
-              <tr v-if="postList.length === 0">
-                <td colspan="6">
-                  <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
-                </td>
-              </tr>
+                </tr>
+                <tr v-if="postList.length === 0">
+                  <td colspan="6">
+                    <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -86,22 +81,22 @@
                 <col style="width: 110px" />
               </colgroup>
               <thead>
-              <tr>
-                <th scope="col">번호</th>
-                <th scope="col">데이터 설명</th>
-                <th scope="col">데이터 명</th>
-                <th scope="col">시스템 명</th>
-                <th scope="col">추출방법</th>
-                <th scope="col">추출일시</th>
-                <th scope="col">완료일시</th>
-                <th scope="col">만료일</th>
-                <th scope="col">파일 다운로드</th>
-                <th scope="col">상태</th>
-              </tr>
+                <tr>
+                  <th scope="col">번호</th>
+                  <th scope="col">데이터 설명</th>
+                  <th scope="col">데이터 명</th>
+                  <th scope="col">시스템 명</th>
+                  <th scope="col">추출방법</th>
+                  <th scope="col">추출일시</th>
+                  <th scope="col">완료일시</th>
+                  <th scope="col">만료일</th>
+                  <th scope="col">파일 다운로드</th>
+                  <th scope="col">상태</th>
+                </tr>
               </thead>
               <tbody>
 
-              <tr v-for="(item, index) in postList" :key="index">
+                <tr v-for="(item, index) in postList" :key="index">
                   <td>{{ item.rownum }}</td>
                   <td>
                     <a @click="onClickDataName(item)" :title="item.description ? item.description : '-'">
@@ -109,7 +104,8 @@
                     </a>
                   </td>
                   <td :title="item.meta_name ? item.meta_name : '-'">{{ item.meta_name ? item.meta_name : '-' }}</td>
-                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}</td>
+                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}
+                  </td>
                   <td>{{ getDownloadType(item.download_type) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.end_time) }}</td>
@@ -120,21 +116,21 @@
                     </button>
                   </td>
                   <td v-else>-</td>
-                  <td><em :class="getStatusStyle(item.status)" >{{ getStatus(item.status) }}</em></td>
+                  <td><em :class="getStatusStyle(item.status)">{{ getStatus(item.status) }}</em></td>
 
-              </tr>
-              <tr v-if="postList.length === 0">
-                <td colspan="10">
-                  <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
-                </td>
-              </tr>
+                </tr>
+                <tr v-if="postList.length === 0">
+                  <td colspan="10">
+                    <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
           <!-- mu-pagination -->
         </div>
-          <pagination :paging="pagingObj" @onClickPage="onClickPage" />
-          <!-- //mu-pagination -->
+        <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+        <!-- //mu-pagination -->
       </div>
     </div>
   </div>
@@ -156,8 +152,8 @@ definePageMeta({
 const { $ofetch } = useNuxtApp();
 
 const tabs = ref([
-  {idx: 0, key: "데이터 추출 이력"},
-  {idx: 1, key: "대용량 데이터 추출"}
+  { idx: 0, key: "데이터 추출 이력" },
+  { idx: 1, key: "대용량 데이터 추출" }
 ])
 
 // 대용량 데이터 추출 필터 항목
@@ -200,16 +196,16 @@ const searchObj = ref({
 });
 const searchList = ref([
   {
-    value : "description",
-    text : "데이터 설명"
+    value: "description",
+    text: "데이터 설명"
   },
   {
-    value : "meta_name",
-    text : "데이터 명"
+    value: "meta_name",
+    text: "데이터 명"
   },
   {
-    value : "system_name",
-    text : "시스템 명"
+    value: "system_name",
+    text: "시스템 명"
   },
 ])
 
@@ -226,11 +222,11 @@ const getMyExtractedDataList = async (offset = 1) => {
   };
 
   await $ofetch("/api/myCatalog/myExtractedDataList", {
-      method: 'POST',
-      body: JSON.stringify(param),
-      headers: {
-          'Content-Type': 'application/json'
-      }
+    method: 'POST',
+    body: JSON.stringify(param),
+    headers: {
+      'Content-Type': 'application/json'
+    }
   }).then(async (res) => {
     if (res && res.data && res.data.list) {
       pagingObj.value = {

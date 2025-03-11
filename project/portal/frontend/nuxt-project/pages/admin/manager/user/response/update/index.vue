@@ -27,14 +27,15 @@
             <tbody>
               <tr>
                 <th scope="row">분류</th>
-                  <td>
-                    <span>{{ getClassification(dataRequest) }}</span>
-                  </td>
-                </tr>
+                <td>
+                  <span>{{ getClassification(dataRequest) }}</span>
+                </td>
+              </tr>
               <tr>
                 <th scope="row">신청 상태</th>
                 <td>
-                  <span :class="getProcessStyle(dataRequest.process_status)">{{ getProcessStatus(dataRequest.process_status) }}</span>
+                  <span :class="getProcessStyle(dataRequest.process_status)">{{
+                    getProcessStatus(dataRequest.process_status) }}</span>
                 </td>
               </tr>
               <tr>
@@ -79,9 +80,7 @@
                 <td>
                   <ul class="file-sch-list">
                     <li v-for="(item, index) in files" :key="index">
-                      <a href="#none" title="첨부파일다운로드"
-                        ><i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}</a
-                      >
+                      <a href="#none" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}</a>
                     </li>
                   </ul>
                 </td>
@@ -91,13 +90,8 @@
           <!-- //mu-formbox -->
           <!-- mu-button-wrap -->
           <div class="mu-button-wrap">
-            <button
-              type="button"
-              class="mu-btn mu-btn-lg"
-              @click="onClickDeleteDataRequestButton"
-            >
-              <span>삭제</span></button
-            ><!-- 게시글 삭제용 -->
+            <button type="button" class="mu-btn mu-btn-lg" @click="onClickDeleteDataRequestButton">
+              <span>삭제</span></button><!-- 게시글 삭제용 -->
           </div>
           <!-- //mu-button-wrap -->
           <div class="reply-wrap">
@@ -120,50 +114,20 @@
                     <td>
                       <div class="mu-item-group">
                         <div class="mu-radio">
-                          <input
-                            type="radio"
-                            id="r1"
-                            name="r1"
-                            value=1
-                            v-model="answer.process_status"
-                            checked="checked"
-                          /><label for="r1"
-                            ><em class="step-process review">검토중</em></label
-                          >
+                          <input type="radio" id="r1" name="r1" value=1 v-model="answer.process_status"
+                            checked="checked" /><label for="r1"><em class="step-process review">검토중</em></label>
                         </div>
                         <div class="mu-radio">
-                          <input
-                            type="radio"
-                            id="r2"
-                            name="r2"
-                            value=2
-                            v-model="answer.process_status"
-                          />
+                          <input type="radio" id="r2" name="r2" value=2 v-model="answer.process_status" />
                           <label for="r2"><em class="step-process ing">진행중</em></label>
                         </div>
                         <div class="mu-radio">
-                          <input
-                            type="radio"
-                            id="r3"
-                            name="r3"
-                            value=3
-                            v-model="answer.process_status"
-                          />
-                          <label for="r3"
-                            ><em class="step-process supply">제공</em></label
-                          >
+                          <input type="radio" id="r3" name="r3" value=3 v-model="answer.process_status" />
+                          <label for="r3"><em class="step-process supply">제공</em></label>
                         </div>
                         <div class="mu-radio">
-                          <input
-                            type="radio"
-                            id="r4"
-                            name="r4"
-                            value=4
-                            v-model="answer.process_status"
-                          />
-                          <label for="r4"
-                            ><em class="step-process unsupply">미제공</em></label
-                          >
+                          <input type="radio" id="r4" name="r4" value=4 v-model="answer.process_status" />
+                          <label for="r4"><em class="step-process unsupply">미제공</em></label>
                         </div>
                       </div>
                     </td>
@@ -171,12 +135,7 @@
                   <tr>
                     <th scope="row">답변<strong class="required">필수</strong></th>
                     <td>
-                      <textarea
-                        class="mu-area"
-                        title="답변 내용 입력"
-                        rows="10"
-                        v-model="answer.admin_reply"
-                      ></textarea>
+                      <textarea class="mu-area" title="답변 내용 입력" rows="10" v-model="answer.admin_reply"></textarea>
                     </td>
                   </tr>
                 </tbody>
@@ -185,21 +144,13 @@
               <div class="modify-btn" style="margin-top: 10px;">
                 <button type="button" class="mu-btn" @click="onClickListButton">
                   <span>답변 취소</span></button> &nbsp;
-                <button
-                  type="button"
-                  class="mu-btn mu-btn-primary"
-                  @click="onClickSaveButton"
-                >
+                <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveButton">
                   <span>답변 확인</span></button>
               </div>
             </div>
           </div>
           <div class="mu-button-wrap">
-            <button
-              type="button"
-              class="mu-btn mu-btn-lg mu-btn-primary"
-              @click="onClickListButton(dataRequest.id)"
-            >
+            <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton(dataRequest.id)">
               <span>취소</span>
             </button>
           </div>
@@ -231,18 +182,18 @@ const userStore = useUserStore();
 
 interface DataRequest {
   id: number
-	writer: string
-	request_type: number
-	title: string
-	data_name: string
-	contents: string
-	request_start: string
-	request_end: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: number
+  title: string
+  data_name: string
+  contents: string
+  request_start: string
+  request_end: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface File {
@@ -275,18 +226,18 @@ onMounted(() => {
 
 const dataRequest = ref<DataRequest>({
   id: 0,
-	writer: "",
-	request_type: 0,
-	title: "",
-	data_name: "",
-	contents: "",
-	request_start: "",
-	request_end: "",
-	benefit_content: "",
-	create_date: "",
-	update_date: "",
-	process_status: 0,
-	finish_date: ""
+  writer: "",
+  request_type: 0,
+  title: "",
+  data_name: "",
+  contents: "",
+  request_start: "",
+  request_end: "",
+  benefit_content: "",
+  create_date: "",
+  update_date: "",
+  process_status: 0,
+  finish_date: ""
 });
 
 const files = ref<Array<File>>([]);
@@ -350,9 +301,9 @@ const getDataRequestOne = async (id: number): Promise<void> => {
     } else {
       if (answerList.value && answerList.value.length > 0) {
         lastFlag.value =
-        userStore.getAnswerId == answerList.value[answerList.value.length - 1].id
-          ? "Y"
-          : "N";
+          userStore.getAnswerId == answerList.value[answerList.value.length - 1].id
+            ? "Y"
+            : "N";
         answer.value = answerList.value[answerList.value.findIndex((el) => el.id === userStore.getAnswerId)];
       }
 

@@ -1,6 +1,7 @@
 <template>
   <!-- detail-section : 데이터 정보 -->
-  <div :class="props.isAdmin ? 'data-box-wrap' : ''" :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''"
+    :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
         <h4>데이터 프로파일링</h4>
@@ -10,7 +11,8 @@
           </button>
         </div>
       </div>
-      <div v-if="(props.userDataAuth == 1 || props.userDataAuth == 2) && ((table && table.status) || (column && column.status))">
+      <div
+        v-if="(props.userDataAuth == 1 || props.userDataAuth == 2) && ((table && table.status) || (column && column.status))">
         <!-- detail-box : 테이블 프로필 -->
         <div class="detail-box" v-if="showTableArea">
           <div class="mu-heading">
@@ -25,13 +27,13 @@
             </colgroup>
             <tbody>
               <tr>
-              <th scope="col">행수</th>
-              <!-- <th scope="col">테이블 크기(Byte)</th> -->
-              <td>{{ comman(table.num_rows) ? comman(table.num_rows) : "-" }}</td>
-              <th scope="col">테이블프로파일링 일시</th>
-              <!-- <td>{{ table.total_size | numberComma }}</td> -->
-              <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
-            </tr>
+                <th scope="col">행수</th>
+                <!-- <th scope="col">테이블 크기(Byte)</th> -->
+                <td>{{ comman(table.num_rows) ? comman(table.num_rows) : "-" }}</td>
+                <th scope="col">테이블프로파일링 일시</th>
+                <!-- <td>{{ table.total_size | numberComma }}</td> -->
+                <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -62,7 +64,8 @@
               <tbody>
                 <tr v-for="(item, index) in column" :key="index">
                   <td>
-                    <span :title="item.name + '(' + item.column_type + ')'">{{ item.name ? item.name : "-" }}<br>({{ item.column_type ? item.column_type : "-" }})</span>
+                    <span :title="item.name + '(' + item.column_type + ')'">{{ item.name ? item.name : "-" }}<br>({{
+                      item.column_type ? item.column_type : "-" }})</span>
                   </td>
                   <td>
                     <span class="mu-ellipsis" :title="numberComma(item.null_count)">
@@ -179,11 +182,11 @@ const numberComma = (val) => {
 };
 
 const checkInvaildNumberColumn = (column) => {
-  if( column.hasOwnProperty('min_value') &&
-          column.hasOwnProperty('max_value') &&
-          column.hasOwnProperty('avg_value') &&
-          column.hasOwnProperty('var_value') &&
-          column.hasOwnProperty('std_value') )
+  if (column.hasOwnProperty('min_value') &&
+    column.hasOwnProperty('max_value') &&
+    column.hasOwnProperty('avg_value') &&
+    column.hasOwnProperty('var_value') &&
+    column.hasOwnProperty('std_value'))
     return true;
   else
     return false;
@@ -191,5 +194,9 @@ const checkInvaildNumberColumn = (column) => {
 
 </script>
 <style>
-.mu-grid tbody tr td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mu-grid tbody tr td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

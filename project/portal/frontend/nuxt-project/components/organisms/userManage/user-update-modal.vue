@@ -8,32 +8,36 @@
       <div class="mu-dialog-body">
         <table class="mu-formbox">
           <caption>
-              사용자 정보 수정
+            사용자 정보 수정
           </caption>
           <colgroup>
-              <col style="width: 150px" />
-              <col />
+            <col style="width: 150px" />
+            <col />
           </colgroup>
           <tbody>
             <tr>
               <th scope="row">이름<strong class="required">필수</strong></th>
               <td>
-                <input type="text" placeholder="" class="mu-input" title="이름" v-model="props.modalParam.userObject.user_nm" :disabled="!props.updateFlag"/>
+                <input type="text" placeholder="" class="mu-input" title="이름"
+                  v-model="props.modalParam.userObject.user_nm" :disabled="!props.updateFlag" />
                 <p v-if="!reg_username_valid" class="complete-msg error">이름을 입력해주세요.</p>
               </td>
             </tr>
             <tr>
               <th scope="row">사번<strong class="required">필수</strong></th>
               <td>
-                <input type="text" placeholder="" class="mu-input" title="사번" readonly="readonly" v-model="props.modalParam.userObject.user_id" />
+                <input type="text" placeholder="" class="mu-input" title="사번" readonly="readonly"
+                  v-model="props.modalParam.userObject.user_id" />
                 <p v-if="!reg_userid_valid" class="complete-msg error">사번을 입력해주세요.</p>
               </td>
             </tr>
             <tr>
               <th scope="row">조직명</th>
               <td>
-                <input type="text" placeholder="" class="mu-input w220" title="조직명" value="경영지원팀" readonly="readonly" v-model="props.modalParam.userObject.dept_nm" />
-                <button type="button" class="mu-btn" @click="onToggleDeptModal" style="margin-left:10px" :disabled="!props.updateFlag">
+                <input type="text" placeholder="" class="mu-input w220" title="조직명" value="경영지원팀" readonly="readonly"
+                  v-model="props.modalParam.userObject.dept_nm" />
+                <button type="button" class="mu-btn" @click="onToggleDeptModal" style="margin-left:10px"
+                  :disabled="!props.updateFlag">
                   <span>찾아보기</span>
                 </button>
               </td>
@@ -41,7 +45,8 @@
             <tr>
               <th scope="row">이메일</th>
               <td>
-                <input type="text" placeholder="" class="mu-input" title="이메일" value="" v-model="props.modalParam.userObject.user_email" :disabled="!props.updateFlag"/>
+                <input type="text" placeholder="" class="mu-input" title="이메일" value=""
+                  v-model="props.modalParam.userObject.user_email" :disabled="!props.updateFlag" />
               </td>
             </tr>
             <tr>
@@ -50,7 +55,7 @@
                 <div class="mu-selectbox">
                   <select v-model="props.modalParam.userObject.role_name" :disabled="!props.updateFlag">
                     <option v-for="role in selectRoleList" :key="role.role_id" :value="role.role_id">
-                      {{role.role_name}}
+                      {{ role.role_name }}
                     </option>
                   </select>
                 </div>
@@ -60,27 +65,27 @@
         </table>
       </div>
       <div class="mu-dialog-foot">
-          <button v-if="!props.updateFlag" type="button" class="mu-btn mu-btn-primary" @click="close"><span>닫기</span></button>
-          <button v-if="props.updateFlag" type="button" class="mu-btn" @click="close"><span>취소</span></button>
-          <button v-if="props.updateFlag" type="button" class="mu-btn mu-btn-primary" @click="onClickSaveButton"><span>확인</span></button>
+        <button v-if="!props.updateFlag" type="button" class="mu-btn mu-btn-primary"
+          @click="close"><span>닫기</span></button>
+        <button v-if="props.updateFlag" type="button" class="mu-btn" @click="close"><span>취소</span></button>
+        <button v-if="props.updateFlag" type="button" class="mu-btn mu-btn-primary"
+          @click="onClickSaveButton"><span>확인</span></button>
       </div>
 
       <div class="mu-dialog-close-btn">
-          <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="close"><i class="mu-icon-svg close"></i><span>팝업닫기</span></button>
+        <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="close"><i
+            class="mu-icon-svg close"></i><span>팝업닫기</span></button>
       </div>
     </div>
 
-    <select-dept-modal
-      :toggle-dept-modal="toggleDeptModal"
-      @onSelect="onSelectDept"
-      @onCloseModal="onToggleDeptModal"
-    />
+    <select-dept-modal :toggle-dept-modal="toggleDeptModal" @onSelect="onSelectDept"
+      @onCloseModal="onToggleDeptModal" />
 
   </div>
 </template>
 
 <script setup lang="ts">
-import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import { confirmAlert } from "@functional/alert/alert-default";
 import { successAlert } from "@/components/functional/alert/alert-default";
 import selectDeptModal from "@functional/dept/select-department-modal";
 
@@ -117,24 +122,24 @@ const close = () => {
 //
 const onClickSaveButton = async () => {
   if (!reg_username_valid.value
-  || !reg_userid_valid.value) return;
+    || !reg_userid_valid.value) return;
 
   const result = await confirmAlert("저장하시겠습니까?");
-  if(!result) return;
+  if (!result) return;
 
   let param = {
-      "user_id" : props.modalParam.userObject.user_id,
-      "user_nm" : props.modalParam.userObject.user_nm,
-      "role_name" : props.modalParam.userObject.role_name,
-      "dept_cd" : props.modalParam.userObject.dept_cd,
-      "email" : props.modalParam.userObject.user_email,
+    "user_id": props.modalParam.userObject.user_id,
+    "user_nm": props.modalParam.userObject.user_nm,
+    "role_name": props.modalParam.userObject.role_name,
+    "dept_cd": props.modalParam.userObject.dept_cd,
+    "email": props.modalParam.userObject.user_email,
   }
   $ofetch('/api/admin/manager/user/update', {
     method: 'POST',
     body: param
   })
     .then(async (res) => {
-      if(res && !res.errorMessage) {
+      if (res && !res.errorMessage) {
         await successAlert('저장 되었습니다.');
         emit('searchMethod');
         close();
@@ -145,18 +150,18 @@ const onClickSaveButton = async () => {
 //
 const getRoleList = async () => {
   await $ofetch(`/api/roleList?role_type=`)
-      .then((res) => {
-        if (res && !res.errorMessage) {
-          if(props.modalParam.roleType === 0){
-            selectRoleList.value = res.data.filter(role => role.role_type === 0);
-          } else {
-            selectRoleList.value = res.data;
-          }
+    .then((res) => {
+      if (res && !res.errorMessage) {
+        if (props.modalParam.roleType === 0) {
+          selectRoleList.value = res.data.filter(role => role.role_type === 0);
+        } else {
+          selectRoleList.value = res.data;
         }
-      })
-      .catch((err) => {
-        console.log(err)
-      });
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    });
 }
 
 //

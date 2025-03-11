@@ -1,45 +1,25 @@
 <template>
   <div class="mu-pagination">
-    <button
-      type="button"
-      class="mu-btn mu-btn-paging"
-      v-show="showPrevPageBtn"
-      @click="() => onClickMoveButton('first')"
-    >
+    <button type="button" class="mu-btn mu-btn-paging" v-show="showPrevPageBtn"
+      @click="() => onClickMoveButton('first')">
       <i class="mu-icon-svg first"></i><span>맨 처음으로 이동</span>
     </button>
-    <button
-      type="button"
-      class="mu-btn mu-btn-paging"
-      v-show="showPrevPageBtn"
-      @click="() => onClickMoveButton('prev')"
-    >
+    <button type="button" class="mu-btn mu-btn-paging" v-show="showPrevPageBtn"
+      @click="() => onClickMoveButton('prev')">
       <i class="mu-icon-svg prev"></i><span>이전 페이지로 이동</span>
     </button>
     <ul>
-      <li
-        v-for="page in pages"
-        :key="page"
-        :class="{ active: page === paging.currentPage }"
-        @click="onClickPageNum(page)"
-      >
+      <li v-for="page in pages" :key="page" :class="{ active: page === paging.currentPage }"
+        @click="onClickPageNum(page)">
         <a href="javascript:void(0);">{{ page }}</a>
       </li>
     </ul>
-    <button
-      type="button"
-      class="mu-btn mu-btn-paging"
-      v-show="showNextPageBtn"
-      @click="() => onClickMoveButton('next')"
-    >
+    <button type="button" class="mu-btn mu-btn-paging" v-show="showNextPageBtn"
+      @click="() => onClickMoveButton('next')">
       <i class="mu-icon-svg next"></i><span>다음 페이지로 이동</span>
     </button>
-    <button
-      type="button"
-      class="mu-btn mu-btn-paging"
-      v-show="showNextPageBtn"
-      @click="() => onClickMoveButton('last')"
-    >
+    <button type="button" class="mu-btn mu-btn-paging" v-show="showNextPageBtn"
+      @click="() => onClickMoveButton('last')">
       <i class="mu-icon-svg last"></i><span>맨 마지막으로 이동</span>
     </button>
   </div>

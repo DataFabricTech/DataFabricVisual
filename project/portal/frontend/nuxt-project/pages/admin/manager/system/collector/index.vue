@@ -4,14 +4,9 @@
       <div class="board-list-wrap">
         <div class="mu-heading">
           <!-- board-list-search -->
-          <collector-board-list-search
-            :searchObj.sync="searchObj"
-            @searchMethod="getCollectorList"
-          />
-          <page-size
-            v-model:pageSize="pagingObj.limit"
-            @searchMethod="getCollectorList()"
-            @createCollector="popupCollectorCreateModal"/>
+          <collector-board-list-search :searchObj.sync="searchObj" @searchMethod="getCollectorList" />
+          <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getCollectorList()"
+            @createCollector="popupCollectorCreateModal" />
         </div>
 
         <div class="board-list">
@@ -27,8 +22,8 @@
               <col style="width: 8%" />
               <col style="width: 8%" />
               <col style="width: 8%" />
-              <col style="width: 6%"/>
-              <col style="width: 5%"/>
+              <col style="width: 6%" />
+              <col style="width: 5%" />
               <col />
             </colgroup>
             <thead>
@@ -57,18 +52,22 @@
                 <td>{{ item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-" }}</td>
                 <td>{{ getKrCollectFlag(item.collect_flag) }}</td>
                 <td>
-                  <button :disabled="!item.isActiveIngestion" type="button" class="mu-btn mu-btn-sm" @click="startCollecton(item, index)"><span>실행</span></button>
+                  <button :disabled="!item.isActiveIngestion" type="button" class="mu-btn mu-btn-sm"
+                    @click="startCollecton(item, index)"><span>실행</span></button>
                 </td>
                 <td>{{ item.status_value ? item.status_value : "-" }}</td>
                 <td>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="popupCollectorUpdateModal(item)"><i class="mu-icon-svg edit"></i><span>수정</span></button>
+                  <button type="button" class="mu-btn mu-btn-sm" @click="popupCollectorUpdateModal(item)"><i
+                      class="mu-icon-svg edit"></i><span>수정</span></button>
                   <br>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="deleteCollector(item.system_id)"><i class="mu-icon-svg del"></i><span>삭제</span></button>
+                  <button type="button" class="mu-btn mu-btn-sm" @click="deleteCollector(item.system_id)"><i
+                      class="mu-icon-svg del"></i><span>삭제</span></button>
                 </td>
                 <td>
-                  <button type="button" class="mu-btn mu-btn-icon-only" title="초기화" @click="onClickReloadOneButton(item, index)">
-                      <i class="mu-icon-svg refresh"></i>
-                      <span>초기화</span>
+                  <button type="button" class="mu-btn mu-btn-icon-only" title="초기화"
+                    @click="onClickReloadOneButton(item, index)">
+                    <i class="mu-icon-svg refresh"></i>
+                    <span>초기화</span>
                   </button>
                 </td>
               </tr>
@@ -84,14 +83,9 @@
         <pagination :paging="pagingObj" @onClickPage="onClickPage" />
       </div>
     </div>
-    <collector-modal
-      :isDetail="isDetail"
-      :isUpdate="isUpdate"
-      :collector="collector"
-      :toggleCollectorModal="toggleCollectorModal"
-      @updateCollector="updateCollector"
-      @onCloseModal="onCloseCollectorModal"
-    />
+    <collector-modal :isDetail="isDetail" :isUpdate="isUpdate" :collector="collector"
+      :toggleCollectorModal="toggleCollectorModal" @updateCollector="updateCollector"
+      @onCloseModal="onCloseCollectorModal" />
   </div>
 </template>
 
@@ -100,7 +94,7 @@ import PageSize from "@organisms/collector/page-size.vue";
 import Pagination from "@functional/pagination/pagination";
 import { errorAlert } from "@functional/alert/alert-default";
 import { useUserStore } from "@/store/user";
-import {onMounted, watch, reactive, ref} from "vue";
+import { onMounted, ref } from "vue";
 import CollectorBoardListSearch from "@organisms/collector/collector-board-list-search.vue";
 import CollectorModal from "@organisms/collector/collector-modal.vue";
 import { confirmAlert, successAlert } from "@/components/functional/alert/alert-default";
@@ -158,34 +152,34 @@ const isUpdate = ref(false)
 
 const searchObj = ref({
   searchTypeList: [
-  {
-    "name": "all",
-    "description": "전체"
-  },
-  {
-    "name": "system_id",
-    "description": "시스템 ID"
-  },
-  {
-    "name": "system_type",
-    "description": "시스템 타입"
-  },
-  {
-    "name": "system_name",
-    "description": "시스템 명"
-  },
-  {
-    "name": "host",
-    "description": "Host"
-  },
-  {
-    "name": "database",
-    "description": "Database"
-  },
-  {
-    "name": "collect_flag",
-    "description": "수집 여부"
-  }],
+    {
+      "name": "all",
+      "description": "전체"
+    },
+    {
+      "name": "system_id",
+      "description": "시스템 ID"
+    },
+    {
+      "name": "system_type",
+      "description": "시스템 타입"
+    },
+    {
+      "name": "system_name",
+      "description": "시스템 명"
+    },
+    {
+      "name": "host",
+      "description": "Host"
+    },
+    {
+      "name": "database",
+      "description": "Database"
+    },
+    {
+      "name": "collect_flag",
+      "description": "수집 여부"
+    }],
   searchType: "all",
   searchWord: "",
 });
@@ -200,16 +194,16 @@ const getKrCollectFlag = (content) => {
 const getCollectorList = async (offset: number = 1): Promise<void> => {
   try {
     await $ofetch(`/api/admin/system/collector/collectorList?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`)
-    .then((res) => {
-      if (res && !res.errorMessage) {
-        collectorList.value = res.data.list
-        pagingObj.value = {
-          ...pagingObj.value,
-          currentPage: offset,
-          total: res.data.total
+      .then((res) => {
+        if (res && !res.errorMessage) {
+          collectorList.value = res.data.list
+          pagingObj.value = {
+            ...pagingObj.value,
+            currentPage: offset,
+            total: res.data.total
+          }
         }
-      }
-    })
+      })
   } catch (error) {
     console.log(error);
   }
@@ -362,8 +356,8 @@ const updateCollector = async (newCollector) => {
     toggleCollectorModal.value = false
     getCollectorList()
   }).catch((err) => {
-      if (suffix == 'add') errorAlert("등록에 실패하였습니다.")
-      if (suffix == 'update') errorAlert("수정에 실패하였습니다.")
+    if (suffix == 'add') errorAlert("등록에 실패하였습니다.")
+    if (suffix == 'update') errorAlert("수정에 실패하였습니다.")
   })
 }
 
@@ -386,5 +380,4 @@ const onClickReloadOneButton = async (collector, index) => {
 
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

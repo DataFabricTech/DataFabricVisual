@@ -9,8 +9,10 @@
               <caption>
                 table caption </caption>
               <colgroup>
-                <col style="width: 200px;"><col>
-                <col style="width: 200px;"><col>
+                <col style="width: 200px;">
+                <col>
+                <col style="width: 200px;">
+                <col>
               </colgroup>
               <tbody>
                 <tr>
@@ -50,14 +52,16 @@
                     </select>
                   </div>
                   <div class="mu-input-icon">
-                    <input type="text" class="mu-input" placeholder="Search" title="검색어입력" v-model="searchWord" @keypress.enter.prevent='onSearchDataList()'>
-                    <button type="button" class="mu-btn mu-btn-sch" @click="onSearchDataList()"><i class="mu-icon-svg search"></i><span>검색</span></button>
+                    <input type="text" class="mu-input" placeholder="Search" title="검색어입력" v-model="searchWord"
+                      @keypress.enter.prevent='onSearchDataList()'>
+                    <button type="button" class="mu-btn mu-btn-sch" @click="onSearchDataList()"><i
+                        class="mu-icon-svg search"></i><span>검색</span></button>
                   </div>
                 </div>
               </fieldset>
             </div>
-            
-            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList" v-show="true"/>
+
+            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList" v-show="true" />
           </div>
         </div>
 
@@ -95,9 +99,9 @@
                 <td>{{ item.meta_type }}</td>
                 <td>
                   <div class="category-group">
-                      <div v-for="category in item.classifications" :key="category.id" class="category">
+                    <div v-for="category in item.classifications" :key="category.id" class="category">
                       <em class="category-label" :title="getKrName(category)">{{ getKrName(category) }}</em>
-                      </div>
+                    </div>
                   </div>
                 </td>
                 <td>{{ item.role_id }}</td>
@@ -124,13 +128,10 @@
     </div>
   </div>
 
-  <user-update-modal
-    v-model:visibleUpdateModal="visibleUpdateModal"
-    v-model:updateFlag="updateFlag"
-    v-model:modalParam="modalParam"
-    @searchMethod="" />
+  <user-update-modal v-model:visibleUpdateModal="visibleUpdateModal" v-model:updateFlag="updateFlag"
+    v-model:modalParam="modalParam" @searchMethod="" />
 </template>
-    
+
 <script setup lang="ts">
 import PageSize from "@/pages/admin/manager/user/page-size";
 import Pagination from "@functional/pagination/pagination";
@@ -145,16 +146,16 @@ definePageMeta({
 });
 
 interface pagingObj {
-    total: number;
-    limit: number;
-    block: number;
-    currentPage: number;
+  total: number;
+  limit: number;
+  block: number;
+  currentPage: number;
 }
 const pagingObj = ref<pagingObj>({
-    total: 0,
-    limit: 10,
-    block: 10,
-    currentPage: 1,
+  total: 0,
+  limit: 10,
+  block: 10,
+  currentPage: 1,
 });
 
 const { $ofetch } = useNuxtApp();
@@ -168,18 +169,17 @@ const searchType = ref("all")
 const searchWord = ref("")
 
 // 테이블 데이터
-const dataList = ref<any[]>([]); 
+const dataList = ref<any[]>([]);
 
 const visibleUpdateModal = ref(false)
 const updateFlag = ref(true) // 사용자정보팝업 수정여부
 const modalParam = ref({})
 
-const categoryList = computed(() => categoryStore.getCategoryList);
 const categoryStore = useCategoryStore();
 
 
 
-// 
+//
 onMounted(() => {
   userId.value = route.query.user_id;
 
@@ -189,8 +189,8 @@ onMounted(() => {
 // 전체 조회
 const initSearch = async () => {
   try {
-      onMetaDataInfo();
-      onSearchDataList();
+    onMetaDataInfo();
+    onSearchDataList();
   } catch (error) {
     console.error('Search failed:', error);
   } finally {
@@ -199,21 +199,21 @@ const initSearch = async () => {
 
 // 상세 조회
 const onMetaDataInfo = async (): Promise<void> => {
-    try {
-      let { data } = await $ofetch(
-        "/api/admin/system/role/userDataInfo?userId="+ userId.value
-      );
-  
-      if (data && data.length > 0) {
-        userDataInfo.value = data[0];
-      }
-    } catch (error) {
-      console.log(error);
+  try {
+    let { data } = await $ofetch(
+      "/api/admin/system/role/userDataInfo?userId=" + userId.value
+    );
+
+    if (data && data.length > 0) {
+      userDataInfo.value = data[0];
     }
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // 목록 조회
-const onSearchDataList = async (offset = 1) =>{
+const onSearchDataList = async (offset = 1) => {
   try {
     let { data } = await $ofetch(
       `/api/admin/system/role/userMetaDataSearch?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}&userId=${userId.value}`
@@ -232,12 +232,12 @@ const onSearchDataList = async (offset = 1) =>{
   }
 }
 
-// 
+//
 const onClickPage = (page) => {
   onSearchDataList(page);
 }
 
-// 
+//
 const onClickListButton = () => {
   router.push("/admin/manager/system/role/auth/menu-auth/");
 };
@@ -250,9 +250,10 @@ const getKrName = (key) => {
 </script>
 
 <style>
-.mu-formbox > tbody > tr > th, .mu-formbox > tbody > tr > td {
-    padding: 10px 0 10 10px !important;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
+.mu-formbox>tbody>tr>th,
+.mu-formbox>tbody>tr>td {
+  padding: 10px 0 10 10px !important;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
 }
 </style>

@@ -28,17 +28,9 @@
                   <tr v-for="(item, index) in postList" :key="index">
                     <td>
                       <div class="mu-radio">
-                        <input
-                          type="checkbox"
-                          :id="'check_' + item.id"
-                          title="행선택"
-                          :value="item.id"
-                          v-model="item.selected"
-                          @change="selected($event)"
-                        />
-                        <label :for="'check_' + item.id"
-                          ><span class="blind">행선택</span></label
-                        >
+                        <input type="checkbox" :id="'check_' + item.id" title="행선택" :value="item.id"
+                          v-model="item.selected" @change="selected($event)" />
+                        <label :for="'check_' + item.id"><span class="blind">행선택</span></label>
                       </div>
                     </td>
                     <td>
@@ -51,36 +43,20 @@
             </div>
           </div>
           <div class="mu-swap-btn">
-            <button
-              type="button"
-              class="mu-btn mu-btn-icon-only mu-btn-secondary"
-              title="멘위로 이동"
-              @click="onClickMoveTopButton"
-            >
+            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="멘위로 이동"
+              @click="onClickMoveTopButton">
               <i class="mu-icon-svg arrow-top"></i><span>이동</span>
             </button>
-            <button
-              type="button"
-              class="mu-btn mu-btn-icon-only mu-btn-secondary"
-              title="위로 이동"
-              @click="onClickMoveUpButton"
-            >
+            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="위로 이동"
+              @click="onClickMoveUpButton">
               <i class="mu-icon-svg arrow-up"></i><span>이동</span>
             </button>
-            <button
-              type="button"
-              class="mu-btn mu-btn-icon-only mu-btn-secondary"
-              title="아래로 이동"
-              @click="onClickMoveDownButton"
-            >
+            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="아래로 이동"
+              @click="onClickMoveDownButton">
               <i class="mu-icon-svg arrow-down"></i><span>이동</span>
             </button>
-            <button
-              type="button"
-              class="mu-btn mu-btn-icon-only mu-btn-secondary"
-              title="맨아래로 이동"
-              @click="onClickMoveBottomButton"
-            >
+            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="맨아래로 이동"
+              @click="onClickMoveBottomButton">
               <i class="mu-icon-svg arrow-bottom"></i><span>이동</span>
             </button>
           </div>
@@ -94,12 +70,7 @@
       </div>
       <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
       <div class="mu-dialog-close-btn">
-        <button
-          type="button"
-          class="mu-btn mu-btn-close"
-          title="해당 팝업 닫기"
-          @click="close"
-        >
+        <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="close">
           <i class="mu-icon-svg close"></i><span>팝업닫기</span>
         </button>
       </div>

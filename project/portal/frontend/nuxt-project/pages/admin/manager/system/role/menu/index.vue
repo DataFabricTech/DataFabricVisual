@@ -6,13 +6,8 @@
           <h4>메뉴 권한 정보</h4>
           <div class="detail-section" :class="activeTab === 0 ? 'open' : 'close'" style="height: auto;">
             <div class="mu-item-group">
-              <button
-                type="button"
-                class="mu-btn mu-btn-bg-non btn-section-toggle"
-                title="세로 보기"
-                @click="changeTab(activeTab === 0 ? 1 : 0)"
-                style="margin-left: 10px"
-              >
+              <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="세로 보기"
+                @click="changeTab(activeTab === 0 ? 1 : 0)" style="margin-left: 10px">
                 <span>{{ toggleShowDataText }}</span>
               </button>
             </div>
@@ -20,68 +15,73 @@
         </div>
 
         <div v-if="activeTab === 0">
-            <div class="board-list slim-scroll" style="overflow-x: auto;white-space: nowrap;">
-              <table class="mu-grid" style="table-layout: auto;margin-top:0px;">
-                <colgroup>
-                  <col v-for="(header, index) in tableHeaders" :key="index" />
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th rowspan="3" class="sticky-column">
-                      구분
-                      <span @click.stop="sortTable('role_id')" style="cursor: pointer;">{{ sortKey === 'role_id' && sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                      <br><br>
-                      <input
-                        type="text"
-                        placeholder="권한명"
-                        class="mu-input w100"
-                        title="권한명 입력"
-                        v-model="role_name"
-                        @keypress.enter.prevent='onFilterRoleName()'
-                      />
-                    </th>
-                    <th v-for="(header, index) in systemRoleGubun" :key="index" :colspan="header.collength || 1" :style="{ backgroundColor: header.title === '사용자' ? '#f6f6f9' : '#86848A' }">
-                      <span :style="{ color: header.title === '사용자' ? 'black' : 'white' }">{{ header.title }}</span>
-                    </th>
-                    <th rowspan="3">삭제</th>
-                  </tr>
-                  <tr>
-                    <th v-for="(header, index) in tableHeaders[0]" :key="index" :colspan="header.colspan || 1" :rowspan="header.rowspan || 1" :style="{ backgroundColor: header.menu_id.startsWith('A') ? '#86848A' : '#f6f6f9' }">
-                      <span :style="{ color: header.menu_id.startsWith('A') ? 'white' : 'black' }">{{ header.menu_name }}</span>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th v-for="(header, index) in tableHeaders[1]" :key="index" :style="{ backgroundColor: header.menu_id.startsWith('A') ? '#86848A' : '#f6f6f9' }">
-                      <span :style="{ color: header.menu_id.startsWith('A') ? 'white' : 'black' }">{{ header.menu_name }}</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index1) in roleTypeList" :key="index1">
-                    <td class="sticky-column">
-                      <a href="javascript:void(0);" :title="`${item.role_id}`" @click="isSelectRoleAll(item.role_id)">{{ item.role_id }}</a>
-                      <br>({{ item.role_name }})
-                    </td>
-                    <td v-for="(header1, index2) in tableHeaders[1]" :key="index2">
-                      <div class="mu-checkbox">
-                        <input type="checkbox" title="role 선택" :id="`checkbox_${item.role_id}_${header1.menu_id}`" :checked="isChecked(item.role_id, header1.menu_id)" @change="handleCheckboxChange(header1, item, $event)">
-                        <label :for="`checkbox_${item.role_id}_${header1.menu_id}`">
-                          <span></span>
-                        </label>
-                      </div>
-                    </td>
-                    <td :colspan="systemRoleGubun.collength || 1">
-                      <button type="button" class="mu-btn mu-btn-sm" v-on:click="onClickDeleteButton(item)"><i class="mu-icon-svg del"></i><span>삭제</span></button>
-                    </td>
-                  </tr>
-                  <tr v-if="roleTypeList != null && roleTypeList.length === 0">
-                    <td :colspan="tableHeaders[1]?.length + 2 || 1">
-                      <p class="nodata">데이터가 존재하지 않습니다.</p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="board-list slim-scroll" style="overflow-x: auto;white-space: nowrap;">
+            <table class="mu-grid" style="table-layout: auto;margin-top:0px;">
+              <colgroup>
+                <col v-for="(header, index) in tableHeaders" :key="index" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th rowspan="3" class="sticky-column">
+                    구분
+                    <span @click.stop="sortTable('role_id')" style="cursor: pointer;">{{ sortKey === 'role_id' &&
+                      sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    <br><br>
+                    <input type="text" placeholder="권한명" class="mu-input w100" title="권한명 입력" v-model="role_name"
+                      @keypress.enter.prevent='onFilterRoleName()' />
+                  </th>
+                  <th v-for="(header, index) in systemRoleGubun" :key="index" :colspan="header.collength || 1"
+                    :style="{ backgroundColor: header.title === '사용자' ? '#f6f6f9' : '#86848A' }">
+                    <span :style="{ color: header.title === '사용자' ? 'black' : 'white' }">{{ header.title }}</span>
+                  </th>
+                  <th rowspan="3">삭제</th>
+                </tr>
+                <tr>
+                  <th v-for="(header, index) in tableHeaders[0]" :key="index" :colspan="header.colspan || 1"
+                    :rowspan="header.rowspan || 1"
+                    :style="{ backgroundColor: header.menu_id.startsWith('A') ? '#86848A' : '#f6f6f9' }">
+                    <span :style="{ color: header.menu_id.startsWith('A') ? 'white' : 'black' }">{{ header.menu_name
+                    }}</span>
+                  </th>
+                </tr>
+                <tr>
+                  <th v-for="(header, index) in tableHeaders[1]" :key="index"
+                    :style="{ backgroundColor: header.menu_id.startsWith('A') ? '#86848A' : '#f6f6f9' }">
+                    <span :style="{ color: header.menu_id.startsWith('A') ? 'white' : 'black' }">{{ header.menu_name
+                    }}</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index1) in roleTypeList" :key="index1">
+                  <td class="sticky-column">
+                    <a href="javascript:void(0);" :title="`${item.role_id}`" @click="isSelectRoleAll(item.role_id)">{{
+                      item.role_id }}</a>
+                    <br>({{ item.role_name }})
+                  </td>
+                  <td v-for="(header1, index2) in tableHeaders[1]" :key="index2">
+                    <div class="mu-checkbox">
+                      <input type="checkbox" title="role 선택" :id="`checkbox_${item.role_id}_${header1.menu_id}`"
+                        :checked="isChecked(item.role_id, header1.menu_id)"
+                        @change="handleCheckboxChange(header1, item, $event)">
+                      <label :for="`checkbox_${item.role_id}_${header1.menu_id}`">
+                        <span></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td :colspan="systemRoleGubun.collength || 1">
+                    <button type="button" class="mu-btn mu-btn-sm" v-on:click="onClickDeleteButton(item)"><i
+                        class="mu-icon-svg del"></i><span>삭제</span></button>
+                  </td>
+                </tr>
+                <tr v-if="roleTypeList != null && roleTypeList.length === 0">
+                  <td :colspan="tableHeaders[1]?.length + 2 || 1">
+                    <p class="nodata">데이터가 존재하지 않습니다.</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div v-if="activeTab === 1">
@@ -91,35 +91,40 @@
                 <tr>
                   <th colspan="3" :colspan="tableHeaders[1]?.length || 1" class="sticky-column">구분</th>
                   <th v-for="(header, index) in roleTypeList" :key="index">
-                    <a href="javascript:void(0);" :title="`${header.role_id}`" @click="isSelectRoleAll(header.role_id)" style="color:#2855ce">{{ header.role_id }}</a>
+                    <a href="javascript:void(0);" :title="`${header.role_id}`" @click="isSelectRoleAll(header.role_id)"
+                      style="color:#2855ce">{{ header.role_id }}</a>
                     <br>({{ header.role_name }})
-                    <br><br><button type="button" class="mu-btn mu-btn-sm" v-on:click="onClickDeleteButton({role_id : header.role_id})"><i class="mu-icon-svg del"></i><span>삭제</span></button>
+                    <br><br><button type="button" class="mu-btn mu-btn-sm"
+                      v-on:click="onClickDeleteButton({ role_id: header.role_id })"><i
+                        class="mu-icon-svg del"></i><span>삭제</span></button>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(menu, menuIndex) in tableHeaders[1]" :key="menuIndex">
-                  <td v-if="menuIndex == 0 || menuIndex == systemRoleGubun[0].collength" 
-                      :rowspan="menuIndex == 0 ? systemRoleGubun[0].collength : (menuIndex == systemRoleGubun[0].collength ? systemRoleGubun[1].collength : 1)"
-                      class="sticky-column"
-                      :style="{ backgroundColor: systemRoleGubun[0].collength > menuIndex ? '#ffffff' : '#86848A', 'font-weight': 'bold' }"
-                      >
-                      {{ systemRoleGubun[0].collength > menuIndex ? systemRoleGubun[0].title : systemRoleGubun[1].title }}
+                  <td v-if="menuIndex == 0 || menuIndex == systemRoleGubun[0].collength"
+                    :rowspan="menuIndex == 0 ? systemRoleGubun[0].collength : (menuIndex == systemRoleGubun[0].collength ? systemRoleGubun[1].collength : 1)"
+                    class="sticky-column"
+                    :style="{ backgroundColor: systemRoleGubun[0].collength > menuIndex ? '#ffffff' : '#86848A', 'font-weight': 'bold' }">
+                    {{ systemRoleGubun[0].collength > menuIndex ? systemRoleGubun[0].title : systemRoleGubun[1].title }}
                   </td>
-                  <td v-if="tableHeaders[0] && tableHeaders[0].some(item => item.index === menuIndex)" 
-                      :rowspan="tableHeaders[0].find(item => item.index === menuIndex)?.colspan || 0" 
-                      class="sticky-column"
-                      :style="{ backgroundColor: tableHeaders[0].find(item => item.index === menuIndex)?.menu_id.startsWith('A') ? '#86848A' : '#ffffff'
-                            , 'font-weight': 'bold' }"
-                      >
-                    {{ tableHeaders[0].find(item => item.index === menuIndex)?.menu_name }}
+                  <td v-if="tableHeaders[0] && tableHeaders[0].some(item => item.index === menuIndex)"
+                    :rowspan="tableHeaders[0].find(item => item.index === menuIndex)?.colspan || 0"
+                    class="sticky-column" :style="{
+                      backgroundColor: tableHeaders[0].find(item => item.index === menuIndex)?.menu_id.startsWith('A') ? '#86848A' : '#ffffff'
+                      , 'font-weight': 'bold'
+                    }">
+                    {{tableHeaders[0].find(item => item.index === menuIndex)?.menu_name}}
                   </td>
-                  <td class="sticky-column" :style="{ backgroundColor: menu.menu_id.startsWith('A') ? '#86848A' : '#ffffff', 'font-weight': 'bold' }">
+                  <td class="sticky-column"
+                    :style="{ backgroundColor: menu.menu_id.startsWith('A') ? '#86848A' : '#ffffff', 'font-weight': 'bold' }">
                     {{ menu.menu_name }}
                   </td>
                   <td v-for="(item, itemIndex) in roleTypeList" :key="itemIndex">
                     <div class="mu-checkbox">
-                      <input type="checkbox" title="role 선택" :id="`checkbox_${item.role_id}_${menu.menu_id}`" :checked="isChecked(item.role_id, menu.menu_id)" @change="handleCheckboxChange(menu, item, $event)">
+                      <input type="checkbox" title="role 선택" :id="`checkbox_${item.role_id}_${menu.menu_id}`"
+                        :checked="isChecked(item.role_id, menu.menu_id)"
+                        @change="handleCheckboxChange(menu, item, $event)">
                       <label :for="`checkbox_${item.role_id}_${menu.menu_id}`">
                         <span></span>
                       </label>
@@ -138,29 +143,21 @@
 
       </div>
       <div class="mu-button-wrap">
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg"
-          @click="roleDataInit"
-        >
+        <button type="button" class="mu-btn mu-btn-lg" @click="roleDataInit">
           <span>취소</span>
         </button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickSaveButton"
-        >
+        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickSaveButton">
           <span>저장</span>
         </button>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script setup lang="ts">
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useNuxtApp, useRouter } from "nuxt/app";
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref } from "vue";
 
 definePageMeta({
   name: "MenuAuthSetting",
@@ -170,13 +167,13 @@ definePageMeta({
 const { $ofetch } = useNuxtApp();
 const router = useRouter();
 
-const systemRoleGubun = ref([ {title:'사용자', id:'U', collength:0}
-                            , {title:'관리자', id:'A', collength:0}]);
+const systemRoleGubun = ref([{ title: '사용자', id: 'U', collength: 0 }
+  , { title: '관리자', id: 'A', collength: 0 }]);
 const roleTypeList = ref([]);
-const roleMenuExists = ref([]);  
+const roleMenuExists = ref([]);
 const tableHeaders = ref([]);
 const selectedItems = ref([]);
-const isSelectAllRole =  ref([]);
+const isSelectAllRole = ref([]);
 const originalRoleTypeList = ref([]); // for filter
 
 const activeTab = ref(0);
@@ -192,7 +189,7 @@ onMounted(() => {
   onMenuDataLoad();
 });
 
-// 
+//
 const roleDataInit = () => {
   onMenuDataLoad();
 
@@ -201,17 +198,17 @@ const roleDataInit = () => {
 
   roleTypeList.value.forEach(role => {
     roleMenuExists.value.forEach(menu => {
-        const checkboxId = `checkbox_${role.role_id}_${menu.menu_id}`;
-        const checkbox = document.getElementById(checkboxId) as HTMLInputElement;
+      const checkboxId = `checkbox_${role.role_id}_${menu.menu_id}`;
+      const checkbox = document.getElementById(checkboxId) as HTMLInputElement;
 
-        if (checkbox) {
-          checkbox.checked = isChecked(role.role_id, menu.menu_id);
-        }
+      if (checkbox) {
+        checkbox.checked = isChecked(role.role_id, menu.menu_id);
+      }
     });
   });
 }
 
-// 
+//
 const onMenuDataLoad = async () => {
   const roleType = systemRoleGubun.value.map(item => item.id).join(',');
 
@@ -227,14 +224,14 @@ const onMenuDataLoad = async () => {
 
     let i = 0;
     result.data[0].roleMenuList.forEach(menu => {
-      headers.push({ index: i,menu_name: menu.menu_name, colspan: menu.child.length, menu_id: menu.menu_id });
-      i+= menu.child.length;
+      headers.push({ index: i, menu_name: menu.menu_name, colspan: menu.child.length, menu_id: menu.menu_id });
+      i += menu.child.length;
 
       menu.child.filter(child => child.menu_visible === true).forEach(child => {
         childHeaders.push(child);
 
-        for (let i=0; i<systemRoleGubun.value.length; i++) {
-          if(systemRoleGubun.value[i].id === menu.menu_auth) {
+        for (let i = 0; i < systemRoleGubun.value.length; i++) {
+          if (systemRoleGubun.value[i].id === menu.menu_auth) {
             systemRoleGubun.value[i].collength++;
           }
         }
@@ -243,11 +240,11 @@ const onMenuDataLoad = async () => {
 
     tableHeaders.value = [headers, childHeaders];
 
-    if(result.data[1] && result.data[1].roleTypeList) {
+    if (result.data[1] && result.data[1].roleTypeList) {
       roleTypeList.value = result.data[1].roleTypeList;
     }
 
-    if(result.data[2] && result.data[2].roleMenuExistsList) {
+    if (result.data[2] && result.data[2].roleMenuExistsList) {
       roleMenuExists.value = result.data[2].roleMenuExistsList;
     }
 
@@ -255,7 +252,7 @@ const onMenuDataLoad = async () => {
   }
 };
 
-// 
+//
 const isChecked = (role_id: any, menu_id: any) => {
   return roleMenuExists.value.some(item => item.menu_role_name === role_id && item.menu_id === menu_id);
 }
@@ -273,22 +270,22 @@ const handleCheckboxChange = (header: any, item: any, event: any) => {
 
     if (as11Item) {
       const hasMenuIdStartingWithA = selectedItems.value.find(existingItem => existingItem.menu_id.startsWith('A') && existingItem.menu_id != dataUsageOverviewMenu && existingItem.role_name === item.role_id && existingItem.use_yn === 'Y');
-      
-      if (hasMenuIdStartingWithA){
+
+      if (hasMenuIdStartingWithA) {
         isSelectRoleItem(item.role_id, dataUsageOverviewMenu, hasMenuIdStartingWithA ? true : false);
       }
     }
   }
 
-  if(header.menu_id === dataUsageOverviewMenu ) {
-    const availableMenus = roleMenuExists.value.filter(existingItem => 
-      existingItem.menu_depth === 2 && 
-      existingItem.menu_id.startsWith('A') && 
+  if (header.menu_id === dataUsageOverviewMenu) {
+    const availableMenus = roleMenuExists.value.filter(existingItem =>
+      existingItem.menu_depth === 2 &&
+      existingItem.menu_id.startsWith('A') &&
       existingItem.menu_role_name === item.role_id &&
       existingItem.menu_id !== dataUsageOverviewMenu
     );
 
-    const selectedMenuIds = selectedItems.value.filter(existingItem => 
+    const selectedMenuIds = selectedItems.value.filter(existingItem =>
       existingItem.menu_id.startsWith('A') &&
       existingItem.role_name === item.role_id &&
       existingItem.menu_id !== dataUsageOverviewMenu
@@ -302,11 +299,11 @@ const handleCheckboxChange = (header: any, item: any, event: any) => {
 
       const index1 = availableMenus.findIndex(availableItem => availableItem.menu_id === selectedItem.menu_id);
       if (selectedItem.use_yn === 'Y') {
-        availableMenus.push({menu_role_name: selectedItem.role_id, use_yn: 'Y', menu_id: selectedItem.menu_id});
+        availableMenus.push({ menu_role_name: selectedItem.role_id, use_yn: 'Y', menu_id: selectedItem.menu_id });
       }
     });
 
-    // 
+    //
     if (availableMenus.length > 0) {
       errorAlert("관리자 메뉴에서 필수 화면입니다.");
       isSelectRoleItem(item.role_id, header.menu_id, true);
@@ -314,27 +311,27 @@ const handleCheckboxChange = (header: any, item: any, event: any) => {
   }
 }
 
-// 
+//
 const handleCheckboxChangeData = (header: any, item: any) => {
   const checkbox = document.getElementById(`checkbox_${item.role_id}_${header.menu_id}`) as HTMLInputElement;
   const statusText = checkbox.checked ? 'Y' : 'N';
 
-  // 
+  //
   const existingItem = selectedItems.value.find(existingItem => existingItem.menu_id === header.menu_id && existingItem.role_name === item.role_id);
 
   if (existingItem) {
     selectedItems.value = selectedItems.value.map(existingItem => {
-                          if (existingItem.menu_id === header.menu_id && existingItem.role_name === item.role_id) {
-                            return { ...existingItem, use_yn: statusText };
-                          }
-                          return existingItem;
-                        });
+      if (existingItem.menu_id === header.menu_id && existingItem.role_name === item.role_id) {
+        return { ...existingItem, use_yn: statusText };
+      }
+      return existingItem;
+    });
   } else {
     selectedItems.value.push({ menu_id: header.menu_id, role_name: item.role_id, use_yn: statusText, order_num: 1 });
   }
 };
 
-// 
+//
 const onClickDeleteButton = async (item): Promise<void> => {
   if (!(await confirmAlert("권한을 삭제 하시겠습니까?"))) return;
 
@@ -357,7 +354,7 @@ const onClickDeleteButton = async (item): Promise<void> => {
   });
 };
 
-// 
+//
 const onClickSaveButton = async (): Promise<void> => {
   if (selectedItems.value.length === 0) {
     errorAlert("선택된 항목이 없습니다.");
@@ -385,7 +382,7 @@ const onClickSaveButton = async (): Promise<void> => {
   }
 };
 
-// 
+//
 const isSelectRoleAll = (id: string) => {
   tableHeaders.value[1].forEach(element => {
     const checkboxId = `checkbox_${id}_${element.menu_id}`;
@@ -393,19 +390,19 @@ const isSelectRoleAll = (id: string) => {
     if (checkbox) {
       checkbox.checked = !checkbox.checked;
 
-      handleCheckboxChangeData({menu_id : element.menu_id}, {role_id: id});
+      handleCheckboxChangeData({ menu_id: element.menu_id }, { role_id: id });
     }
   });
 };
 
-// 
+//
 const isSelectRoleItem = (id: string, menuId: string, checkYn: boolean) => {
   tableHeaders.value[1].forEach(element => {
     const checkboxId = `checkbox_${id}_${menuId}`;
     const checkbox = document.getElementById(checkboxId) as HTMLInputElement;
     checkbox.checked = checkYn;
 
-    handleCheckboxChangeData({menu_id : menuId}, {role_id: id});
+    handleCheckboxChangeData({ menu_id: menuId }, { role_id: id });
   });
 };
 
@@ -423,7 +420,7 @@ const sortTable = (key) => {
   sortData();
 }
 
-// 
+//
 const sortData = () => {
   roleTypeList.value.sort((a, b) => {
     let result = 0;
@@ -436,12 +433,12 @@ const sortData = () => {
   });
 }
 
-// 
+//
 const role_name = ref('');
 const onFilterRoleName = () => {
   if (!role_name.value) {
     selectedItems.value = [];
-    
+
     roleTypeList.value = [...originalRoleTypeList.value];
   } else {
     roleTypeList.value = roleTypeList.value.filter(item => item.role_name.includes(role_name.value));
@@ -454,6 +451,7 @@ const onFilterRoleName = () => {
 .mu-grid td {
   border: 1px solid #ddd;
 }
+
 .sticky-column {
   min-width: 150px;
   position: -webkit-sticky;

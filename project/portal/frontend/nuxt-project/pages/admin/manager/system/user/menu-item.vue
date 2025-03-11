@@ -1,54 +1,24 @@
 <template>
   <ul v-if="props.list" class="sub-category-menu">
-    <li
-      v-for="(item, index) in props.list"
-      :key="index"
-      :class="getTagStyle('li', item)"
-      style="min-width: 186px; width: max-content"
-    >
+    <li v-for="(item, index) in props.list" :key="index" :class="getTagStyle('li', item)"
+      style="min-width: 186px; width: max-content">
       <div>{{ item.checked }}</div>
 
       <button type="button" :class="getTagStyle('button', item)" @click="onToggle(item.id)">
         <span>펼치기</span>
       </button>
-      <!-- <a
-        v-if="item.id === '_NOT_CLASSIFIED'"
-        href="javascript:void(0);"
-        style="overflow: visible"
-        :title="item.dept_nm"
-      >
-        {{ item.dept_nm }}
-      </a> -->
-      <a
-        href="javascript:void(0);"
-        :class="getTagStyle('a', item)"
-        style="overflow: visible; max-width: max-content"
-        :title="item.name"
-        :id="item.id"
-        @click="() => onClick(item)"
-      >
+      <a href="javascript:void(0);" :class="getTagStyle('a', item)" style="overflow: visible; max-width: max-content"
+        :title="item.name" :id="item.id" @click="() => onClick(item)">
         {{ item.name }}
       </a>
-      <button
-        style="width: max-content"
-        v-if="calledFrom === 'deptDataManage' && item.id !== '_NOT_CLASSIFIED'"
-        v-show="selectedId === item.id"
-        type="button"
-        class="item-set"
-        :id="`setup_${item.dept_cd}`"
-        @click.stop="(e) => onToggleTooltip(e, item, 'setup')"
-      >
+      <button style="width: max-content" v-if="calledFrom === 'deptDataManage' && item.id !== '_NOT_CLASSIFIED'"
+        v-show="selectedId === item.id" type="button" class="item-set" :id="`setup_${item.dept_cd}`"
+        @click.stop="(e) => onToggleTooltip(e, item, 'setup')">
         <span>설정</span>
       </button>
 
-      <menu-item
-        :list="item.subTypes"
-        :toggle-targets="toggleTargets"
-        :selected-id="selectedId"
-        @onToggleNode="onToggle"
-        @onClickMenuItem="onClick"
-        @onClickSetup="onToggleTooltip"
-      />
+      <menu-item :list="item.subTypes" :toggle-targets="toggleTargets" :selected-id="selectedId"
+        @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
     </li>
   </ul>
 </template>
@@ -65,21 +35,21 @@ const props = defineProps({
   },
   toggleTargets: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   selectedId: {
     type: String,
     default: () => ""
   },
-  // 
+  //
   onToggleNode: {
     type: Function
   },
-  // 
+  //
   onClickMenuItem: {
     type: Function
   },
-  // 
+  //
   onClickSetup: {
     type: Function
   }
@@ -88,44 +58,27 @@ const props = defineProps({
 const deptStore = useDeptStore();
 const eventStore = useEventStore();
 
-// 
-const selectedData = ref([]);
-
-// 
+//
 const calledFrom = deptStore.getCalledFrom;
 const getSelectedItemId = deptStore.getSelectedItemId;
 
-// 
+//
 const onToggle = (menuName) => {
   emit("onToggleNode", menuName);
 };
 
-// 
+//
 const onClick = (item) => {
   deptStore.setSelectedItemId(item && item.id ? item.id : "");
   emit("onClickMenuItem", item);
 };
 
-const onClickFromTreeMap = (item) => {
-  const styles = [];
-
-  // 
-  let guid = "";
-  if (item.guid) guid = item.guid;
-  else if (item.id) guid = item.id;
-  let a = document.getElementById(guid);
-  styles.push("active");
-  styles.push("item-label");
-  let adjustStyles = styles.join(" ");
-  a.className = adjustStyles;
-};
-
-// 
+//
 const onToggleTooltip = (e, item, type) => {
   eventStore.emit("onToggleMetaDataTooltip", e, item, type);
 };
 
-// 
+//
 const getTagStyle = (tagType, item) => {
   const styles = [];
 
@@ -147,7 +100,7 @@ const getTagStyle = (tagType, item) => {
       }
 
       if (item) {
-        // 
+        //
         if (item.id === "_NOT_CLASSIFIED") {
           styles.push("no-label");
         }
@@ -160,7 +113,7 @@ const getTagStyle = (tagType, item) => {
       styles.push("item-label");
 
       if (item) {
-        // 
+        //
         if (item.id === "_NOT_CLASSIFIED") {
           styles.push("no-label");
         }

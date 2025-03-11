@@ -25,17 +25,14 @@
             <tr>
               <th scope="row">카테고리 명</th>
               <td>
-                <td>
-                  {{ upperCategory && upperCategory.description ? upperCategory.description + '(' + upperCategory.value + ')' : "없음" }}
-                  <button
-                    type="button"
-                    class="mu-btn mu-btn-primary"
-                    @click="openSelectCategoryModal"
-                    style="margin-left:10px"
-                  >
-                    <i class="mu-icon-svg search"></i><span>찾아보기</span>
-                  </button>
-                </td>
+              <td>
+                {{ upperCategory && upperCategory.description ? upperCategory.description + '(' + upperCategory.value +
+                  ')' : "없음" }}
+                <button type="button" class="mu-btn mu-btn-primary" @click="openSelectCategoryModal"
+                  style="margin-left:10px">
+                  <i class="mu-icon-svg search"></i><span>찾아보기</span>
+                </button>
+              </td>
               </td>
             </tr>
           </tbody>
@@ -46,54 +43,30 @@
             <tr>
               <th scope="row">카테고리 명<strong class="required">필수</strong></th>
               <td>
-                <input
-                  type="text"
-                  placeholder="카테고리 명을 입력하세요. (최대 20자)"
-                  class="mu-input"
-                  title="카테고리 명 입력"
-                  name="krName"
-                  maxlength="20"
-                  v-model="krName"
-                />
+                <input type="text" placeholder="카테고리 명을 입력하세요. (최대 20자)" class="mu-input" title="카테고리 명 입력"
+                  name="krName" maxlength="20" v-model="krName" />
               </td>
             </tr>
             <tr>
               <th scope="row">카테고리 ID<strong class="required">필수</strong></th>
               <td>
-                <input
-                  type="text"
-                  placeholder="카테고리 ID를 입력하세요. (최대 20자)"
-                  class="mu-input"
-                  title="카테고리 ID 입력"
-                  name="enName"
-                  maxlength="20"
-                  :disabled="props.manageModal.type === 'update'"
-                  v-model="enName"
-                  @input="onInput"
-                />
+                <input type="text" placeholder="카테고리 ID를 입력하세요. (최대 20자)" class="mu-input" title="카테고리 ID 입력"
+                  name="enName" maxlength="20" :disabled="props.manageModal.type === 'update'" v-model="enName"
+                  @input="onInput" />
               </td>
             </tr>
             <tr v-if="upperCategory.value === ''">
               <th scope="row">카테고리 이미지</th>
               <td>
                 <div class="mu-item-group">
-                  <img v-if="categoryImageFile"
-                    :src="categoryImageFile"
+                  <img v-if="categoryImageFile" :src="categoryImageFile"
                     style="width: 70px; height: 70px; background-color: #0D2254; background-size: cover"
-                    :class="['ico-category', 'category-11']"
-                  />
-                  <img v-else
-                    src="/category_basic.png"
+                    :class="['ico-category', 'category-11']" />
+                  <img v-else src="/category_basic.png"
                     style="width: 70px; height: 70px; background-color: #0D2254; background-size: cover"
-                    :class="['ico-category', 'category-11']"
-                  />
-                  <input
-                    id="categoryImageFileInput"
-                    type="file"
-                    name="categoryImage"
-                    @change="fileUpload"
-                    v-show="false"
-                  />
+                    :class="['ico-category', 'category-11']" />
+                  <input id="categoryImageFileInput" type="file" name="categoryImage" @change="fileUpload"
+                    v-show="false" />
                   <label for="categoryImageFileInput" class="mu-btn" v-if="!categoryImageFile">이미지업로드</label>
                   <label for="categoryImageFileInput" class="mu-btn" v-if="categoryImageFile">이미지수정</label>
                 </div>
@@ -103,20 +76,10 @@
               <th scope="row">상위카테고리</th>
               <td>
                 <!-- 카테고리 수정 모달일 경우 안보이게 처리 -->
-                <!-- <auto-select
-                  :value="selectValue"
-                  :placeholder="placeholder"
-                  :options="upperCategories"
-                  :disabled="props.manageModal.type === 'update'"
-                  @setData="onChangeUpperCategory"
-                /> -->
-                {{ upperCategory && upperCategory.description ? upperCategory.description + '(' + upperCategory.value + ')' : "없음" }}
-                <button
-                  type="button"
-                  class="mu-btn mu-btn-primary"
-                  @click="openSelectCategoryModal"
-                  style="margin-left:10px"
-                >
+                {{ upperCategory && upperCategory.description ? upperCategory.description + '(' + upperCategory.value +
+                  ')' : "없음" }}
+                <button type="button" class="mu-btn mu-btn-primary" @click="openSelectCategoryModal"
+                  style="margin-left:10px">
                   <i class="mu-icon-svg search"></i><span>찾아보기</span>
                 </button>
               </td>
@@ -124,15 +87,8 @@
             <tr>
               <th scope="row">Ord no</th>
               <td>
-                <input
-                  type="number"
-                  placeholder="카테고리 순서"
-                  class="mu-input"
-                  title="Ord no"
-                  name="ordNo"
-                  maxlength="1000"
-                  v-model="categoryOrdNo"
-                />
+                <input type="number" placeholder="카테고리 순서" class="mu-input" title="Ord no" name="ordNo" maxlength="1000"
+                  v-model="categoryOrdNo" />
               </td>
             </tr>
           </tbody>
@@ -140,23 +96,13 @@
       </div>
       <div class="mu-dialog-foot">
         <button type="button" class="mu-btn" @click="onCancel"><span>취소</span></button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-primary"
-          @click="onConfirm"
-          v-if="props.manageModal.type !== 'update'"
-          :disabled="isDisabled"
-        >
+        <button type="button" class="mu-btn mu-btn-primary" @click="onConfirm"
+          v-if="props.manageModal.type !== 'update'" :disabled="isDisabled">
           <span>확인</span>
         </button>
 
-        <button
-          type="button"
-          class="mu-btn mu-btn-primary"
-          @click="onUpdate"
-          v-if="props.manageModal.type === 'update'"
-          :disabled="isDisabled"
-        >
+        <button type="button" class="mu-btn mu-btn-primary" @click="onUpdate" v-if="props.manageModal.type === 'update'"
+          :disabled="isDisabled">
           <span>수정</span>
         </button>
       </div>
@@ -168,20 +114,15 @@
       </div>
     </div>
 
-    <select-category-modal
-      v-if="toggleSelectCategoryModal"
-      :upperCategory="upperCategory"
-      :toggle-select-category-modal="toggleSelectCategoryModal"
-      @onSelect="onSelectCategory"
-      @onCloseModal="onClickCategoryInfoSearchCloseButton"
-    />
+    <select-category-modal v-if="toggleSelectCategoryModal" :upperCategory="upperCategory"
+      :toggle-select-category-modal="toggleSelectCategoryModal" @onSelect="onSelectCategory"
+      @onCloseModal="onClickCategoryInfoSearchCloseButton" />
   </div>
 </template>
 
 <script setup lang="ts">
 import ObjectUtils from "@utils/ObjectUtils";
 
-import AutoSelect from "@functional/autoSelect/auto-select";
 import { errorAlert } from "@functional/alert/alert-default";
 import { useCategoryStore } from "@store/category";
 import { useNuxtApp } from "nuxt/app";
@@ -233,77 +174,6 @@ const modalTypeText = computed(() => {
 
   return TYPE_MAP.get(props.manageModal.type);
 });
-
-const placeholder = computed(() => {
-  // auto-select 컴포넌트에 표시할 placeholder 텍스트 계산
-  const { type = "" } = props.manageModal;
-  return type === "map" ? "맵핑할 카테고리를 선택하세요" : "카테고리를 선택하세요.";
-});
-// auto-select 컴포넌트에 선택값으로 전달할 값 계산
-const selectValue = computed(() => {
-  let name = ObjectUtils.getPropertyValue(props.manageModal, "target/name", "");
-  let description = ObjectUtils.getPropertyValue(props.manageModal, "target/description", "");
-  // enName.value = name;
-
-  if (props.manageModal.type === "update") {
-    // 카테고리 수정 모달일 경우 현재 카테고리의 상위 카테고리를 선택값으로 처리
-    const matched = categoryStore.getOriginalList.find((el) => el.name === name);
-    if (matched) {
-      const { superTypes = [] } = matched;
-      if (superTypes.length > 0) {
-        const superItem = categoryStore.getOriginalList.find((el) => el.name === superTypes[0]);
-        if (superItem) {
-          name = superItem.name;
-          description = superItem.description;
-        }
-      } else {
-        name = "";
-        description = "";
-      }
-    }
-  }
-
-  return {
-    description,
-    value: name
-  };
-});
-
-// 카테고리 Select 옵션 계산
-const upperCategories = computed(() => {
-  return categoryStore.getOriginalList.map((el) => ({
-    description: el.description,
-    value: el.name,
-    id: el.id
-  }));
-});
-
-// 담당부서 정보
-const deptInfo = computed(() => {
-  let deptInfo = "";
-
-  const deptNm = ObjectUtils.getPropertyValue(selectedDept.value, "dept_nm", "");
-  const deptCd = ObjectUtils.getPropertyValue(selectedDept.value, "dept_cd", "");
-
-  if (deptNm) {
-    deptInfo = `${deptNm} (${deptCd})`;
-  }
-
-  return deptInfo;
-});
-
-// const deptInfo2 = computed(() => {
-//   let deptInfo = "";
-
-//   const deptNm = ObjectUtils.getPropertyValue(selectedDept2.value, "dept_nm", "");
-//   const deptCd = ObjectUtils.getPropertyValue(selectedDept2.value, "dept_cd", "");
-
-//   if (deptNm) {
-//     deptInfo = `${deptNm} (${deptCd})`;
-//   }
-
-//   return deptInfo;
-// });
 
 // 확인/수정 버튼 비활성화 여부 계산
 const isDisabled = computed(() => {
@@ -401,10 +271,6 @@ watch(
         if (dept) {
           selectedDept.value = dept;
         }
-        // if (dept.dept_cd2) {
-        //   selectedDept2.value.dept_cd = dept.dept_cd2;
-        //   selectedDept2.value.dept_nm = dept.dept_nm2;
-        // }
       } else if (newVal.type === "insert") {
         // 카테고리 추가 시 상위 카테고리 옵션 목록 중 현재 카테고리를 선택값으로 처리. 카테고리 목록 상단 추가 버튼 클릭 시에는 값 세팅하지 않음
         originalUpperCategory.value = target.name;
@@ -527,11 +393,11 @@ const createMappingParams = () => {
   // 선택한 맵핑 카테고리의 상위 타입 목록 탐색
   const mappingItem = categoryMap[upperCategory.value.id]; // 맵핑 카테고리
   // 맵핑 카테고리의 상위 타입이 있을 경우 파라미터 추가 가공
-  if(!isEmpties(mappingItem.superTypes)) {
+  if (!isEmpties(mappingItem.superTypes)) {
     superTypes = mappingItem.superTypes;
   }
 
-  return { entityIds, superTypes, tableTypes, entityTargets:  tempTargets};
+  return { entityIds, superTypes, tableTypes, entityTargets: tempTargets };
 };
 
 // 확인 버튼 클릭 이벤트 핸들러
@@ -619,10 +485,7 @@ const onClear = () => {
   originalUpperCategory.value = "";
   selectedDept.value = {};
   originalDeptCd.value = "";
-  // selectedDept2.value = {};
-  // originalDeptCd2.value = "";
   isEdited.value = false;
-  // mappingCategory.value = { description: "", value: "", id: "" };
   categoryImageFile.value = "";
 };
 
@@ -681,19 +544,6 @@ const onClickCategoryInfoSearchCloseButton = (param) => {
   } catch (error) {
     console.log(error);
   }
-}
-
-const deleteUpperCategory = () => {
-  upperCategory.value = {
-    description: "",
-    value: "",
-    level: "",
-    parent_id: "",
-    id: "",
-  }
-  categoryTreeStore.setSelectedItemId("");
-  categoryTreeStore.setToggleTargetOnClick("")
-  categoryTreeStore.collapseAll()
 }
 
 defineExpose({

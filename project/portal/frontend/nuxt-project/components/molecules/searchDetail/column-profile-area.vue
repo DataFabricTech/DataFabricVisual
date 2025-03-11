@@ -3,13 +3,7 @@
     <!-- detail-box : 컬럼 프로필 -->
     <div class="mu-heading">
       <h4>컬럼 프로파일링</h4>
-      <button
-        type="button"
-        class="mu-btn mu-btn-sm"
-        title="접기"
-        @click="toggleShowData()"
-        style="margin-left: 10px"
-      >
+      <button type="button" class="mu-btn mu-btn-sm" title="접기" @click="toggleShowData()" style="margin-left: 10px">
         <span>{{ toggleShowDataText }}</span>
       </button>
     </div>
@@ -67,9 +61,6 @@ const toggleShowData = () => {
     toggleShowDataText.value = "펼치기";
   }
 };
-
-// 랜더링 후 안보이도록 하기 위함
-// onMounted(() => { showData.value = false})
 
 const numberComma = (val) => {
   if (!!Number(val)) {

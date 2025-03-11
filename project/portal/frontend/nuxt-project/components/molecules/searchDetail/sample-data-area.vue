@@ -1,16 +1,12 @@
 <template>
-  <div :class="props.isAdmin ? 'data-box-wrap' : ''" :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''"
+    :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading" :style="props.isModal ? 'margin-bottom: 0px;' : ''">
         <h4>샘플 데이터</h4>
         <div class="mu-item-group">
-          <button
-            type="button"
-            class="mu-btn mu-btn-bg-non btn-section-toggle"
-            title="접기"
-            @click="toggleShowData()"
-            style="margin-left: 10px"
-          >
+          <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
+            style="margin-left: 10px">
             <span>{{ toggleShowDataText }}</span>
           </button>
         </div>
@@ -32,8 +28,7 @@
               <tr>
                 <th scope="col" v-for="(item, index) in props.list[0]" :key="index">
                   <span>{{ index }}</span><br>
-                  <span
-                      style="
+                  <span style="
                         color: #9b9b9b;
                         margin-top: 2px;
                         overflow: hidden;
@@ -41,9 +36,7 @@
                         display: -webkit-box;
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
-                      "
-                          :title="descriptionEllipsis(index, props.entity)"
-                    >
+                      " :title="descriptionEllipsis(index, props.entity)">
                     {{ descriptionEllipsis(index, props.entity) }}
                   </span>
                   <span :title="typeEllipsis(index, props.entity)">({{ typeEllipsis(index, props.entity) }})</span>
@@ -76,8 +69,6 @@
 <script setup lang="ts">
 const props = defineProps(["list", "entity", "isAdmin", "isModal", "userDataAuth"]);
 
-// const showData = ref(false);
-// const toggleShowDataText = ref("펼치기");
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
 

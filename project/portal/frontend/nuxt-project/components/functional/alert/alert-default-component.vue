@@ -1,9 +1,5 @@
 <template>
-  <vue-final-modal
-    class="vue-final-modal"
-    :click-to-close="options.clickToClose"
-    :esc-to-close="options.escToClose"
-  >
+  <vue-final-modal class="vue-final-modal" :click-to-close="options.clickToClose" :esc-to-close="options.escToClose">
     <div class="alert" :class="alertIconTheme" :style="{ ...style, width, height }">
       <div class="alert__body">
         <div v-if="showCloseIcon" class="alert__close-button">
@@ -18,19 +14,11 @@
       </div>
       <div class="alert__foot">
         <div class="alert__foot-main-buttons">
-          <button
-            class="button button--lg"
-            v-if="type === 'confirm'"
-            :class="alertCancelButtonTheme"
-            @click.stop="onCancel"
-          >
+          <button class="button button--lg" v-if="type === 'confirm'" :class="alertCancelButtonTheme"
+            @click.stop="onCancel">
             {{ cancelButtonText }}
           </button>
-          <button
-            class="button button--lg"
-            :class="alertConfirmButtonTheme"
-            @click.stop="onConfirm"
-          >
+          <button class="button button--lg" :class="alertConfirmButtonTheme" @click.stop="onConfirm">
             {{ confirmButtonText }}
           </button>
         </div>

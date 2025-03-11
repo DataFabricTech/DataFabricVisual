@@ -3,7 +3,8 @@
     <div class="mu-tab-box-2">
       <ul class="mu-tab">
         <li :class="activeTab == index ? 'active' : ''" v-for="(tab, index) in props.tabs" :key="index">
-          <a class="mu-switch" @click="onSelectTab(tab, index)" :title="activeTab == index ? '선택됨' : ''">{{ tab.key }}</a>
+          <a class="mu-switch" @click="onSelectTab(tab, index)" :title="activeTab == index ? '선택됨' : ''">{{ tab.key
+            }}</a>
         </li>
       </ul>
     </div>
@@ -11,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const emit = defineEmits(['onSelectTab'])
 const props = defineProps(['isAdmin', 'tabs', 'activeTab'])
@@ -30,6 +31,4 @@ const onSelectTab = (tabObj, index) => {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

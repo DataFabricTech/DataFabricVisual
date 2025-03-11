@@ -2,7 +2,7 @@
   <div class="mu-item-group">
     <!-- mu-selectbox / 10개씩 보기(Default) -->
     <div class="mu-search-btn">
-        <button type="button" class="mu-btn mu-btn-primary" @click="createCollector()"><span>수집대상 등록</span></button>
+      <button type="button" class="mu-btn mu-btn-primary" @click="createCollector()"><span>수집대상 등록</span></button>
     </div>
     <div class="mu-selectbox w160">
       <select @change="onChangePageSizeSelect">

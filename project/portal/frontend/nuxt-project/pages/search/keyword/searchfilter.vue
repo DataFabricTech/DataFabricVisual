@@ -1,21 +1,9 @@
 <template>
-  <searchFilterGroup
-    v-for="item in props.entityFiltersList"
-    :key="item.idx"
-    :item="item"
-    :entityFilterCondition="props.entityFilterCondition"
-    :entityFilterCriterion="props.entityFilterCriterion"
-    :datetimeType="datetimeType"
-    :timePickerOptions="timePickerOptions"
-    :lang="lang"
-    :startDate="startDate"
-    :filterCnt="filterCnt"
-    @getFilterGrpNum="getFilterGrpNum"
-    @addGroup="addGroup"
-    @deleteGroup="deleteGroup"
-    @addFilter="addFilter"
-    @deleteFilter="deleteFilter"
-  />
+  <searchFilterGroup v-for="item in props.entityFiltersList" :key="item.idx" :item="item"
+    :entityFilterCondition="props.entityFilterCondition" :entityFilterCriterion="props.entityFilterCriterion"
+    :datetimeType="datetimeType" :timePickerOptions="timePickerOptions" :lang="lang" :startDate="startDate"
+    :filterCnt="filterCnt" @getFilterGrpNum="getFilterGrpNum" @addGroup="addGroup" @deleteGroup="deleteGroup"
+    @addFilter="addFilter" @deleteFilter="deleteFilter" />
 </template>
 
 <script setup lang="ts">

@@ -27,15 +27,8 @@
                 <td>
                   <div class="mu-item-group">
                     <div class="mu-radio" v-for="(item, index) in radioList" :key="index">
-                      <input
-                        type="radio"
-                        :id="index"
-                        v-model="post.category"
-                        :value="item"
-                      />
-                      <label :for="index"
-                        ><em class="data-label">{{ item }}</em></label
-                      >
+                      <input type="radio" :id="index" v-model="post.category" :value="item" />
+                      <label :for="index"><em class="data-label">{{ item }}</em></label>
                     </div>
                   </div>
                 </td>
@@ -44,14 +37,8 @@
               <tr>
                 <th scope="row">질문 내용 <strong class="required">필수</strong></th>
                 <td>
-                  <input
-                    type="text"
-                    placeholder="질문내용을 입력하세요"
-                    title="FAQ 질문내용 입력"
-                    class="mu-input"
-                    v-model="post.post_content"
-                    v-bind:class="[!postContentValid ? 'error' : '']"
-                  />
+                  <input type="text" placeholder="질문내용을 입력하세요" title="FAQ 질문내용 입력" class="mu-input"
+                    v-model="post.post_content" v-bind:class="[!postContentValid ? 'error' : '']" />
                   <p v-if="!postContentValid" class="complete-msg error">
                     질문을 입력해주세요.
                   </p>
@@ -61,15 +48,8 @@
               <tr>
                 <th scope="row">답변 내용 <strong class="required">필수</strong></th>
                 <td>
-                  <textarea
-                    id="textarea02"
-                    placeholder="답변내용을 입력하세요"
-                    title="FAQ 답변내용 입력"
-                    rows="10"
-                    v-model="post.admin_reply"
-                    v-bind:class="[!adminReplyValid ? 'error' : '', 'mu-area']"
-                  ></textarea>
-                  <!-- <ckeditor :editor="editor" v-model="post.admin_reply"></ckeditor> -->
+                  <textarea id="textarea02" placeholder="답변내용을 입력하세요" title="FAQ 답변내용 입력" rows="10"
+                    v-model="post.admin_reply" v-bind:class="[!adminReplyValid ? 'error' : '', 'mu-area']"></textarea>
                   <p v-if="!adminReplyValid" class="complete-msg error">
                     내용을 입력해주세요.
                   </p>
@@ -87,11 +67,7 @@
         <button type="button" class="mu-btn mu-btn-lg" @click="onClickListButton">
           <span>취소</span>
         </button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickSaveButton"
-        >
+        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickSaveButton">
           <span>수정</span>
         </button>
       </div>
@@ -110,8 +86,7 @@ definePageMeta({
   layout: "admin",
 });
 
-const { $ofetch, $ckeditor5 } = useNuxtApp();
-const editor = $ckeditor5.customEditor5;
+const { $ofetch } = useNuxtApp();
 
 const route = useRoute();
 const router = useRouter();

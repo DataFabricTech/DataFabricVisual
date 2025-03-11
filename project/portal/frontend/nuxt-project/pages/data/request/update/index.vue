@@ -1,47 +1,27 @@
 <template>
   <div class="contents">
     <div>
-      <request-edit-inner
-        :dataRequest="dataRequest"
-        @cancelMethod="onClickCancelButton"
-        @saveMethod="onClickSaveButton"
-        :isUpdate="true"
-      >
+      <request-edit-inner :dataRequest="dataRequest" @cancelMethod="onClickCancelButton" @saveMethod="onClickSaveButton"
+        :isUpdate="true">
         <template v-slot:file>
           <div class="mu-item-vgroup">
             <!-- 첨부파일 : 파일찾기 , 삭제 편집모드 -->
             <div class="mu-file-attach">
-              <input
-                type="text"
-                id="file-name"
-                class="mu-input"
-                placeholder="파일 첨부 크기는 최대 100MB까지 가능합니다."
-                readonly
-              />
+              <input type="text" id="file-name" class="mu-input" placeholder="파일 첨부 크기는 최대 100MB까지 가능합니다." readonly />
               <div class="mu-file-btn">
                 <button type="button" class="mu-btn">
                   <label for="file-find">파일찾기</label>
                 </button>
-                <input
-                  type="file"
-                  id="file-find"
-                  class="mu-btn-hide"
-                  @change="onChange"
-                />
+                <input type="file" id="file-find" class="mu-btn-hide" @change="onChange" />
               </div>
             </div>
             <!-- 첨부파일 : 리스트 개발삭제 가능함 -->
             <ul class="file-sch-list">
               <li v-for="(item, index) in files" :key="index">
                 <a v-if="!item.delete_flag" href="#none" title="첨부파일다운로드">
-                  <i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}</a
-                >
-                <button
-                  v-if="!item.delete_flag"
-                  type="button"
-                  class="mu-btn mu-btn-delete"
-                  @click="onClickDeleteButton"
-                >
+                  <i class="mu-icon-svg file">첨부파일있음</i>{{ item.name }}</a>
+                <button v-if="!item.delete_flag" type="button" class="mu-btn mu-btn-delete"
+                  @click="onClickDeleteButton">
                   <i class="mu-icon-svg item-delete"></i><span>첨부파일 삭제</span>
                 </button>
               </li>
@@ -72,18 +52,18 @@ const router = useRouter();
 
 interface DataRequest {
   id: number
-	writer: string
-	request_type: number
-	title: string
-	data_name: string
-	contents: string
-	request_start?: string
-	request_end?: string
-	benefit_content: string
-	create_date: string
-	update_date: string
-	process_status: number
-	finish_date: string
+  writer: string
+  request_type: number
+  title: string
+  data_name: string
+  contents: string
+  request_start?: string
+  request_end?: string
+  benefit_content: string
+  create_date: string
+  update_date: string
+  process_status: number
+  finish_date: string
 }
 
 interface File {
@@ -107,18 +87,18 @@ const files = ref<Array<File>>([]);
 const delete_files = ref<Array<File>>([]);
 const dataRequest = ref<DataRequest>({
   id: 0,
-	writer: "",
-	request_type: 0,
-	title: "",
-	data_name: "",
-	contents: "",
-	request_start: "",
-	request_end: "",
-	benefit_content: "",
-	create_date: "",
-	update_date: "",
-	process_status: 0,
-	finish_date: ""
+  writer: "",
+  request_type: 0,
+  title: "",
+  data_name: "",
+  contents: "",
+  request_start: "",
+  request_end: "",
+  benefit_content: "",
+  create_date: "",
+  update_date: "",
+  process_status: 0,
+  finish_date: ""
 });
 
 const getDataRequestOne = async (id: number): Promise<void> => {
@@ -171,13 +151,7 @@ const onClickCancelButton = async (): Promise<void> => {
 // 삭제버튼 클릭 이벤트
 const onClickDeleteButton = (e: any): void => {
   if (files.value[e.target.id] && files.value[e.target.id].isNew) files.value.splice(e.target.id, 1);
-  // [10, 20]
   else delete_files.value.push(files.value.splice(e.target.id, 1)[0]);
-};
-
-// 목록버튼 클릭 이벤트
-const onClickListButton = (): void => {
-  router.push("/data/request");
 };
 
 // 저장버튼 클릭 이벤트

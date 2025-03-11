@@ -1,32 +1,32 @@
 <template>
   <div class="board-wrap">
     <div v-if="props.isAdmin" class="board-head">
-        <strong class="board-label"><em class="data-label">{{ props.post.category }}</em></strong>
-        <strong class="board-title">{{ props.post.title }}</strong>
-        <div class="board-desc">
-            <div class="data-info">
-              <dl>
-                <dt>등록자</dt>
-                <dd>{{ props.post.user_nm }}</dd>
-                <dt>등록일</dt>
-                <dd>{{ props.post.upload_date }}</dd>
-                <dt>조회수</dt>
-                <dd>{{ props.post.view_count }}</dd>
-              </dl>
-            </div>
+      <strong class="board-label"><em class="data-label">{{ props.post.category }}</em></strong>
+      <strong class="board-title">{{ props.post.title }}</strong>
+      <div class="board-desc">
+        <div class="data-info">
+          <dl>
+            <dt>등록자</dt>
+            <dd>{{ props.post.user_nm }}</dd>
+            <dt>등록일</dt>
+            <dd>{{ props.post.upload_date }}</dd>
+            <dt>조회수</dt>
+            <dd>{{ props.post.view_count }}</dd>
+          </dl>
         </div>
+      </div>
     </div>
     <div v-else class="board-head">
       <div class="board-desc">
         <div class="data-info">
-            <dl>
-              <dt>등록자</dt>
-              <dd>{{ props.post.user_nm }}</dd>
-              <dt>등록일</dt>
-              <dd>{{ props.post.upload_date }}</dd>
-              <dt>조회수</dt>
-              <dd>{{ props.post.view_count }}</dd>
-            </dl>
+          <dl>
+            <dt>등록자</dt>
+            <dd>{{ props.post.user_nm }}</dd>
+            <dt>등록일</dt>
+            <dd>{{ props.post.upload_date }}</dd>
+            <dt>조회수</dt>
+            <dd>{{ props.post.view_count }}</dd>
+          </dl>
         </div>
       </div>
     </div>

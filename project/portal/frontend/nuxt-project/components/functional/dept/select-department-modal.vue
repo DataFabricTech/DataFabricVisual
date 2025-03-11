@@ -19,20 +19,10 @@
                   <tr>
                     <th scope="row">조직명</th>
                     <td>
-                      <input
-                        type="text"
-                        placeholder="검색어를 입력하세요."
-                        class="mu-input w200"
-                        title="검색어입력"
-                        v-model="word"
-                        @keypress.enter.prevent="onSearch()"
-                      />
-                      <button
-                        type="button"
-                        class="mu-btn mu-btn-primary"
-                        @click.prevent="onSearch"
-                        style="margin-left:10px"
-                      >
+                      <input type="text" placeholder="검색어를 입력하세요." class="mu-input w200" title="검색어입력" v-model="word"
+                        @keypress.enter.prevent="onSearch()" />
+                      <button type="button" class="mu-btn mu-btn-primary" @click.prevent="onSearch"
+                        style="margin-left:10px">
                         <i class="mu-icon-svg search"></i><span>검색</span>
                       </button>
                     </td>
@@ -42,24 +32,19 @@
             </div>
             <div class="mu-search-btn"></div>
           </div>
-          
+
           <div class="mu-heading" style="justify-content: space-between;margin-top: auto;">
             <h4>조직 목록</h4>
             <div class="detail-section" :class="showData ? 'open' : 'close'" style="height: auto;">
               <div class="mu-item-group">
-                <button
-                  type="button"
-                  class="mu-btn mu-btn-bg-non btn-section-toggle"
-                  title="접기"
-                  @click="toggleShowData()"
-                  style="margin-left: 10px"
-                >
+                <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기"
+                  @click="toggleShowData()" style="margin-left: 10px">
                   <span>{{ toggleShowDataText }}</span>
                 </button>
               </div>
             </div>
           </div>
-          
+
           <div class="department-tree" style="overflow: auto; border: 1px solid #cecece;height: 400px;">
             <!-- 부서 목록 Tree S -->
             <ul class="category-menu slim-scroll" style="padding: 10px;">
@@ -67,21 +52,12 @@
                 <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggle('all')">
                   <span>펼치기</span>
                 </button>
-                <a
-                  href="javascript:void(0);"
-                  :class="['' === selectedId ? 'active' : '', 'item-label']"
-                  title="조직 전체"
-                  @click="() => onClick()"
-                >
+                <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']" title="조직 전체"
+                  @click="() => onClick()">
                   조직 전체
                 </a>
-                <dept-item
-                  :list="deptListFiltered"
-                  :toggle-targets="toggleTargets"
-                  :selected-id="selectedId"
-                  @onToggleNode="onToggle"
-                  @onClickMenuItem="onClick"
-                />
+                <dept-item :list="deptListFiltered" :toggle-targets="toggleTargets" :selected-id="selectedId"
+                  @onToggleNode="onToggle" @onClickMenuItem="onClick" />
               </li>
             </ul>
           </div>
@@ -108,7 +84,7 @@
           </table>
         </div>
       </div>
-      
+
       <div class="mu-dialog-foot">
         <button type="button" class="mu-btn" @click="onCancel">
           <span>취소</span>
@@ -117,14 +93,9 @@
           <span>확인</span>
         </button>
       </div>
-      
+
       <div class="mu-dialog-close-btn">
-        <button
-          type="button"
-          class="mu-btn mu-btn-close"
-          title="해당 팝업 닫기"
-          @click="onClose"
-        >
+        <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose">
           <i class="mu-icon-svg close"></i><span>팝업닫기</span>
         </button>
       </div>
@@ -199,7 +170,7 @@ const onClear = () => {
   selected.value = { dept_cd: "", dept_nm: "" };
 };
 
-// 
+//
 const onClose = () => {
   onClear();
 
@@ -207,12 +178,12 @@ const onClose = () => {
   emit("onCloseModal");
 };
 
-// 
+//
 const onCancel = () => {
   onClose();
 };
 
-// 
+//
 const onConfirm = () => {
   if (props.toggleDeptModal) {
     if ((selected.value && selected.value.dept_cd) || selected.value.dept_cd == "") {
@@ -222,14 +193,14 @@ const onConfirm = () => {
   }
 };
 
-// 
+//
 onMounted(() => {
   onDeptDataLoad();
 
   openModal();
 });
 
-// 
+//
 onBeforeUnmount(() => {
   closeModal();
 });
@@ -242,20 +213,20 @@ const onDeptDataLoad = async () => {
   departments.value = _deptMap.value;
 };
 
-// 
+//
 const generateRandomString = (length: number) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
-  
+
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
     result += characters[randomIndex];
   }
-  
+
   return result;
 };
 
-// 
+//
 const randomSuffix = generateRandomString(5);
 
 //
@@ -273,36 +244,31 @@ const deptList = computed(() => {
   });
 });
 
-// 
+//
 deptStore.setCalledFrom({ from: "_metaDataManage" });
 
-// 
+//
 const onClick = (item) => {
   if (item && item.id) {
     selected.value = { dept_cd: item.id.replace(`${randomSuffix}_`, ''), dept_nm: item.name };
   }
 };
 
-// 
-const onClickMenuItem = (item: Department) => {
-  emit("onClickMenuItem", item);
-};
-
-// 
+//
 const onToggle = (value) => {
   deptStore.setToggleTargetOnClick(value);
 };
 
-// 
+//
 const deptListFiltered = computed(() => {
   return filterDepartmentsWithParents(deptList.value, word.value);
 });
 
-// 
+//
 const onSearch = () => {
 };
 
-// 
+//
 const filterDepartmentsWithParents = (departments, searchTerm) => {
   const filteredDepartments = [];
 
@@ -322,18 +288,18 @@ const filterDepartmentsWithParents = (departments, searchTerm) => {
   return filteredDepartments;
 };
 
-// 
+//
 const openModal = () => {
   isActive.value = true;
   zIndex.value = getNextZIndex();
 };
 
-// 
+//
 const closeModal = () => {
   isActive.value = false;
 };
 
-// 
+//
 const getNextZIndex = () => {
   const maxZIndex = Array.from(document.querySelectorAll('*'))
     .map(el => parseFloat(window.getComputedStyle(el).zIndex))
@@ -348,6 +314,7 @@ const getNextZIndex = () => {
 <style scoped>
 .mu-modal {
   position: fixed;
-  z-index: 101; /* 기본 z-index 값 */
+  z-index: 101;
+  /* 기본 z-index 값 */
 }
 </style>
