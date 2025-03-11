@@ -85,7 +85,7 @@ export const classificationStore = defineStore("classification", () => {
   const classificationTagList: Ref<Tag[]> = ref([]); // tagContent내에 실질 태그 목록
 
   // [ 이름 / 설명 ] 수정 상태
-  const isNameEditable = ref<boolean>(false);
+  const isdisplayNameEditable = ref<boolean>(false);
   const isDescEditable = ref<boolean>(false);
 
   // 분류 목록 조회 ( id / name / displayName )
@@ -106,7 +106,7 @@ export const classificationStore = defineStore("classification", () => {
   // 분류 상세 조회 ( name, displayName, description )
   const getClassificationDetail = async (id?: string) => {
     // [이름 / 설명 ] 수정상태 off
-    isNameEditable.value = false;
+    isdisplayNameEditable.value = false;
     isDescEditable.value = false;
 
     if (id) {
@@ -119,6 +119,12 @@ export const classificationStore = defineStore("classification", () => {
     );
 
     classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
+
+    // displayName이 null이면 name을 사용하도록 설정
+    if(classificationDetailData.value.displayName === "") {
+      classificationDetailData.value.displayName = classificationDetailData.value.name;
+    }
+
     if (data.data && data.data.description.length === 0) {
       // 설명이 없을 때,
       classificationDetailData.value.description = "-";
@@ -223,7 +229,7 @@ export const classificationStore = defineStore("classification", () => {
     deleteClassification,
     deleteClassificationTag,
     addClassificationTag,
-    isNameEditable,
+    isdisplayNameEditable,
     isDescEditable,
     editClassificationTag,
   };

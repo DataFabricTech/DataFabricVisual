@@ -25,7 +25,7 @@
             :class="menuListClass(item.id)"
             v-for="item in classificationList"
             :key="item.id"
-            @click="showClassificationDetail(item.id, item.name)"
+            @click="showClassificationDetail(item.id, item.displayName)"
           >
             <button class="menu-button">
               <svg-icon class="svg-icon" name="tag"></svg-icon>
@@ -82,12 +82,12 @@ const props = defineProps({
 });
 
 // 분류 목록 중 단일 목록 클릭시 실행되는 함수
-const showClassificationDetail = async (id: string, name: string) => {
+const showClassificationDetail = async (id: string, displayName: string) => {
   showNameNoti.value = false;
   // 선택한 분류의 상세 조회 API 호출
   await getClassificationDetail(id);
   // 태그 리스트 API 호출
-  await getClassificationTags(name);
+  await getClassificationTags(displayName);
 };
 </script>
 

@@ -4,17 +4,17 @@
       <div class="h-group gap-2">
         <editable-group
           class="w-auto"
-          :parent-edit-mode="isNameEditable"
-          compKey="name"
+          :parent-edit-mode="isdisplayNameEditable"
+          compKey="displayName"
           :editable="true"
           @editCancel="editCancel"
           @editDone="editDone"
-          @editIcon="() => editIconClick('name')"
+          @editIcon="() => editIconClick('displayName')"
         >
           <template #edit-slot>
             <label class="hidden-text" for="title-modify">분류명 입력</label>
             <input
-              v-model="newData.name"
+              v-model="newData.displayName"
               placeholder="분류명에 대한 영역입니다."
               required
               id="title-modify"
@@ -23,7 +23,7 @@
             />
           </template>
           <template #view-slot>
-            <h3 class="editable-group-title">{{ newData.name }}</h3>
+            <h3 class="editable-group-title">{{ newData.displayName }}</h3>
           </template>
         </editable-group>
         <div
@@ -96,7 +96,7 @@ const {
 } = useClassificationStore;
 const {
   classificationDetailData,
-  isNameEditable,
+  isdisplayNameEditable,
   isDescEditable,
   showNameNoti,
 } = storeToRefs(useClassificationStore);
@@ -139,13 +139,13 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
   const hasError = ref(false);
   const patch: JsonPatchOperation[] = [];
 
-  if (newData.name === "") {
+  if (newData.displayName === "") {
     nameNotiMsg.value = $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
     hasError.value = true;
-  } else if (newData.name.length === 1) {
+  } else if (newData.displayName.length === 1) {
     nameNotiMsg.value = $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
     hasError.value = true;
-  } else if (!$constants.GOVERNANCE.TITLE.REGEX.test(newData.name)) {
+  } else if (!$constants.GOVERNANCE.TITLE.REGEX.test(newData.displayName)) {
     nameNotiMsg.value = $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
     hasError.value = true;
   }
@@ -153,19 +153,19 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
   // 이름에 에러가 있으면 편집 상태 열기 및 수정값 유지
   if (hasError.value) {
     showNameNoti.value = true;
-    isNameEditable.value = true;
+    isdisplayNameEditable.value = true;
     return patch;
   }
 
   showNameNoti.value = false;
-  isNameEditable.value = false;
+  isdisplayNameEditable.value = false;
 
   if (!hasError.value) {
-    if (oldData.name !== newData.name) {
+    if (oldData.displayName !== newData.displayName) {
       patch.push({
         op: "replace",
-        path: "/name",
-        value: newData.name,
+        path: "/displayName",
+        value: newData.displayName,
       });
     }
 
@@ -182,8 +182,8 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
 };
 
 const editIconClick = (key: string) => {
-  if (key === "name") {
-    isNameEditable.value = true;
+  if (key === "displayName") {
+    isdisplayNameEditable.value = true;
   } else if (key === "description") {
     isDescEditable.value = true;
     // 수정버튼 클릭시, description의 수정상태에 '-'를 제거
