@@ -41,7 +41,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const currentComponent = ref("glossary");
 
   const editGlossaryMode = reactive({
-    name: false,
+    displayName: false,
     des: false,
     tag: false,
   });
@@ -74,7 +74,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
       showLoader: false,
     });
     const glossariesData: Glossary[] = res.data.data;
+    console.log("glossariesData 확인 =>>>>> ", glossariesData);
     glossaries.splice(0, glossaries.length, ...glossariesData);
+    console.log("glossaries 확인 => ", glossaries);
 
     if (res.data.paging.after) {
       glossariesAfter.value = res.data.paging.after;
@@ -292,7 +294,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     editGlossaryMode[property] = !editGlossaryMode[property];
   }
   function disableEditModes(): void {
-    editGlossaryMode.name = false;
+    editGlossaryMode.displayName = false;
     editGlossaryMode.des = false;
     editGlossaryMode.tag = false;
   }

@@ -1,12 +1,12 @@
 <template>
   <div class="work-page" v-if="store.currentComponent === 'glossary'">
     <div class="l-top-bar">
-      <div class="editable-group" v-if="!store.editGlossaryMode.name">
-        <span class="editable-group-title">{{ store.glossary.name }}</span>
+      <div class="editable-group" v-if="!store.editGlossaryMode.displayName">
+        <span class="editable-group-title">{{ store.glossary.displayName }}</span>
         <button
           class="button button-neutral-ghost button-sm"
           type="button"
-          @click="changeEditGlossaryMode('name')"
+          @click="changeEditGlossaryMode('displayName')"
           v-if="!isGlossaryNull()"
         >
           <span class="hidden-text">수정</span>
@@ -14,21 +14,21 @@
         </button>
       </div>
       <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <div class="editable-group" v-if="store.editGlossaryMode.name">
+      <div class="editable-group" v-if="store.editGlossaryMode.displayName">
         <label class="hidden-text" for="title-modify"
           >카테고리 이름 수정
         </label>
         <input
           id="title-modify"
           class="text-input"
-          v-model="editData.name"
+          v-model="editData.displayName"
           maxlength="20"
         />
         <div class="h-group gap-1">
           <button
             class="button button-neutral-stroke"
             type="button"
-            @click="cancel('name')"
+            @click="cancel('displayName')"
           >
             취소
           </button>
@@ -38,8 +38,8 @@
             @click="
               updateGlossary(glossary.id, {
                 op: 'replace',
-                path: '/name',
-                value: editData.name,
+                path: '/displayName',
+                value: editData.displayName,
               })
             "
           >
@@ -225,14 +225,14 @@ const {
 const store = useGlossaryStore();
 
 const editData = reactive({
-  name: "",
+  displayName: "",
   description: "",
 });
 
 watch(
   () => store.glossary,
   async (newGlossary) => {
-    editData.name = newGlossary.name;
+    editData.displayName = newGlossary.displayName;
     editData.description = newGlossary.description;
     await resetTerms();
     await getTerms();
@@ -251,7 +251,7 @@ const isGlossaryNull = (): boolean => {
 };
 
 function syncEditDataWithGlossary(): void {
-  editData.name = store.glossary.name;
+  editData.displayName = store.glossary.displayName;
   editData.description = store.glossary.description;
 }
 
