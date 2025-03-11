@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,19 +35,19 @@ public class CategoryService {
 
         // 1. 카테고리 정보 테이블 조회
         List<Map<String, Object>> originList = getCategoryList();
-        
+
         // 카테고리 항목 확인
         // [{ id: 1, name: "MG", count: 0 }]
         Map<String, Object> restResponse = getClassificationCountFromApi();
         if (!restResponse.isEmpty()) {
             Map<String, Object> res = (Map<String, Object>) restResponse.get("result");
-            if (res.get("result") != null && res.get("result").toString().equals("success")) {                    
+            if (res.get("result") != null && res.get("result").toString().equals("success")) {
                 // API에서 받아온 카테고리 매핑 개수 Map
                 Map<String, Object> count = (Map<String, Object>) res.get("count");
 
                 // 2. 갱신된 카테고리 카운트 정보와 연동하여 리스트로 출력
                 if (originList != null) {
-                    for (int i=0; i<originList.size(); i++) {
+                    for (int i = 0; i < originList.size(); i++) {
                         String c_id = originList.get(i).get("id").toString();
                         if (count.get(c_id) != null) {
                             originList.get(i).put("count", count.get(c_id));
@@ -59,8 +58,8 @@ public class CategoryService {
                 }
 
                 resultList = originList;
-                
-            } else {                  
+
+            } else {
                 return new ArrayList<>();
             }
         } else {
@@ -85,13 +84,13 @@ public class CategoryService {
         Map<String, Object> categoryInfo = new HashMap<>();
         Map<String, Object> systemInfo = new HashMap<>();
         Map<String, Object> orderInfo = new HashMap<>();
-        
+
         // 카테고리 카운트 정보
         Map<String, Object> countMap = new HashMap<>();
         Map<String, Object> restResponse = getClassificationCountFromApi();
         if (!restResponse.isEmpty()) {
             Map<String, Object> res = (Map<String, Object>) restResponse.get("result");
-            if (res.get("result") != null && res.get("result").toString().equals("success")) {                    
+            if (res.get("result") != null && res.get("result").toString().equals("success")) {
                 // API에서 받아온 카테고리 매핑 개수 Map
                 countMap = (Map<String, Object>) res.get("count");
             }
@@ -106,7 +105,8 @@ public class CategoryService {
 
         for (Map<String, Object> category : categoryList) {
             Map<String, Object> content = new HashMap<>();
-            if (category.get("name").toString().equals("CATEGORY")) continue;
+            if (category.get("name").toString().equals("CATEGORY"))
+                continue;
 
             content.put("level", category.get("level"));
             content.put("root", category.get("parent"));
@@ -123,7 +123,7 @@ public class CategoryService {
             ((List<Map<String, Object>>) categoryInfo.get("content")).add(content);
         }
         categoryInfo.put("checkedCount", 0);
-        
+
         // 시스템 타입 정보
         List<Map<String, Object>> systemList = categoryMapper.getSystemListForFilter();
         systemInfo.put("allChecked", true);
@@ -135,7 +135,7 @@ public class CategoryService {
         List<String> systemTypes = categoryMapper.getSystemTypes();
         systemList.removeIf(item -> !systemTypes.contains(item.get("system_type")));
 
-        int i=0;
+        int i = 0;
         for (String systemType : systemTypes) {
             i = i + 1;
             boolean added = false;
@@ -147,7 +147,7 @@ public class CategoryService {
 
                     content.put("root", "SYSTEMTYPE");
                     content.put("rootDescription", "시스템 타입");
-                    
+
                     content.put("id", i);
                     content.put("name", system.get("system_type"));
                     content.put("description", system.get("system_type"));
@@ -164,7 +164,7 @@ public class CategoryService {
 
                 content.put("root", "SYSTEMTYPE");
                 content.put("rootDescription", "시스템 타입");
-                
+
                 content.put("id", i);
                 content.put("name", systemType);
                 content.put("description", systemType);
@@ -172,7 +172,7 @@ public class CategoryService {
                 content.put("checked", false);
                 ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
             }
-        }        
+        }
         systemInfo.put("checkedCount", 0);
 
         // 정렬 오름차순, 내림차순
@@ -214,9 +214,9 @@ public class CategoryService {
         Map<String, Object> restResponse = new HashMap<>();
         try {
             RestTemplate restTemplate = new RestTemplate();
-            
+
             String url = esSyncBaseUrl + esSyncUrlCategorycount;
-            restResponse = restTemplate.getForObject(url, HashMap.class);   
+            restResponse = restTemplate.getForObject(url, HashMap.class);
         } catch (Exception e) {
             log.error("Fail to Execute Category Count API");
         }

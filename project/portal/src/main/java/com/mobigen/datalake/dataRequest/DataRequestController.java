@@ -41,20 +41,21 @@ public class DataRequestController {
 
     /**
      * 데이터요청 목록 조회
-     * @param pageSize                  페이지 크기
-     * @param pnum                      페이지 번호
-     * @param searchType                검색 종류
-     * @param searchWord                검색어
-     * @return                          게시글 목록
+     * 
+     * @param pageSize   페이지 크기
+     * @param pnum       페이지 번호
+     * @param searchType 검색 종류
+     * @param searchWord 검색어
+     * @return 게시글 목록
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/list")
-    public Object getDataRequestList(@RequestParam("pageSize") int pageSize, 
-                                     @RequestParam("pnum") int pnum,
-                                     @RequestParam("searchType") String searchType,
-                                     @RequestParam("searchWord") String searchWord,
-                                     @RequestParam("searchStatus") String searchStatus) throws Exception {
+    public Object getDataRequestList(@RequestParam int pageSize,
+            @RequestParam int pnum,
+            @RequestParam String searchType,
+            @RequestParam String searchWord,
+            @RequestParam String searchStatus) throws Exception {
 
         Map<String, String> param = new HashMap<>();
         param.put("searchType", searchType);
@@ -64,7 +65,7 @@ public class DataRequestController {
         param.put("offset", String.valueOf(pageSize * (pnum - 1)));
 
         int total = dataRequestService.getDataRequestListTotal(param);
-        
+
         List<Map> list = dataRequestService.getDataRequestList(param);
         Map resultMap = new HashMap<>();
         resultMap.put("list", list);
@@ -75,25 +76,28 @@ public class DataRequestController {
 
     /**
      * 데이터요청 단건 조회
-     * @param id                    게시글 ID
+     * 
+     * @param id 게시글 ID
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/one")
-    public Object getDataRequestOne(@RequestParam("id") String id, HttpServletRequest request) throws Exception {
+    public Object getDataRequestOne(@RequestParam String id, HttpServletRequest request) throws Exception {
         return dataRequestService.getDataRequestOne(id, request);
     }
 
     /**
      * 데이터요청 저장 : 파일저장 포함
-     * @param uploadForm                파일
+     * 
+     * @param uploadForm 파일
      * @param request
      * @return
      */
     @RequestMapping(value = "/add/saveFile", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult insertFile(@ModelAttribute("uploadForm") FileUploadRequest uploadForm, HttpServletRequest request)  {
+    public JsonResult insertFile(@ModelAttribute FileUploadRequest uploadForm,
+            HttpServletRequest request) {
         JsonResult js = new JsonResult();
 
         try {
@@ -109,10 +113,11 @@ public class DataRequestController {
                 uploadForm.setPost_id((Integer) dataRequest.get("id"));
 
                 // 파일 업로드 경로 숨기기
-                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm, env.getProperty("properties.fileUploadPath"), request);
+                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm,
+                        env.getProperty("properties.fileUploadPath"), request);
                 if (uploadResult.size() != 0)
                     uploadResult.get(0).setSaveFileName(null);
-                    
+
                 js.setData(uploadResult);
             } else {
                 js.setData(0);
@@ -129,14 +134,16 @@ public class DataRequestController {
 
     /**
      * 데이터요청 삭제
-     * @param param                 게시글 정보
+     * 
+     * @param param 게시글 정보
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/delete")
     @ResponseBody
-    public Object deleteDataRequest(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+    public Object deleteDataRequest(@RequestBody Map<String, Object> param, HttpServletRequest request)
+            throws Exception {
         JsonResult js = new JsonResult();
 
         // 세션 사용자 ID와 실제 DB의 게시글 작성자 일치 여부 확인
@@ -144,15 +151,16 @@ public class DataRequestController {
         String userId = user.get("user_id").toString();
         String userRole = user.get("authority").toString();
 
-        List paramDeleteList = ((List)param.get("deleteList"));
+        List paramDeleteList = ((List) param.get("deleteList"));
 
         // 세션의 사용자가 관리자가 아닌 경우 사용자 검증
         if ("Super-Admin".equals(userRole) || "Admin".equals(userRole)) {
             js.setData(dataRequestService.deleteDataRequest(param));
         } else {
             Boolean isValid = false;
-            for (int i=0; i<paramDeleteList.size(); i++){
-                Map<String, Object> dataRequestOne = dataRequestService.getDataRequestOne(paramDeleteList.get(i).toString(), request);
+            for (int i = 0; i < paramDeleteList.size(); i++) {
+                Map<String, Object> dataRequestOne = dataRequestService
+                        .getDataRequestOne(paramDeleteList.get(i).toString(), request);
 
                 // 게시글이 없으면 다음 확인
                 if (dataRequestOne.size() == 0) {
@@ -160,33 +168,37 @@ public class DataRequestController {
                 }
 
                 // 세션 사용자 ID와 작성자 비교
-                String writer = ((Map<String, Object>) dataRequestOne.get("dataRequest")).get("writer").toString();;
+                String writer = ((Map<String, Object>) dataRequestOne.get("dataRequest")).get("writer").toString();
+                ;
 
                 // 다른 경우 삭제처리 하지 않음
                 if (!writer.equals(userId)) {
                     isValid = false;
                     break;
                 } else {
-                    isValid = true;    
+                    isValid = true;
                 }
             }
-            
+
             // 검증 성공한 경우만 삭제 처리
             if (isValid) {
                 Map<String, Object> result = (Map<String, Object>) dataRequestService.deleteDataRequest(param);
-                Integer deleteCnt = result.get("deleteCnt") != null ? Integer.parseInt(result.get("deleteCnt").toString()) : 0;
+                Integer deleteCnt = result.get("deleteCnt") != null
+                        ? Integer.parseInt(result.get("deleteCnt").toString())
+                        : 0;
                 js.setData(deleteCnt);
             } else {
                 js.setData(0);
             }
         }
-       
+
         return js;
     }
 
     /**
      * 데이터요청 수정
-     * @param param                 게시글 수정 내용
+     * 
+     * @param param 게시글 수정 내용
      * @return
      * @throws Exception
      */
@@ -199,14 +211,14 @@ public class DataRequestController {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         String userId = user.get("user_id").toString();
         String userRole = user.get("authority").toString();
-        
+
         if ("Super-Admin".equals(userRole) || "Admin".equals(userRole)) {
-            param.put("writer", userId); 
+            param.put("writer", userId);
             result = dataRequestService.updateDataRequest(param, null);
         } else {
             if (userId != null && !userId.equals("")) {
                 if (userId.equals(param.get("writer").toString())) {
-                    param.put("writer", userId); 
+                    param.put("writer", userId);
                     result = dataRequestService.updateDataRequest(param, null);
                 }
             }
@@ -217,13 +229,15 @@ public class DataRequestController {
 
     /**
      * 데이터요청 수정 : 파일저장 포함
-     * @param uploadForm             파일
+     * 
+     * @param uploadForm 파일
      * @param request
      * @return
      */
     @RequestMapping(value = "/update/saveFile", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult updateDataRequestFile(@ModelAttribute("uploadForm") FileUploadRequest uploadForm, HttpServletRequest request) throws Exception {
+    public JsonResult updateDataRequestFile(@ModelAttribute("uploadForm") FileUploadRequest uploadForm,
+            HttpServletRequest request) throws Exception {
         JsonResult js = new JsonResult();
 
         // 세션 사용자 ID와 실제 DB의 게시글 작성자 일치 여부 확인
@@ -255,13 +269,14 @@ public class DataRequestController {
             if ("Super-Admin".equals(userRole) || "Admin".equals(userRole)) {
                 dataRequestService.updateDataRequest(params, delete_files);
 
-                if(delete_thumb_flag != null && delete_thumb_flag)
+                if (delete_thumb_flag != null && delete_thumb_flag)
                     dataRequestService.deleteThumb(params);
 
                 uploadForm.setPost_id((Integer) params.get("id"));
                 // 파일 업로드 경로 숨기기
-                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm, env.getProperty("properties.fileUploadPath"), request);
-                if(uploadResult.size() != 0)
+                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm,
+                        env.getProperty("properties.fileUploadPath"), request);
+                if (uploadResult.size() != 0)
                     uploadResult.get(0).setSaveFileName(null);
 
                 js.setData(uploadResult);
@@ -269,18 +284,20 @@ public class DataRequestController {
             } else {
                 // 세션의 사용자 ID와 작성자가 동일한 경우만 수정 처리
                 if (userId != null && !userId.equals("")) {
-                    Map<String, Object> selectedPost = dataRequestService.getDataRequestOne(params.get("id").toString(), request);
-                    String writer = (((Map<String, Object>)selectedPost.get("post")).get("writer")).toString();
+                    Map<String, Object> selectedPost = dataRequestService.getDataRequestOne(params.get("id").toString(),
+                            request);
+                    String writer = (((Map<String, Object>) selectedPost.get("post")).get("writer")).toString();
                     if (userId.equals(writer)) {
                         dataRequestService.updateDataRequest(params, delete_files);
 
-                        if(delete_thumb_flag != null && delete_thumb_flag)
+                        if (delete_thumb_flag != null && delete_thumb_flag)
                             dataRequestService.deleteThumb(params);
 
                         uploadForm.setPost_id((Integer) params.get("id"));
                         // 파일 업로드 경로 숨기기
-                        List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm, env.getProperty("properties.fileUploadPath"), request);
-                        if(uploadResult.size() != 0)
+                        List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm,
+                                env.getProperty("properties.fileUploadPath"), request);
+                        if (uploadResult.size() != 0)
                             uploadResult.get(0).setSaveFileName(null);
 
                         js.setData(uploadResult);
@@ -291,7 +308,6 @@ public class DataRequestController {
                     js.setData(0);
                 }
             }
-            
 
         } catch (Exception e) {
             js.setErrorMessage("파일 업데이트에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
@@ -302,20 +318,23 @@ public class DataRequestController {
 
     /**
      * 데이터요청 답변 저장
-     * @param param                 답변 정보
+     * 
+     * @param param 답변 정보
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/updateAdminReply")
     @ResponseBody
-    public Object updateAdminReply(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+    public Object updateAdminReply(@RequestBody Map<String, Object> param, HttpServletRequest request)
+            throws Exception {
         return dataRequestService.updateAdminReply(param, request);
     }
 
     /**
      * 데이터 요청 답변 삭제
-     * @param param                 데이터 요청 답변 정보
+     * 
+     * @param param 데이터 요청 답변 정보
      * @return
      * @throws Exception
      */

@@ -24,10 +24,10 @@ public class MetaDataManageController {
 
     /**
      * 메타 데이터 통합 관리 > 메타 데이터 통합 관리 대상 목록 조회
-    *
-    * @params Object       카테고리명
-    * @return Object       메타 데이터 통합 관리 대상 목록 반환
-    */
+     *
+     * @params Object 카테고리명
+     * @return Object 메타 데이터 통합 관리 대상 목록 반환
+     */
     @ResponseJsonResult
     @PostMapping("/list")
     public Object getMetaDataList(@RequestBody Map<String, Object> param) throws Exception {
@@ -36,10 +36,10 @@ public class MetaDataManageController {
 
     /**
      * 메타 데이터 통합 관리 > 메타 데이터 통합 관리 대상 목록 조회
-    *
-    * @params Object       
-    * @return Object       메타 데이터 통합 관리 대상 목록 반환
-    */
+     *
+     * @params Object
+     * @return Object 메타 데이터 통합 관리 대상 목록 반환
+     */
     @ResponseJsonResult
     @GetMapping("/getFilterOptions")
     public Object getFilterOptions() throws Exception {
@@ -48,10 +48,10 @@ public class MetaDataManageController {
 
     /**
      * 메타 데이터 통합 관리 > 데이터 공개설정 권한 처리
-    *
-    * @params Object       
-    * @return Object       성공여부
-    */
+     *
+     * @params Object
+     * @return Object 성공여부
+     */
     @ResponseJsonResult
     @PutMapping("/setDataAuth")
     public Object setDataAuth(@RequestBody Map<String, Object> param) throws Exception {

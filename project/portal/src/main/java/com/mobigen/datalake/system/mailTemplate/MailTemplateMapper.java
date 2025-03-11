@@ -9,8 +9,12 @@ import java.util.Map;
 @Repository("mailTemplate")
 public interface MailTemplateMapper {
     List getMailTemplateList(Map<String, Object> param) throws Exception;
+
     List getMailTemplateInfo(Map<String, Object> param) throws Exception;
+
     Integer getMailTemplateListTotCnt(Map<String, Object> param) throws Exception;
+
     Integer saveMailTemplate(@RequestBody Map<String, Object> param) throws Exception;
-    Integer deleteMailTemplate(@RequestBody Map<String, Object> param) throws Exception;    
+
+    Integer deleteMailTemplate(@RequestBody Map<String, Object> param) throws Exception;
 }

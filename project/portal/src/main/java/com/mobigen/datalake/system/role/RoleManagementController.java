@@ -2,7 +2,6 @@ package com.mobigen.datalake.system.role;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,15 +19,18 @@ import java.util.Map;
 @AllArgsConstructor
 public class RoleManagementController {
     private final RoleManagementService roleManagementService;
-  
+
     /**
      * 권한 관리 - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/search")
-    public Object getRoleManagementSearchList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("roleType") String roleType)  throws Exception {
+    public Object getRoleManagementSearchList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord,
+            @RequestParam String roleType) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -40,10 +42,10 @@ public class RoleManagementController {
         param.put("limit", String.valueOf(pageSize));
         param.put("offset", String.valueOf(pageSize * (pnum - 1)));
         param.put("roleType", roleType);
-        
+
         total = roleManagementService.getRoleManagementSearchListCount(param);
         list = (List<Map>) roleManagementService.getRoleManagementSearchList(param);
-           
+
         result.put("total", total);
         result.put("list", list);
         return result;
@@ -51,20 +53,21 @@ public class RoleManagementController {
 
     /**
      * 권한 관리 - 삭제
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/roleDelete")
     @ResponseBody
-    public Object deleteRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object deleteRoleItem(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             // TO-DO : 로직 검토 필요
             int roleUserCount = 0;
             roleUserCount = roleManagementService.getRoleUserCount(param);
-            
+
             if (roleUserCount > 0) {
                 String errorMessage = "해당되는 권한에 사용자가 있습니다.";
                 result.put("errorMessage", errorMessage);
@@ -76,22 +79,22 @@ public class RoleManagementController {
             // 권한 타입이 데이터 권한인 경우에만 동기화
             List<Map> searchList = roleManagementService.searchRoleItem(param);
 
-            // 
+            //
             int count = 0;
             count = roleManagementService.deleteRoleItem(param);
-            
+
             if (searchList.size() > 0 && searchList.get(0).get("role_type").toString().equals("0")) {
                 result.put("errorMessage", "");
                 result.put("isFailed", false);
-                
+
                 return result;
             }
 
             // ES 동기화 처리
-            String[] roleIds = {param.get("role_id").toString()};
+            String[] roleIds = { param.get("role_id").toString() };
             boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "delete");
 
-            if(!roleEsUpdateResult) {
+            if (!roleEsUpdateResult) {
                 String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -104,16 +107,17 @@ public class RoleManagementController {
 
     /**
      * 권한 관리 - 등록
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/register")
     @ResponseBody
-    public Object registerRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object registerRoleItem(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List list = roleManagementService.searchRoleItem(param);
 
             if (list.size() > 0 && !"Y".equals(param.get("updateFlag"))) {
@@ -126,7 +130,7 @@ public class RoleManagementController {
                 int count = 0;
                 count = roleManagementService.registerRoleItem(param);
 
-                if (count <= 0){
+                if (count <= 0) {
                     String errorMessage = "등록에 실패하였습니다.";
                     result.put("errorMessage", errorMessage);
                     result.put("isFailed", true);
@@ -135,10 +139,10 @@ public class RoleManagementController {
 
             if ("Y".equals(param.get("updateFlag"))) {
                 // ES 동기화 처리
-                String[] roleIds = {param.get("role_id").toString()};
+                String[] roleIds = { param.get("role_id").toString() };
                 boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "update");
 
-                if(!roleEsUpdateResult) {
+                if (!roleEsUpdateResult) {
                     String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                     result.put("errorMessage", errorMessage);
                     result.put("isFailed", true);
@@ -152,13 +156,14 @@ public class RoleManagementController {
 
     /**
      * 권한 관리 - 등록 - 중복 체크
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/checkDupRoleId")
     @ResponseBody
-    public Object checkDupRoleId(@RequestParam("role_id") String role_id)  throws Exception {
+    public Object checkDupRoleId(@RequestParam String role_id) throws Exception {
         Map<String, Object> result = new HashMap<>();
         try {
             Map<String, Object> param = new HashMap<>();
@@ -179,12 +184,13 @@ public class RoleManagementController {
 
     /**
      * 권한 관리 - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/searchDetail")
-    public Object getRoleDetailSearchList(@RequestParam("roleId") String roleId)  throws Exception {
+    public Object getRoleDetailSearchList(@RequestParam String roleId) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -194,19 +200,22 @@ public class RoleManagementController {
         param.put("roleId", roleId);
 
         list = (List<Map>) roleManagementService.getRoleDetailSearchList(param);
-           
+
         result.put("list", list);
         return result;
     }
 
     /**
      * 사용자 권한 관리 - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/userSearch")
-    public Object getUserRoleList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
+    public Object getUserRoleList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord,
+            @RequestParam String roleId) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -221,7 +230,7 @@ public class RoleManagementController {
 
         total = roleManagementService.getUserRoleSearchListCount(param);
         list = (List<Map>) roleManagementService.getUserRoleSearchList(param);
-           
+
         result.put("total", total);
         result.put("list", list);
         return result;
@@ -229,12 +238,15 @@ public class RoleManagementController {
 
     /**
      * 부서 권한 관리 - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/deptSearch")
-    public Object getDeptRoleList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
+    public Object getDeptRoleList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord,
+            @RequestParam String roleId) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -249,7 +261,7 @@ public class RoleManagementController {
 
         total = roleManagementService.getDeptRoleSearchListCount(param);
         list = (List<Map>) roleManagementService.getDeptRoleSearchList(param);
-           
+
         result.put("total", total);
         result.put("list", list);
         return result;
@@ -257,12 +269,15 @@ public class RoleManagementController {
 
     /**
      * 데이타 권한 관리 - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/metaSearch")
-    public Object getMetaRoleList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
+    public Object getMetaRoleList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord,
+            @RequestParam String roleId) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -277,30 +292,31 @@ public class RoleManagementController {
 
         total = roleManagementService.getMetaRoleSearchListCount(param);
         list = (List<Map>) roleManagementService.getMetaRoleSearchList(param);
-           
+
         result.put("total", total);
         result.put("list", list);
         return result;
     }
-    
+
     /**
      * 사용자 권한 관리 - 등록
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/userRoleSave")
     @ResponseBody
-    public Object userRoleSave(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object userRoleSave(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
             int count = 0;
             count = roleManagementService.registerUserRoleItem(list);
 
-            if (count <= 0){
+            if (count <= 0) {
                 String errorMessage = "등록에 실패하였습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -313,22 +329,23 @@ public class RoleManagementController {
 
     /**
      * 사용자 권한 관리 - 삭제
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/deleteUserRoleItem")
     @ResponseBody
-    public Object deleteUserRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object deleteUserRoleItem(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
             int count = 0;
             count = roleManagementService.deleteUserRoleItem(list);
 
-            if (count <= 0){
+            if (count <= 0) {
                 String errorMessage = "삭제 처리 실패했습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -338,25 +355,26 @@ public class RoleManagementController {
         }
         return result;
     }
-    
+
     /**
      * 조직 권한 관리 - 등록
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/deptRoleSave")
     @ResponseBody
-    public Object registerDeptRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object registerDeptRoleItem(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
             int count = 0;
             count = roleManagementService.registerDeptRoleItem(list);
 
-            if (count <= 0){
+            if (count <= 0) {
                 String errorMessage = "등록에 실패하였습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -369,22 +387,23 @@ public class RoleManagementController {
 
     /**
      * 조직 권한 관리 - 삭제
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/deleteDeptRoleItem")
     @ResponseBody
-    public Object deleteDeptRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object deleteDeptRoleItem(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
             int count = 0;
             count = roleManagementService.deleteDeptRoleItem(list);
 
-            if (count <= 0){
+            if (count <= 0) {
                 String errorMessage = "삭제 처리 실패했습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -397,27 +416,27 @@ public class RoleManagementController {
 
     /**
      * 데이터 권한 관리 - 등록
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/metaRoleSave")
     @ResponseBody
-    public Object registerMetaRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object registerMetaRoleItem(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
-            
+
             int count = 0;
             count = roleManagementService.registerMetaRoleItem(list);
 
-            if (count <= 0){
+            if (count <= 0) {
                 String errorMessage = "등록에 실패하였습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
             }
-
 
             if (list.isEmpty()) {
                 String errorMessage = "등록할 데이타가 없습니다.";
@@ -429,10 +448,10 @@ public class RoleManagementController {
 
             if (list.size() > 0 && list.get(0).containsKey("role_id")) {
                 // ES 동기화 처리
-                String[] roleIds = {list.get(0).get("role_id").toString()};
+                String[] roleIds = { list.get(0).get("role_id").toString() };
                 boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "update");
 
-                if(!roleEsUpdateResult) {
+                if (!roleEsUpdateResult) {
                     String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                     result.put("errorMessage", errorMessage);
                     result.put("isFailed", true);
@@ -446,16 +465,17 @@ public class RoleManagementController {
 
     /**
      * 데이터 권한 관리 - 삭제
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/deleteMetaRoleItem")
     @ResponseBody
-    public Object deleteMetaRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object deleteMetaRoleItem(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
             if (list.isEmpty()) {
@@ -468,10 +488,10 @@ public class RoleManagementController {
 
             if (list.size() > 0 && list.get(0).containsKey("role_id")) {
                 // 삭제전에 ES 동기화 처리
-                String[] roleIds = {list.get(0).get("role_id").toString()};
+                String[] roleIds = { list.get(0).get("role_id").toString() };
                 boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "delete");
 
-                if(!roleEsUpdateResult) {
+                if (!roleEsUpdateResult) {
                     String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                     result.put("errorMessage", errorMessage);
                     result.put("isFailed", true);
@@ -481,7 +501,7 @@ public class RoleManagementController {
             int count = 0;
             count = roleManagementService.deleteMetaRoleItem(list);
 
-            if (count <= 0){
+            if (count <= 0) {
                 String errorMessage = "삭제 처리 실패했습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -494,10 +514,10 @@ public class RoleManagementController {
 
     /**
      * 데이타 권한 조회 - 조회
-    *
-    * @params Object       카테고리명
-    * @return Object       메타 데이터 통합 관리 대상 목록 반환
-    */
+     *
+     * @params Object 카테고리명
+     * @return Object 메타 데이터 통합 관리 대상 목록 반환
+     */
     @ResponseJsonResult
     @PostMapping("/metaDatalist")
     public Object getMetaDataList(@RequestBody Map<String, Object> param) throws Exception {
@@ -506,12 +526,13 @@ public class RoleManagementController {
 
     /**
      * 데이타 권한 조회(상세) - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/metaDataInfo")
-    public Object getMetaDataInfo(@RequestParam("metaId") String metaId)  throws Exception {
+    public Object getMetaDataInfo(@RequestParam String metaId) throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("metaId", metaId);
 
@@ -520,12 +541,15 @@ public class RoleManagementController {
 
     /**
      * 데이타 권한 조회(상세) - 리스트 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/metaDataSearch")
-    public Object getMetaDataList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("metaId") String metaId)  throws Exception {
+    public Object getMetaDataList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord,
+            @RequestParam String metaId) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -540,7 +564,7 @@ public class RoleManagementController {
 
         total = roleManagementService.getMetaDataListCount(param);
         list = (List<Map>) roleManagementService.getMetaDataList(param);
-           
+
         result.put("total", total);
         result.put("list", list);
         return result;
@@ -548,12 +572,13 @@ public class RoleManagementController {
 
     /**
      * 사용자 권한 조회 - 리스트 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/userDataSearch")
-    public Object userDataSearch(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object userDataSearch(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -561,7 +586,7 @@ public class RoleManagementController {
 
         total = roleManagementService.getUserDataListCount(param);
         list = (List<Map>) roleManagementService.getUserDataList(param);
-           
+
         result.put("total", total);
         result.put("list", list);
         return result;
@@ -569,12 +594,13 @@ public class RoleManagementController {
 
     /**
      * 사용자 권한 조회(상세) - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/userDataInfo")
-    public Object getUserDataInfo(@RequestParam("userId") String userId)  throws Exception {
+    public Object getUserDataInfo(@RequestParam String userId) throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("userId", userId);
 
@@ -583,12 +609,15 @@ public class RoleManagementController {
 
     /**
      * 사용자 권한 조회(상세) - 리스트 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/userMetaDataSearch")
-    public Object userMetaDataSearch(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("userId") String userId)  throws Exception {
+    public Object userMetaDataSearch(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord,
+            @RequestParam String userId) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -603,7 +632,7 @@ public class RoleManagementController {
 
         total = roleManagementService.getUserMetaDataListCount(param);
         list = (List<Map>) roleManagementService.getUserMetaDataList(param);
-           
+
         result.put("total", total);
         result.put("list", list);
         return result;
@@ -611,18 +640,19 @@ public class RoleManagementController {
 
     /**
      * 권한 관리 - es 동기화 호출
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/esSyncCall")
-    public Object esSyncCall(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object esSyncCall(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        if(param.get("role_id") != null) {
-            String[] roleIds = {param.get("role_id").toString()};
+        if (param.get("role_id") != null) {
+            String[] roleIds = { param.get("role_id").toString() };
             boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "update");
-            
+
             if (!roleEsUpdateResult) {
                 String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                 result.put("errorMessage", errorMessage);
@@ -637,12 +667,14 @@ public class RoleManagementController {
 
     /**
      * 메뉴 - 리스트 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/menuList")
-    public Object getMenuList(@RequestParam("menuType") String menuType, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord)  throws Exception {
+    public Object getMenuList(@RequestParam String menuType, @RequestParam String searchType,
+            @RequestParam String searchWord) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -654,27 +686,28 @@ public class RoleManagementController {
         param.put("searchWord", searchWord);
 
         list = (List<Map>) roleManagementService.getMenuList(param);
-           
+
         result.put("list", list);
         return result;
     }
 
     /**
      * 메뉴 관리 - 등록 / 수정
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/menuRegister")
     @ResponseBody
-    public Object menuRegister(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object menuRegister(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             int count = 0;
             count = roleManagementService.menuRegister(param);
-            
-            if (count <= 0){
+
+            if (count <= 0) {
                 String errorMessage = "저장 처리 실패했습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -687,18 +720,19 @@ public class RoleManagementController {
 
     /**
      * 메뉴 관리 - 삭제
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/menuDelete")
     @ResponseBody
-    public Object menuDelete(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object menuDelete(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        try{
+        try {
             List<Map> searchList = roleManagementService.menuDeleteCheck(param);
-            if(!searchList.isEmpty()){
+            if (!searchList.isEmpty()) {
                 String errorMessage = "하위 메뉴가 있습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -708,7 +742,7 @@ public class RoleManagementController {
             int count = 0;
             count = roleManagementService.menuDelete(param);
 
-            if (count <= 0){
+            if (count <= 0) {
                 String errorMessage = "삭제 처리 실패했습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
@@ -718,5 +752,5 @@ public class RoleManagementController {
         }
         return result;
     }
-    
+
 }

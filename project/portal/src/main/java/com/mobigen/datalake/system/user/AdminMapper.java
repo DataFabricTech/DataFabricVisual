@@ -8,14 +8,24 @@ import java.util.Map;
 @Repository("adminMapper")
 public interface AdminMapper {
     List getUserList(Map<String, Object> param) throws Exception;
+
     Integer getUserListTotal(Map<String, Object> param) throws Exception;
+
     Object getUser(String user_id);
+
     Integer updateUserInfo(Map<String, String> param) throws Exception;
+
     List getUserListWithRoleName(Map<String, Object> param) throws Exception;
+
     Integer getUserListTotalWithRoleName(Map<String, Object> param) throws Exception;
-    Integer UnlockLoginDeactivation(Map<String, Object> param) throws Exception;    
+
+    Integer UnlockLoginDeactivation(Map<String, Object> param) throws Exception;
+
     Integer initPassword(Map<String, String> param) throws Exception;
+
     List<Map<String, Object>> getEmailManageList() throws Exception;
+
     List<Map<String, Object>> getLogoImageList() throws Exception;
+
     List<Map<String, Object>> getCommonCodeList(Map<String, String> param) throws Exception;
 }

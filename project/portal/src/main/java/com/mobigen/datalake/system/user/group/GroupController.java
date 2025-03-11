@@ -21,7 +21,8 @@ public class GroupController {
 
     @ResponseJsonResult
     @GetMapping("/group")
-    public Object getGroup(@RequestParam("unum") String unum, @RequestParam("type") String type, @RequestParam("word") String word) throws Exception {
+    public Object getGroup(@RequestParam String unum, @RequestParam String type, @RequestParam String word)
+            throws Exception {
         HashMap result = new HashMap();
         PageHelper.startPage(Integer.parseInt(unum), 2);
         PageInfo info = PageInfo.of(groupService.getAllGroup(type, word, "0"));

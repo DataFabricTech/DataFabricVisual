@@ -21,17 +21,20 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 @Controller
 @AllArgsConstructor
 public class MailTemplateController {
-    
+
     private final MailTemplateService mailTemplateService;
 
     /**
      * 메일 템플릿 - 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/getMailTemplateList")
-    public Object getMailTemplateList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord)  throws Exception {
+    public Object getMailTemplateList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord)
+            throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("searchType", searchType);
         param.put("searchWord", searchWord);
@@ -43,12 +46,13 @@ public class MailTemplateController {
 
     /**
      * 메일 템플릿 - 상세 조회
+     * 
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/getMailTemplateInfo")
-    public Object getMailTemplateInfo(@RequestParam("template_id") String template_id)  throws Exception {
+    public Object getMailTemplateInfo(@RequestParam String template_id) throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("template_id", template_id);
 
@@ -57,6 +61,7 @@ public class MailTemplateController {
 
     /**
      * 메일 템플릿 - 저장
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -70,6 +75,7 @@ public class MailTemplateController {
 
     /**
      * 메일 템플릿 - 삭제
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -83,6 +89,7 @@ public class MailTemplateController {
 
     /**
      * 메일 템플릿 - 메일 발송
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -92,8 +99,9 @@ public class MailTemplateController {
     @ResponseBody
     public Object sendMailWithTemplate(@RequestBody Map<String, Object> param) throws Exception {
         // param.get("variables")가 null인 경우 빈 HashMap을 생성
-        Map<String, Object> variables = (param.get("variables") == null) ? new HashMap<>() : (Map<String, Object>) param.get("variables");
-        
+        Map<String, Object> variables = (param.get("variables") == null) ? new HashMap<>()
+                : (Map<String, Object>) param.get("variables");
+
         // sendMail 메소드 호출
         return mailTemplateService.sendMail(param.get("template_id").toString(), variables);
     }

@@ -26,6 +26,7 @@ public class AdminController {
 
     /**
      * 사용자 목록 조회
+     * 
      * @param pageSize
      * @param pnum
      * @param searchType
@@ -35,7 +36,10 @@ public class AdminController {
      */
     @ResponseJsonResult
     @GetMapping("/user/list")
-    public Object getUserList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("userType") String userType, @RequestParam("searchSelectDeptcd") String searchSelectDeptcd) throws Exception {
+    public Object getUserList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String searchType, @RequestParam String searchWord,
+            @RequestParam String userType, @RequestParam String searchSelectDeptcd)
+            throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("searchType", searchType);
         param.put("userType", userType);
@@ -59,18 +63,20 @@ public class AdminController {
 
     /**
      * 사용자 단건 조회
+     * 
      * @param user_id
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/user/one")
-    public Object getUser( @RequestParam("user_id") String user_id) throws Exception {
+    public Object getUser(@RequestParam String user_id) throws Exception {
         return adminService.getUser(user_id);
     }
 
     /**
      * 사용자 정보 수정 (권한)
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -84,6 +90,7 @@ public class AdminController {
 
     /**
      * 장기 미접속 해제
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -91,12 +98,14 @@ public class AdminController {
     @ResponseJsonResult
     @PostMapping("/user/UnlockLoginDeactivation")
     @ResponseBody
-    public Object unlockLoginDeactivation(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+    public Object unlockLoginDeactivation(@RequestBody Map<String, Object> param, HttpServletRequest request)
+            throws Exception {
         return adminService.unlockLoginDeactivation(param, request);
     }
 
     /**
      * 패스워드 초기화
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -110,6 +119,7 @@ public class AdminController {
 
     /**
      * 관리자 이메일 관리
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -119,9 +129,10 @@ public class AdminController {
     public Object getEmailManageList() throws Exception {
         return adminService.getEmailManageList();
     }
-    
+
     /**
      * 로고 이미지 정보 조회
+     * 
      * @param param
      * @return
      * @throws Exception
@@ -130,7 +141,7 @@ public class AdminController {
     @GetMapping("/logoImageList")
     public Object getLogoImageList() throws Exception {
         return adminService.getLogoImageList();
-    }    
+    }
 
     @ResponseJsonResult
     @GetMapping("/commonCodeList")

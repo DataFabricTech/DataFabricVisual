@@ -8,5 +8,6 @@ import java.util.Map;
 @Repository("recommendMapper")
 public interface RecommendMapper {
     List getRecommendSearchList() throws Exception;
+
     Integer saveRecommendSearchList(Map<String, String> param) throws Exception;
 }

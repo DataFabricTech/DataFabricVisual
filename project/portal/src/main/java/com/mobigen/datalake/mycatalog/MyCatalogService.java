@@ -1,6 +1,5 @@
 package com.mobigen.datalake.mycatalog;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,7 @@ public class MyCatalogService {
     public List<HashMap<String, Object>> getSearchDataList(Map<String, String> param) {
         return myCatalogMapper.getSearchDataList(param);
     }
-    
+
     // My 데이터 요청 내역 목록 조회
     public List<HashMap<String, Object>> getDataRequestList(Map<String, String> param) {
         return myCatalogMapper.getDataRequestList(param);
@@ -36,16 +35,17 @@ public class MyCatalogService {
     }
 
     // My 전체 추출 데이터 목록 조회
-    public List<Map<String,String>> getAllExtractedDataList(Map<String, String> param) {
+    public List<Map<String, String>> getAllExtractedDataList(Map<String, String> param) {
         return myCatalogMapper.getAllExtractedDataList(param);
     }
+
     // My 전체 추출 데이터 목록 전체개수 조회
     public int getAllExtractedDataListCount(Map<String, String> param) {
         return myCatalogMapper.getAllExtractedDataListCount(param);
     }
 
     // My 추출 데이터 목록 조회
-    public List<Map<String,String>> getExtractedDataList(Map<String, String> param) {
+    public List<Map<String, String>> getExtractedDataList(Map<String, String> param) {
         List<Map<String, String>> resultList = new ArrayList<>();
 
         if (param.get("select_type") != null && param.get("select_type").toString().equals("1")) {
@@ -53,10 +53,10 @@ public class MyCatalogService {
         } else {
             resultList = myCatalogMapper.getExtractedDataList(param);
         }
-            
+
         return resultList;
     }
-    
+
     // My 추출 데이터 목록 전체개수 조회
     public int getExtractedDataListCount(Map<String, String> param) {
         int resultCount = 0;
@@ -74,7 +74,7 @@ public class MyCatalogService {
     }
 
     // My 찜 데이터 목록 조회
-    public List<Map<String,String>> getFavoriteDataList(Map<String, String> param) {
+    public List<Map<String, String>> getFavoriteDataList(Map<String, String> param) {
         return myCatalogMapper.getFavoriteDataList(param);
     }
 
@@ -87,7 +87,7 @@ public class MyCatalogService {
     public List<Map<String, String>> getMyReviewDataList(Map<String, String> param) {
         return myCatalogMapper.getMyReviewDataList(param);
     }
-    
+
     // My 추출 데이터 목록 전체개수 조회
     public int getMyReviewDataListCount(Map<String, String> param) {
         return myCatalogMapper.getMyReviewDataListCount(param);

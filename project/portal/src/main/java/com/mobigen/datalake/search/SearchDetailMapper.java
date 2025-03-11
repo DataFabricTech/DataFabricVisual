@@ -1,6 +1,5 @@
 package com.mobigen.datalake.search;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -73,8 +72,8 @@ public interface SearchDetailMapper {
 
     List<Map<String, Object>> getClassificationList(String[] ids);
 
-    List<Map<String,String>> getDataManagerInfoList();
-    
+    List<Map<String, String>> getDataManagerInfoList();
+
     Map<String, Object> getDetailData(String id);
 
     Integer getUserDataAuth(Map<String, Object> params);

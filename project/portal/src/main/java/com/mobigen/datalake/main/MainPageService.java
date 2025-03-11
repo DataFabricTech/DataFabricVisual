@@ -5,9 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -19,11 +17,9 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.datalake.search.SearchDetailService;
 import com.mobigen.datalake.search.SearchService;
-import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.security.SessionManager;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +47,6 @@ public class MainPageService {
         Map<String, Object> dataCountMap = new HashMap<>();
         dataCountMap.put("totalDataCount", mainPageMapper.getTotalDataCount());
         dataCountMap.put("useDataCount", mainPageMapper.getUseDataCount());
-        dataCountMap.put("newDataCount", mainPageMapper.getNewDataCount());
         return dataCountMap;
     }
 
@@ -94,14 +89,15 @@ public class MainPageService {
             params.put("roleids", role_ids);
 
             RestTemplate restTemplate = new RestTemplate();
-        
+
             // esSearch API의 URL 생성
             String fastUrl = "http://" + esSearchApiHost + ":" + esSearchApiPort + "/api/v1/search/keyword";
             log.info("call essearch api : " + fastUrl);
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(params);
-            ResponseEntity<HashMap> responseEntity = restTemplate.exchange(fastUrl, HttpMethod.POST, requestEntity, HashMap.class);
-            
+            ResponseEntity<HashMap> responseEntity = restTemplate.exchange(fastUrl, HttpMethod.POST, requestEntity,
+                    HashMap.class);
+
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 Map<String, Object> body = responseEntity.getBody();
 
@@ -117,15 +113,17 @@ public class MainPageService {
                 }
 
                 // 권한 관련 키,값 제거
-                if (body != null && body.containsKey("release")) body.remove("release");
-                if (body != null && body.containsKey("role_id")) body.remove("role_id");
-                
+                if (body != null && body.containsKey("release"))
+                    body.remove("release");
+                if (body != null && body.containsKey("role_id"))
+                    body.remove("role_id");
+
             } else {
                 result.put("results", new ArrayList<>());
                 result.put("total_count", 0);
                 throw new Exception("최신 등록 데이터 검색에 실패하였습니다.");
             }
-            
+
         } catch (Exception e) {
             result.put("results", new ArrayList<>());
             result.put("total_count", 0);
@@ -147,28 +145,28 @@ public class MainPageService {
     public Object getMyFavoriteDataList(String user_id) throws Exception {
         // 결과를 저장할 리스트
         List<Map<String, Object>> shareDataList = mainPageMapper.getMyFavoriteDataList(user_id);
-    
+
         // JSON 데이터를 처리하기 위한 ObjectMapper 생성
         ObjectMapper objectMapper = new ObjectMapper();
-    
+
         // 각 guid에 대해 detail 데이터를 가져와서 shareDataList에 추가
         for (int i = 0; i < shareDataList.size(); i++) {
             Map<String, Object> params = new LinkedHashMap<>();
             params.put("user_id", user_id);
             params.put("meta_id", shareDataList.get(i).get("meta_id"));
-    
+
             // getDetailData 호출
             Object detailData = searchDetailService.getDetailDataForMain(params);
-    
+
             // detailData가 JSON 형식일 경우 처리
             if (detailData != null) {
                 // JSON 결과를 Map 형태로 변환
                 Map<String, Object> detailDataMap = objectMapper.convertValue(detailData, Map.class);
-    
+
                 // "data" 필드가 있는지 확인
                 if (detailDataMap.containsKey("data")) {
                     Object data = detailDataMap.get("data");
-    
+
                     // "data"가 LinkedHashMap인 경우 처리
                     LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) data;
 
@@ -179,7 +177,7 @@ public class MainPageService {
                 }
             }
         }
-    
+
         // shareDataList를 리턴
         return shareDataList;
     }
@@ -188,28 +186,28 @@ public class MainPageService {
     public Object getMyReviewDataList(String user_id) throws Exception {
         // 결과를 저장할 리스트
         List<Map<String, Object>> shareDataList = mainPageMapper.getMyReviewDataList(user_id);
-    
+
         // JSON 데이터를 처리하기 위한 ObjectMapper 생성
         ObjectMapper objectMapper = new ObjectMapper();
-    
+
         // 각 guid에 대해 detail 데이터를 가져와서 shareDataList에 추가
         for (int i = 0; i < shareDataList.size(); i++) {
             Map<String, Object> params = new LinkedHashMap<>();
             params.put("user_id", user_id);
             params.put("meta_id", shareDataList.get(i).get("meta_id"));
-    
+
             // getDetailData 호출
             Object detailData = searchDetailService.getDetailDataForMain(params);
-    
+
             // detailData가 JSON 형식일 경우 처리
             if (detailData != null) {
                 // JSON 결과를 Map 형태로 변환
                 Map<String, Object> detailDataMap = objectMapper.convertValue(detailData, Map.class);
-    
+
                 // "data" 필드가 있는지 확인
                 if (detailDataMap.containsKey("data")) {
                     Object data = detailDataMap.get("data");
-    
+
                     // "data"가 LinkedHashMap인 경우 처리
                     LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) data;
 
@@ -220,7 +218,7 @@ public class MainPageService {
                 }
             }
         }
-    
+
         // shareDataList를 리턴
         return shareDataList;
     }
@@ -260,16 +258,14 @@ public class MainPageService {
             List<Map<String, Object>> list = (List<Map<String, Object>>) params.get("list");
 
             if (list != null && list.size() > 0) {
-                int updateCnt = 0;
-                int saveCnt = 0;
-                for (int i=0; i<list.size(); i++) {
+                for (int i = 0; i < list.size(); i++) {
                     // 기존 데이터 조회
                     Map<String, Object> originInfo = mainPageMapper.getCodeInfo(list.get(i));
                     if (originInfo != null) {
-                        updateCnt = mainPageMapper.updateCodeTableFromName(list.get(i));
+                        mainPageMapper.updateCodeTableFromName(list.get(i));
                     } else {
                         // 기존 데이터가 없는 경우 신규 데이터 추가
-                        saveCnt += mainPageMapper.insertCodeTable(list.get(i));
+                        mainPageMapper.insertCodeTable(list.get(i));
                     }
                 }
                 result.put("result", true);

@@ -1,10 +1,7 @@
 package com.mobigen.datalake.search;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
 import com.mobigen.framework.utility.RegexUtils;
@@ -38,12 +34,12 @@ public class DetailController {
     /**
      * 상세 데이터 조회
      *
-     * @param guid              조회용 메타 ID
-     * @return Object           상세 데이터
+     * @param guid 조회용 메타 ID
+     * @return Object 상세 데이터
      */
     @ResponseJsonResult
     @GetMapping("/{guid}")
-    public Object getDetailData(@PathVariable("guid") String guid, HttpServletRequest request) throws Exception {
+    public Object getDetailData(@PathVariable String guid, HttpServletRequest request) throws Exception {
         Map<String, Object> params = new LinkedHashMap<>();
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("user_id", user.get("user_id"));
@@ -57,12 +53,13 @@ public class DetailController {
     /**
      * 상세 데이터 조회 - 메타데이터 계산
      *
-     * @param guid              조회용 메타 ID
-     * @return Object           상세 데이터
+     * @param guid 조회용 메타 ID
+     * @return Object 상세 데이터
      */
     @ResponseJsonResult
     @GetMapping("/metadatainfo/{guid}")
-    public Object getDetailMetadatainfo(@PathVariable("guid") String guid, HttpServletRequest request) throws Exception {
+    public Object getDetailMetadatainfo(@PathVariable String guid, HttpServletRequest request)
+            throws Exception {
         Map<String, Object> params = new LinkedHashMap<>();
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("user_id", user.get("user_id").toString());
@@ -73,8 +70,8 @@ public class DetailController {
     /**
      * 테이블 프로파일 데이터 조회
      *
-     * @param params            조회용 파라미터
-     * @return Object           테이블 프로파일 정보
+     * @param params 조회용 파라미터
+     * @return Object 테이블 프로파일 정보
      */
     @ResponseJsonResult
     @PostMapping("/dataprofile")
@@ -86,8 +83,8 @@ public class DetailController {
     /**
      * 샘플 데이터 조회
      *
-     * @param params            조회용 파라미터
-     * @return Object           샘플 데이터 10건
+     * @param params 조회용 파라미터
+     * @return Object 샘플 데이터 10건
      */
     @ResponseJsonResult
     @PostMapping("/sampledata")
@@ -106,8 +103,8 @@ public class DetailController {
     /**
      * 데이터 테이블 프로파일링 카운트 조회
      *
-     * @param meta_id            조회용 guid
-     * @return Object         개수
+     * @param meta_id 조회용 guid
+     * @return Object 개수
      */
     @ResponseJsonResult
     @GetMapping("/getRowCount")
@@ -116,17 +113,17 @@ public class DetailController {
         return searchDetailService.getRowCount(guid);
     }
 
-
     /**
      * 사용자 데이터 설명 목록 조회
      *
-     * @param params            조회용 파라미터
-     * @return Object           사용자 데이터 설명 목록
+     * @param params 조회용 파라미터
+     * @return Object 사용자 데이터 설명 목록
      */
     @ResponseJsonResult
     @PostMapping("/userDescriptionList")
     @ResponseBody
-    public Object getUserDescriptionList(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+    public Object getUserDescriptionList(@RequestBody Map<String, Object> params, HttpServletRequest request)
+            throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("user", user);
 
@@ -136,8 +133,8 @@ public class DetailController {
     /**
      * 사용자 데이터 설명 등록
      *
-     * @param params            등록용 파라미터
-     * @return Object           사용자 데이터 설명 등록 결과
+     * @param params 등록용 파라미터
+     * @return Object 사용자 데이터 설명 등록 결과
      */
     @ResponseJsonResult
     @PostMapping("/userDescriptionInsert")
@@ -149,8 +146,8 @@ public class DetailController {
     /**
      * 사용자 데이터 설명 수정
      *
-     * @param params            수정용 파라미터
-     * @return Object           사용자 데이터 설명 수정 결과
+     * @param params 수정용 파라미터
+     * @return Object 사용자 데이터 설명 수정 결과
      */
     @ResponseJsonResult
     @PutMapping("/userDescriptionUpdate")
@@ -162,8 +159,8 @@ public class DetailController {
     /**
      * 사용자 데이터 설명 삭제
      *
-     * @param params            삭제용 파라미터
-     * @return Object           사용자 데이터 설명 삭제 결과
+     * @param params 삭제용 파라미터
+     * @return Object 사용자 데이터 설명 삭제 결과
      */
     @ResponseJsonResult
     @PostMapping("/userDescriptionDelete")
@@ -175,13 +172,14 @@ public class DetailController {
     /**
      * 사용자 데이터 설명 추천 상태 1건 조회
      *
-     * @param id                조회용 id
-     * @return Object           사용자 데이터 설명 추천 상태 1건
+     * @param id 조회용 id
+     * @return Object 사용자 데이터 설명 추천 상태 1건
      */
     @ResponseJsonResult
     @GetMapping("/userDescriptionFavoriteStatus/{id}")
     @ResponseBody
-    public Object getUserDescriptionFavoriteStatus(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
+    public Object getUserDescriptionFavoriteStatus(@PathVariable int id, HttpServletRequest request)
+            throws Exception {
         Map<String, Object> params = new LinkedHashMap<>();
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("id", id);
@@ -192,13 +190,14 @@ public class DetailController {
     /**
      * 사용자 데이터 설명 추천 등록
      *
-     * @param params            등록용 파라미터
-     * @return Object           사용자 데이터 설명 추천 등록 결과
+     * @param params 등록용 파라미터
+     * @return Object 사용자 데이터 설명 추천 등록 결과
      */
     @ResponseJsonResult
     @PostMapping("/userDescriptionFavoriteInsert")
     @ResponseBody
-    public Object insertUserDescriptionFavorite(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+    public Object insertUserDescriptionFavorite(@RequestBody Map<String, Object> params, HttpServletRequest request)
+            throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("userID", user.get("user_id"));
         return searchDetailService.insertUserDescriptionFavorite(params);
@@ -207,13 +206,14 @@ public class DetailController {
     /**
      * 사용자 데이터 설명 추천 삭제
      *
-     * @param params            삭제용 파라미터
-     * @return Object           사용자 데이터 설명 추천 취소 결과
+     * @param params 삭제용 파라미터
+     * @return Object 사용자 데이터 설명 추천 취소 결과
      */
     @ResponseJsonResult
     @PostMapping("/userDescriptionFavoriteDelete")
     @ResponseBody
-    public Object deleteUserDescriptionFavorite(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+    public Object deleteUserDescriptionFavorite(@RequestBody Map<String, Object> params, HttpServletRequest request)
+            throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("userID", user.get("user_id"));
         return searchDetailService.deleteUserDescriptionFavorite(params);
@@ -222,8 +222,8 @@ public class DetailController {
     /**
      * 사용자 리뷰 목록 조회
      *
-     * @param param             조회용 파라미터
-     * @return Object           사용자 리뷰 목록
+     * @param param 조회용 파라미터
+     * @return Object 사용자 리뷰 목록
      */
     @ResponseJsonResult
     @PostMapping("/reviewdatalist")
@@ -235,8 +235,8 @@ public class DetailController {
     /**
      * 사용자 리뷰 등록
      *
-     * @param params            등록용 파라미터
-     * @return Object           사용자 리뷰 등록 결과
+     * @param params 등록용 파라미터
+     * @return Object 사용자 리뷰 등록 결과
      */
     @ResponseJsonResult
     @PostMapping("/review")
@@ -248,8 +248,8 @@ public class DetailController {
     /**
      * 사용자 리뷰 수정
      *
-     * @param params            수정용 파라미터
-     * @return Object           사용자 리뷰 수정 결과
+     * @param params 수정용 파라미터
+     * @return Object 사용자 리뷰 수정 결과
      */
     @ResponseJsonResult
     @PutMapping("/review")
@@ -261,21 +261,21 @@ public class DetailController {
     /**
      * 사용자 리뷰 삭제
      *
-     * @param reviewID          삭제용 id
-     * @return Object           사용자 리뷰 삭제 결과
+     * @param reviewID 삭제용 id
+     * @return Object 사용자 리뷰 삭제 결과
      */
     @ResponseJsonResult
     @DeleteMapping("/review/{reviewID}")
     @ResponseBody
-    public Object deleteUserReview(@PathVariable("reviewID") int reviewID) {
+    public Object deleteUserReview(@PathVariable int reviewID) {
         return searchDetailService.deleteUserReview(reviewID);
     }
 
     /**
      * 데이터 추천 & 찜하기 여부 조회
      *
-     * @param params            조회용 파라미터
-     * @return Object           데이터 추천 & 찜하기 여부 정보
+     * @param params 조회용 파라미터
+     * @return Object 데이터 추천 & 찜하기 여부 정보
      */
     @ResponseJsonResult
     @PostMapping("/recommendStatus")
@@ -287,8 +287,8 @@ public class DetailController {
     /**
      * 데이터 추천 등록
      *
-     * @param params            등록용 파라미터
-     * @return Object           데이터 추천 등록 결과
+     * @param params 등록용 파라미터
+     * @return Object 데이터 추천 등록 결과
      */
     @ResponseJsonResult
     @PostMapping("/recommend")
@@ -300,8 +300,8 @@ public class DetailController {
     /**
      * 데이터 찜하기 등록
      *
-     * @param params            등록용 파라미터
-     * @return Object           데이터 찜하기 등록 결과
+     * @param params 등록용 파라미터
+     * @return Object 데이터 찜하기 등록 결과
      */
     @ResponseJsonResult
     @PostMapping("/favorite")
@@ -313,8 +313,8 @@ public class DetailController {
     /**
      * 비즈니스 속성 등록
      *
-     * @param params            등록용 파라미터
-     * @return Object           비지니스 속성 Atlas에 등록 결과
+     * @param params 등록용 파라미터
+     * @return Object 비지니스 속성 Atlas에 등록 결과
      */
     @ResponseJsonResult
     @PostMapping("/attributes")
@@ -326,8 +326,8 @@ public class DetailController {
     /**
      * 데이터 담당 부서 조회
      *
-     * @param params            조회용 파라미터
-     * @return Object           데이터 담당 부서 목록
+     * @param params 조회용 파라미터
+     * @return Object 데이터 담당 부서 목록
      */
     @ResponseJsonResult
     @PostMapping("/getDataManagerInfoList")
@@ -338,18 +338,20 @@ public class DetailController {
 
     /**
      * 데이터 접근 권한 조회
-     * @return Object           데이터 접근 권한 결과
-     * @throws Exception 
-    */
+     * 
+     * @return Object 데이터 접근 권한 결과
+     * @throws Exception
+     */
     @ResponseJsonResult
     @PostMapping("/getUserDataAuth")
     @ResponseBody
-    public Object getUserDataAuth(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+    public Object getUserDataAuth(@RequestBody Map<String, Object> params, HttpServletRequest request)
+            throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("user", user);
-        
+
         // 사용자 데이터 권한(role_id) 확인
         return searchDetailService.getUserDataAuth(params);
     }
-    
+
 }

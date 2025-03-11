@@ -112,7 +112,7 @@ public class RoleManagementService {
         List<Map> searchList = (List<Map>) roleManagementMapper.searchUserRole(param);
         return searchList;
     }
-    
+
     // 권한 관리 조회 - 사용자 저장
     public Integer registerUserRoleItem(List<Map<String, Object>> list) throws Exception {
         Integer total = roleManagementMapper.registerUserRoleItem(list);
@@ -124,7 +124,7 @@ public class RoleManagementService {
         Integer total = roleManagementMapper.deleteUserRoleItem(list);
         return total;
     }
-    
+
     // 권한 관리 조회 - 조직 조회
     public List<Map> searchDeptRole(Map<String, Object> param) throws Exception {
         List<Map> searchList = (List<Map>) roleManagementMapper.searchDeptRole(param);
@@ -161,7 +161,6 @@ public class RoleManagementService {
         return total;
     }
 
-
     // 데이타 권한 조회 - 조회
     public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -194,7 +193,7 @@ public class RoleManagementService {
         Integer total = roleManagementMapper.getMetaDataListCount(param);
         return total;
     }
-    
+
     // 사용자 권한 조회 - 조회
     public List<Map> getUserDataList(Map<String, Object> param) throws Exception {
         List<Map> searchList = (List<Map>) roleManagementMapper.getUserDataList(param);
@@ -212,7 +211,7 @@ public class RoleManagementService {
         List<Map> searchList = (List<Map>) roleManagementMapper.getUserDataInfo(param);
         return searchList;
     }
-    
+
     // 사용자 권한 조회(상세) - 리스트 조회
     public List<Map> getUserMetaDataList(Map<String, Object> param) throws Exception {
         List<Map> searchList = (List<Map>) roleManagementMapper.getUserMetaDataList(param);
@@ -240,7 +239,7 @@ public class RoleManagementService {
             }
 
             // role id로 meta role 조회
-            if(!"delete".equals(roleStauts)) {
+            if (!"delete".equals(roleStauts)) {
                 searchList = roleManagementMapper.searchMetaRoleInfo(param);
 
                 if (searchList == null || searchList.size() == 0) {
@@ -250,7 +249,7 @@ public class RoleManagementService {
 
             // rest api 호출
             RestTemplate restTemplate = new RestTemplate();
-            
+
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("roleids", roleIds);
 
@@ -258,11 +257,14 @@ public class RoleManagementService {
             ResponseEntity<String> restResponse = restTemplate.postForEntity(url, requestBody, String.class);
 
             // for debug
-            log.info("\n\n\n\n\n\n========================\nrest param : " + requestBody +"\nrest Response : "+ restResponse.getBody() +"\n========================\n\n");
+            log.info("\n\n\n\n\n\n========================\nrest param : " + requestBody + "\nrest Response : "
+                    + restResponse.getBody() + "\n========================\n\n");
 
             if (restResponse != null && restResponse.getBody() != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Object> body = objectMapper.readValue(restResponse.getBody(), new TypeReference<Map<String, Object>>(){});
+                Map<String, Object> body = objectMapper.readValue(restResponse.getBody(),
+                        new TypeReference<Map<String, Object>>() {
+                        });
                 if (body != null && body.get("result") != null) {
                     Map<String, Object> bodyResultMap = (Map<String, Object>) body.get("result");
                     if (bodyResultMap != null) {
@@ -271,7 +273,7 @@ public class RoleManagementService {
                             result = true;
                         }
 
-                        // 
+                        //
                         if (bodyResultMap.get("message").toString().contains("roleids Meta Not Found")) {
                             result = true;
                         }
@@ -282,7 +284,7 @@ public class RoleManagementService {
             e.printStackTrace();
             result = false;
         }
-        
+
         return result;
     }
 

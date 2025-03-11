@@ -1,7 +1,5 @@
 package com.mobigen.datalake.diagram;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,22 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mobigen.datalake.metaData.manage.MetaDataManageService;
-import com.mobigen.framework.result.JsonResult;
-import com.mobigen.framework.result.annotation.ResponseJsonResult;
-
 @Slf4j
 @RequestMapping("/api")
 @Controller
 @AllArgsConstructor
 public class DiagramController {
     private final DiagramService diagramService;
-    private final MetaDataManageService metaDataManageService;
 
     /**
      *
      * @param direction all / parent / child 중 하나가 들어감 해당 노드 부터의 방향을 나타냄
-     * @param nodeId 기준이 되는 노드 정보
+     * @param nodeId    기준이 되는 노드 정보
      * @return
      * @throws Exception
      */
@@ -140,7 +132,7 @@ public class DiagramController {
      */
     @DeleteMapping("/node/{linkID}")
     @ResponseBody
-    public Object deleteNodeLink(@PathVariable int linkID) throws Exception {       
+    public Object deleteNodeLink(@PathVariable int linkID) throws Exception {
         return diagramService.deleteNodeLink(linkID);
     }
 
@@ -152,7 +144,7 @@ public class DiagramController {
      */
     @PostMapping("/node/deleteNodeLinks")
     @ResponseBody
-    public Object deleteNodeLinks(@RequestBody Map<String, Object> params) throws Exception {       
+    public Object deleteNodeLinks(@RequestBody Map<String, Object> params) throws Exception {
         return diagramService.deleteNodeLinks(params);
     }
 
@@ -180,7 +172,7 @@ public class DiagramController {
             diagramService.updateSelfNode(tooltipMap);
         } else {
             diagramService.saveSelfNode(tooltipMap);
-        }          
+        }
         return diagramService.saveNodeLink(params);
 
     }

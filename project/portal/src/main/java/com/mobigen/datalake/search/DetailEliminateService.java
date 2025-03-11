@@ -6,32 +6,20 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.Date;
-import java.util.Locale;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.mobigen.framework.security.SessionManager;
-
-import io.trino.jdbc.$internal.joda.time.LocalDateTime;
-import io.trino.jdbc.$internal.joda.time.format.DateTimeFormatter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DetailEliminateService {
     private final DetailEliminateMapper detailEliminateMapper;
-
-    private final SessionManager sessionManager;
 
     @Value("${properties.trino.hikari.jdbc-url}")
     private String trinoJdbcUrl;
@@ -79,10 +65,10 @@ public class DetailEliminateService {
             } else {
                 result.put("result", false);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             result.put("result", false);
         }
-        
+
         return result;
     }
 
@@ -147,9 +133,10 @@ public class DetailEliminateService {
                     tableName.append("\"" + tableNameStr + "\"");
                 }
 
-                query = "select " + parameter.get("querySelect").toString() + " from \"" + catalog + "\".\"" + tableSchema + "\"." + tableName
+                query = "select " + parameter.get("querySelect").toString() + " from \"" + catalog + "\".\""
+                        + tableSchema + "\"." + tableName
                         + parameter.get("queryWhere").toString();// + " limit 10";
-                        
+
                 if (parameter.get("limit") != null && !parameter.get("limit").toString().equals("")) {
                     query += " LIMIT " + parameter.get("limit").toString();
                 }
@@ -175,7 +162,7 @@ public class DetailEliminateService {
             String fileName = parameter.get("fileName") + "_" + formattedDateTime;
             filePath = fileUploadPath + "/" + parameter.get("fileName") + "_" + formattedDateTime + ".csv";
 
-            log.info("만들 파일 경로"+ filePath);
+            log.info("만들 파일 경로" + filePath);
 
             BufferedWriter writer = null;
 
@@ -197,31 +184,32 @@ public class DetailEliminateService {
                 writer = new BufferedWriter(new FileWriter(filePath));
                 writer.write("\uFEFF"); // BOM(Byte Order Mark) 작성
             } catch (Exception e) {
-                if (writer != null){
+                if (writer != null) {
                     writer.close();
                 }
                 log.error("Error while writing the CSV file: " + e.getMessage());
-                throw new Exception("Failed to write CSV file: " +  e.getMessage()); 
-            } 
+                throw new Exception("Failed to write CSV file: " + e.getMessage());
+            }
 
             CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader(rs));
-            
+
             // // 헤더 : name
             // log.info("write header !!");
             // for (int i = 1; i <= columnCount; i++) {
-            //     csvPrinter.print(rs.getMetaData().getColumnName(i));
+            // csvPrinter.print(rs.getMetaData().getColumnName(i));
             // }
             // csvPrinter.println();
 
             // 헤더 작성 : userDescription
             // log.info("write userDescription !!");
             // if (parameter.get("userDescriptionList") != null) {
-            //     Object[] userDescriptionArray = ((List) parameter.get("userDescriptionList")).toArray();
-            //     if (userDescriptionArray.length > 0) {
-            //         for (int i = 0; i < userDescriptionArray.length; i++) {
-            //             csvPrinter.print(userDescriptionArray[i]);
-            //         }
-            //     }
+            // Object[] userDescriptionArray = ((List)
+            // parameter.get("userDescriptionList")).toArray();
+            // if (userDescriptionArray.length > 0) {
+            // for (int i = 0; i < userDescriptionArray.length; i++) {
+            // csvPrinter.print(userDescriptionArray[i]);
+            // }
+            // }
             // }
             // log.info("write userDescription end !!");
             // csvPrinter.println();
@@ -272,7 +260,7 @@ public class DetailEliminateService {
                                 log.info("canWrite : " + filePath);
                                 throw new Exception("Permission Denied Delete File");
                             }
-                            
+
                             log.info("File Delete Fail: " + filePath);
                             throw new Exception("File Delete Fail");
                         }
@@ -297,7 +285,7 @@ public class DetailEliminateService {
                 response.setContentType("application/octet-stream");
                 response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
                 response.setContentLength((int) fileSize);
-                
+
                 // 파일 내용을 클라이언트에 직접 출력
                 log.info("outputStream write start !!");
                 byte[] buffer = new byte[4096]; // 4KB 버퍼 생성
@@ -320,7 +308,7 @@ public class DetailEliminateService {
                 log.error("Error while processing the CSV file: ", e);
                 throw new Exception("Failed to read or send CSV file", e);
             }
-        
+
         } catch (Exception e) {// 응답 설정
             // 해당 파일이 있는 경우 제거
             if (!filePath.equals("")) {
@@ -371,9 +359,9 @@ public class DetailEliminateService {
                 response.getOutputStream().flush();
                 throw new Exception(errorMessage);
             } else if (e.getMessage().indexOf("Column") != -1 ||
-                       e.getMessage().indexOf("mismatched input") != -1 ||
-                       e.getMessage().indexOf("Unknown resolvedType:") != -1 ||
-                       e.getMessage().indexOf("Query failed") != -1) {
+                    e.getMessage().indexOf("mismatched input") != -1 ||
+                    e.getMessage().indexOf("Unknown resolvedType:") != -1 ||
+                    e.getMessage().indexOf("Query failed") != -1) {
                 log.info(e.getMessage());
                 String errorMessage = "쿼리가 잘못되었습니다.";
                 responseMap.put("errorMessage", errorMessage);
@@ -436,7 +424,7 @@ public class DetailEliminateService {
                     os.close();
                 } catch (Exception e) {
                 }
-            }            
+            }
         }
     }
 
@@ -465,7 +453,7 @@ public class DetailEliminateService {
     // 파일 최대 크기 반환
     public static long parseFileSize(String sizeStr) {
         sizeStr = sizeStr.toUpperCase().trim();
-    
+
         long multiplier = 1;
         if (sizeStr.endsWith("KB")) {
             multiplier = 1024;
@@ -477,7 +465,7 @@ public class DetailEliminateService {
             multiplier = 1024 * 1024 * 1024;
             sizeStr = sizeStr.replace("GB", "").trim();
         }
-    
+
         return Long.parseLong(sizeStr) * multiplier;
     }
 
@@ -488,7 +476,7 @@ public class DetailEliminateService {
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
             jsonBuilder.append("\"").append(entry.getKey()).append("\": ")
-                        .append("\"").append(entry.getValue()).append("\", ");
+                    .append("\"").append(entry.getValue()).append("\", ");
         }
 
         // 마지막 쉼표 제거

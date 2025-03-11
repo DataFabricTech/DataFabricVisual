@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository("metaDataClassificationMapper")
 public interface MetaDataClassificationMapper {
     Object getClassificationDept(String name) throws Exception;
-    
+
     String getClassificationDepth(String name) throws Exception;
 
     Integer insertClassification(Map<String, Object> params) throws Exception;

@@ -8,7 +8,6 @@ import com.mobigen.framework.security.SessionManager;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,21 +30,23 @@ public class MenuService {
 
     private final IRISProperties properties;
 
-    // 
+    //
     public List<Map> getMenu_back(HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        if (user == null) return null;
+        if (user == null)
+            return null;
 
         String userAuthority = user.get("authority").toString();
 
         List<Map> menuID = new ArrayList<>();
         List<Map> menu = new ArrayList<>();
 
-        String roleName = user == null || !StringUtils.hasText((String)user.get("authority")) ? "User" : (String)user.get("authority");
-        if(!userAuthority.equals(roleName)) {// 권한이 변경된 경우 빈 결과값 리턴
+        String roleName = user == null || !StringUtils.hasText((String) user.get("authority")) ? "User"
+                : (String) user.get("authority");
+        if (!userAuthority.equals(roleName)) {// 권한이 변경된 경우 빈 결과값 리턴
             return menu;
         }
-        
+
         switch (userAuthority) {
             case "Super-Admin":
             case "Admin":
@@ -60,8 +61,8 @@ public class MenuService {
                 menuID.addAll(menuMapper.getMenuID("User"));
                 break;
         }
-        
-        for (Map map: menuID) {
+
+        for (Map map : menuID) {
             HashMap allMenu = new HashMap();
 
             Map parentMenu = menuMapper.getParentMenu((String) map.get("menu_id"));
@@ -77,7 +78,7 @@ public class MenuService {
         return menu;
     }
 
-    // 
+    //
     public List<Map> getMenuHierarchy(List<Map> menuList) {
         List<Map> roleMenuList = new ArrayList<>();
         Map<String, Map> menuMapById = new HashMap<>();
@@ -118,8 +119,8 @@ public class MenuService {
 
         return roleMenuList;
     }
-    
-    // 
+
+    //
     private void addChildren(Map<String, Object> parentItem, Map<String, List<Map>> childrenMapById) {
         String parentId = (String) parentItem.get("menu_id");
         List<Map> children = childrenMapById.get(parentId);
@@ -135,7 +136,7 @@ public class MenuService {
         }
     }
 
-    // 
+    //
     private Map<String, Object> createMenuMap(Map item) {
         String menuId = (String) item.get("menu_id");
         Map<String, Object> menuMap = new HashMap<>();
@@ -153,29 +154,31 @@ public class MenuService {
         return menuMap;
     }
 
-    // 
+    //
     public List<Map> getMenu(HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        if (user == null) return null;
+        if (user == null)
+            return null;
 
         String userAuthority = user.get("authority").toString();
 
         List<Map> menuID = new ArrayList<>();
         List<Map> menu = new ArrayList<>();
 
-        String roleName = user == null || !StringUtils.hasText((String)user.get("authority")) ? "User" : (String)user.get("authority");
-        if(!userAuthority.equals(roleName)) {// 권한이 변경된 경우 빈 결과값 리턴
+        String roleName = user == null || !StringUtils.hasText((String) user.get("authority")) ? "User"
+                : (String) user.get("authority");
+        if (!userAuthority.equals(roleName)) {// 권한이 변경된 경우 빈 결과값 리턴
             return menu;
         }
 
-        List<Map> menuList = menuMapper.getUserMenubyRole((String) user.get("role_id")); 
+        List<Map> menuList = menuMapper.getUserMenubyRole((String) user.get("role_id"));
 
         List<Map> roleMenuList = getMenuHierarchy(menuList);
 
         // menu_visible이 true인 항목만 필터링
         List<Map> filteredRoleMenuList = roleMenuList.stream()
-            .filter(item -> Boolean.TRUE.equals(item.get("menu_visible"))) // menu_visible이 true인 항목만 필터
-            .collect(Collectors.toList());
+                .filter(item -> Boolean.TRUE.equals(item.get("menu_visible"))) // menu_visible이 true인 항목만 필터
+                .collect(Collectors.toList());
 
         HashMap menuListMap = new HashMap();
         menuListMap.put("roleMenuList", filteredRoleMenuList);
@@ -187,28 +190,47 @@ public class MenuService {
 
         Map<String, Object> payloadMap = new HashMap<>();
         payloadMap.put("roleMenuList", roleMenuList);
-        menuRoleListMap.put("decodeRoleMenuList", JWT.create().withPayload(payloadMap).withExpiresAt(new Date()).sign(algorithm));
-        
+        menuRoleListMap.put("decodeRoleMenuList",
+                JWT.create().withPayload(payloadMap).withExpiresAt(new Date()).sign(algorithm));
+
         menu.add(menuRoleListMap);
 
         return menu;
     }
 
-    // 
+    //
     public Object clickMenu(String userID, String menuID, String deptID) throws Exception {
         return menuMapper.clickMenu(userID, menuID, deptID);
     }
 
-    // 
+    //
     public List<Map> getMenuHistory() throws Exception {
         List<Map> result = new ArrayList<>();
         List<Map> history = menuMapper.getMenuHistory();
 
-        result.add(new HashMap(){{put("id", "User"); put("name", "User"); put("color", "#a6cfe2");}});
-        result.add(new HashMap(){{put("id", "Manager"); put("name", "Manager"); put("color", "#e88565");}});
-        result.add(new HashMap(){{put("id", "Admin"); put("name", "Admin"); put("color", "#eed974");}});
+        result.add(new HashMap() {
+            {
+                put("id", "User");
+                put("name", "User");
+                put("color", "#a6cfe2");
+            }
+        });
+        result.add(new HashMap() {
+            {
+                put("id", "Manager");
+                put("name", "Manager");
+                put("color", "#e88565");
+            }
+        });
+        result.add(new HashMap() {
+            {
+                put("id", "Admin");
+                put("name", "Admin");
+                put("color", "#eed974");
+            }
+        });
 
-        for(Map item: history) {
+        for (Map item : history) {
             if (item.get("parent").toString().contains("A")) {
                 item.put("parent", "Admin");
             } else if (item.get("parent").toString().contains("D")) {
@@ -219,17 +241,16 @@ public class MenuService {
             result.add(item);
         }
 
-
-        return  result;
+        return result;
     }
 
-    // 
+    //
     public List<Map> getRoleMenu(String roleType) throws Exception {
         List<Map> menu = new ArrayList<>();
 
-        try{
+        try {
             String[] roleSplitText = roleType.split(",");
-            
+
             List<Map> roleMenuList = new ArrayList<>();
             for (String role : roleSplitText) {
                 List<Map> menuList = menuMapper.getRoleMenu(role);
@@ -248,19 +269,17 @@ public class MenuService {
             HashMap roleMenuMap = new HashMap();
             roleMenuMap.put("roleMenuExistsList", menuMapper.getRoleMenuExists());
             menu.add(roleMenuMap);
-            
-        } catch(Exception e) {
-            
+
+        } catch (Exception e) {
+
         }
 
         return menu;
     }
 
-    // 
+    //
     public Object roleMenuSave(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<>();
-
-        String errorMessage = "";
 
         List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
@@ -282,5 +301,5 @@ public class MenuService {
 
         return result;
     }
-    
+
 }

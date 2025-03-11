@@ -30,7 +30,7 @@ public class MetaDataClassificationService {
 
     @Value("${properties.ESSync.url.updates}")
     private String esSyncUrlUpdates;
-    
+
     @Value("${properties.ESSync.url.convertcategory}")
     private String esSyncUrlConvertcategory;
 
@@ -51,13 +51,14 @@ public class MetaDataClassificationService {
     public Object insertClassification(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
-        String level = (String) metaDataClassificationMapper.getClassificationDepth((String)params.get("superTypeName"));
+        String level = (String) metaDataClassificationMapper
+                .getClassificationDepth((String) params.get("superTypeName"));
 
         // 루트 카테고리의 경우
         if (level == null || level.equals("")) {
             level = "1";
         } else {
-            int levelInt =  Integer.parseInt(level) + 1;
+            int levelInt = Integer.parseInt(level) + 1;
             level = Integer.toString(levelInt);
         }
         params.put("level", level);
@@ -72,7 +73,7 @@ public class MetaDataClassificationService {
     public Object updateClassification(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
         boolean isFailed = true;
-        boolean esUpdated = false;        
+        boolean esUpdated = false;
 
         int resultCount = metaDataClassificationMapper.updateClassification(params);
 
@@ -92,7 +93,7 @@ public class MetaDataClassificationService {
                 }
             }
 
-            if ( esResult ) { // ES 등록 성공
+            if (esResult) { // ES 등록 성공
                 esUpdated = true;
             } else { // ES 등록 실패
                 result.put("errorMessage", "ES 업데이트 실패");
@@ -101,7 +102,7 @@ public class MetaDataClassificationService {
         } else {
 
         }
-        
+
         result.put("isFailed", isFailed);
         result.put("esUpdated", esUpdated);
         return result;
@@ -114,10 +115,13 @@ public class MetaDataClassificationService {
         String errorMessage = "";
 
         // 매핑된 메타 데이터가 있는지 확인
-        List<Map<String, Object>> mappedDataList = metaDataManageService.getMappedMetaDataManageListByClassificationId(new HashMap<String, Object>(){{
-            put("id", id);
-        }});
-        if(!mappedDataList.isEmpty()) {
+        List<Map<String, Object>> mappedDataList = metaDataManageService
+                .getMappedMetaDataManageListByClassificationId(new HashMap<String, Object>() {
+                    {
+                        put("id", id);
+                    }
+                });
+        if (!mappedDataList.isEmpty()) {
             errorMessage = "해당 카테고리를 참조하고 있는 개체가 있습니다.";
             result.put("errorMessage", errorMessage);
             result.put("isFailed", true);
@@ -126,7 +130,7 @@ public class MetaDataClassificationService {
 
         // 하위 카테고리가 있는지 확인
         List<Map<String, Object>> childrenList = metaDataClassificationMapper.getClassificationChildrenById(id);
-        if(!childrenList.isEmpty()) {
+        if (!childrenList.isEmpty()) {
             errorMessage = "해당 카테고리를 참조하고 있는 개체가 있습니다.";
             result.put("errorMessage", errorMessage);
             result.put("isFailed", true);
@@ -145,7 +149,7 @@ public class MetaDataClassificationService {
     public Object checkDuplicateClassificationName(String name) throws Exception {
         Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> resultList = metaDataClassificationMapper.getClassificationListByName(name);
-        
+
         result.put("isDuplicate", resultList.size() > 0);
         return result;
     }
@@ -166,20 +170,20 @@ public class MetaDataClassificationService {
         // 테이블 유형일 경우 하위 컬럼 ID 목록 추출하여 함께 카테고리 맵핑
         // List<String> tableTypes = (List<String>) params.get("tableTypes");
         // if (tableTypes.size() > 0) {
-        //     List<String> columnIds = new ArrayList<>();
+        // List<String> columnIds = new ArrayList<>();
 
-        //     for (String tableTypeId : tableTypes) {
-        //         columnIds.addAll(this.getColumns(tableTypeId));
-        //     }
+        // for (String tableTypeId : tableTypes) {
+        // columnIds.addAll(this.getColumns(tableTypeId));
+        // }
 
-        //     entityIds.addAll(columnIds);
+        // entityIds.addAll(columnIds);
         // }
 
         // 중복된 카테고리 매핑이 있는 엔티티 제거
         entityIds = removeDuplicateMappingEntity(classificationId, entityIds);
         entityIdsCount = entityIds.size();
 
-        if(entityIds.size() <= 0) {
+        if (entityIds.size() <= 0) {
             return result;
         }
 
@@ -190,7 +194,7 @@ public class MetaDataClassificationService {
         int resultCount = metaDataManageService.updateMetaDataClassification(updateParam);
 
         // 매핑 성공 시
-        if(resultCount > 0) {
+        if (resultCount > 0) {
             // update classification count
             updateParam.put("entityIdsCount", entityIdsCount);
 
@@ -200,22 +204,22 @@ public class MetaDataClassificationService {
             }
         }
 
-        //es sync api 호출
+        // es sync api 호출
         Integer failCount = 0;
-        for(String id : entityIds) {
+        for (String id : entityIds) {
             Map<String, Object> esParam = new HashMap<>();
             esParam.put("meta_id", id);
             esParam.put("event_status", 2);
             esParam.put("event_name", "카테고리 매핑");
             Map<String, Object> restResponse = essyncUpdate(esParam);
 
-            boolean esResult = false;            
+            boolean esResult = false;
             if (!restResponse.isEmpty()) {
                 Map<String, String> res = (Map<String, String>) restResponse.get("result");
-                if (res.get("result").equals("success")) {                    
+                if (res.get("result").equals("success")) {
                     esResult = true;
                 } else {
-                    failCount++;                    
+                    failCount++;
                     esResult = false;
                 }
             }
@@ -230,7 +234,7 @@ public class MetaDataClassificationService {
         for (int j = 0; j < superTypes.size(); j++) {
             String classificationId = superTypes.get(j);
             List<String> entityIds = removeDuplicateMappingEntity(classificationId, ids);
-            if(entityIds.size() <= 0) {
+            if (entityIds.size() <= 0) {
                 continue;
             }
 
@@ -251,13 +255,13 @@ public class MetaDataClassificationService {
 
         // Boolean isTableType = (Boolean) params.get("isTableType");
         // if (isTableType) {
-        //     // 테이블 유형일 경우 하위 목록 조회 및 추가
-        //     targetIds.addAll(this.getColumns(guid));
+        // // 테이블 유형일 경우 하위 목록 조회 및 추가
+        // targetIds.addAll(this.getColumns(guid));
         // }
-//         else {
-//             // 컬럼 유형일 경우 현재 엔티티가 속한 테이블 & 해당 테이블의 하위 컬럼(현재 엔티티 제외) 목록 조회 및 추가
-//             targetIds.addAll(this.getTableWithOtherColumns(guid));
-//         }
+        // else {
+        // // 컬럼 유형일 경우 현재 엔티티가 속한 테이블 & 해당 테이블의 하위 컬럼(현재 엔티티 제외) 목록 조회 및 추가
+        // targetIds.addAll(this.getTableWithOtherColumns(guid));
+        // }
 
         for (String targetId : targetIds) {
             // 선택된 classification 정보
@@ -274,9 +278,9 @@ public class MetaDataClassificationService {
 
             // 기존 mapping list에서 지워지는 id 목록 제거 후 해당 데이터로 업데이트
             List<String> updateIds = new ArrayList<>();
-            for(String mapId : orgMappingList) {
+            for (String mapId : orgMappingList) {
                 // 삭제 id 목록에 포함되지 않은 id일 경우 update id 목록에 추가
-                if(!removeIds.contains(mapId)) {
+                if (!removeIds.contains(mapId)) {
                     updateIds.add(mapId);
                 }
             }
@@ -288,9 +292,9 @@ public class MetaDataClassificationService {
             int resultCount = metaDataManageService.deleteMetaDataClassification(delParams);
         }
 
-        //es sync api 호출
+        // es sync api 호출
         Integer failCount = 0;
-        for(String target : targetIds) {
+        for (String target : targetIds) {
             Map<String, Object> esParam = new HashMap<>();
             esParam.put("meta_id", target);
             esParam.put("event_status", 2);
@@ -301,12 +305,12 @@ public class MetaDataClassificationService {
                 Map<String, String> res = (Map<String, String>) restResponse.get("result");
                 if (res.get("result").equals("success")) {
                 } else {
-                    failCount++;                    
+                    failCount++;
                 }
             }
         }
 
-        if(failCount > 0){
+        if (failCount > 0) {
             result.put("essyncIsFailed", true);
         }
 
@@ -321,7 +325,7 @@ public class MetaDataClassificationService {
         try {
             String guid = params.get("guid").toString();
             String deleteCategoryId = params.get("deleteCategoryId").toString();
-    
+
             // 1. 삭제할 카테고리 id에 대한 하위 카테고리 모두 조회 (본인 id 포함된 결과)
             List<String> list = metaDataClassificationMapper.getClassificationChildByParentId(deleteCategoryId);
 
@@ -330,8 +334,8 @@ public class MetaDataClassificationService {
 
             // 3. 존재하는 카테고리에 대한 목록 생성
             List<String> realDeleteIdsList = new ArrayList<>();
-            for (int i=0; i<originClassifications.size(); i++) {
-                for (int j=0; j<list.size(); j++) {   
+            for (int i = 0; i < originClassifications.size(); i++) {
+                for (int j = 0; j < list.size(); j++) {
                     String originIds = originClassifications.get(i).toString();
                     if (originIds.equals(list.get(j).toString())) {
                         realDeleteIdsList.add(originIds);
@@ -346,12 +350,12 @@ public class MetaDataClassificationService {
             map.put("guid", guid);
             map.put("deleteIds", deleteIds);
             int deleteResult = metaDataClassificationMapper.deleteMappingClassification(map);
-            
+
             int downCount = 0;
 
             // 5. ES Sync 처리
             // ES 업데이트 API 수행 결과 - API 호출 필요
-            //es sync api 호출
+            // es sync api 호출
             Integer failCount = 0;
 
             Map<String, Object> esParam = new HashMap<>();
@@ -372,13 +376,13 @@ public class MetaDataClassificationService {
                 }
             }
 
-            if ( esResult ) { // ES 등록 성공
+            if (esResult) { // ES 등록 성공
                 esUpdated = true;
             } else { // ES 등록 실패
                 result.put("errorMessage", "ES 업데이트 실패");
                 isFailed = true;
             }
-            
+
             result.put("deleteResult", deleteResult);
             result.put("downCount", downCount);
             result.put("isFailed", isFailed);
@@ -395,37 +399,39 @@ public class MetaDataClassificationService {
 
     // 하위 컬럼 id 목록 추출
     // private List<String> getColumns(String id) throws Exception {
-    //     List<String> ids = new ArrayList<>();
+    // List<String> ids = new ArrayList<>();
 
-    //     List<Map<String, Object>> childrenList = metaDataManageService.getMetaDataListByParentId(id);
-    //     for (Map<String, Object> item : childrenList) {
-    //         String columnId = (String) item.get("id");
-    //         ids.add(columnId);
-    //     }
+    // List<Map<String, Object>> childrenList =
+    // metaDataManageService.getMetaDataListByParentId(id);
+    // for (Map<String, Object> item : childrenList) {
+    // String columnId = (String) item.get("id");
+    // ids.add(columnId);
+    // }
 
-    //     return ids;
+    // return ids;
     // }
 
     // 테이블 guid 및 선택 컬럼을 제외한 나머지 하위 컬럼 guid 목록 추출
     private List<String> getTableWithOtherColumns(String guid) {
         List<String> guids = new ArrayList<>();
 
-//         JsonResult detail = this.atlasRestAPI.get("/entity/guid/" + guid);
-//         if (detail.getResult() > 0) {
-//             Map data = (Map) detail.getData();
-//             Object tableGuid = this.findNestedMapValue(data, "entity/attributes/table/guid");
-//
-//             if (tableGuid != null && tableGuid instanceof String) {
-//                 guids.add((String) tableGuid);
-//
-//                 List<String> columns = this.getColumns((String) tableGuid);
-//                 for (String column : columns) {
-//                     if (!guid.equals(column)) {
-//                         guids.add(column);
-//                     }
-//                 }
-//             }
-//         }
+        // JsonResult detail = this.atlasRestAPI.get("/entity/guid/" + guid);
+        // if (detail.getResult() > 0) {
+        // Map data = (Map) detail.getData();
+        // Object tableGuid = this.findNestedMapValue(data,
+        // "entity/attributes/table/guid");
+        //
+        // if (tableGuid != null && tableGuid instanceof String) {
+        // guids.add((String) tableGuid);
+        //
+        // List<String> columns = this.getColumns((String) tableGuid);
+        // for (String column : columns) {
+        // if (!guid.equals(column)) {
+        // guids.add(column);
+        // }
+        // }
+        // }
+        // }
 
         return guids;
     }
@@ -470,26 +476,29 @@ public class MetaDataClassificationService {
     }
 
     // 중복된 매핑이 있는지 검사 후 삭제
-    private List<String> removeDuplicateMappingEntity(String classificationId, List<String> entityIds) throws Exception {
+    private List<String> removeDuplicateMappingEntity(String classificationId, List<String> entityIds)
+            throws Exception {
 
         // 중복된 카테고리 매핑이 있는 엔티티 검색
         Map<String, Object> findParam = new HashMap<>();
         findParam.put("id", classificationId);
         findParam.put("entityIds", entityIds);
-        List<Map<String, Object>> findDuplicateCategory = metaDataManageService.getMappedMetaDataManageListByClassificationId(findParam);
+        List<Map<String, Object>> findDuplicateCategory = metaDataManageService
+                .getMappedMetaDataManageListByClassificationId(findParam);
 
         // 중복된 카테고리 매핑이 있을 경우 해당 entity 삭제
         List<String> removeEntityIds = new ArrayList<>();
-        if(!findDuplicateCategory.isEmpty()) {
-            for(Map<String, Object> item : findDuplicateCategory) {
+        if (!findDuplicateCategory.isEmpty()) {
+            for (Map<String, Object> item : findDuplicateCategory) {
                 String id = item.get("meta_id").toString();
                 removeEntityIds.add(id);
             }
-            LOGGER.info("invalid parameters: entity: {}, already associated with classification: {}", removeEntityIds, classificationId);
+            LOGGER.info("invalid parameters: entity: {}, already associated with classification: {}", removeEntityIds,
+                    classificationId);
         }
 
         List<String> newEntityIds = new ArrayList<>();
-        for(String id : entityIds) {
+        for (String id : entityIds) {
             if (!removeEntityIds.contains(id)) {
                 newEntityIds.add(id);
             }
@@ -502,7 +511,7 @@ public class MetaDataClassificationService {
         Map<String, Object> restResponse = new HashMap<>();
         try {
             RestTemplate restTemplate = new RestTemplate();
-        
+
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("metaid", params.get("meta_id"));
             requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
@@ -513,7 +522,7 @@ public class MetaDataClassificationService {
         } catch (Exception e) {
             log.error("Failed essync Update");
         }
-        
+
         return restResponse;
     }
 
@@ -524,7 +533,7 @@ public class MetaDataClassificationService {
         String eventName = params.get("event_name").toString();
         try {
             RestTemplate restTemplate = new RestTemplate();
-            
+
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("metaids", meta_ids);
             requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
@@ -535,7 +544,7 @@ public class MetaDataClassificationService {
         } catch (Exception e) {
             log.error("Failed essync Updates");
         }
-        
+
         return restResponse;
     }
 
@@ -543,11 +552,11 @@ public class MetaDataClassificationService {
         Map<String, Object> restResponse = new HashMap<>();
         try {
             RestTemplate restTemplate = new RestTemplate();
-            
+
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("c_id", params.get("id"));        
+            requestBody.put("c_id", params.get("id"));
             requestBody.put("c_description", params.get("description"));
-            
+
             String url = esSyncBaseUrl + esSyncUrlConvertcategory;
             restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
         } catch (Exception e) {
@@ -555,4 +564,4 @@ public class MetaDataClassificationService {
         }
         return restResponse;
     }
- }
+}

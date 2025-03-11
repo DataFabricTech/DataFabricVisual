@@ -1,6 +1,5 @@
 package com.mobigen.datalake.search;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,8 +23,6 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.framework.result.JsonResult;
-import com.mobigen.framework.utility.AtlasErrorMap;
-import com.mobigen.framework.utility.Crypto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,7 +106,8 @@ public class SearchDetailService {
     // Jsonb => Map 타입 변환 함수
     public Map<String, Object> convertJsonbToMap(Object jsonb) throws Exception {
         if (jsonb != null) {
-            return objectMapper.readValue((String) jsonb, new TypeReference<Map<String, Object>>() {});    
+            return objectMapper.readValue((String) jsonb, new TypeReference<Map<String, Object>>() {
+            });
         }
         return null;
     }
@@ -120,44 +118,43 @@ public class SearchDetailService {
         return result;
     }
 
-    // front-end 에서 했던 로직을 server로 이전 
+    // front-end 에서 했던 로직을 server로 이전
     // 컬럼 목록 정리하는 로직
     public List makeReferredEntitiesAttributes(Map data) {
         List referredEntitiesAttributes = null;
 
         Map entity = (Map) data.get("entity");
-        
-        
+
         Map relationshipAttributes = (Map) entity.get("relationshipAttributes");
-        if(relationshipAttributes == null){
+        if (relationshipAttributes == null) {
             return null;
         }
 
-        List<Map> relationColumnsDataList = (List<Map>) relationshipAttributes.get("columns");        
+        List<Map> relationColumnsDataList = (List<Map>) relationshipAttributes.get("columns");
         List<Map> relationPartitionKeysDataList = (List<Map>) relationshipAttributes.get("partitionKeys");
-        
+
         Map referredEntitiesDataList = (Map) data.get("referredEntities");
-                
-        if( relationColumnsDataList != null && relationColumnsDataList.size() > 0 ){
+
+        if (relationColumnsDataList != null && relationColumnsDataList.size() > 0) {
             referredEntitiesAttributes = new ArrayList();
             int dataCnt = 0;
 
             Set<String> referredEntitiesDataKeys = referredEntitiesDataList.keySet();
-            
-            for (Map relationColumnsData : relationColumnsDataList) {                
+
+            for (Map relationColumnsData : relationColumnsDataList) {
                 for (String item : referredEntitiesDataKeys) {
-                    if( relationColumnsData.get("guid").equals(item) ){
+                    if (relationColumnsData.get("guid").equals(item)) {
                         dataCnt++;
                         Map itemMap = (Map) referredEntitiesDataList.get(item);
                         referredEntitiesAttributes.add(itemMap.get("attributes"));
                     }
-                }                
+                }
             }
 
-            if(relationPartitionKeysDataList != null && relationPartitionKeysDataList.size() > 0){
+            if (relationPartitionKeysDataList != null && relationPartitionKeysDataList.size() > 0) {
                 for (Map relationPartitionKeysData : relationPartitionKeysDataList) {
                     for (String item : referredEntitiesDataKeys) {
-                        if( relationPartitionKeysData.get("guid").equals(item) ){
+                        if (relationPartitionKeysData.get("guid").equals(item)) {
                             dataCnt++;
                             Map itemMap = (Map) referredEntitiesDataList.get(item);
                             Map itemAttributes = (Map) itemMap.get("attributes");
@@ -191,7 +188,7 @@ public class SearchDetailService {
 
         Map entity = (Map) data.get("entity");
         Map<String, Object> obj = (Map) entity.get("attributes");
-        Map<String, Object> relationshipAttributes = (Map) entity.get("relationshipAttributes");        
+        Map<String, Object> relationshipAttributes = (Map) entity.get("relationshipAttributes");
 
         for (String key : obj.keySet()) {
             Object value = obj.get(key);
@@ -204,55 +201,58 @@ public class SearchDetailService {
                     List<Object> guidByDisplayText = new ArrayList<>();
                     List<Map<String, Object>> keyList = (List<Map<String, Object>>) value;
 
-                    if ("columns".equals(key) && (referredEntitiesAttributes != null && referredEntitiesAttributes.size() > 0 ) ) {
+                    if ("columns".equals(key)
+                            && (referredEntitiesAttributes != null && referredEntitiesAttributes.size() > 0)) {
                         for (Map<String, Object> refItem : referredEntitiesAttributes) {
                             for (Map<String, Object> valItem : keyList) {
                                 if (valItem.containsKey("guid")) {
                                     Object attr = relationshipAttributes.get(key);
-                                    if (attr instanceof Map){
+                                    if (attr instanceof Map) {
                                         Map<String, Object> attrMap = (Map<String, Object>) attr;
-                                        if ( attrMap.containsKey("guid") && attrMap.get("guid") != null ){
-                                            if ( valItem.get("guid").equals(attrMap.get("guid")) && refItem.get("name").equals(attrMap.get("displayText"))){
+                                        if (attrMap.containsKey("guid") && attrMap.get("guid") != null) {
+                                            if (valItem.get("guid").equals(attrMap.get("guid"))
+                                                    && refItem.get("name").equals(attrMap.get("displayText"))) {
                                                 refComment.add(refItem.get("comment"));
                                                 valItem.put("displayText", attrMap.get("displayText"));
                                                 guidByDisplayText.add(attrMap.get("displayText"));
                                             }
                                         }
-                                    } else if ( attr instanceof List ) {
+                                    } else if (attr instanceof List) {
                                         List<Map<String, Object>> attrList = (List<Map<String, Object>>) attr;
-                                        for (Map attrRow : attrList){
-                                            if ( attrRow.containsKey("guid") && attrRow.get("guid") != null ){
-                                                if ( valItem.get("guid").equals(attrRow.get("guid")) && refItem.get("name").equals(attrRow.get("displayText"))){
+                                        for (Map attrRow : attrList) {
+                                            if (attrRow.containsKey("guid") && attrRow.get("guid") != null) {
+                                                if (valItem.get("guid").equals(attrRow.get("guid"))
+                                                        && refItem.get("name").equals(attrRow.get("displayText"))) {
                                                     refComment.add(refItem.get("comment"));
                                                     valItem.put("displayText", attrRow.get("displayText"));
                                                     guidByDisplayText.add(attrRow.get("displayText"));
                                                 }
                                             }
                                         }
-                                    }                                    
+                                    }
                                 }
                             }
                         }
                     } else {
                         for (Object valItem : keyList) {
-                            if ( valItem instanceof Map) {
+                            if (valItem instanceof Map) {
                                 Map<String, Object> valMap = (Map<String, Object>) valItem;
 
                                 if (valMap.containsKey("guid")) {
                                     Object attr = relationshipAttributes.get(key);
-                                    if (attr instanceof Map){
+                                    if (attr instanceof Map) {
                                         Map<String, Object> attrMap = (Map<String, Object>) attr;
-                                        if ( attrMap.containsKey("guid") && attrMap.get("guid") != null ){
-                                            if ( valMap.get("guid").equals(attrMap.get("guid"))){
+                                        if (attrMap.containsKey("guid") && attrMap.get("guid") != null) {
+                                            if (valMap.get("guid").equals(attrMap.get("guid"))) {
                                                 valMap.put("displayText", attrMap.get("displayText"));
                                                 guidByDisplayText.add(attrMap.get("displayText"));
                                             }
                                         }
-                                    } else if ( attr instanceof List ){
+                                    } else if (attr instanceof List) {
                                         List<Map<String, Object>> attrList = (List<Map<String, Object>>) attr;
-                                        for (Map attrRow : attrList){
-                                            if ( attrRow.containsKey("guid") && attrRow.get("guid") != null ){
-                                                if ( valMap.get("guid").equals(attrRow.get("guid"))){
+                                        for (Map attrRow : attrList) {
+                                            if (attrRow.containsKey("guid") && attrRow.get("guid") != null) {
+                                                if (valMap.get("guid").equals(attrRow.get("guid"))) {
                                                     valMap.put("displayText", attrRow.get("displayText"));
                                                     guidByDisplayText.add(attrRow.get("displayText"));
                                                 }
@@ -261,22 +261,23 @@ public class SearchDetailService {
                                     }
                                 }
                             }
-                        }                        
+                        }
                     }
                     metaDataInfoResult.put(key, guidByDisplayText);
                 } else {
                     if (value != null) {
-                        if ( ((Map<String, Object>) value).containsKey("guid") && ((Map<String, Object>) value).get("guid") != null ){
+                        if (((Map<String, Object>) value).containsKey("guid")
+                                && ((Map<String, Object>) value).get("guid") != null) {
                             Object attr = relationshipAttributes.get(key);
-                            if (attr instanceof Map && ((Map<String, Object>) attr).containsKey("displayText")){
+                            if (attr instanceof Map && ((Map<String, Object>) attr).containsKey("displayText")) {
                                 metaDataInfoResult.put(key, ((Map<String, Object>) attr).get("displayText"));
-                            }else {
-                                metaDataInfoResult.put(key, value);    
-                            }                                                        
+                            } else {
+                                metaDataInfoResult.put(key, value);
+                            }
                         } else {
                             metaDataInfoResult.put(key, value);
                         }
-                    } 
+                    }
                 }
             }
 
@@ -299,7 +300,7 @@ public class SearchDetailService {
 
         // 컬럼 프로파일 데이터
         if (params.get("columnData") != null) {
-            if (!((List)params.get("columnData")).isEmpty()) {
+            if (!((List) params.get("columnData")).isEmpty()) {
                 List<Map> columnData = searchDetailMapper.getColumnData((List<String>) params.get("columnData"));
                 resultData.put("columnData", columnData);
             }
@@ -317,9 +318,10 @@ public class SearchDetailService {
         // 테이블 프로파일에서 조회
         Map<String, Object> tblData = searchDetailMapper.getTableData(guid);
         if (tblData != null) {
-            if (tblData.get("num_rows") != null) rowCount = Integer.parseInt(tblData.get("num_rows").toString());
+            if (tblData.get("num_rows") != null)
+                rowCount = Integer.parseInt(tblData.get("num_rows").toString());
         }
-        
+
         return rowCount;
     }
 
@@ -332,7 +334,8 @@ public class SearchDetailService {
         // 샘플 데이터 조회 쿼리 제작
         String query = "";
 
-        // 테이블 Type인 경우 => DB 스키마 : 109ae637-9e13-44f9-9686-a79cf1e12499.data_catalog.public / 
+        // 테이블 Type인 경우 => DB 스키마 :
+        // 109ae637-9e13-44f9-9686-a79cf1e12499.data_catalog.public /
         if (params.get("typeName").toString().endsWith("table")) {
             String[] queryStrSplit = params.get("qualified_name").toString().split("\\.");
             String system_id = queryStrSplit[0];
@@ -341,23 +344,26 @@ public class SearchDetailService {
             String tableNameStr = queryStrSplit[3];
             String[] tableNameArr = tableNameStr.split("\\.");
             StringBuilder tableName = new StringBuilder();
-            if(tableNameArr.length > 1){
-                for(int i =0; i<tableNameArr.length; i++){
+            if (tableNameArr.length > 1) {
+                for (int i = 0; i < tableNameArr.length; i++) {
                     if (!tableName.toString().equals("")) {
-                        tableName.append(".").append("\""+ tableNameArr[i]+"\"");
-                    }else{
-                        tableName.append("\""+ tableNameArr[i] + "\"");
+                        tableName.append(".").append("\"" + tableNameArr[i] + "\"");
+                    } else {
+                        tableName.append("\"" + tableNameArr[i] + "\"");
                     }
                 }
-            }else{
-                tableName.append("\""+ tableNameStr + "\"");
+            } else {
+                tableName.append("\"" + tableNameStr + "\"");
             }
 
-            if(params.get("columns") != null && params.get("columns") != "") {
-                // query = "select " + params.get("columns") + " from \"" + dbName + "\".\"" + catalog + "\".\"" + tableSchema + "." + tableName + " limit 10";
-                query = "select " + params.get("columns") + " from \"" + system_id + "\".\"" + tableSchema + "." + tableName + " limit 10";
+            if (params.get("columns") != null && params.get("columns") != "") {
+                // query = "select " + params.get("columns") + " from \"" + dbName + "\".\"" +
+                // catalog + "\".\"" + tableSchema + "." + tableName + " limit 10";
+                query = "select " + params.get("columns") + " from \"" + system_id + "\".\"" + tableSchema + "."
+                        + tableName + " limit 10";
             } else {
-                // query = "select * from \"" + dbName + "\".\"" + catalog + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
+                // query = "select * from \"" + dbName + "\".\"" + catalog + "\".\"" +
+                // tableSchema + "\"." + tableName + " limit 10";
                 query = "select * from \"" + system_id + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
             }
         }
@@ -380,10 +386,13 @@ public class SearchDetailService {
                 if (dbInfo != null) {
                     properties.setProperty("user", "admin");
                     // properties.setProperty("password", dbInfo.get("password").toString());
-                    connectionUrl = trinoJdbcUrl + dbInfo.get("system_name").toString().toLowerCase() + "/" + dbInfo.get("database");
+                    connectionUrl = trinoJdbcUrl + dbInfo.get("system_name").toString().toLowerCase() + "/"
+                            + dbInfo.get("database");
                 }
-                
-                if (connectionUrl == null || connectionUrl.equals("")) { return null; }
+
+                if (connectionUrl == null || connectionUrl.equals("")) {
+                    return null;
+                }
                 connection = DriverManager.getConnection(connectionUrl, properties);
 
                 statement = connection.createStatement();
@@ -394,10 +403,10 @@ public class SearchDetailService {
 
                 String column;
                 while (rs.next()) {
-                    Map<String,Object> columnMap = new LinkedHashMap<>();
+                    Map<String, Object> columnMap = new LinkedHashMap<>();
                     for (int indexOfColumn = 0; indexOfColumn < sizeOfColumn; indexOfColumn++) {
                         column = metaData.getColumnName(indexOfColumn + 1);
-                        
+
                         columnMap.put(column, rs.getString(column));
                     }
                     list.add(columnMap);
@@ -410,7 +419,7 @@ public class SearchDetailService {
 
             } catch (Exception e) {
                 // 권한 문제
-                if(e.getMessage().indexOf("Access Denied") != -1) {
+                if (e.getMessage().indexOf("Access Denied") != -1) {
                     resultData.put("errorMessage", e.getMessage());
                 }
                 // 쿼리 문제
@@ -423,9 +432,24 @@ public class SearchDetailService {
                 }
                 e.printStackTrace();
             } finally {
-                if(rs != null) try{ rs.close();} catch (Exception e){e.printStackTrace();}
-                if(statement != null) try{ statement.close();} catch (Exception e){e.printStackTrace();}
-                if(connection != null) try{ connection.close();} catch (Exception e){e.printStackTrace();}
+                if (rs != null)
+                    try {
+                        rs.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                if (statement != null)
+                    try {
+                        statement.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                if (connection != null)
+                    try {
+                        connection.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
         }
 
@@ -454,7 +478,6 @@ public class SearchDetailService {
             result.put("userDescriptionList", new ArrayList<>());
             result.put("isUserDescriptionMenuAuth", false);
         }
-        
 
         return result;
     }
@@ -486,7 +509,7 @@ public class SearchDetailService {
                     requestBody.put("event_status", 1); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "create user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
-                    
+
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
                         Map<String, String> res = (Map<String, String>) restResponse.get("result");
@@ -499,12 +522,12 @@ public class SearchDetailService {
                         }
                     }
 
-                    if ( esResult ) { // ES 등록 성공
+                    if (esResult) { // ES 등록 성공
                         esUpdated = true;
                     } else { // ES 등록 실패
                         result.put("errorMessage", "ES 업데이트 실패");
                         isFailed = true;
-                    }                    
+                    }
                 }
             }
         }
@@ -530,7 +553,7 @@ public class SearchDetailService {
 
         if (updateResult > 0) {
             // ES에 description 등록 결정 로직
-            // 사용자 데이터  설명 추천수 높은 1건 조회
+            // 사용자 데이터 설명 추천수 높은 1건 조회
             Map favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 조회된 id와 수정하려는 id가 같은 경우
@@ -545,7 +568,7 @@ public class SearchDetailService {
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "update user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
-                    
+
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
                         Map<String, String> res = (Map<String, String>) restResponse.get("result");
@@ -558,12 +581,12 @@ public class SearchDetailService {
                         }
                     }
 
-                    if ( esResult ) { // ES 수정 성공
+                    if (esResult) { // ES 수정 성공
                         esUpdated = true;
                     } else { // ES 등록 실패
                         result.put("errorMessage", "ES 업데이트 실패");
                         isFailed = true;
-                    }                    
+                    }
                 }
             }
         }
@@ -587,37 +610,37 @@ public class SearchDetailService {
 
         // 1. postgres 등록
         deleteResult = searchDetailMapper.deleteUserDescription(params);
-        
+
         if (deleteResult > 0) {
             // ES에 description 등록 결정 로직
-            // 사용자 데이터  설명 추천수 높은 1건 조회
+            // 사용자 데이터 설명 추천수 높은 1건 조회
             Map favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
 
             // 3. ES 신규 user_description 등록
             // ES 업데이트 API 수행 결과 - API 호출 필요
             Map<String, Object> requestBody = new HashMap<>();
-        
+
             if (!ObjectUtils.isEmpty(favoriteData)) { // 조회된 데이터가 있으면 해당 값으로 설정
-                requestBody.put("metaid", favoriteData.get("meta_id"));    
+                requestBody.put("metaid", favoriteData.get("meta_id"));
                 requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                 requestBody.put("event_name", "delete user_description");
-                
+
                 // MetaData 테이블에 해당 데이터로 user_description 업데이트
                 Map<String, Object> newParams = new HashMap<>();
                 newParams.put("meta_id", params.get("guid"));
                 newParams.put("user_description", favoriteData.get("user_description"));
                 updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
             } else {
-                requestBody.put("metaid", params.get("guid"));    
+                requestBody.put("metaid", params.get("guid"));
                 requestBody.put("event_status", 3); // 1=생성, 2=수정, 3=삭제
                 requestBody.put("event_name", "delete user_description");
 
                 // MetaData 테이블에 해당 데이터로 user_description Null 처리
                 deleteMetaResult = searchDetailMapper.deleteMetaUserDescription((String) params.get("guid"));
             }
-            
+
             Map<String, Object> restResponse = essyncUpdate(requestBody);
-            
+
             boolean esResult = false;
             if (!restResponse.isEmpty()) {
                 Map<String, String> res = (Map<String, String>) restResponse.get("result");
@@ -630,12 +653,12 @@ public class SearchDetailService {
                 }
             }
 
-            if ( esResult ) { // ES 삭제 성공
+            if (esResult) { // ES 삭제 성공
                 esUpdated = true;
             } else { // ES 등록 실패
                 result.put("errorMessage", "ES 업데이트 실패");
                 isFailed = true;
-            }   
+            }
         }
 
         result.put("deleteResult", deleteResult);
@@ -650,8 +673,8 @@ public class SearchDetailService {
     // 사용자 데이터 설명 추천 상태 조회
     public Object getUserDescriptionFavoriteStatus(Map<String, Object> params) {
         Map<String, Object> resultMap = new LinkedHashMap<>();
-        Integer favoriteCounts = 0;  // 해당 설명에 대한 전체 추천수
-        Boolean isFavorite = false;  // 해당 설명에 대한 로그인 유저의 추천 정보
+        Integer favoriteCounts = 0; // 해당 설명에 대한 전체 추천수
+        Boolean isFavorite = false; // 해당 설명에 대한 로그인 유저의 추천 정보
 
         favoriteCounts = searchDetailMapper.getUserDescriptionFavoriteCounts(params);
         Map favoriteData = searchDetailMapper.getUserDescriptionFavoriteStatus(params);
@@ -671,7 +694,7 @@ public class SearchDetailService {
     public Object insertUserDescriptionFavorite(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int insertResult = 0; // postgres 등록 여부
-        int addResult = 0;  // postgres count + 1 여부
+        int addResult = 0; // postgres count + 1 여부
         Boolean isFavorite = false; // 좋아요 클릭 여부
         int favoriteCounts = 0; // 해당 설명에 대한 전체 추천수
         int updateMetaResult = 0; // <table> 테이블에 업데이트 여부
@@ -679,7 +702,7 @@ public class SearchDetailService {
         Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
 
         insertResult = searchDetailMapper.insertUserDescriptionFavorite(params);
-        addResult = searchDetailMapper.addUserDescriptionFavoriteCount((Integer)params.get("id"));
+        addResult = searchDetailMapper.addUserDescriptionFavoriteCount((Integer) params.get("id"));
 
         // 추천 등록 성공
         if (insertResult == 1 && addResult == 1) {
@@ -705,7 +728,7 @@ public class SearchDetailService {
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "update user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
-                    
+
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
                         Map<String, String> res = (Map<String, String>) restResponse.get("result");
@@ -718,13 +741,13 @@ public class SearchDetailService {
                         }
                     }
 
-                    if ( esResult ) { // ES 수정 성공
+                    if (esResult) { // ES 수정 성공
                         esUpdated = true;
                     } else { // ES 등록 실패
                         result.put("errorMessage", "ES 업데이트 실패");
                         isFailed = true;
-                    }                    
-               }
+                    }
+                }
             }
         }
 
@@ -743,7 +766,7 @@ public class SearchDetailService {
     public Object deleteUserDescriptionFavorite(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int deleteResult = 0; // postgres 등록 여부
-        int subResult = 0;  // postgres count -1 여부
+        int subResult = 0; // postgres count -1 여부
         Boolean isFavorite = false; // 좋아요 클릭 여부
         int favoriteCounts = 0; // 해당 설명에 대한 전체 추천수
         int updateMetaResult = 0; // <table> 테이블에 업데이트 여부
@@ -751,7 +774,7 @@ public class SearchDetailService {
         Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
 
         deleteResult = searchDetailMapper.deleteUserDescriptionFavorite(params);
-        subResult = searchDetailMapper.subUserDescriptionFavoriteCount((Integer)params.get("id"));
+        subResult = searchDetailMapper.subUserDescriptionFavoriteCount((Integer) params.get("id"));
 
         // 추천 등록 성공
         if (deleteResult == 1 && subResult == 1) {
@@ -776,7 +799,7 @@ public class SearchDetailService {
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "update user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
-                    
+
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
                         Map<String, String> res = (Map<String, String>) restResponse.get("result");
@@ -789,13 +812,13 @@ public class SearchDetailService {
                         }
                     }
 
-                    if ( esResult ) { // ES 수정 성공
+                    if (esResult) { // ES 수정 성공
                         esUpdated = true;
                     } else { // ES 등록 실패
                         result.put("errorMessage", "ES 업데이트 실패");
                         isFailed = true;
-                    }                    
-               }
+                    }
+                }
             }
         }
 
@@ -847,11 +870,11 @@ public class SearchDetailService {
         Map recommendData = searchDetailMapper.getDataRecommendedByUser(params); // 추천 유저 정보
         Map favoredData = searchDetailMapper.getDataFavoredByUser(params); // 찜하기 유저 정보
 
-        if ( !ObjectUtils.isEmpty(recommendData) ) {
+        if (!ObjectUtils.isEmpty(recommendData)) {
             isRecommended = true;
         }
 
-        if ( !ObjectUtils.isEmpty(favoredData) ) {
+        if (!ObjectUtils.isEmpty(favoredData)) {
             isFavored = true;
         }
 
@@ -865,7 +888,7 @@ public class SearchDetailService {
     // 데이터 추천 저장
     public Object saveDataRecommendation(Map<String, Object> params) {
         Boolean isDeleting = (Boolean) params.get("isDeleting"); // 추천 취소 상태 여부
-        if ( isDeleting ) {
+        if (isDeleting) {
             return searchDetailMapper.deleteDataRecommendation(params);
         } else {
             return searchDetailMapper.insertDataRecommendation(params);
@@ -875,7 +898,7 @@ public class SearchDetailService {
     // 데이터 찜하기 등록
     public Object saveDataFavorite(Map<String, Object> params) {
         Boolean isDeleting = (Boolean) params.get("isDeleting"); // 찜하기 취소 상태 여부
-        if ( isDeleting ) {
+        if (isDeleting) {
             return searchDetailMapper.deleteDataFavorite(params);
         } else {
             return searchDetailMapper.insertDataFavorite(params);
@@ -902,7 +925,7 @@ public class SearchDetailService {
         requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
         requestBody.put("event_name", "update business_attributes");
         Map<String, Object> restResponse = essyncUpdate(requestBody);
-        
+
         boolean esResult = false;
         if (!restResponse.isEmpty()) {
             Map<String, String> res = (Map<String, String>) restResponse.get("result");
@@ -915,33 +938,33 @@ public class SearchDetailService {
             }
         }
 
-        if ( esResult ) { // ES 등록 성공
+        if (esResult) { // ES 등록 성공
             esUpdated = true;
         } else { // ES 등록 실패
             result.put("errorMessage", "ES 업데이트 실패");
             isFailed = true;
-        }              
+        }
         return insertResult;
     }
 
     // 데이터 조회 사용자 권한 확인
     // public Object getAuthCheckList(Map<String, Object> params) {
-    //     Map<String, Object> result = new LinkedHashMap<>();
-    //     List<Map> authCheckList = new ArrayList<>();
-    //     Boolean isAuthorized = false; // 권한 여부
+    // Map<String, Object> result = new LinkedHashMap<>();
+    // List<Map> authCheckList = new ArrayList<>();
+    // Boolean isAuthorized = false; // 권한 여부
 
-    //     // 최상위 관리자인 경우
-    //     if (params.get("userId").toString().equals("bigadm")) {
-    //         isAuthorized = true;
-    //     } else {
-    //         authCheckList = searchDetailMapper.getAuthCheckList(params);
-    //         if (authCheckList.size() <= 0) isAuthorized = true;
-    //     }
+    // // 최상위 관리자인 경우
+    // if (params.get("userId").toString().equals("bigadm")) {
+    // isAuthorized = true;
+    // } else {
+    // authCheckList = searchDetailMapper.getAuthCheckList(params);
+    // if (authCheckList.size() <= 0) isAuthorized = true;
+    // }
 
-    //     result.put("authCheckList", authCheckList);
-    //     result.put("isAuthorized", isAuthorized);
+    // result.put("authCheckList", authCheckList);
+    // result.put("isAuthorized", isAuthorized);
 
-    //     return result;
+    // return result;
     // }
 
     // 데이터 담당 부서 조회
@@ -957,23 +980,24 @@ public class SearchDetailService {
             }
 
             List<Map<String, String>> infoList = searchDetailMapper.getDataManagerInfoList();
-            
+
             for (Map<String, String> info : infoList) {
                 Map<String, String> dataManagerInfo = new LinkedHashMap<>();
                 dataManagerInfo.put("user_nm", info.get("user_nm"));
                 dataManagerInfo.put("dept_nm", info.get("dept_nm"));
                 dataManagerInfo.put("dept_nm2", info.get("dept_nm2"));
-//                if(info.get("user_email_ext") != null){                    // 현진 담장자의 이메일을 사용하지 않아 주석처리
-//                    dataManagerInfo.put("user_email", Crypto.AES_Decode(info.get("user_email_ext")));
-//                }else{
-//                    if(info.get("user_email") != null){
-//                        dataManagerInfo.put("user_email", Crypto.AES_Decode(info.get("user_email")));
-//                    }
-//                }
+                // if(info.get("user_email_ext") != null){ // 현진 담장자의 이메일을 사용하지 않아 주석처리
+                // dataManagerInfo.put("user_email",
+                // Crypto.AES_Decode(info.get("user_email_ext")));
+                // }else{
+                // if(info.get("user_email") != null){
+                // dataManagerInfo.put("user_email", Crypto.AES_Decode(info.get("user_email")));
+                // }
+                // }
                 dataManagerInfoList.add(dataManagerInfo);
             }
             result.setData(dataManagerInfoList);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -1016,13 +1040,13 @@ public class SearchDetailService {
                     result.put("role_auth", -1);
                 }
             }
-   
+
             return result;
         } catch (Exception e) {
             log.error("권한 조회 실패");
             result.put("role_auth", -1);
         }
-        
+
         return result;
     }
 
@@ -1031,7 +1055,7 @@ public class SearchDetailService {
 
         try {
             RestTemplate restTemplate = new RestTemplate();
-        
+
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("metaid", params.get("metaid"));
             requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
@@ -1042,7 +1066,6 @@ public class SearchDetailService {
         } catch (Exception e) {
             log.error("essyncUpdate API 호출 오류");
         }
-        
 
         return restResponse;
     }

@@ -17,28 +17,25 @@ import com.mobigen.datalake.post.file.FileMapper;
 import com.mobigen.framework.service.file.FileService;
 import com.mobigen.framework.service.file.model.FileUploadResponse;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CkeditorFileUploadService {
-  
-	private final FileMapper fileMapper;
+
+  private final FileMapper fileMapper;
 
   private final FileService fileService;
 
   private static final int BUFFER_SIZE = 4096;
 
   @Value("${properties.fileUploadPath}")
-	public String fileUploadPath;
+  public String fileUploadPath;
 
-  public void ckeditorDownload(@PathVariable int fileId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public void ckeditorDownload(@PathVariable int fileId, HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
     HashMap param = new HashMap();
     param.put("fileId", fileId);
 
@@ -52,19 +49,19 @@ public class CkeditorFileUploadService {
     try {
       // 경로에서 ../, ./, \.., /../ 등의 문자열을 제거
       fullPath = fullPath.replaceAll("\\.\\./", "")
-                          .replaceAll("\\.\\.\\\\", "")
-                          .replaceAll("\\./", "")
-                          .replaceAll("\\\\", "/");
+          .replaceAll("\\.\\.\\\\", "")
+          .replaceAll("\\./", "")
+          .replaceAll("\\\\", "/");
 
       File baseDir = new File(fileUploadPath);
       File downloadFile = new File(fullPath);
 
       // 경로가 기본 디렉토리를 벗어나지 않도록 확인
-			if (!downloadFile.getCanonicalPath().startsWith(baseDir.getCanonicalPath())) {
+      if (!downloadFile.getCanonicalPath().startsWith(baseDir.getCanonicalPath())) {
         log.info("Out of default directory path !!!!");
         return;
-			}
- 
+      }
+
       inputStream = new FileInputStream(downloadFile);
 
       String mimeType = context.getMimeType(fullPath);
@@ -90,8 +87,10 @@ public class CkeditorFileUploadService {
       log.error("Download Error", e);
     } finally {
       try {
-        if (inputStream != null) inputStream.close();
-        if (outStream != null) outStream.close();
+        if (inputStream != null)
+          inputStream.close();
+        if (outStream != null)
+          outStream.close();
       } catch (Exception e1) {
         log.error("Download Error", e1);
       }

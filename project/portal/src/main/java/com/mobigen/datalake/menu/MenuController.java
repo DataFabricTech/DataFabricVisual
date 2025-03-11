@@ -10,10 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
@@ -35,7 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MenuController {
 
     private final MenuService menuService;
-
 
     @GetMapping("/images")
     public ResponseEntity<byte[]> getImage(@RequestParam String path) {
@@ -67,7 +64,7 @@ public class MenuController {
             }
 
             // ResponseEntity에 MIME 타입과 파일 데이터 설정
-            ResponseEntity<byte[]>  result = ResponseEntity.ok()
+            ResponseEntity<byte[]> result = ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + imageFile.getName() + "\"")
                     .body(imageBytes);
@@ -91,7 +88,8 @@ public class MenuController {
 
     @ResponseJsonResult
     @GetMapping("/menu/click")
-    public Object clickMenu(@RequestParam("menuID") String menuID, @RequestParam("userID") String userID, @RequestParam("deptID") String deptID) throws Exception {
+    public Object clickMenu(@RequestParam String menuID, @RequestParam String userID,
+            @RequestParam String deptID) throws Exception {
         return menuService.clickMenu(userID, menuID, deptID);
     }
 
@@ -103,7 +101,7 @@ public class MenuController {
 
     @ResponseJsonResult
     @GetMapping("/roleMenu")
-    public Object getRoleMenu(@RequestParam("roleType") String roleType) throws Exception {
+    public Object getRoleMenu(@RequestParam String roleType) throws Exception {
         return menuService.getRoleMenu(roleType);
     }
 
@@ -113,6 +111,5 @@ public class MenuController {
     public Object roleMenuSave(@RequestBody Map<String, Object> param) throws Exception {
         return menuService.roleMenuSave(param);
     }
-    
 
 }

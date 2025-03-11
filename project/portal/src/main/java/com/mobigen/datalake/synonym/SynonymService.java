@@ -1,11 +1,9 @@
 package com.mobigen.datalake.synonym;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,20 +13,15 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.mobigen.datalake.post.PostMapper;
 import com.mobigen.datalake.system.mailTemplate.MailTemplateService;
 import com.mobigen.datalake.system.user.AdminService;
 import com.mobigen.datalake.user.UserMapper;
 import com.mobigen.framework.security.SessionManager;
 
-import jakarta.mail.Message;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,23 +31,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SynonymService {
 
-    private final PostMapper postMapper;
     private final UserMapper userMapper;
     private final SynonymMapper synonymMapper;
     private final AdminService adminService;
     private final MailTemplateService mailTemplateService;
     private final SessionManager sessionManager;
-    private final JavaMailSender javaMailSender;
-    
+
     @Value("${properties.activeSendMail.synonym}")
-	public boolean activeSendMail;
+    public boolean activeSendMail;
 
     @Value("${properties.ESSync.base_url}")
     private String esSyncBaseUrl;
 
     @Value("${properties.ESSync.url.synonymsync}")
     private String esSyncUrlSynonymsync;
-    
 
     // 동의어 목록 조회
     public List<Map> getSynonymList(Map params) throws Exception {
@@ -90,7 +80,6 @@ public class SynonymService {
         return synonymMapper.getSynonymListTotal(params);
     }
 
-
     // 검색 시 표기용 동의어 항목 조회
     public Map<String, Object> getSynonymListForSearch(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
@@ -100,11 +89,11 @@ public class SynonymService {
             List<Map> updatedTermList = new ArrayList<>();
 
             // 검색어 목록
-            List<String> searchWords = ((List)params.get("searchWords"));
+            List<String> searchWords = ((List) params.get("searchWords"));
 
             if (searchWords != null) {
                 // 데이터가 있는 경우
-                for(int a=0; a<searchWords.size(); a++) {
+                for (int a = 0; a < searchWords.size(); a++) {
                     // 대표어 중복 제거 목록 조회
                     List<Map> termList = synonymMapper.getDistinctTermListForSearchOne(searchWords.get(a).toString());
                     if (!termList.isEmpty()) {
@@ -116,17 +105,17 @@ public class SynonymService {
                             termMap.put("rownum", termList.size() - i);
                             termMap.put("searchWord", searchWords.get(a));
                             termMap.put("term", term_1);
-    
+
                             List synonyms = new ArrayList<>(); // 동의어 추가할 리스트 부분
-    
+
                             List oneList = synonymMapper.getSynonymListOneForSearch(term_1);
                             if (oneList != null) {
-                                for (int j=0; j<oneList.size(); j++) {
+                                for (int j = 0; j < oneList.size(); j++) {
                                     synonyms.add((((Map<String, Object>) oneList.get(j)).get("synonym")));
                                 }
                             }
                             termMap.put("synonyms", synonyms);
-    
+
                             // 가공된 동의어 목록에 가공한 데이터 추가
                             updatedTermList.add(termMap);
                         }
@@ -137,7 +126,7 @@ public class SynonymService {
                         termMap.put("searchWord", searchWords.get(a));
                         termMap.put("term", "");
                         termMap.put("synonyms", new ArrayList<>());
-    
+
                         // 가공된 동의어 목록에 가공한 데이터 추가
                         updatedTermList.add(termMap);
                     }
@@ -145,15 +134,14 @@ public class SynonymService {
             }
 
             result.put("list", updatedTermList);
-            
-        } catch(Exception e) {
+
+        } catch (Exception e) {
             log.error("동의어 항목 조회에 실패하였습니다.");
             result.put("list", new ArrayList<>());
         }
 
         return result;
     }
-
 
     // 동의어 추가
     public Object addSynonym(Map<String, Object> params) throws Exception {
@@ -245,7 +233,8 @@ public class SynonymService {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
         String formattedDateTime = now.format(formatterDatetime);
-        if (params.get("req_date") == null) params.put("req_date", now);
+        if (params.get("req_date") == null)
+            params.put("req_date", now);
 
         // 삭제 요청 정보 등록
         params.put("type", 0); // 요청 타입(0:삭제요청)
@@ -253,7 +242,6 @@ public class SynonymService {
 
         // 최근 삭제 요청 정보 id 조회
         int req_id = synonymMapper.getRecentDeleteRequestInfoId();
-
 
         // 삭제 요청 동의어 등록
         List<Map> list = (List<Map>) params.get("synonyms");
@@ -276,7 +264,6 @@ public class SynonymService {
         result.put("addDeleteRequestItemResult", addDeleteRequestItemResult);
         return result;
     }
-
 
     // 동의어 삭제 요청 내역 목록 조회
     public Object getDeleteRequestList(Map<String, Object> params) throws Exception {
@@ -373,7 +360,6 @@ public class SynonymService {
         return updated_list;
     }
 
-
     // 대표어 1건 동의어 조회
     public Object getSynonymListOne(String term) throws Exception {
         List<Map> synonymListOne = new ArrayList<>();
@@ -407,6 +393,7 @@ public class SynonymService {
 
         return result;
     }
+
     // 동의어 삭제 요청 승인
     public Object confirmDeleteRequestOne(Map<String, Object> params, HttpServletRequest request) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>();
@@ -520,7 +507,7 @@ public class SynonymService {
                 params.put("term", req.get("term"));
                 params.put("synonyms", req.get("synonyms"));
                 params.put("request", req.get("request"));
-                
+
                 Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
 
                 String strUserEmail = (String) writer.get("user_email");
@@ -543,7 +530,6 @@ public class SynonymService {
         result.put("rejectAllResult", rejectAllResult);
         return rejectAllResult;
     }
-
 
     // 동의어 여러건 삭제
     public Object deleteMySynonym(Map<String, Object> params, HttpServletRequest request) throws Exception {
@@ -593,7 +579,7 @@ public class SynonymService {
                 params.put("term", req_info.get("term"));
                 params.put("synonyms", req_info.get("synonyms"));
                 params.put("request", req_info.get("request"));
-                
+
                 Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
 
                 String strUserEmail = (String) writer.get("user_email");
@@ -634,7 +620,7 @@ public class SynonymService {
                     break;
                 }
             }
-            
+
             // 2. 참조 관리자 조회
             List<Map> adminList = synonymMapper.getMailUserList();
             Map<String, Object> mailAdminMap = new HashMap<>();
@@ -649,7 +635,7 @@ public class SynonymService {
                 log.info("No Email Recipient");
                 return;
             }
-            
+
             // 3. 메일 발송 파라미터
             List<Map<String, Object>> sender = new ArrayList<>();
             List<Map<String, Object>> recipients = new ArrayList<>();
@@ -666,9 +652,11 @@ public class SynonymService {
             for (String key : mailDefaultAdminMap.keySet()) {
                 Map<String, Object> recipientsMap = new HashMap<>();
                 // 기본 관리자 계정 중 하나만 이용
-                if (((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email") != null) {
-                    recipientsMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
-                    recipientsMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
+                if (((Map<String, String>) mailDefaultAdminMap.get(key)).get("user_email") != null) {
+                    recipientsMap.put("name",
+                            ((Map<String, String>) mailDefaultAdminMap.get(key)).get("user_nm").toString());
+                    recipientsMap.put("email",
+                            ((Map<String, String>) mailDefaultAdminMap.get(key)).get("user_email").toString());
                     recipients.add(recipientsMap);
                     break;
                 }
@@ -677,15 +665,16 @@ public class SynonymService {
             // 참조자
             for (String key : mailAdminMap.keySet()) {
                 Map<String, Object> ccRecipientsMap = new HashMap<>();
-                ccRecipientsMap.put("name", ((Map<String, String>)mailAdminMap.get(key)).get("user_nm").toString());
-                ccRecipientsMap.put("email", ((Map<String, String>)mailAdminMap.get(key)).get("user_email").toString());
+                ccRecipientsMap.put("name", ((Map<String, String>) mailAdminMap.get(key)).get("user_nm").toString());
+                ccRecipientsMap.put("email",
+                        ((Map<String, String>) mailAdminMap.get(key)).get("user_email").toString());
                 ccRecipients.add(ccRecipientsMap);
             }
 
             // 메일 전송 파라미터
             Map<String, Object> mailTemplateParam = new HashMap<>();
             mailTemplateParam.put("_title_", "동의어 삭제 요청");
-            
+
             String writer = "";
             String user_nm = user.get("username") != null ? user.get("username").toString() : "-";
             String dept_nm = user.get("dept_nm") != null ? user.get("dept_nm").toString() : "-";
@@ -701,9 +690,9 @@ public class SynonymService {
             } else {
                 mailTemplateParam.put("_req_date_", "-");
             }
-            
+
             mailTemplateParam.put("_term_", params.get("term") != null ? params.get("term").toString() : "-");
-            
+
             // 동의어 목록
             String synonymsText = "";
             List<Map<String, Object>> synonyms = (List<Map<String, Object>>) params.get("synonyms");
@@ -732,14 +721,14 @@ public class SynonymService {
             if (commonCodeList != null && commonCodeList.size() > 0) {
                 templateId = commonCodeList.get(0).get("value").toString();
             }
-            if(templateId == null || templateId.isEmpty() || templateId.equals("")) {
+            if (templateId == null || templateId.isEmpty() || templateId.equals("")) {
                 log.error("이메일 발송 실패");
                 return;
             }
 
             // 메일 발송
             Map<String, Object> mailTemplateResult = mailTemplateService.sendMail(templateId, mailTemplateParam);
-            if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
+            if (mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")) {
                 log.error("이메일 발송 실패");
             }
         } catch (Exception e) {
@@ -760,7 +749,7 @@ public class SynonymService {
                     break;
                 }
             }
-            
+
             // 2. 참조 관리자 조회
             List<Map> adminList = synonymMapper.getMailUserList();
             Map<String, Object> mailAdminMap = new HashMap<>();
@@ -775,7 +764,7 @@ public class SynonymService {
                 log.info("No Email Recipient");
                 return;
             }
-            
+
             // 3. 메일 발송 파라미터
             List<Map<String, Object>> sender = new ArrayList<>();
             List<Map<String, Object>> recipients = new ArrayList<>();
@@ -785,9 +774,11 @@ public class SynonymService {
             for (String key : mailDefaultAdminMap.keySet()) {
                 Map<String, Object> senderMap = new HashMap<>();
                 // 기본 관리자 계정 중 하나만 이용
-                if (((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email") != null) {
-                    senderMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
-                    senderMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
+                if (((Map<String, String>) mailDefaultAdminMap.get(key)).get("user_email") != null) {
+                    senderMap.put("name",
+                            ((Map<String, String>) mailDefaultAdminMap.get(key)).get("user_nm").toString());
+                    senderMap.put("email",
+                            ((Map<String, String>) mailDefaultAdminMap.get(key)).get("user_email").toString());
                     sender.add(senderMap);
                     break;
                 }
@@ -802,8 +793,9 @@ public class SynonymService {
             // 참조자
             for (String key : mailAdminMap.keySet()) {
                 Map<String, Object> ccRecipientsMap = new HashMap<>();
-                ccRecipientsMap.put("name", ((Map<String, String>)mailAdminMap.get(key)).get("user_nm").toString());
-                ccRecipientsMap.put("email", ((Map<String, String>)mailAdminMap.get(key)).get("user_email").toString());
+                ccRecipientsMap.put("name", ((Map<String, String>) mailAdminMap.get(key)).get("user_nm").toString());
+                ccRecipientsMap.put("email",
+                        ((Map<String, String>) mailAdminMap.get(key)).get("user_email").toString());
                 ccRecipients.add(ccRecipientsMap);
             }
 
@@ -823,9 +815,9 @@ public class SynonymService {
             } else {
                 mailTemplateParam.put("_req_date_", "-");
             }
-            
+
             mailTemplateParam.put("_term_", params.get("term") != null ? params.get("term").toString() : "-");
-            
+
             // 동의어 목록
             String synonymsText = "";
             List<Map<String, Object>> synonyms = (List<Map<String, Object>>) params.get("synonyms");
@@ -840,7 +832,8 @@ public class SynonymService {
             mailTemplateParam.put("_synonyms_", synonymsText);
             mailTemplateParam.put("_status_", params.get("status") != null ? params.get("status").toString() : "-");
             mailTemplateParam.put("_request_", params.get("request") != null ? params.get("request").toString() : "-");
-            mailTemplateParam.put("_response_", params.get("response") != null ? params.get("response").toString() : "-");
+            mailTemplateParam.put("_response_",
+                    params.get("response") != null ? params.get("response").toString() : "-");
             mailTemplateParam.put("add_sender", sender);
             mailTemplateParam.put("add_recipients", recipients);
             mailTemplateParam.put("add_cc_recipients", ccRecipients);
@@ -856,14 +849,14 @@ public class SynonymService {
             if (commonCodeList != null && commonCodeList.size() > 0) {
                 templateId = commonCodeList.get(0).get("value").toString();
             }
-            if(templateId == null || templateId.isEmpty() || templateId.equals("")) {
+            if (templateId == null || templateId.isEmpty() || templateId.equals("")) {
                 log.error("이메일 발송 실패");
                 return;
             }
 
             // 메일 발송
             Map<String, Object> mailTemplateResult = mailTemplateService.sendMail(templateId, mailTemplateParam);
-            if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
+            if (mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")) {
                 log.error("이메일 발송 실패");
             }
         } catch (Exception e) {
@@ -903,110 +896,183 @@ public class SynonymService {
 
 }
 
-
-/* // 동의어 삭제 요청 등록 메일
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOBIGEN DATA CATALOG</title>
-</head>
-<body style="font-family:'맑은 고딕'; color: black; background-color: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: auto;">
-    <div style="width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;">
-        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
-            <tbody>
-                <tr>
-                    <td style="padding: 0; border: none;">
-                        <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
-                        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청자</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_writer_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청일</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_req_date_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">대표어</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_term_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 목록</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_synonyms_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 사유</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_request_</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div style="font-size: 14px; color: #555; margin-top: 20px; text-align: center; font-weight: bold;">
-            MOBIGEN DATA CATALOG
-        </div>
-    </div>
-</body>
-</html>
+/*
+ * // 동의어 삭제 요청 등록 메일
+ * <!DOCTYPE html>
+ * <html lang="ko">
+ * <head>
+ * <meta charset="UTF-8">
+ * <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ * <title>MOBIGEN DATA CATALOG</title>
+ * </head>
+ * <body
+ * style="font-family:'맑은 고딕'; color: black; background-color: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: auto;"
+ * >
+ * <div
+ * style="width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;"
+ * >
+ * <table
+ * style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;"
+ * >
+ * <tbody>
+ * <tr>
+ * <td style="padding: 0; border: none;">
+ * <h1
+ * style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;"
+ * >_title_</h1>
+ * <table
+ * style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;"
+ * >
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >요청자</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_writer_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >요청일</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_req_date_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >대표어</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_term_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >삭제요청 목록</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_synonyms_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >삭제요청 사유</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_request_</td>
+ * </tr>
+ * </table>
+ * </td>
+ * </tr>
+ * </tbody>
+ * </table>
+ * <div
+ * style="font-size: 14px; color: #555; margin-top: 20px; text-align: center; font-weight: bold;"
+ * >
+ * MOBIGEN DATA CATALOG
+ * </div>
+ * </div>
+ * </body>
+ * </html>
  */
 
- /* // 동의어 삭제 요청 처리 결과 메일
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOBIGEN DATA CATALOG</title>
-</head>
-<body style="font-family:'맑은 고딕'; color: black; background-color: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: auto;">
-    <div style="width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;">
-        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
-            <tbody>
-                <tr>
-                    <td style="padding: 0; border: none;">
-                        <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
-                        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청자</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_writer_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청일</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_req_date_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">대표어</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_term_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 목록</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_synonyms_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 사유</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_request_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">결과</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_status_</td>
-                            </tr>
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">반려 사유</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_response_</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div style="font-size: 14px; color: #555; margin-top: 20px; text-align: center; font-weight: bold;">
-            MOBIGEN DATA CATALOG
-        </div>
-    </div>
-</body>
-</html>
-
+/*
+ * // 동의어 삭제 요청 처리 결과 메일
+ * <!DOCTYPE html>
+ * <html lang="ko">
+ * <head>
+ * <meta charset="UTF-8">
+ * <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ * <title>MOBIGEN DATA CATALOG</title>
+ * </head>
+ * <body
+ * style="font-family:'맑은 고딕'; color: black; background-color: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: auto;"
+ * >
+ * <div
+ * style="width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;"
+ * >
+ * <table
+ * style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;"
+ * >
+ * <tbody>
+ * <tr>
+ * <td style="padding: 0; border: none;">
+ * <h1
+ * style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;"
+ * >_title_</h1>
+ * <table
+ * style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;"
+ * >
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >요청자</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_writer_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >요청일</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_req_date_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >대표어</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_term_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >삭제요청 목록</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_synonyms_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >삭제요청 사유</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_request_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >결과</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_status_</td>
+ * </tr>
+ * <tr>
+ * <th
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;"
+ * >반려 사유</th>
+ * <td
+ * style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;"
+ * >_response_</td>
+ * </tr>
+ * </table>
+ * </td>
+ * </tr>
+ * </tbody>
+ * </table>
+ * <div
+ * style="font-size: 14px; color: #555; margin-top: 20px; text-align: center; font-weight: bold;"
+ * >
+ * MOBIGEN DATA CATALOG
+ * </div>
+ * </div>
+ * </body>
+ * </html>
+ * 
  */

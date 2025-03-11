@@ -13,20 +13,21 @@ public interface FileMapper {
 
     Integer deleteFile(String file_id) throws Exception;
 
-    void deleteThumb(Integer post_id) throws Exception;    
-    
+    void deleteThumb(Integer post_id) throws Exception;
+
     List getFileList(String post_id, String file_type) throws Exception;
 
-    Map<String, Object>  getFileFullPath(Map<String, Object> param) throws Exception;
+    Map<String, Object> getFileFullPath(Map<String, Object> param) throws Exception;
 
     Map<String, Object> getOriginalFileName(String fileId) throws Exception;
 
-	FileUploadResponse selectFileInfo(Map<String, Object> params);
+    FileUploadResponse selectFileInfo(Map<String, Object> params);
 
-	Map<String, Object> getDataRequestFileInfo(int file_id);
+    Map<String, Object> getDataRequestFileInfo(int file_id);
 
     Integer fineFileId();
 
     Integer getFileDupCnt(Map<String, Object> params) throws Exception;
+
     Integer updateFileRegDate(Map<String, Object> params) throws Exception;
 }

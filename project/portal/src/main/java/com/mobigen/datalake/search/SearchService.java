@@ -2,7 +2,6 @@ package com.mobigen.datalake.search;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,11 +51,11 @@ public class SearchService {
 
         if (map != null && map.get("classifications") != null) {
             // 2. 카테고리를 가지고 있는 메타데이터 id 조회 (system_type, meta_type 동일한 데이터로 createtime 내림차순)
-            params.put("classifications", map.get("classifications") );
+            params.put("classifications", map.get("classifications"));
             List<String> guids = searchMapper.getMetaDataInfoFromClassifications(params);
             if (guids != null && guids.size() > 0) {
                 RestTemplate restTemplate = new RestTemplate();
-            
+
                 // esSearch API의 URL 생성
                 String fastUrl = "http://" + esSearchApiHost + ":" + esSearchApiPort + "/api/v1/search/keywordRef";
                 log.info("call essearch api : " + fastUrl);
@@ -82,7 +80,6 @@ public class SearchService {
                 resultMap.put("total_count", 0);
             }
 
-            
         } else {
             resultMap.put("results", new ArrayList<>());
             resultMap.put("total_count", 0);
@@ -96,7 +93,8 @@ public class SearchService {
         List<String> result = new ArrayList<>();
         try {
             // 1. 사용자가 가지고 있는 role_id 모두 조회 (user_id, dept_id)
-            List<String> roleIdsFromUser = searchMapper.getRoleIdsFromUser(user.get("user_id").toString(), user.get("dept_id").toString());
+            List<String> roleIdsFromUser = searchMapper.getRoleIdsFromUser(user.get("user_id").toString(),
+                    user.get("dept_id").toString());
 
             if (roleIdsFromUser != null && roleIdsFromUser.size() > 0) {
                 result = roleIdsFromUser;

@@ -28,68 +28,84 @@ public class DataStatisticsService {
 
     /**
      * 오늘의 통계 데이터 조회
+     * 
      * @return
      * @throws Exception
      */
     public List<Map> getDataStatTotal() throws Exception {
-        return dataStatisticsMapper.getTodayTotal();//오늘 로그인 접속자, 메타데이터 조회, 파일추출, API 추출, 데이터 요청
+        return dataStatisticsMapper.getTodayTotal();// 오늘 로그인 접속자, 메타데이터 조회, 파일추출, API 추출, 데이터 요청
     }
 
     /**
      * 차트 데이터 조회
-     * @param searchType : login(로그인), meta(메타데이터), file(파일추출), api(API추출), request(데이터 요청)
+     * 
+     * @param searchType     : login(로그인), meta(메타데이터), file(파일추출), api(API추출),
+     *                       request(데이터 요청)
      * @param searchDateType : year(년도별), month(월별), day(일별), hour(시간대별)
      * @param startDate
      * @param endDate
      * @return
      * @throws Exception
      */
-    public Map<String, Object> getChartDataList(String searchType, String searchDateType, String startDate, String endDate) throws Exception {
+    public Map<String, Object> getChartDataList(String searchType, String searchDateType, String startDate,
+            String endDate) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
-        if("login".equals(searchType)) {//로그인 차트 데이터 조회
-            if("year".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getLoginYearChartData(startDate, endDate));
-            } else if("month".equals(searchDateType)) {
-                result.put("chartDataList",  dataStatisticsMapper.getLoginMonthChartData(startDate, endDate));
-            } else if("day".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getLoginDayChartData(startDate, endDate));
-            } else if("hour".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getLoginHourChartData(startDate, endDate));
+        if ("login".equals(searchType)) {// 로그인 차트 데이터 조회
+            if ("year".equals(searchDateType)) {
+                result.put("chartDataList", (List<Map>) dataStatisticsMapper.getLoginYearChartData(startDate, endDate));
+            } else if ("month".equals(searchDateType)) {
+                result.put("chartDataList", dataStatisticsMapper.getLoginMonthChartData(startDate, endDate));
+            } else if ("day".equals(searchDateType)) {
+                result.put("chartDataList", (List<Map>) dataStatisticsMapper.getLoginDayChartData(startDate, endDate));
+            } else if ("hour".equals(searchDateType)) {
+                result.put("chartDataList", (List<Map>) dataStatisticsMapper.getLoginHourChartData(startDate, endDate));
             }
-            result.put("totalInfo", (List<Map>)dataStatisticsMapper.getLoginTotalInfo(searchDateType, startDate, endDate));
-        } else if("meta".equals(searchType)) {//메타 차트 데이터 조회
-            if("year".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getMetaYearChartData(startDate, endDate));
-            } else if("month".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getMetaMonthChartData(startDate, endDate));
-            } else if("day".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getMetaDayChartData(startDate, endDate));
-            } else if("hour".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getMetaHourChartData(startDate, endDate));
+            result.put("totalInfo",
+                    (List<Map>) dataStatisticsMapper.getLoginTotalInfo(searchDateType, startDate, endDate));
+        } else if ("meta".equals(searchType)) {// 메타 차트 데이터 조회
+            if ("year".equals(searchDateType)) {
+                result.put("chartDataList", (List<Map>) dataStatisticsMapper.getMetaYearChartData(startDate, endDate));
+            } else if ("month".equals(searchDateType)) {
+                result.put("chartDataList", (List<Map>) dataStatisticsMapper.getMetaMonthChartData(startDate, endDate));
+            } else if ("day".equals(searchDateType)) {
+                result.put("chartDataList", (List<Map>) dataStatisticsMapper.getMetaDayChartData(startDate, endDate));
+            } else if ("hour".equals(searchDateType)) {
+                result.put("chartDataList", (List<Map>) dataStatisticsMapper.getMetaHourChartData(startDate, endDate));
             }
-            result.put("totalInfo", (List<Map>)dataStatisticsMapper.getMetaTotalInfo(searchDateType, startDate, endDate));
-        } else if("file".equals(searchType) || "api".equals(searchType)) {//데이터추출 차트 데이터 조회
-            if("year".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getFileApiYearChartData(searchType, startDate, endDate));
-            } else if("month".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getFileApiMonthChartData(searchType, startDate, endDate));
-            } else if("day".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getFileApiDayChartData(searchType, startDate, endDate));
-            } else if("hour".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getFileApiHourChartData(searchType, startDate, endDate));
+            result.put("totalInfo",
+                    (List<Map>) dataStatisticsMapper.getMetaTotalInfo(searchDateType, startDate, endDate));
+        } else if ("file".equals(searchType) || "api".equals(searchType)) {// 데이터추출 차트 데이터 조회
+            if ("year".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getFileApiYearChartData(searchType, startDate, endDate));
+            } else if ("month".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getFileApiMonthChartData(searchType, startDate, endDate));
+            } else if ("day".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getFileApiDayChartData(searchType, startDate, endDate));
+            } else if ("hour".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getFileApiHourChartData(searchType, startDate, endDate));
             }
-            result.put("totalInfo", (List<Map>)dataStatisticsMapper.getFileApiTotalInfo(searchType, searchDateType, startDate, endDate));
-        } else if("request".equals(searchType)) {//데이터요청 차트 데이터 조회
-            if("year".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getDataRequestYearChartData(startDate, endDate));
-            } else if("month".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getDataRequestMonthChartData(startDate, endDate));
-            } else if("day".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getDataRequestDayChartData(startDate, endDate));
-            } else if("hour".equals(searchDateType)) {
-                result.put("chartDataList",  (List<Map>) dataStatisticsMapper.getDataRequestHourChartData(startDate, endDate));
+            result.put("totalInfo", (List<Map>) dataStatisticsMapper.getFileApiTotalInfo(searchType, searchDateType,
+                    startDate, endDate));
+        } else if ("request".equals(searchType)) {// 데이터요청 차트 데이터 조회
+            if ("year".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getDataRequestYearChartData(startDate, endDate));
+            } else if ("month".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getDataRequestMonthChartData(startDate, endDate));
+            } else if ("day".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getDataRequestDayChartData(startDate, endDate));
+            } else if ("hour".equals(searchDateType)) {
+                result.put("chartDataList",
+                        (List<Map>) dataStatisticsMapper.getDataRequestHourChartData(startDate, endDate));
             }
-            result.put("totalInfo", (List<Map>)dataStatisticsMapper.getDataRequestTotalInfo(searchDateType, startDate, endDate));
+            result.put("totalInfo",
+                    (List<Map>) dataStatisticsMapper.getDataRequestTotalInfo(searchDateType, startDate, endDate));
         }
         return result;
     }
@@ -105,7 +121,7 @@ public class DataStatisticsService {
                 try {
                     total = dataStatisticsMapper.getLoginHistoryListTotal(params);
                     list = dataStatisticsMapper.getLoginHistoryList(params);
-        
+
                 } catch (Exception e) {
                     resultMap.put("list", new ArrayList<>());
                     resultMap.put("total", 0);
@@ -117,20 +133,20 @@ public class DataStatisticsService {
                 try {
                     total = dataStatisticsMapper.getDownloadHistoryListTotal(params);
                     list = dataStatisticsMapper.getDownloadHistoryList(params);
-        
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     resultMap.put("list", new ArrayList<>());
                     resultMap.put("total", 0);
                 }
             }
-            
+
             // 상세조회 이력
             if (params.get("historyType").toString().equals("searchMeta")) {
                 try {
                     total = dataStatisticsMapper.getSearchMetaHistoryListTotal(params);
                     list = dataStatisticsMapper.getSearchMetaHistoryList(params);
-        
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     resultMap.put("list", new ArrayList<>());
@@ -143,7 +159,7 @@ public class DataStatisticsService {
                 try {
                     total = dataStatisticsMapper.getDataRequestHistoryListTotal(params);
                     list = dataStatisticsMapper.getDataRequestHistoryList(params);
-        
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     resultMap.put("list", new ArrayList<>());
@@ -152,14 +168,14 @@ public class DataStatisticsService {
             }
         }
 
-        
         resultMap.put("list", list);
         resultMap.put("total", total);
 
         return resultMap;
     }
 
-    public void downloadHistory(Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void downloadHistory(Map<String, Object> params, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
         String historyType = params.get("historyType").toString();
 
         // 출력할 CSV 파일 이름
@@ -185,8 +201,8 @@ public class DataStatisticsService {
 
         if (historyList != null && !historyList.isEmpty()) {
             try (OutputStream os = response.getOutputStream();
-                OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-                PrintWriter writer = new PrintWriter(osw)) {
+                    OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+                    PrintWriter writer = new PrintWriter(osw)) {
 
                 // BOM 추가 (Excel 호환성을 위해)
                 writer.write('\uFEFF');
@@ -197,8 +213,8 @@ public class DataStatisticsService {
                 Map<String, String> columnNameToKoreanMap = getKoreanHeaderMap(historyType);
 
                 String[] koreanHeaders = Arrays.stream(headers)
-                                            .map(key -> columnNameToKoreanMap.getOrDefault(key, key)) // 키에 해당하는 한글명 매핑
-                                            .toArray(String[]::new);
+                        .map(key -> columnNameToKoreanMap.getOrDefault(key, key)) // 키에 해당하는 한글명 매핑
+                        .toArray(String[]::new);
 
                 writer.println(String.join(",", koreanHeaders));
 
@@ -273,7 +289,7 @@ public class DataStatisticsService {
             map.put("create_date", "요청일");
             map.put("process_status", "요청상태");
         }
-        
+
         return map;
     }
 
@@ -287,7 +303,6 @@ public class DataStatisticsService {
         response.getOutputStream().flush();
     }
 
-
     // Map을 JSON 문자열로 변환하는 메서드
     private String convertMapToJson(Map<String, String> map) {
         StringBuilder jsonBuilder = new StringBuilder();
@@ -295,7 +310,7 @@ public class DataStatisticsService {
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
             jsonBuilder.append("\"").append(entry.getKey()).append("\": ")
-                        .append("\"").append(entry.getValue()).append("\", ");
+                    .append("\"").append(entry.getValue()).append("\", ");
         }
 
         // 마지막 쉼표 제거

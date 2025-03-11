@@ -6,18 +6,15 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
@@ -26,8 +23,6 @@ import com.mobigen.framework.service.file.model.FileUploadRequest;
 import com.mobigen.framework.service.file.model.FileUploadResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,22 +34,23 @@ public class CollectorController {
     private final CollectorService collectorService;
     private final FileService fileService;
     private final SessionManager sessionManager;
-    
+
     @Value("${properties.systemConfigPath}")
-	public String systemConfigPath;
-    
+    public String systemConfigPath;
+
     /**
      * 수집대상 목록 조회
-     * @param searchType                검색 종류
+     * 
+     * @param searchType 검색 종류
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/collectorList")
-    public Object getCollectorListInfo(@RequestParam("pageSize") int pageSize,
-                                @RequestParam("pnum") int pnum,
-                                @RequestParam("searchType") String searchType,
-                                @RequestParam("searchWord") String searchWord) throws Exception {
+    public Object getCollectorListInfo(@RequestParam int pageSize,
+            @RequestParam int pnum,
+            @RequestParam String searchType,
+            @RequestParam String searchWord) throws Exception {
 
         Map<String, Object> params = new HashMap<>();
         params.put("searchType", searchType);
@@ -67,19 +63,21 @@ public class CollectorController {
 
     /**
      * 수집대상 시스템 ID 중복확인
-     * @param system_id                시스템 ID
+     * 
+     * @param system_id 시스템 ID
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/systemIdDupCheck")
-    public Object systemIdDupCheck(@RequestParam("system_id") String system_id) throws Exception {
+    public Object systemIdDupCheck(@RequestParam String system_id) throws Exception {
         return collectorService.systemIdDupCheck(system_id);
     }
 
     /**
      * 수집대상 등록
-     * @param params               수집대상 시스템
+     * 
+     * @param params 수집대상 시스템
      * @return
      * @throws Exception
      */
@@ -91,7 +89,8 @@ public class CollectorController {
 
     /**
      * 수집대상 수정
-     * @param params               수집대상 시스템
+     * 
+     * @param params 수집대상 시스템
      * @return
      * @throws Exception
      */
@@ -103,30 +102,33 @@ public class CollectorController {
 
     /**
      * 수집대상 삭제
-     * @param system_id                시스템 ID
+     * 
+     * @param system_id 시스템 ID
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/delete")
-    public Object deleteCollector(@RequestParam("system_id") String system_id) throws Exception {
+    public Object deleteCollector(@RequestParam String system_id) throws Exception {
         return collectorService.deleteCollector(system_id);
     }
 
     /**
      * 수동 수집 실행
-     * @param system_id                시스템 ID
+     * 
+     * @param system_id 시스템 ID
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/directCollect")
-    public Object directCollect(@RequestParam("system_id") String system_id) throws Exception {
+    public Object directCollect(@RequestParam String system_id) throws Exception {
         return collectorService.directCollect(system_id);
     }
 
     /**
      * 시스템 타입 조회
+     * 
      * @return
      * @throws Exception
      */
@@ -138,25 +140,27 @@ public class CollectorController {
 
     /**
      * 수집대상 조회
-     * @param system_id                검색 종류
+     * 
+     * @param system_id 검색 종류
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/collectorOne")
-    public Object getCollectorOneInfo(@RequestParam("system_id") String system_id) throws Exception {
+    public Object getCollectorOneInfo(@RequestParam String system_id) throws Exception {
         return collectorService.getCollectorOneInfo(system_id);
     }
 
     /**
      * Hive 수집대상 파일저장
-     * @param uploadForm                파일
+     * 
+     * @param uploadForm 파일
      * @param request
      * @return
      */
     @RequestMapping(value = "/add/saveFile", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult insertFile(@ModelAttribute FileUploadRequest uploadForm, HttpServletRequest request)  {
+    public JsonResult insertFile(@ModelAttribute FileUploadRequest uploadForm, HttpServletRequest request) {
         JsonResult js = new JsonResult();
 
         try {
@@ -165,10 +169,11 @@ public class CollectorController {
 
             if (user != null) {
                 // 파일 업로드 경로 숨기기
-                List<FileUploadResponse> uploadResult = fileService.fileHiveConfigUpload(uploadForm, systemConfigPath, request);
+                List<FileUploadResponse> uploadResult = fileService.fileHiveConfigUpload(uploadForm, systemConfigPath,
+                        request);
                 if (uploadResult.size() != 0)
                     uploadResult.get(0).setSaveFileName(null);
-                    
+
                 js.setData(uploadResult);
             } else {
                 js.setData(0);

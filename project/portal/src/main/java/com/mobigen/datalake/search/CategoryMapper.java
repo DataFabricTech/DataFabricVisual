@@ -17,6 +17,8 @@ public interface CategoryMapper {
     List getCategoryListForChart();
 
     List getCategoryListForFilter();
+
     List getSystemListForFilter();
+
     List getSystemTypes();
 }

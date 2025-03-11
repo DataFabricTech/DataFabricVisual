@@ -21,7 +21,7 @@ public class RecommendService {
     public Object saveRecommendSearchList(Map<String, Object> param) throws Exception {
         Integer result = 0;
 
-        List<Map<String,String>> recommendSearchList = (List<Map<String,String>>) param.get("recommendSearchList");
+        List<Map<String, String>> recommendSearchList = (List<Map<String, String>>) param.get("recommendSearchList");
 
         for (Map<String, String> item : recommendSearchList) {
             result += recommendMapper.saveRecommendSearchList(item);

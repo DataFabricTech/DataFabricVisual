@@ -17,7 +17,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 @EnableCaching
 @EnableAsync
 @EnableAspectJAutoProxy
-@ComponentScan(basePackages = {"com"})
+@ComponentScan(basePackages = { "com" })
 @ServletComponentScan
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -27,10 +27,11 @@ public class DataLakeApplication extends SpringBootServletInitializer {
     }
 
     // Springboot를 war로 띄워야 하는 경우 필요함
-//    @Override
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//        return application.sources(DataLakeApplication.class);
-//    }
+    // @Override
+    // protected SpringApplicationBuilder configure(SpringApplicationBuilder
+    // application) {
+    // return application.sources(DataLakeApplication.class);
+    // }
 
     @Bean
     public CustomHttpSessionListener customHttpSessionListener() {

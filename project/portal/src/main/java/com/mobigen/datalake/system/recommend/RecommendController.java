@@ -18,19 +18,21 @@ public class RecommendController {
 
     /**
      * 추천검색어 목록 조회
-     * @return                      추천 검색어 목록
+     * 
+     * @return 추천 검색어 목록
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/search")
-    public Object getRecommendSearchList()  throws Exception {
+    public Object getRecommendSearchList() throws Exception {
         return recommendService.getRecommendSearchList();
     }
 
     /**
      * 추천검색어 저장
-     * @param param                 추천 검색어 목록
-     * @return                      추천 검색어 저장 결과
+     * 
+     * @param param 추천 검색어 목록
+     * @return 추천 검색어 저장 결과
      * @throws Exception
      */
     @ResponseJsonResult

@@ -1,7 +1,5 @@
 package com.mobigen.datalake.metaData.manage;
 
-import com.mobigen.framework.result.JsonResult;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +24,6 @@ public class MetaDataManageService {
 
     @Value("${properties.ESSync.url.updates}")
     private String esSyncUrlUpdates;
-    
 
     // 메타 데이터 통합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
@@ -43,7 +40,8 @@ public class MetaDataManageService {
         return result;
     }
 
-    public List<Map<String, Object>> getMappedMetaDataManageListByClassificationId(Map<String, Object> params) throws Exception {
+    public List<Map<String, Object>> getMappedMetaDataManageListByClassificationId(Map<String, Object> params)
+            throws Exception {
         return metaDataManageMapper.getMappedMetaDataManageListByClassificationId(params);
     };
 
@@ -84,7 +82,7 @@ public class MetaDataManageService {
 
         result.put("result", addResult);
         result.put("esResult", esResult);
-        
+
         return result;
     }
 
@@ -94,7 +92,7 @@ public class MetaDataManageService {
 
         try {
             RestTemplate restTemplate = new RestTemplate();
-            
+
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("metaids", meta_ids);
             requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
@@ -118,7 +116,7 @@ public class MetaDataManageService {
             log.error("essyncUpdates API 호출 오류");
             result = false;
         }
-        
+
         return result;
     }
 }

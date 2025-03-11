@@ -1,12 +1,7 @@
 package com.mobigen.datalake.system.mailTemplate;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -20,21 +15,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.Message.RecipientType;
-import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
-
 
 @Slf4j
 @Service
@@ -42,7 +33,6 @@ import java.util.Objects;
 public class MailTemplateService {
     private final MailTemplateMapper mailTemplateMapper;
     private final JavaMailSender javaMailSender;
-
 
     // 메일 템플릿 - 조회
     public Map<String, Object> getMailTemplateList(Map<String, Object> params) throws Exception {
@@ -72,14 +62,14 @@ public class MailTemplateService {
 
     // 메일 템플릿 - 등록/수정
     public Integer saveMailTemplate(Map<String, Object> param) throws Exception {
-        String[] fields = {"sender", "receiver", "cc_recipients", "bcc_recipients", "template_variables"};
-        
+        String[] fields = { "sender", "receiver", "cc_recipients", "bcc_recipients", "template_variables" };
+
         for (String field : fields) {
             Object fieldValue = param.get(field);
-    
+
             if (fieldValue instanceof String) {
                 String json = (String) fieldValue;
-    
+
                 if (json == null || json.isEmpty()) {
                     param.put(field, new ArrayList<>());
                 } else {
@@ -91,20 +81,21 @@ public class MailTemplateService {
                 param.put(field, new ArrayList<>());
             }
         }
-    
-        // 
+
+        //
         param.put("sender", convertToJsonArray(param.get("sender")));
         param.put("receiver", convertToJsonArray(param.get("receiver")));
         param.put("cc_recipients", convertToJsonArray(param.get("cc_recipients")));
         param.put("bcc_recipients", convertToJsonArray(param.get("bcc_recipients")));
         param.put("template_variables", normalConvertToJsonArray(param.get("template_variables")));
 
-        // param.put("template_content", covertToHtml((String) param.get("template_content")));
-    
+        // param.put("template_content", covertToHtml((String)
+        // param.get("template_content")));
+
         Integer total = mailTemplateMapper.saveMailTemplate(param);
         return total;
     }
-    
+
     // 메일 템플릿 - 삭제
     public Integer deleteMailTemplate(Map<String, Object> param) throws Exception {
         Integer total = mailTemplateMapper.deleteMailTemplate(param);
@@ -113,7 +104,8 @@ public class MailTemplateService {
 
     //
     private String covertToHtml(String content) {
-        if (content == null) return "";
+        if (content == null)
+            return "";
 
         String convertContent = content.replaceAll("&lt;", "<");
         convertContent = convertContent.replaceAll("&gt;", ">");
@@ -121,18 +113,18 @@ public class MailTemplateService {
         return convertContent;
     }
 
-    // 
+    //
     private Object convertToJsonArray(Object value) {
         if (value instanceof List) {
             List<?> list = (List<?>) value;
-            
+
             if (!list.isEmpty() && list.get(0) instanceof Map) {
                 return list.stream()
                         .map(item -> {
                             Map<String, Object> map = (Map<String, Object>) item;
                             Object name = map.get("name");
                             Object email = map.get("email");
-                            
+
                             if (name != null && email != null) {
                                 return "\"name\":\"" + name + "\"||\"email\":\"" + email + "\"";
                             } else {
@@ -151,14 +143,15 @@ public class MailTemplateService {
         if (fieldValue instanceof List) {
             List<?> list = (List<?>) fieldValue;
 
-            if(list.size() == 0 || list.get(0) == null) return "[]";
+            if (list.size() == 0 || list.get(0) == null)
+                return "[]";
 
             String jsonArray = list.stream()
-                                   .map(Object::toString)
-                                   .collect(Collectors.joining(","));
-            
+                    .map(Object::toString)
+                    .collect(Collectors.joining(","));
+
             jsonArray = jsonArray.replaceAll("[\\{\\}\\[\\]]", "").trim();
-                                   
+
             if (!jsonArray.startsWith("") && !jsonArray.endsWith("")) {
                 return "" + jsonArray + "";
             }
@@ -166,11 +159,12 @@ public class MailTemplateService {
         }
         return "[]";
     }
-    
+
     //
     private List<Map<String, Object>> parseJsonToList(String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {});
+        return objectMapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {
+        });
     }
 
     //
@@ -178,11 +172,14 @@ public class MailTemplateService {
         Map result = new HashMap();
         MimeMessage message = javaMailSender.createMimeMessage();
 
-        List<Map<String, Object>> mailTemplateInfo = mailTemplateMapper.getMailTemplateInfo(new HashMap<String, Object>() {{
-            put("template_id", templateId);
-        }});
+        List<Map<String, Object>> mailTemplateInfo = mailTemplateMapper
+                .getMailTemplateInfo(new HashMap<String, Object>() {
+                    {
+                        put("template_id", templateId);
+                    }
+                });
 
-        if (mailTemplateInfo.isEmpty()){
+        if (mailTemplateInfo.isEmpty()) {
             result.put("result", "fail");
             result.put("message", "메일 템플릿가 없습니다.");
             return result;
@@ -243,15 +240,15 @@ public class MailTemplateService {
             }
         }
 
-        if (mailSenderUserList.isEmpty() ){
+        if (mailSenderUserList.isEmpty()) {
             result.put("result", "fail");
             result.put("message", "발신자가 없습니다.");
             return result;
         }
         // if (mailReceiverUserList.isEmpty() ){
-        //     result.put("result", "fail");
-        //     result.put("message", "수신자가 없습니다.");
-        //     return result;
+        // result.put("result", "fail");
+        // result.put("message", "수신자가 없습니다.");
+        // return result;
         // }
 
         try {
@@ -262,7 +259,7 @@ public class MailTemplateService {
             for (Map<String, String> sender : mailSenderUserList) {
                 String name = sender.get("name");
                 String email = sender.get("email");
-                
+
                 InternetAddress fromAddress = new InternetAddress(email, name, "UTF-8");
                 message.setFrom(fromAddress);
             }
@@ -280,7 +277,7 @@ public class MailTemplateService {
             for (Map mailUser : mailCcUserList) {
                 String name = mailUser.get("name") != null ? mailUser.get("name").toString() : null;
                 String email = mailUser.get("email") != null ? mailUser.get("email").toString() : null;
-                
+
                 addRecipientIfValid(Message.RecipientType.CC, message, email, name);
             }
 
@@ -302,12 +299,12 @@ public class MailTemplateService {
         } catch (Exception e) {
             // 에러 로깅
             log.error("이메일 발송 중 오류 발생: {}", e.getMessage(), e);
-            
+
             // 실패 응답 반환
             result.put("result", "fail");
             result.put("message", "이메일 발송에 실패하였습니다.");
             return result;
-        } 
+        }
 
         result.put("result", "sucess");
         result.put("message", "정상 처리 되었습니다.");
@@ -317,7 +314,7 @@ public class MailTemplateService {
     //
     private List<Map<String, String>> extractUserInfo(Object userObject) {
         List<Map<String, String>> userList = new ArrayList<>();
-    
+
         if (userObject instanceof String[]) {
             String[] userArray = (String[]) userObject;
             for (String user : userArray) {
@@ -327,8 +324,8 @@ public class MailTemplateService {
                 if (parts.length == 2) {
                     String name = parts[0].split(":")[1].replace("\"", "").trim();
                     String email = parts[1].split(":")[1].replace("\"", "").trim();
-                    
-                    // 
+
+                    //
                     if (isValidEmail(email)) {
                         Map<String, String> userInfo = new HashMap<>();
                         userInfo.put("name", name);
@@ -344,10 +341,10 @@ public class MailTemplateService {
         return userList;
     }
 
-    // 
+    //
     private List<Map<String, String>> addExtractUserInfo(Object userObject) {
         List<Map<String, String>> userList = new ArrayList<>();
-    
+
         if (userObject instanceof List) {
             List<?> userArray = (List<?>) userObject;
             for (Object user : userArray) {
@@ -355,7 +352,7 @@ public class MailTemplateService {
                     Map<?, ?> userMap = (Map<?, ?>) user;
                     String name = (String) userMap.get("name");
                     String email = (String) userMap.get("email");
-    
+
                     // 이메일 유효성 검사
                     if (isValidEmail(email)) {
                         Map<String, String> userInfo = new HashMap<>();
@@ -368,11 +365,11 @@ public class MailTemplateService {
                 }
             }
         }
-    
+
         return userList;
     }
 
-    // 
+    //
     private String replaceVariables(String template, Map<String, Object> variables) {
         for (Map.Entry<String, Object> entry : variables.entrySet()) {
             String value;
@@ -389,13 +386,13 @@ public class MailTemplateService {
         return template;
     }
 
-    // 
+    //
     public static boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return email.matches(emailRegex);
     }
 
-    // 
+    //
     private void addRecipientIfValid(RecipientType type, Message message, String email, String name) {
         try {
             if (isValidEmail(email)) {

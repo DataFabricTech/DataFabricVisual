@@ -7,6 +7,7 @@ import java.util.Map;
 public interface DataStatisticsMapper {
     /**
      * 오늘 로그인 사용자 수
+     * 
      * @return
      * @throws Exception
      */
@@ -14,6 +15,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 총접속자수, 오늘접속자수, 어제접속자수, 이번달접속자수, 지난달접속자수 정보 조회
+     * 
      * @param searchDateType
      * @param startDate
      * @param endDate
@@ -24,6 +26,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 총 메타데이터 조회수, 오늘 메타데이터 조회수, 어제 메타데이터 조회수, 이번달 메타데이터 조회수, 지난달 메타데이터 조회수 정보 조회
+     * 
      * @param searchDateType
      * @param startDate
      * @param endDate
@@ -34,6 +37,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 총 데이터추출 수, 오늘 데이터추출 수, 어제 데이터추출 수, 이번달 데이터추출 수, 지난달 데이터추출 수 정보 조회
+     * 
      * @param searchType
      * @param searchDateType
      * @param startDate
@@ -41,10 +45,12 @@ public interface DataStatisticsMapper {
      * @return
      * @throws Exception
      */
-    List getFileApiTotalInfo(String searchType, String searchDateType, String startDate, String endDate) throws Exception;
+    List getFileApiTotalInfo(String searchType, String searchDateType, String startDate, String endDate)
+            throws Exception;
 
     /**
      * 총 데이터요청 수, 오늘 데이터요청 수, 어제 데이터요청 수, 이번달 데이터요청 수, 지난달 데이터요청 수 정보 조회
+     * 
      * @param searchDateType
      * @param startDate
      * @param endDate
@@ -53,13 +59,14 @@ public interface DataStatisticsMapper {
      */
     List getDataRequestTotalInfo(String searchDateType, String startDate, String endDate) throws Exception;
 
-
     /**
      * 평균접속자수
+     * 
      * @return
      * @throws Exception
      */
     Object getLoginAvg() throws Exception;
+
     /**
      * 차트데이터 조회 : 년도별 로그인 사용자 수
      *
@@ -72,6 +79,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 월별 로그인 사용자 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -81,6 +89,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 일별 로그인 사용자 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -90,6 +99,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 시간대별 로그인 사용자 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -99,6 +109,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 년도별 메타데이터 조회 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -108,6 +119,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 월별 메타데이터 조회 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -117,6 +129,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 일별 메타데이터 조회 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -126,6 +139,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 시간대별 메타데이터 조회 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -135,6 +149,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 년도별 데이터 추출 수
+     * 
      * @param searchType
      * @param startDate
      * @param endDate
@@ -145,6 +160,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 월별 데이터 추출 수
+     * 
      * @param searchType
      * @param startDate
      * @param endDate
@@ -155,6 +171,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 일별 데이터 추출 수
+     * 
      * @param searchType
      * @param startDate
      * @param endDate
@@ -165,6 +182,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 시간대별 데이터 추출 수
+     * 
      * @param searchType
      * @param startDate
      * @param endDate
@@ -175,6 +193,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 년도별 데이터 요청 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -184,6 +203,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 월별 데이터 요청 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -193,6 +213,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 일별 데이터 요청 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -202,6 +223,7 @@ public interface DataStatisticsMapper {
 
     /**
      * 차트데이터 조회 : 시간대별 데이터 요청 수
+     * 
      * @param startDate
      * @param endDate
      * @return
@@ -211,18 +233,22 @@ public interface DataStatisticsMapper {
 
     // 로그인 이력 조회
     int getLoginHistoryListTotal(Map<String, Object> params) throws Exception;
+
     List<LinkedHashMap<String, Object>> getLoginHistoryList(Map<String, Object> params) throws Exception;
 
     // 다운로드 이력 조회
     int getDownloadHistoryListTotal(Map<String, Object> params) throws Exception;
+
     List<LinkedHashMap<String, Object>> getDownloadHistoryList(Map<String, Object> params) throws Exception;
 
     // 다운로드 이력 조회
     int getSearchMetaHistoryListTotal(Map<String, Object> params) throws Exception;
+
     List<LinkedHashMap<String, Object>> getSearchMetaHistoryList(Map<String, Object> params) throws Exception;
 
     // 데이터 요청 이력 조회
     int getDataRequestHistoryListTotal(Map<String, Object> params) throws Exception;
+
     List<LinkedHashMap<String, Object>> getDataRequestHistoryList(Map<String, Object> params) throws Exception;
 
 }

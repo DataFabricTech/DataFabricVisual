@@ -3,7 +3,6 @@ package com.mobigen.datalake.post;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mobigen.framework.iris.User;
 import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
@@ -21,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,39 +43,42 @@ public class PostController {
 
     @ResponseJsonResult
     @GetMapping("/post")
-    public Object getAllPost(@RequestParam("pnum") String pnum, @RequestParam("type") String type, @RequestParam("word") String word, @RequestParam("postId") String postId) throws Exception {
+    public Object getAllPost(@RequestParam String pnum, @RequestParam String type,
+            @RequestParam String word, @RequestParam String postId) throws Exception {
         PageHelper.startPage(Integer.parseInt(pnum), 2);
         return PageInfo.of(postService.getPost(type, word, postId));
     }
 
     /**
      * FAQ 전체 조회
-     * @param postType                  게시글 종류
+     * 
+     * @param postType 게시글 종류
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/post-all")
-    public Object getAllPost(@RequestParam("postType") String postType) throws Exception {
+    public Object getAllPost(@RequestParam String postType) throws Exception {
         return postService.getAllPost(postType);
     }
 
     /**
      * 공지사항, FAQ 목록 조회
-     * @param pageSize                  페이지 크기
-     * @param pnum                      페이지 번호
-     * @param postType                  게시글 종류
-     * @param searchType                검색 종류
-     * @param searchWord                검색어
-     * @return                          게시글 목록
+     * 
+     * @param pageSize   페이지 크기
+     * @param pnum       페이지 번호
+     * @param postType   게시글 종류
+     * @param searchType 검색 종류
+     * @param searchWord 검색어
+     * @return 게시글 목록
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/post/list")
-    public Object getPostList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum,
-                              @RequestParam("postType") String postType,
-                              @RequestParam("searchType") String searchType,
-                              @RequestParam("searchWord") String searchWord) throws Exception {
+    public Object getPostList(@RequestParam int pageSize, @RequestParam int pnum,
+            @RequestParam String postType,
+            @RequestParam String searchType,
+            @RequestParam String searchWord) throws Exception {
 
         Map<String, String> param = new HashMap<>();
         param.put("postType", postType);
@@ -87,7 +88,7 @@ public class PostController {
         param.put("offset", String.valueOf(pageSize * (pnum - 1)));
 
         int total = postService.getPostListTotal(param);
-        
+
         List<Map> list = postService.getPostList(param);
         Map resultMap = new HashMap<>();
         resultMap.put("list", list);
@@ -98,19 +99,21 @@ public class PostController {
 
     /**
      * 공지사항, FAQ 단건 조회
-     * @param postId                    게시글 ID
+     * 
+     * @param postId 게시글 ID
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/post/one")
-    public Object getPostOne(@RequestParam("postId") String postId, HttpServletRequest request) throws Exception {
+    public Object getPostOne(@RequestParam String postId, HttpServletRequest request) throws Exception {
         return postService.getPostOne(postId, request);
     }
 
     /**
      * 공지사항, FAQ 저장
-     * @param param                     게시글 정보
+     * 
+     * @param param 게시글 정보
      * @return
      * @throws Exception
      */
@@ -132,7 +135,8 @@ public class PostController {
 
     /**
      * 공지사항, FAQ 삭제
-     * @param param                 게시글 정보
+     * 
+     * @param param 게시글 정보
      * @return
      * @throws Exception
      */
@@ -147,14 +151,14 @@ public class PostController {
         String userId = user.get("user_id").toString();
         String userRole = user.get("authority").toString();
 
-        List paramDeleteList = ((List)param.get("deleteList"));
+        List paramDeleteList = ((List) param.get("deleteList"));
 
         // 세션의 사용자가 관리자가 아닌 경우 사용자 검증
         if ("Super-Admin".equals(userRole) || "Admin".equals(userRole)) {
             js.setData(postService.deletePost(param));
         } else {
             Boolean isValid = false;
-            for (int i=0; i<paramDeleteList.size(); i++){
+            for (int i = 0; i < paramDeleteList.size(); i++) {
                 Map<String, Object> postOne = postService.getPostOne(paramDeleteList.get(i).toString(), request);
 
                 // 게시글이 없으면 다음 확인
@@ -163,17 +167,18 @@ public class PostController {
                 }
 
                 // 세션 사용자 ID와 작성자 비교
-                String writer = ((Map<String, Object>) postOne.get("post")).get("writer").toString();;
+                String writer = ((Map<String, Object>) postOne.get("post")).get("writer").toString();
+                ;
 
                 // 다른 경우 삭제처리 하지 않음
                 if (!writer.equals(userId)) {
                     isValid = false;
                     break;
                 } else {
-                    isValid = true;    
+                    isValid = true;
                 }
             }
-            
+
             // 검증 성공한 경우만 삭제 처리
             if (isValid) {
                 js.setData(Integer.parseInt(postService.deletePost(param).toString()));
@@ -181,19 +186,21 @@ public class PostController {
                 js.setData(0);
             }
         }
-       
+
         return js;
     }
 
     /**
      * 공지사항 저장 : 파일저장포함
-     * @param uploadForm                파일
+     * 
+     * @param uploadForm 파일
      * @param request
      * @return
      */
     @RequestMapping(value = "/post/add/saveFile", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult insertFile(@ModelAttribute("uploadForm") FileUploadRequest uploadForm, HttpServletRequest request)  {
+    public JsonResult insertFile(@ModelAttribute FileUploadRequest uploadForm,
+            HttpServletRequest request) {
         System.out.println("insertFile");
         JsonResult js = new JsonResult();
 
@@ -210,10 +217,11 @@ public class PostController {
                 uploadForm.setPost_id((Integer) post.get("id"));
 
                 // 파일 업로드 경로 숨기기
-                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm, env.getProperty("properties.fileUploadPath"), request);
+                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm,
+                        env.getProperty("properties.fileUploadPath"), request);
                 if (uploadResult.size() != 0)
                     uploadResult.get(0).setSaveFileName(null);
-                    
+
                 js.setData(uploadResult);
             } else {
                 js.setData(0);
@@ -228,13 +236,15 @@ public class PostController {
 
     /**
      * 공지사항 수정: 파일저장포함
-     * @param uploadForm             파일
+     * 
+     * @param uploadForm 파일
      * @param request
      * @return
      */
     @RequestMapping(value = "/post/update/saveFile", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult updatePostFile(@ModelAttribute("uploadForm") FileUploadRequest uploadForm, HttpServletRequest request) throws Exception {
+    public JsonResult updatePostFile(@ModelAttribute FileUploadRequest uploadForm,
+            HttpServletRequest request) throws Exception {
         JsonResult js = new JsonResult();
 
         // 세션 사용자 ID와 실제 DB의 게시글 작성자 일치 여부 확인
@@ -266,13 +276,14 @@ public class PostController {
             if ("Super-Admin".equals(userRole) || "Admin".equals(userRole)) {
                 postService.updatePost(params, delete_files);
 
-                if(delete_thumb_flag != null && delete_thumb_flag)
-                  postService.deleteThumb(params);
+                if (delete_thumb_flag != null && delete_thumb_flag)
+                    postService.deleteThumb(params);
 
                 uploadForm.setPost_id((Integer) params.get("id"));
                 // 파일 업로드 경로 숨기기
-                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm, env.getProperty("properties.fileUploadPath"), request);
-                if(uploadResult.size() != 0)
+                List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm,
+                        env.getProperty("properties.fileUploadPath"), request);
+                if (uploadResult.size() != 0)
                     uploadResult.get(0).setSaveFileName(null);
 
                 js.setData(uploadResult);
@@ -281,17 +292,18 @@ public class PostController {
                 // 세션의 사용자 ID와 작성자가 동일한 경우만 수정 처리
                 if (userId != null && !userId.equals("")) {
                     Map<String, Object> selectedPost = postService.getPostOne(params.get("id").toString(), request);
-                    String writer = (((Map<String, Object>)selectedPost.get("post")).get("writer")).toString();
+                    String writer = (((Map<String, Object>) selectedPost.get("post")).get("writer")).toString();
                     if (userId.equals(writer)) {
                         postService.updatePost(params, delete_files);
 
-                        if(delete_thumb_flag != null && delete_thumb_flag)
+                        if (delete_thumb_flag != null && delete_thumb_flag)
                             postService.deleteThumb(params);
 
                         uploadForm.setPost_id((Integer) params.get("id"));
                         // 파일 업로드 경로 숨기기
-                        List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm, env.getProperty("properties.fileUploadPath"), request);
-                        if(uploadResult.size() != 0)
+                        List<FileUploadResponse> uploadResult = fileService.fileUpload(uploadForm,
+                                env.getProperty("properties.fileUploadPath"), request);
+                        if (uploadResult.size() != 0)
                             uploadResult.get(0).setSaveFileName(null);
 
                         js.setData(uploadResult);
@@ -302,7 +314,6 @@ public class PostController {
                     js.setData(0);
                 }
             }
-            
 
         } catch (Exception e) {
             js.setErrorMessage("파일 업데이트에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
@@ -313,7 +324,8 @@ public class PostController {
 
     /**
      * 공지사항, FAQ 수정
-     * @param param                 게시글 수정 내용
+     * 
+     * @param param 게시글 수정 내용
      * @return
      * @throws Exception
      */
@@ -326,14 +338,14 @@ public class PostController {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         String userId = user.get("user_id").toString();
         String userRole = user.get("authority").toString();
-        
+
         if ("Super-Admin".equals(userRole) || "Admin".equals(userRole)) {
-            param.put("writer", userId); 
+            param.put("writer", userId);
             result = postService.updatePost(param, null);
         } else {
             if (userId != null && !userId.equals("")) {
                 if (userId.equals(param.get("writer").toString())) {
-                    param.put("writer", userId); 
+                    param.put("writer", userId);
                     result = postService.updatePost(param, null);
                 }
             }
@@ -344,7 +356,8 @@ public class PostController {
 
     /**
      * FAQ 순서 저장
-     * @param param                 FAQ 정보
+     * 
+     * @param param FAQ 정보
      * @return
      * @throws Exception
      */
