@@ -76,6 +76,8 @@ public interface SearchDetailMapper {
 
     Map<String, Object> getDetailData(String id);
 
+    Integer checkExistMetaData(String meta_id);
+
     Integer getUserDataAuth(Map<String, Object> params);
 
     Integer getMetaDataRelease(String meta_id);

@@ -181,32 +181,42 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 onMounted(async () => {
-  // 권한 체크
-  await getUserDataAuth().then(async (res) => {
-    if (res && res == true) {
-      window.addEventListener('scroll', handleScroll);
-      userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
-      categoryStore.fetchCategories(); // 카테고리 정보 조회
-      categoryTreeStore.fetchCategories(); // 카테고리 정보 조회
-      await getAllDataByGuid()
-      await searchTagList();
+  // 테이블에 데이터가 있는지 확인
+  await checkExistMetaData().then(async (checkRes) => {
+    if (checkRes) {
+      // 권한 체크
+      await getUserDataAuth().then(async (res) => {
+        if (res && res == true) {
+          window.addEventListener('scroll', handleScroll);
+          userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
+          categoryStore.fetchCategories(); // 카테고리 정보 조회
+          categoryTreeStore.fetchCategories(); // 카테고리 정보 조회
+          await getAllDataByGuid()
+          await searchTagList();
+        } else {
+          if (route.query.guid == ""
+            || route.query.guid == null
+            || route.query.guid == undefined
+            || route.query.guid == 'undefined'
+            || route.query.guid == 'null') {
+              await defaultAlert("조회에 실패하였습니다.")
+          } else {
+            await defaultAlert("데이터 접근 권한이 없습니다.")
+          }
+          history.go(-1)
+        }
+      }).catch(async (err) => {
+        await errorAlert("조회에 실패하였습니다.")
+        history.go(-1)
+      });
     } else {
-      if (route.query.guid == ""
-        || route.query.guid == null
-        || route.query.guid == undefined
-        || route.query.guid == 'undefined'
-        || route.query.guid == 'null') {
-        await defaultAlert("조회에 실패하였습니다.")
-      } else {
-        await defaultAlert("데이터 접근 권한이 없습니다.")
-      }
+      await defaultAlert("조회된 데이터가 없습니다.")
       history.go(-1)
     }
+  }).catch(async (err) => {
+    await defaultAlert("조회에 실패하였습니다.")
+    history.go(-1)
   })
-    .catch(async (err) => {
-      await errorAlert("조회에 실패하였습니다.")
-      history.go(-1)
-    });
 });
 
 // 엔티티 유형
@@ -977,6 +987,32 @@ const searchTagList = async (offset = 1) => {
   } catch (error) {
     console.log(error);
   }
+}
+
+// 해당 meta_id에 대한 데이터가 존재하는지 여부
+const checkExistMetaData = async () => {
+  let exist = false;
+  if (route.query.guid == ""
+    || route.query.guid == null
+    || route.query.guid == undefined
+    || route.query.guid == 'undefined'
+    || route.query.guid == 'null') {
+      exist = false;
+  } else {
+    await $ofetch(`/api/search/detail/checkExistMetaData?meta_id=${route.query.guid}`).then(async (res) => {
+      if (res && res.data) {
+        if (res.data.result) {
+          exist = true
+        } else {
+          exist = false
+        }
+      }
+    }).catch(async (err) => {
+      exist = false;
+    });
+  }
+
+  return exist
 }
 
 // 사용자의 role

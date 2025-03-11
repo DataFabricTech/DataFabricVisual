@@ -343,6 +343,20 @@ public class DetailController {
      * @throws Exception
      */
     @ResponseJsonResult
+    @GetMapping("/checkExistMetaData")
+    @ResponseBody
+    public Object checkExistMetaData(@RequestParam String meta_id, HttpServletRequest request)
+            throws Exception {
+        return searchDetailService.checkExistMetaData(meta_id);
+    }
+
+    /**
+     * 데이터 접근 권한 조회
+     * 
+     * @return Object 데이터 접근 권한 결과
+     * @throws Exception
+     */
+    @ResponseJsonResult
     @PostMapping("/getUserDataAuth")
     @ResponseBody
     public Object getUserDataAuth(@RequestBody Map<String, Object> params, HttpServletRequest request)

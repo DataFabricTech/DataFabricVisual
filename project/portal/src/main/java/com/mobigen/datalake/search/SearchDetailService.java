@@ -1003,6 +1003,23 @@ public class SearchDetailService {
         return result;
     }
 
+    // 데이터 존재유무 확인
+    public Map<String, Object> checkExistMetaData(String meta_id) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Integer cnt = searchDetailMapper.checkExistMetaData(meta_id);
+            if (cnt != null && cnt > 0) {
+                result.put("result", true);
+            } else {
+                result.put("result", false);
+            }
+
+        } catch(Exception e) {
+            result.put("result", false);
+        }
+        return result;
+    }
+
     // 사용자의 데이터 접근 권한 조회
     public Map<String, Object> getUserDataAuth(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
