@@ -1013,10 +1013,6 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
     return true;
   }
 
-  if (classification.value.id == "") { // 카테고리 필터 적용중인 경우 처리
-    return false
-  }
-
   // 상세필터 항목 사용중인경우 처리
   if (detailFilters.value['CATEGORY']
     && detailFilters.value['SYSTEMTYPE']
