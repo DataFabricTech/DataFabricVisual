@@ -59,8 +59,8 @@
         </div>
       </div>
       <div class="data-result" v-else>
-        <p v-if="props.userDataAuth == 1 && props.userDataAuth == 2" class="nodata">데이터 접근 권한이 없습니다.</p>
-        <p v-else class="nodata">샘플데이터가 존재하지 않습니다.</p>
+        <p v-if="props.userDataAuth == 0" class="nodata">데이터 접근 권한이 없습니다.</p>
+        <p v-else class="nodata">샘플 데이터가 존재하지 않습니다.</p>
       </div>
     </div>
   </div>
