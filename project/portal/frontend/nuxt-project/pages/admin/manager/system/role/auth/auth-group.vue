@@ -25,7 +25,10 @@ const props = defineProps({
 
 // 화면 렌더 대상 카테고리 라벨 목록 계산
 const auths = computed(() => {
-  const tempAuths = props.item.role_ids.length > 5 ? props.item.role_ids.slice(0, 5) : [...props.item.role_ids];
+  let tempAuths = []
+  if (props.item && props.item.role_ids) {
+    tempAuths = props.item.role_ids.length > 5 ? props.item.role_ids.slice(0, 5) : [...props.item.role_ids];
+  }
   return tempAuths;
 });
 </script>
