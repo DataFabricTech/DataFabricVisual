@@ -11,7 +11,7 @@
           <table class="mu-formbox">
             <caption>동의어 추가</caption>
             <colgroup>
-              <col style="width:160px" />
+              <col style="width:170px" />
               <col />
             </colgroup>
             <tbody>

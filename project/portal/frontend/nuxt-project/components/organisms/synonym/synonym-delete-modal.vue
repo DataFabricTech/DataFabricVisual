@@ -12,7 +12,7 @@
           <table class="mu-formbox">
             <caption>동의어 삭제 요청</caption>
             <colgroup>
-              <col style="width:150px">
+              <col style="width:170px">
               <col>
             </colgroup>
             <tbody>
@@ -42,7 +42,7 @@
                   <textarea :class="synonym_error_msg2 != '' ? 'mu-area h100 error' : 'mu-area h100'"
                     placeholder="삭제 사유를 입력해주세요.(최대 100자)" title="삭제 사유 입력" maxlength="100"
                     v-model="deleteReason"></textarea>
-                  <p v-if="synonym_delete_error2" class="complete-msg error bul-refer">{{ synonym_error_msg2 }}</p>
+                  <p v-if="synonym_delete_error2" class="complete-msg error">{{ synonym_error_msg2 }}</p>
                   <!-- 에러문구노출 -->
                 </td>
               </tr>

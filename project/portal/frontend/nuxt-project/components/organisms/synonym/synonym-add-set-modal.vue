@@ -23,7 +23,7 @@
                   <button type="button" class="mu-btn mu-btn-delete" @click="clearInputTerm"><i
                       class="mu-icon-svg item-delete"></i><span>삭제</span></button>
                 </div>
-                <p v-if="synonym_add_error" class="complete-msg error bul-refer">{{ synonym_error_msg }}</p>
+                <p v-if="synonym_add_error" class="complete-msg error">{{ synonym_error_msg }}</p>
               </td>
             </tr>
             <tr>
@@ -41,7 +41,7 @@
                     <span>추가</span>
                   </button>
                 </div>
-                <p v-if="synonym_add_error2" class="complete-msg error bul-refer">{{ synonym_error_msg2 }}</p>
+                <p v-if="synonym_add_error2" class="complete-msg error">{{ synonym_error_msg2 }}</p>
               </td>
             </tr>
             <tr>

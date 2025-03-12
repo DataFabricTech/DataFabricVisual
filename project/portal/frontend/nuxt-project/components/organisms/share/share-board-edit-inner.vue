@@ -27,7 +27,7 @@
               <td>
                 <input type="text" placeholder="제목은 40자 이내로 입력 가능합니다." title="제목 입력 필수" class="mu-input"
                   v-model="props.share.title" v-bind:class="[!titleValid ? 'error' : '']" maxlength="40" />
-                <p v-if="!titleValid" class="complete-msg error bul-refer">
+                <p v-if="!titleValid" class="complete-msg error">
                   제목을 입력해주세요.
                 </p>
               </td>
@@ -39,7 +39,7 @@
               </th>
               <td>
                 <ckeditor :editor="editor" v-model="props.share.contents"></ckeditor>
-                <p v-if="!shareContentReplyValid" class="complete-msg error bul-refer">
+                <p v-if="!shareContentValid" class="complete-msg error">
                   내용을 입력해주세요.
                 </p>
               </td>
@@ -88,30 +88,23 @@ const required_flag = ref<boolean>(false);
 const emit = defineEmits(["cancelMethod", "update:share", "saveMethod"]);
 const props = defineProps(["share", "cancelMethod", "saveMethod"]);
 
-const shareContentReplyValid: ComputedRef<boolean> = computed(() => {
-  // 필수값 체크
-  if (!required_flag.value) return true;
-
-  // props.share나 props.share.contents가 없는 경우를 대비해 안전하게 접근
-  return props.share && props.share.contents && props.share.contents.length > 0 ? true : false;
-});
-
 const titleValid: ComputedRef<boolean> = computed(() => {
-  if (!required_flag.value) return true;
-  else return props.share.title.length > 0 ? true : false;
+  if (!required_flag.value) return true
+  else return props.share && props.share.title && props.share.title.length > 0 ? true : false;
 });
+
 const shareContentValid: ComputedRef<boolean> = computed(() => {
-  if (!required_flag.value) return true;
-  else return props.share.contents.length > 0 ? true : false;
+  if (!required_flag.value) return true
+  else return props.share && props.share.contents && props.share.contents.length > 0 ? true : false;
 });
 
 const onClickListButton = (): void => {
   emit("cancelMethod");
 };
 
-
 // 파일 저장 버튼 클릭
 const onClickSaveButton = async (): Promise<void> => {
+  required_flag.value = true;
   if (!titleValid.value || !shareContentValid.value) return;
 
   emit("update:share", props.share);
