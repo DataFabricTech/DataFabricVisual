@@ -185,9 +185,15 @@ export const useServiceStore = defineStore("service", () => {
    */
   async function getServiceList(): Promise<void> {
     const { data } = await $api(`/api/service-manage/list`);
-    const serviceListData: Service[] = data;
-    serviceList.splice(0, serviceList.length, ...serviceListData);
 
+    const serviceListData: Service[] = data.map(service => ({
+      ...service,
+      displayName: service.displayName && service.displayName.trim() !== ""
+          ? service.displayName
+          : service.name
+    }));
+
+    serviceList.splice(0, serviceList.length, ...serviceListData);
     // 첫번째 항목 자동 선택
     if (Object.keys(service).length === 0) {
       await changeCurrentService(serviceListData[0]);
@@ -227,7 +233,15 @@ export const useServiceStore = defineStore("service", () => {
     if (!source.owner) {
       source.owner = [];
     }
-    Object.assign(service, source, newService);
+    Object.assign(service, {
+      ...source,
+      ...newService,
+      displayName:
+          newService.displayName && newService.displayName.trim() !== ""
+              ? newService.displayName
+              : newService.name,
+    });
+
     disableEditInfo();
     // 서비스관리 목록 클릭시, 설명 API호출
     if (
