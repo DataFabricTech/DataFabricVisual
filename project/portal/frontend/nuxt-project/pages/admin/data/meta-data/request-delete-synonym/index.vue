@@ -17,7 +17,7 @@
           <div class="board-list">
             <table class="mu-grid">
               <colgroup>
-                <col style="width:30px">
+                <col style="width:40px">
                 <col style="width:60px">
                 <col style="width:200px">
                 <col style="width:auto">
