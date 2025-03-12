@@ -12,18 +12,18 @@
         <div class="board-list">
           <table class="mu-grid">
             <colgroup>
-              <col style="width: 6%" />
-              <col style="width: 10%" />
-              <col style="width: 14%" />
-              <col style="width: 14%" />
-              <col style="width: 10%" />
-              <col style="width: 10%" />
-              <col style="width: 8%" />
-              <col style="width: 8%" />
-              <col style="width: 8%" />
-              <col style="width: 8%" />
-              <col style="width: 6%" />
               <col style="width: 5%" />
+              <col style="width: 10%" />
+              <col style="width: 14%" />
+              <col style="width: 14%" />
+              <col style="width: 10%" />
+              <col style="width: 10%" />
+              <col style="width: 8%" />
+              <col style="width: 8%" />
+              <col style="width: 8%" />
+              <col style="width: 8%" />
+              <col style="width: 6%" />
+              <col style="width: 6%" />
               <col />
             </colgroup>
             <thead>
