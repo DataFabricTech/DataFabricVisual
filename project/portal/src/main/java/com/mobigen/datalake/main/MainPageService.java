@@ -139,88 +139,28 @@ public class MainPageService {
         return dataRequestList;
     }
 
-    private final SearchDetailService searchDetailService;
-
     // My 찜데이터 조회
     public Object getMyFavoriteDataList(String user_id) throws Exception {
-        // 결과를 저장할 리스트
-        List<Map<String, Object>> shareDataList = mainPageMapper.getMyFavoriteDataList(user_id);
-
-        // JSON 데이터를 처리하기 위한 ObjectMapper 생성
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        // 각 guid에 대해 detail 데이터를 가져와서 shareDataList에 추가
-        for (int i = 0; i < shareDataList.size(); i++) {
-            Map<String, Object> params = new LinkedHashMap<>();
-            params.put("user_id", user_id);
-            params.put("meta_id", shareDataList.get(i).get("meta_id"));
-
-            // getDetailData 호출
-            Object detailData = searchDetailService.getDetailDataForMain(params);
-
-            // detailData가 JSON 형식일 경우 처리
-            if (detailData != null) {
-                // JSON 결과를 Map 형태로 변환
-                Map<String, Object> detailDataMap = objectMapper.convertValue(detailData, Map.class);
-
-                // "data" 필드가 있는지 확인
-                if (detailDataMap.containsKey("data")) {
-                    Object data = detailDataMap.get("data");
-
-                    // "data"가 LinkedHashMap인 경우 처리
-                    LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) data;
-
-                    // "entity" 키가 있는지 확인하여 shareDataList에 추가
-                    if (dataMap.containsKey("entity")) {
-                        shareDataList.get(i).put("entity", dataMap.get("entity"));
-                    }
-                }
-            }
+        List<Map<String, Object>> myFavoriteDataList = new ArrayList<>();
+        try {
+            myFavoriteDataList = mainPageMapper.getMyFavoriteDataList(user_id);
+        } catch(Exception e) {
+            log.error("찜 데이터 조회 실패..");
         }
 
-        // shareDataList를 리턴
-        return shareDataList;
+        return myFavoriteDataList;
     }
 
     // My 리뷰 데이터 조회
     public Object getMyReviewDataList(String user_id) throws Exception {
-        // 결과를 저장할 리스트
-        List<Map<String, Object>> shareDataList = mainPageMapper.getMyReviewDataList(user_id);
-
-        // JSON 데이터를 처리하기 위한 ObjectMapper 생성
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        // 각 guid에 대해 detail 데이터를 가져와서 shareDataList에 추가
-        for (int i = 0; i < shareDataList.size(); i++) {
-            Map<String, Object> params = new LinkedHashMap<>();
-            params.put("user_id", user_id);
-            params.put("meta_id", shareDataList.get(i).get("meta_id"));
-
-            // getDetailData 호출
-            Object detailData = searchDetailService.getDetailDataForMain(params);
-
-            // detailData가 JSON 형식일 경우 처리
-            if (detailData != null) {
-                // JSON 결과를 Map 형태로 변환
-                Map<String, Object> detailDataMap = objectMapper.convertValue(detailData, Map.class);
-
-                // "data" 필드가 있는지 확인
-                if (detailDataMap.containsKey("data")) {
-                    Object data = detailDataMap.get("data");
-
-                    // "data"가 LinkedHashMap인 경우 처리
-                    LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) data;
-
-                    // "entity" 키가 있는지 확인하여 shareDataList에 추가
-                    if (dataMap.containsKey("entity")) {
-                        shareDataList.get(i).put("entity", dataMap.get("entity"));
-                    }
-                }
-            }
+        List<Map<String, Object>> myReviewDataList = new ArrayList<>();
+        try {
+            myReviewDataList = mainPageMapper.getMyReviewDataList(user_id);
+        } catch(Exception e) {
+            log.error("리뷰 데이터 조회 실패..");
         }
 
-        // shareDataList를 리턴
-        return shareDataList;
+        return myReviewDataList;
     }
 
     // My 데이터 요청내역 조회

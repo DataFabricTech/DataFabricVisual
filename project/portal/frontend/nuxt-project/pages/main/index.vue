@@ -219,8 +219,8 @@
             </div>
           </div>
           <div class="main-body">
-            <ul v-if="myFavoriteDataList && myFavoriteDataList.length > 0" class="data-list">
-              <li v-for="(data, idx) in myFavoriteDataList">
+            <ul v-if="myReviewDataList && myReviewDataList.length > 0" class="data-list">
+              <li v-for="(data, idx) in myReviewDataList">
                 <a @click="goToMetaDataDetail(data.meta_id)">
                   <div class="inner-data">
                     <strong class="data-title">{{ data.description ? data.description : '-' }}</strong>
