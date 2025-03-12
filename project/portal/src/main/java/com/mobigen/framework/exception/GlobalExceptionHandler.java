@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
         String url = request.getRequestURI();
         log.info("ERROR URL : " + url + "====================");
         // 프론트엔드의 에러 페이지 URL로 리다이렉트
-        log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.noResourceFoundException"), ex);
+        log.error("No Static Resource Error");
         response.sendRedirect("/error");
     }
 
