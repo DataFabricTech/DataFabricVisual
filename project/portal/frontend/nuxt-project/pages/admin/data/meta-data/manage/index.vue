@@ -666,7 +666,7 @@ const onDeleteCategory = async (target: any) => {
                 },
                 file_id: ""
               };
-              // onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
+              onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
               onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 조회
               onSearchDept(); // 카테고리 담당부서 조회
             }
@@ -701,7 +701,7 @@ const onDeleteCategory = async (target: any) => {
               },
               file_id: ""
             };
-            // onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
+            onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
             onSearchDataList(0); // 테이블 데이터 조회
             onSearchDept(); // 카테고리 담당부서 조회
           }
