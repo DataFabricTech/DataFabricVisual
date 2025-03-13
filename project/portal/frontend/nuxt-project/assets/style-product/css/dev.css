@@ -500,7 +500,7 @@ pre code {
 
 
 /* 추가 속성 필터 date-picker가 스크롤로 가려져서 설정 */
-.data-filter-wrap .attribute-filter-item {max-height: none;}
+.data-filter-wrap .attribute-filter-item {overflow-y:visible; max-height: none;}
 
 /* 왼쪽메뉴 카테고리 배치 조정 */
 .category-menu {overflow-y:auto; height:100%;}
