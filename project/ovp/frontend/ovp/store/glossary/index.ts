@@ -74,9 +74,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
       showLoader: false,
     });
     const glossariesData: Glossary[] = res.data.data;
-    console.log("glossariesData 확인 =>>>>> ", glossariesData);
     glossaries.splice(0, glossaries.length, ...glossariesData);
-    console.log("glossaries 확인 => ", glossaries);
 
     if (res.data.paging.after) {
       glossariesAfter.value = res.data.paging.after;
