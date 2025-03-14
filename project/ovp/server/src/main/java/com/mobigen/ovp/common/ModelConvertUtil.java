@@ -98,7 +98,7 @@ public class ModelConvertUtil {
         resultList.addAll(Arrays.asList(splitArray).subList(1, splitArray.length)); // 나머지 값 추가
 
         // 어떤 경우에도 맨 앞에는 service displayname이 들어감
-        if ("storage".equals(index)) {
+        if (ModelType.STORAGE.getValue().equals(index)) {
             resultList = resultList.subList(0,2);
         } else {
             resultList.remove(resultList.size() - 1);
