@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -67,28 +68,42 @@ public class ModelConvertUtil {
      */
     public Map<String, Object> convertSourceDataOne(String index, Map<String, Object> source) {
         Map<String, Object> modifiedSource = new HashMap<>();
+        Map<String, Object> sourceService = (Map<String, Object>) source.get("service");
 
-        String serviceType = source.get("serviceType") != null ? source.get("serviceType").toString().toLowerCase() : "";
+        String serviceName = Optional.ofNullable(sourceService.get("displayName"))
+                .map(Object::toString)
+                .orElse(sourceService.get("name").toString());
+
+        // serviceType 가져오기
+        String serviceType = Optional.ofNullable(source.get("serviceType"))
+                .map(Object::toString)
+                .map(String::toLowerCase)
+                .orElse("");
+
         modifiedSource.put("type", "trino".equals(serviceType) ? "model" : index);
 
         modifiedSource.put("id", source.get("id"));
         modifiedSource.put("serviceType", serviceType);
-        modifiedSource.put("serviceIcon", new StringBuffer("type-img type-img-").append(serviceType).toString());
+        modifiedSource.put("serviceIcon", "type-img type-img-" + serviceType);
 
-        String[] splitArray = source.get("fullyQualifiedName").toString().split("\\.");
-        List<String> resultList = new ArrayList<>(Arrays.asList(splitArray));
-        // TODO: index 와 실제 데이터가 매칭이 되지 않고 있음.
-        if (!ModelType.STORAGE.getValue().equals(index)) {
-            resultList.remove(resultList.size() - 1);
-            modifiedSource.put("depth", resultList);
+        // fullyQualifiedName을 안전하게 가져와 분리
+        String[] splitArray = Optional.ofNullable(source.get("fullyQualifiedName"))
+                .map(Object::toString)
+                .map(fqn -> fqn.split("\\."))
+                .orElse(new String[0]);
+
+
+        List<String> resultList = new ArrayList<>();
+        resultList.add(serviceName);  // ✅ 첫 번째 값으로 `service.displayName` 추가
+        resultList.addAll(Arrays.asList(splitArray).subList(1, splitArray.length)); // 나머지 값 추가
+
+        // 어떤 경우에도 맨 앞에는 service displayname이 들어감
+        if ("storage".equals(index)) {
+            resultList = resultList.subList(0,2);
         } else {
-            // TODO : [개발] 마이 페이지 -> 나의 데이터 에 'admin' 계정인 경우, all 로 모든 데이터가 표시되기 때문에 아래 코드에서 에러남. try/catch 로 에러 대응함. 추후 코드 수정 필요함.
-            try {
-                modifiedSource.put("depth", List.of(new String[]{resultList.get(0), resultList.get(1)}));
-            } catch (Exception e) {
-                modifiedSource.put("depth", resultList);
-            }
+            resultList.remove(resultList.size() - 1);
         }
+        modifiedSource.put("depth", resultList);
 
         modifiedSource.put("firModelNm", source.get("displayName"));
         modifiedSource.put("modelNm", source.get("name"));
