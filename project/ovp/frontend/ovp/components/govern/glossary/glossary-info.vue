@@ -21,7 +21,7 @@
         <input
           id="title-modify"
           class="text-input"
-          v-model="editData.displayName"
+          v-model.trim="editData.displayName"
           maxlength="20"
         />
         <div class="h-group gap-1">

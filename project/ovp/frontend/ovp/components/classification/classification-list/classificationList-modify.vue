@@ -14,7 +14,7 @@
           <template #edit-slot>
             <label class="hidden-text" for="title-modify">분류명 입력</label>
             <input
-              v-model="newData.displayName"
+              v-model.trim="newData.displayName"
               placeholder="분류명에 대한 영역입니다."
               required
               id="title-modify"

@@ -13,7 +13,7 @@
     <!-- 데이터 로딩 후 분류 목록 또는 "등록된 정보가 없습니다." 메시지 표시 -->
     <div class="work-list-contents" v-else>
       <div v-if="classificationList.length === 0" class="no-result">
-        <div class="notification">
+        <div class="notification">1
           <svg-icon class="notification-icon" name="info"></svg-icon>
           <p class="notification-detail">등록된 정보가 없습니다.</p>
         </div>
