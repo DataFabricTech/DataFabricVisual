@@ -1,166 +1,27 @@
 package com.mobigen.framework.filter;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
 
-import org.apache.catalina.connector.ClientAbortException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.stereotype.Component;
 
-import com.mobigen.framework.iris.User;
-import com.mobigen.framework.result.JsonResult;
-import com.mobigen.framework.security.SessionManager;
-
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-
+@Order(2)
 @Component
 @Slf4j
 public class NuxtSSRStaticUrlFilter implements Filter {
-
-    public static HashMap blacklistToken = new HashMap();
-
-    // 
-    private static final String ROOT_URL = "/";
-    private static final String[] PUBLIC_API_PATTERNS = {
-        "authenticate",
-        "/api/depts",
-        "/api/checkDupUserId",
-        "register"
-    };
-    private static final String API_PREFIX = "/api";
-
-    @Autowired
-    private SessionManager sessionManager;
-    
-    private void removeToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
-        HttpServletResponse hr = (HttpServletResponse)servletResponse;
-        sessionManager.getToken().deleteCookieByHttpServletResponse(hr, "x-access-token");
-        sessionManager.getToken().deleteCookieByHttpServletResponse(hr, "x-refresh-token");
-        String url = ((HttpServletRequest) servletRequest).getRequestURI();
-        if(url.indexOf("/api/")> -1) {
-            hr.setContentType("application/json");
-            hr.setCharacterEncoding("UTF-8");
-
-            // JsonResult jr =new JsonResult();
-            // jr.setResult(0);
-            // jr.setErrorMessage("expired token");
-            // // JSON 데이터 생성 (예: {"status": "success", "message": "Hello, World!"})
-            String jsonResponse = "{\"result\": \"0\", \"errorMessage\": \"expired token\"}";
-
-            try {
-                OutputStream out = hr.getOutputStream();
-                out.write(jsonResponse.getBytes());
-                out.flush();
-            } catch (ClientAbortException e) {
-                // 클라이언트가 응답을 중단한 경우 예외 로그 생략 또는 경고 수준으로 기록
-                log.info("클라이언트 연결 중단: " + e.getMessage());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            hr.sendRedirect("/");
-        }
-    }
-
-    private boolean isPublicUrl(String url) {
-        if (url.equals(ROOT_URL)) {
-            return true;
-        }
-        
-        for (String pattern : PUBLIC_API_PATTERNS) {
-            if (url.contains(pattern)) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
-    private boolean needsTokenValidation(String url) {
-        return url.contains(API_PREFIX) && !isPublicUrl(url);
-    }
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            // DB login_date
-            String lastLoginDate = null;
-
-            // Access Token
-            String accessToken = sessionManager.getAccessToken((HttpServletRequest) servletRequest);
-            Map<String, Object> userInfoFromAccessToken = null;
-            String last_login_from_access_token = null;
-            String userIdFromAccessToken = null;
-
-            if(accessToken != null) {
-                if (!accessToken.equals("")) {
-                    userInfoFromAccessToken = sessionManager.getUserByAccessTokenValue(accessToken);
-                    if(userInfoFromAccessToken.get("last_login") != null) {
-                        last_login_from_access_token = userInfoFromAccessToken.get("last_login").toString();
-                    }
-
-                    if (userInfoFromAccessToken.get("user_id") != null) {
-                        userIdFromAccessToken = userInfoFromAccessToken.get("user_id").toString();
-                    }
-                    
-                    lastLoginDate = sessionManager.getLastLoginUser(userIdFromAccessToken);
-    
-                    if(accessToken != null && lastLoginDate != null && lastLoginDate.compareTo(last_login_from_access_token) > 0 && !"admin".equals(userIdFromAccessToken)) {
-                        removeToken(servletRequest, servletResponse);
-                        return;
-                    }
-                }
-            } else {
-                String url = ((HttpServletRequest) servletRequest).getRequestURI();
-                if (needsTokenValidation(url)) {
-                    removeToken(servletRequest, servletResponse);
-                    log.info(url);
-                }
-            }
-
-            // Refresh Token
-            String refreshToken = sessionManager.getRefreshToken((HttpServletRequest) servletRequest);
-            Map<String, Object> userInfoFromRefreshToken = null;
-            String last_login_from_refresh_token = null;
-            String userIdFromRefreshToken = null;
-
-            if(refreshToken != null) {
-                if (!refreshToken.equals("")) {
-                    userInfoFromRefreshToken = sessionManager.getUserByRefreshTokenValue(refreshToken);
-                    if (userInfoFromRefreshToken.get("last_login") != null) {
-                        last_login_from_refresh_token = userInfoFromRefreshToken.get("last_login").toString();
-                    }
-
-                    if (userInfoFromRefreshToken.get("user_id") != null) {
-                        userIdFromRefreshToken = userInfoFromRefreshToken.get("user_id").toString();
-                    }
-        
-                    lastLoginDate = sessionManager.getLastLoginUser(userIdFromRefreshToken);
-    
-                    if(refreshToken != null && lastLoginDate != null && lastLoginDate.compareTo(last_login_from_refresh_token) > 0 && !"admin".equals(userIdFromRefreshToken)) {
-                        removeToken(servletRequest, servletResponse);
-                        return;
-                    }
-                }
-            } else {
-                String url = ((HttpServletRequest) servletRequest).getRequestURI();
-                if (needsTokenValidation(url)) {
-                    removeToken(servletRequest, servletResponse);
-                    log.info(url);
-                }
-            }
-        
             filterChain.doFilter(new HttpServletRequestWrapper((HttpServletRequest) servletRequest) {
                 /**
                  * Nuxt를 SSR 모드로 배포 시, NuxtLink 경로에 html 이 없기 때문에
