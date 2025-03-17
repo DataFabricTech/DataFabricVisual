@@ -91,7 +91,7 @@
                     style="width: 100%; height: 100%;margin-top: 30px; justify-content: center; align-items: center; text-align: center;">
                     <a @click="goToSearch(cat)" class="chart-category">
                       <i v-if="cat.file_location == '' || cat.file_location == null"
-                        :class="getCategoryIcon(9 + 1)"></i>
+                        :class="getCategoryIcon(1)"></i>
                       <img v-else :src="cat.imageSrc" :class="cat.imageClass" :style="cat.imageStyle" />
                       <br>
                       <em class="chart-category-label"
@@ -299,20 +299,20 @@
 
 
 <script setup lang="ts">
-import { ref } from "@vue/reactivity";
-import { useNuxtApp, useRouter } from "nuxt/app";
 import { errorAlert } from "@/components/functional/alert/alert-default";
-import { onMounted } from "vue";
-import { useUserStore } from "@/store/user";
 import { useCategoryStore } from "@/store/category";
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Autoplay } from 'swiper/modules';
+import { useSearchStore } from "@/store/search";
+import { useUserStore } from "@/store/user";
+import { ref } from "@vue/reactivity";
+import Highcharts from 'highcharts';
+import { useNuxtApp, useRouter } from "nuxt/app";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import { useSearchStore } from "@/store/search";
-import Highcharts from 'highcharts';
+import { Autoplay } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { onMounted } from "vue";
 
 const addCategoryList = ref([]);
 const swiperEl = ref(null);
