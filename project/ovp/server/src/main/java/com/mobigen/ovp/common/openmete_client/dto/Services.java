@@ -9,6 +9,7 @@ public class Services {
     private String id;
     private String fullyQualifiedName;
     private String name;
+    private String displayName;
     private String description;
     private Owner owner;
     private String serviceType;

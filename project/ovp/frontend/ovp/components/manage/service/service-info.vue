@@ -8,7 +8,7 @@
           :alt="servicesWithTrinoById[service.serviceType].label"
           :width="25"
         />
-        <h4 class="service-title">{{ service.name }}</h4>
+        <h4 class="service-title">{{ service.displayName }}</h4>
       </div>
       <button class="button button-error-lighter" @click="removeService">
         삭제

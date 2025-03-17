@@ -52,7 +52,7 @@
               :alt="servicesWithTrinoById[service.serviceType].label"
               :width="25"
             />
-            <span class="menu-text">{{ service.name }}</span>
+            <span class="menu-text">{{ service.displayName }}</span>
             <span class="menu-subtext"
               >({{
                 service.owner && service.owner.name

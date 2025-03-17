@@ -2,6 +2,7 @@ export interface Service {
   fullyQualifiedName: string;
   id: string;
   name: string;
+  displayName: string;
   owner: Owner;
   tags: object[];
   terms: object[];
