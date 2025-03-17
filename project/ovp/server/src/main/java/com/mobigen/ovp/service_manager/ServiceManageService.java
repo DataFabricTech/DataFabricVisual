@@ -71,11 +71,11 @@ public class ServiceManageService {
 
         // 목록 표시에 필요한 항목만 포함되도록 처리함.
         serviceResponses.addAll(dataBases.stream()
-                .map(service -> new ServiceResponse(service.getId(), service.getName(), DATA_BASE, service.getOwner(), service.getServiceType()))
+                .map(service -> new ServiceResponse(service.getId(), service.getName(),  service.getDisplayName(), DATA_BASE, service.getOwner(), service.getServiceType()))
                 .toList());
 
         serviceResponses.addAll(storages.stream()
-                .map(service -> new ServiceResponse(service.getId(), service.getName(), STORAGE, service.getOwner(), service.getServiceType()))
+                .map(service -> new ServiceResponse(service.getId(), service.getName(), service.getDisplayName(), STORAGE, service.getOwner(), service.getServiceType()))
                 .toList());
         return serviceResponses;
     }

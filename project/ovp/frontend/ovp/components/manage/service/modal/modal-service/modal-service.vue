@@ -15,6 +15,7 @@
     @before-open="beforeOpen"
     @closed="onCancel"
     @cancel="onCancel"
+    @confirm="gotoNext"
   >
     <template #body>
       <Step

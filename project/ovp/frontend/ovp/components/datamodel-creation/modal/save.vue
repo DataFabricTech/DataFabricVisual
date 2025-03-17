@@ -15,6 +15,7 @@
     @before-open="onOpenModal"
     @click-outside="onCancelModal"
     @cancel="onCancelModal"
+    @confirm="onSaveModal"
   >
     <template v-slot:body>
       <div class="form form-lg">

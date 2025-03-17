@@ -29,7 +29,7 @@
       @contextmenu.prevent="onShowContextMenu"
     >
       <div class="type-img" :class="props.data.serviceIcon"></div>
-      <span class="menu-text">{{ props.data.label }}</span>
+      <span class="menu-text">{{ props.data.displayName }}</span>
       <span class="menu-subtext">{{ owner }}</span>
     </button>
     <div class="menu-button-group">

@@ -15,6 +15,7 @@
     @before-open="onBeforeOpen"
     @closed="onClosed(false)"
     @cancel="onClosed(false)"
+    @confirm="gotoNext"
   >
     <template v-slot:body>
       <Step

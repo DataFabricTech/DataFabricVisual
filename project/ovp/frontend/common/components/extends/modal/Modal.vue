@@ -20,6 +20,7 @@
     @opened="$emit('open')"
     @before-open="$emit('before-open')"
     @before-close="$emit('before-close')"
+    @keydown.enter="$emit('confirm', modalId)"
   >
     <div class="modal-head">
       <div class="modal-head-text">

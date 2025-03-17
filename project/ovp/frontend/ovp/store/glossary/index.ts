@@ -41,7 +41,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const currentComponent = ref("glossary");
 
   const editGlossaryMode = reactive({
-    name: false,
+    displayName: false,
     des: false,
     tag: false,
   });
@@ -292,7 +292,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     editGlossaryMode[property] = !editGlossaryMode[property];
   }
   function disableEditModes(): void {
-    editGlossaryMode.name = false;
+    editGlossaryMode.displayName = false;
     editGlossaryMode.des = false;
     editGlossaryMode.tag = false;
   }

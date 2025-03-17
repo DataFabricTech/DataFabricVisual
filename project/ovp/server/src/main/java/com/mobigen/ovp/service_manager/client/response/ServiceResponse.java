@@ -16,6 +16,7 @@ import java.util.Objects;
 public class ServiceResponse {
     private String id;
     private String name;
+    private String displayName;
     private String fullyQualifiedName;
     private String serviceType;
     private String description;
@@ -27,6 +28,7 @@ public class ServiceResponse {
     public ServiceResponse(Services service, String type) {
         this.id = service.getId();
         this.name = service.getName();
+        this.displayName = service.getDisplayName();
         this.fullyQualifiedName = service.getFullyQualifiedName();
         this.serviceType = service.getServiceType();
         this.description = service.getDescription();
@@ -60,6 +62,7 @@ public class ServiceResponse {
     public ServiceResponse(ResponseEntity<Services> service, String type) {
         this.id = Objects.requireNonNull(service.getBody()).getId();
         this.name = service.getBody().getName();
+        this.displayName = service.getBody().getDisplayName();
         this.fullyQualifiedName = service.getBody().getFullyQualifiedName();
         this.serviceType = service.getBody().getServiceType();
         this.description = service.getBody().getDescription();
@@ -95,6 +98,7 @@ public class ServiceResponse {
     public ServiceResponse(Map<String, Object> map, String type) {
         this.id = (String) map.get("id");
         this.name = (String) map.get("name");
+        this.displayName = (String) map.get("displayName");
         this.fullyQualifiedName = (String) map.get("fullyQualifiedName");
         this.serviceType = (String) map.get("serviceType");
         this.description = (String) map.get("description");
@@ -138,9 +142,10 @@ public class ServiceResponse {
         }
     }
 
-    public ServiceResponse(String id, String name, String type, Owner owner, String serviceType) {
+    public ServiceResponse(String id, String name, String displayName, String type, Owner owner, String serviceType) {
         this.id = id;
         this.name = name;
+        this.displayName = displayName;
         this.type = type;
         this.owner = owner;
         this.serviceType = serviceType;
