@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import type { Ref } from "vue";
 import _ from "lodash";
 import { ref } from "vue";
-import _isEmpty from "lodash/isEmpty";
 
 interface Classification {
   id: string;
@@ -122,12 +121,12 @@ export const classificationStore = defineStore("classification", () => {
     classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
 
     // displayName이 비어있다면 name을 사용하도록 설정
-    if (_isEmpty(classificationDetailData.value.displayName)) {
+    if (_.isEmpty(classificationDetailData.value.displayName)) {
       classificationDetailData.value.displayName = classificationDetailData.value.name;
     }
 
     // description이 비어있다면 "-"로 설정
-    if (_isEmpty(data.data?.description)) {
+    if (_.isEmpty(data.data?.description)) {
       classificationDetailData.value.description = "-";
     }
   };

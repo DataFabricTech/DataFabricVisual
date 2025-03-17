@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
 import { ref, reactive, type Ref } from "vue";
-import _isEmpty from "lodash/isEmpty";
-
 import type {
   Service,
   Owner,
@@ -190,12 +188,12 @@ export const useServiceStore = defineStore("service", () => {
 
     const serviceListData: Service[] = data.map(service => ({
       ...service,
-      displayName: !_isEmpty(service.displayName) ? service.displayName : service.name
+      displayName: !_.isEmpty(service.displayName) ? service.displayName : service.name
     }));
 
     serviceList.splice(0, serviceList.length, ...serviceListData);
     // 첫번째 항목 자동 선택
-    if (_isEmpty(service)) {
+    if (_.isEmpty(service)) {
       await changeCurrentService(serviceListData[0]);
     }
   }
@@ -236,7 +234,7 @@ export const useServiceStore = defineStore("service", () => {
     Object.assign(service, {
       ...source,
       ...newService,
-      displayName: !_isEmpty(newService.displayName) ? newService.displayName : newService.name,
+      displayName: !_.isEmpty(newService.displayName) ? newService.displayName : newService.name,
     });
 
     disableEditInfo();
