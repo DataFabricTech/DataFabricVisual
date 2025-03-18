@@ -69,10 +69,15 @@ public class ModelConvertUtil {
     public Map<String, Object> convertSourceDataOne(String index, Map<String, Object> source) {
         Map<String, Object> modifiedSource = new HashMap<>();
         Map<String, Object> sourceService = (Map<String, Object>) source.get("service");
+        Map<String, Object> sourceVotes= (Map<String, Object>) source.get("votes");
 
         String serviceName = Optional.ofNullable(sourceService.get("displayName"))
                 .map(Object::toString)
                 .orElse(sourceService.get("name").toString());
+
+        String upVotes = Optional.ofNullable(sourceVotes.get("upVotes"))
+                .map(Object::toString)
+                .orElse("");
 
         // serviceType 가져오기
         String serviceType = Optional.ofNullable(source.get("serviceType"))
@@ -111,6 +116,10 @@ public class ModelConvertUtil {
         modifiedSource.put("modelDesc", source.get("description"));
         modifiedSource.put("fqn", source.get("fullyQualifiedName"));
         modifiedSource.put("owner", source.get("owner"));
+        modifiedSource.put("upVotes", upVotes);
+        modifiedSource.put("updatedAt", source.get("updatedAt"));
+
+
 
         String owner = "";
         if (source.get("owner") != null) {
