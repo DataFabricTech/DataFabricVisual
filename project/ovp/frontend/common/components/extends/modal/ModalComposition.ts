@@ -27,10 +27,11 @@ export function ModalComposition(props: ModalProps, onclose: () => void): ModalC
   });
 
   const dynamicModalStyle: ComputedRef<string> = computed(() => {
-    let style: string = `modal; position: absolute; width: ${props.width}px; height: ${props.height}px;`;
+    console.log(props)
+    let style: string = `modal; position: absolute; width: ${props.width}${props.prefix}; height: ${props.height}${props.prefix};`;
 
     if (props.top !== undefined || props.left !== undefined) {
-      style = `$${style} top: ${modalPosition.top}px; left: ${modalPosition.left}px;`;
+      style = `$${style} top: ${modalPosition.top}${props.prefix}; left: ${modalPosition.left}${props.prefix};`;
     }
 
     return style;
