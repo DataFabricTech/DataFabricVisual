@@ -10,20 +10,36 @@
       </button>
     </div>
   </div>
-  <div class="section-contents p-0 bg-white">
-    <div class="l-split">
-      <selected-model
-        :modelList="selectedModelList"
-        :dataModelFilter="filters"
-        :modelListCnt="selectedModelListCnt"
-        @change="addModelInstance.open()"
-        @delete="deleteDataModel"
-        @item-click="onClickDataModelItem"
-        @bookmark-change="updateMainSelectedModelBookmark"
-      ></selected-model>
-      <execute-query></execute-query>
-    </div>
-    <div class="l-split">
+  <q-splitter class="section-contents p-0 bg-white" v-model="horizontalSplitter"
+       :limits="[30, 70]"
+       unit="%"
+       horizontal>
+    <template #before>
+      <q-splitter class="l-split" v-model="verticalSplitter" :limits="[14, 70]" unit="%">
+        <template #before>
+          <selected-model
+            :modelList="selectedModelList"
+            :dataModelFilter="filters"
+            :modelListCnt="selectedModelListCnt"
+            @change="addModelInstance.open()"
+            @delete="deleteDataModel"
+            @item-click="onClickDataModelItem"
+            @bookmark-change="updateMainSelectedModelBookmark"
+          ></selected-model>
+        </template>
+        <template v-slot:separator>
+          <div style="height: 100%; border-left: 5px dashed black;"></div>
+        </template>
+        <template #after>
+          <execute-query></execute-query>
+        </template>
+    </q-splitter>
+    </template>
+    <template v-slot:separator>
+      <div style="width: 100%; border-top: 5px dashed black;"></div>
+    </template>
+    <template #after>
+      <div class="l-split">
       <sample
         :dataModelName="dataModelName"
         :dataModelOwner="dataModelOwner"
@@ -40,11 +56,16 @@
         :isFirstExecute="isFirstExecute"
         :executeResultErrMsg="executeResultErrMsg"
       ></result>
-    </div>
-  </div>
+      </div>
+    </template>
+  </q-splitter>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { QSplitter } from "quasar";
+import { useModal } from "vue-final-modal";
+
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
 import executeQuery from "@/components/datamodel-creation/execute-query.vue";
 import sample from "@/components/datamodel-creation/sample.vue";
@@ -54,8 +75,10 @@ import saveModel from "@/components/datamodel-creation/modal/save.vue";
 import { useCreationStore } from "@/store/datamodel-creation";
 import { useDataModelSearchStore } from "@/store/datamodel-creation/search";
 import { useDataModelSaveStore } from "@/store/datamodel-creation/save";
-import { storeToRefs } from "pinia";
-import { useModal } from "vue-final-modal";
+import {ref} from "vue";
+
+const horizontalSplitter = ref(50); // 상단과 하단을 50%씩 분할
+const verticalSplitter = ref(14); // 상단을 좌우 50%씩 분할
 
 const addModelInstance = useModal({
   component: addModel,
@@ -119,4 +142,5 @@ await getCategoryList();
 await getTagList();
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
