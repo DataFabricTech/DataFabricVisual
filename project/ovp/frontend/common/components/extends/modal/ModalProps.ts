@@ -15,6 +15,7 @@ export interface ModalProps {
   left?: number;
   width: number;
   height: number;
+  prefix?: "px" | "%";
   title?: string;
   subTitle?: string;
   useCancelBtn?: boolean;

@@ -74,6 +74,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   swipeToClose: "none",
   width: 620,
   height: 180,
+  prefix: "px",
   title: "",
   subTitle: "",
   useCancelBtn: true,
