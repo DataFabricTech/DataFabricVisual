@@ -81,7 +81,7 @@
             </tr>
             <tr>
               <th scope="row">요청주소</th>
-              <td>http://{{ currentHostname }}:13200/data/extract</td>
+              <td>{{ currentProtocol }}://{{ currentHostname }}:13200/data/extract</td>
             </tr>
             <tr>
               <th scope="row">사용방법</th>
@@ -118,7 +118,7 @@
 import json, requests
 
 # API Server URL
-url = f"http://{{ currentHostname }}:13200/data/extract"
+url = f"{{ currentProtocol }}://{{ currentHostname }}:13200/data/extract"
 
 #Header
 headers = { 'Content-Type': 'application/json' }
@@ -406,7 +406,7 @@ Example) 요청한 쿼리가 Processing 중인 경우 response body 예시
     "result": {
 
       "id": "20230404_044338_00023_e73eb",
-  <span style="font-weight: bold;">    "nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">queued</span>/20230404_044338_00023_e73eb
+  <span style="font-weight: bold;">    "nextUri": "{{ currentProtocol }}://{{ currentHostname }}:13200/v1/data/<span style="color:red;">queued</span>/20230404_044338_00023_e73eb
                                                         /y3c47979a7e6c3673595fd029152b1c3696fb471c/1"</span>
     }
 }
@@ -440,7 +440,7 @@ Example) 요청한 쿼리가 완료된 상태의 response body 예시
   "result": {
 
     "id": "20230404_044338_00023_e73eb",
-    <span style="font-weight: bold;"> "nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
+    <span style="font-weight: bold;"> "nextUri": "{{ currentProtocol }}://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
                                                         /y181327fffba2b28ee6d6a273b5d14cc271c0179d/0"</span>
     }
   }
@@ -456,7 +456,7 @@ Example) 요청한 데이터를 Paging 하여 수신 하는 상태의 response b
   "status_code": 200,
   "result": {
     "id": "20230404_044338_00023_e73eb",
-    <span style="font-weight: bold;">"nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
+    <span style="font-weight: bold;">"nextUri": "{{ currentProtocol }}://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
                                               /y720b5cf1a468a5254536ef414fdfd5110d4ad074/<span style="color:red;">1</span>",</span>
     "columns": [
       {
@@ -570,16 +570,31 @@ Example) 요청한 데이터를 모두 수신 한 상태의 response body 예시
 <script setup lang="ts">
 import { defaultAlert, errorAlert } from '@/components/functional/alert/alert-default';
 import { useUserStore } from "@/store/user";
+import { useNuxtApp } from 'nuxt/app';
 
 const emit = defineEmits(["onSelectTab"])
 const props = defineProps(["visibleApiArea", "currentTab", "eliminateModal"]);
 
+const { $ofetch } = useNuxtApp();
 const userStore = useUserStore();
 
 const currentTab = ref(0)
+const currentProtocol = ref("http")
 const currentHostname = ref(window.location.hostname);
 
-onMounted(() => {
+onMounted(async () => {
+  // HTTP, HTTPS 확인용
+  await $ofetch(`/api/search/detail/eliminate/isSslEnabled`).then((res) => {
+    if (res && res.data && res.data.isSslEnabled) {
+      currentProtocol.value = "https"
+    } else {
+      currentProtocol.value = "http"
+    }
+  }).catch((err) => {
+    currentProtocol.value = "http"
+  })
+
+  // tab 설정
   currentTab.value = props.currentTab
 })
 

@@ -3,10 +3,8 @@ package com.mobigen.datalake.search;
 import java.sql.SQLException;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +14,8 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
 import com.mobigen.framework.utility.IpAddressUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,5 +89,17 @@ public class DetailEliminateController {
         params.put("user_id", user.get("user_id").toString());
         params.put("user_ip", IpAddressUtil.getClientIp(request));
         return detailEliminateService.downloadRequest(params);
+    }
+
+    /**
+     * SSL 사용 여부
+     * 
+     * @return
+     * @throws SQLException
+     */
+    @ResponseJsonResult
+    @GetMapping(value = "/isSslEnabled")
+    public Object isSslEnabled() throws Exception {
+        return detailEliminateService.getIsSslEnabled();
     }
 }

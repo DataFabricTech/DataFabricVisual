@@ -1,21 +1,39 @@
 package com.mobigen.datalake.search;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Date;
-import java.text.SimpleDateFormat;
+
+import javax.net.ssl.SSLContext;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.TrustAllStrategy;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -48,6 +66,9 @@ public class DetailEliminateService {
 
     @Value("${properties.DataExtractAPI.url.largedata}")
     private String dataExtractApiUrlLargedata;
+
+    @Value("${server.ssl.enabled}")
+    private Boolean sslEnabled;
 
     /**
      * 파일 추출 이력 저장
@@ -444,6 +465,7 @@ public class DetailEliminateService {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("대용량 다운로드 요청 실패");
             result.put("result", false);
         }
@@ -505,10 +527,42 @@ public class DetailEliminateService {
     }
 
     public Map<String, Object> bigExtractRequestApi(Map<String, Object> requestBody) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+        // 모든 SSL 인증서를 신뢰하는 SSLContext 생성
+        SSLContext sslContext = SSLContextBuilder.create()
+                .loadTrustMaterial(null, TrustAllStrategy.INSTANCE)
+                .build();
+
+        // SSL 연결 시 호스트명 검증을 무시하는 SSLConnectionSocketFactory 생성
+        SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+
+        // http와 https에 사용할 ConnectionSocketFactory 등록
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", sslSocketFactory)
+                .build();
+
+        // 커넥션 매니저 생성
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+
+        // 커넥션 매니저를 사용하여 HttpClient 생성
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .build();
+
+        // HttpClient를 사용하여 RestTemplate 생성
+        HttpComponentsClientHttpRequestFactory requestFactory =
+                new HttpComponentsClientHttpRequestFactory(httpClient);
+        
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
 
         String url = dataExtractApiBaseUrl + dataExtractApiUrlLargedata;
         Map<String, Object> restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
         return restResponse;
+    }
+
+    public Map<String, Object> getIsSslEnabled() throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        result.put("isSslEnabled", sslEnabled);
+        return result;
     }
 }

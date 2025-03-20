@@ -189,13 +189,12 @@
 
 <script setup lang="ts">
 import { confirmAlert, defaultAlert, successAlert } from "@/components/functional/alert/alert-default";
+import selectTab from "@/components/functional/selectTab/select-tab.vue";
 import ObjectUtils from "@/utils/ObjectUtils";
 import { errorAlert } from "@functional/alert/alert-default";
-import SampleDataArea from "@molecules/searchDetail/sample-data-area";
 import DatePicker from "@functional/datepicker/date-picker";
-import selectTab from "@/components/functional/selectTab/select-tab.vue";
 import ApiExtractArea from "@molecules/searchDetail/api-extract-area";
-import { onUpdated } from "vue";
+import SampleDataArea from "@molecules/searchDetail/sample-data-area";
 
 const { $ofetch, $yyyyMMdd } = useNuxtApp();
 const emit = defineEmits(["onCloseModal"]);
@@ -208,29 +207,15 @@ const tabs = ref([
 ])
 const currentExtractTab = ref(0)
 
-const currentHostname = ref(window.location.hostname); // 현재 Domain, 동일한 주소인 경우
-const iframePath = ref(
-  "https://" +
-    window.location.hostname +
-    ":13200/docs?uuid=" +
-    Math.floor(Math.random() * 10000000000000000).toString()
-);
-const type = ref(""); // column인지 table인지
-const referredEntities = ref({}); // 파라미터로 받을 내용 : 컬럼 파라미터 정보
 const columnEntities = ref({}); // 파라미터로 받을 내용 : 컬럼 파라미터 정보
 const querySelect = ref(""); // 조회 쿼리
 const queryWhere = ref(""); // 쿼리 조건
 const queryError = ref(false); // 쿼리 오류 여부
 const queryErrorMessage = ref(""); // 쿼리 오류 메세지
 const visibleApiArea = ref(false);
-const eliminateType = ref("description");
-const partitionKeys = ref([]);
 const columnPositionData = ref([]); // 컬럼정보 (Position 정보 포함)
 const columnUpdateIndex = ref([]);
-const columnData = ref([]); // 컬럼 정보
-const sampleTestData = ref([]); // 파라미터로 받을 내용(샘플데이터)
 const currentTab = ref(0); // API 현재 탭
-const dataCount = ref(null); // 조회된 데이터 Row 개수
 
 const extractLimitTypeList = ref(["all", "custom"])
 const extractLimitType = ref("all")
