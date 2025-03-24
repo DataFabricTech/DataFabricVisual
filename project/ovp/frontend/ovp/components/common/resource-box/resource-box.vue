@@ -284,6 +284,8 @@
     </div>
     <button v-show="props.usePrvBtn" @click="previewClick">미리보기</button>
     <button v-show="props.useDetailBtn" @click="openDetailPage">상세보기</button>
+    <p>추천 수  : {{ dataObj.upVotes }}</p>
+    <p>최근 업데이트 날짜  : {{ dataObj.updatedAt }}</p>
   </div>
 </template>
 

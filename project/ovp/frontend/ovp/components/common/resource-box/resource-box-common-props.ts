@@ -8,6 +8,8 @@ export interface DataModel {
   modelDesc: string;
   owner: string;
   category: string;
+  upVotes: string;
+  updatedAt: number;
 
   [key: string]: string | number | string[];
 }
