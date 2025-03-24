@@ -77,9 +77,10 @@ public class ModelConvertUtil {
                 .map(Object::toString)
                 .orElse(sourceService.get("name").toString());
 
-        String upVotes = Optional.ofNullable(sourceVotes.get("upVotes"))
-                .map(Object::toString)
-                .orElse("");
+        Integer upVotes = Optional.ofNullable(sourceVotes.get("upVotes"))
+                .filter(Number.class::isInstance)
+                .map(val -> ((Number) val).intValue())
+                .orElse(0);
 
         // serviceType 가져오기
         String serviceType = Optional.ofNullable(source.get("serviceType"))
