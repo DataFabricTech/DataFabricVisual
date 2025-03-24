@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -69,10 +71,16 @@ public class ModelConvertUtil {
     public Map<String, Object> convertSourceDataOne(String index, Map<String, Object> source) {
         Map<String, Object> modifiedSource = new HashMap<>();
         Map<String, Object> sourceService = (Map<String, Object>) source.get("service");
+        Map<String, Object> sourceVotes= (Map<String, Object>) source.get("votes");
 
         String serviceName = Optional.ofNullable(sourceService.get("displayName"))
                 .map(Object::toString)
                 .orElse(sourceService.get("name").toString());
+
+        Integer upVotes = Optional.ofNullable(sourceVotes.get("upVotes"))
+                .filter(Number.class::isInstance)
+                .map(val -> ((Number) val).intValue())
+                .orElse(0);
 
         // serviceType 가져오기
         String serviceType = Optional.ofNullable(source.get("serviceType"))
@@ -111,6 +119,17 @@ public class ModelConvertUtil {
         modifiedSource.put("modelDesc", source.get("description"));
         modifiedSource.put("fqn", source.get("fullyQualifiedName"));
         modifiedSource.put("owner", source.get("owner"));
+        modifiedSource.put("upVotes", upVotes);
+        // updatedAt 포맷 적용
+        Object updatedAtRaw = source.get("updatedAt");
+        if (updatedAtRaw instanceof Number) {
+            long timestamp = ((Number) updatedAtRaw).longValue();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = sdf.format(new Timestamp(timestamp));
+            modifiedSource.put("updatedAt", formattedDate);
+        } else {
+            modifiedSource.put("updatedAt", null);
+        }
 
         String owner = "";
         if (source.get("owner") != null) {
