@@ -28,7 +28,8 @@
           ></selected-model>
         </template>
         <template v-slot:separator>
-          <div style="height: 100%; border-left: 5px dashed black;"></div>
+          <!-- TODO: [퍼블리싱] inline 코드 작성됨 -->
+          <q-avatar style="height: 100%; border-left: 5px dashed black;"></q-avatar>
         </template>
         <template #after>
           <execute-query></execute-query>
@@ -36,7 +37,8 @@
     </q-splitter>
     </template>
     <template v-slot:separator>
-      <div style="width: 100%; border-top: 5px dashed black;"></div>
+      <!-- TODO: [퍼블리싱] inline 코드 작성됨 -->
+      <q-avatar style="width: 100%; border-top: 5px dashed black;"></q-avatar>
     </template>
     <template #after>
       <div class="l-split">
