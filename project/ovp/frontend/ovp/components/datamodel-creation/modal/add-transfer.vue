@@ -1,6 +1,7 @@
 <template>
-  <div class="transfer">
-    <div class="transfer-box">
+  <q-splitter class="transfer" v-model="verticalSplitter" :limits="[30, 70]" unit="%">
+    <template #before>
+      <div class="transfer-box">
       <Tab
         class="h-full"
         :data="$constants.DATAMODEL_CREATION.ADD.TAB"
@@ -90,20 +91,25 @@
         </template>
       </Tab>
     </div>
-    <div class="transfer-handle">
-      <button class="button button-neutral-stroke" @click="onSaveSelectedData">
-        <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-        <span class="hidden-text">오른쪽 이동</span>
-      </button>
-      <button
-        class="button button-neutral-stroke"
-        @click="onDeleteSelectedData"
-      >
-        <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-        <span class="hidden-text">왼쪽 이동</span>
-      </button>
-    </div>
-    <div class="transfer-box">
+    </template>
+    <template v-slot:separator>
+      <!-- TODO: [퍼블리싱] inline 코드 작성됨 -->
+      <div class="transfer-handle" style="height: 100%; width: 5px; border-left: 5px dashed black;">
+        <button class="button button-neutral-stroke" @click="onSaveSelectedData">
+          <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
+          <span class="hidden-text">오른쪽 이동</span>
+        </button>
+        <button
+          class="button button-neutral-stroke"
+          @click="onDeleteSelectedData"
+        >
+          <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
+          <span class="hidden-text">왼쪽 이동</span>
+        </button>
+      </div>
+    </template>
+    <template #after>
+      <div class="transfer-box">
       <div class="transfer-head">
         <span>선택된 데이터 모델({{ selectedListLength }})</span>
       </div>
@@ -125,9 +131,12 @@
         @bookmark-change="updateSelectedModelBookmark"
       ></data-model-list>
     </div>
-  </div>
+    </template>
+  </q-splitter>
 </template>
 <script setup lang="ts">
+import { QSplitter, QAvatar } from "quasar";
+
 import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import DataModelApiList from "~/components/datamodel-creation/list/api/data-model-api-list.vue";
@@ -136,6 +145,8 @@ import { ref } from "vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
+
+const verticalSplitter = ref(50);
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
