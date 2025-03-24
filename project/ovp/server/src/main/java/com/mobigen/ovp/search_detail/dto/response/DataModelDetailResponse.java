@@ -42,6 +42,7 @@ public class DataModelDetailResponse {
     List<Tag> terms;
     List<Tag> originTags;
     String prefix;
+    String updatedAt;
 
     public DataModelDetailResponse(Tables tables, String type, String userId) {
         this.serviceIcon = new StringBuffer("type-img type-img-").append(tables.getServiceType().toLowerCase()).toString();
@@ -93,6 +94,7 @@ public class DataModelDetailResponse {
         this.tags = new ArrayList<>();
         this.terms = new ArrayList<>();
         this.originTags = tables.getTags();
+        this.updatedAt = tables.getFormattedUpdatedAt();
 
         String[] splitArray = this.fqn.split("\\.");
         List<String> resultList = new ArrayList<>(Arrays.asList(splitArray));

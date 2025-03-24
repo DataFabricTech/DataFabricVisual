@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -117,9 +119,16 @@ public class ModelConvertUtil {
         modifiedSource.put("fqn", source.get("fullyQualifiedName"));
         modifiedSource.put("owner", source.get("owner"));
         modifiedSource.put("upVotes", upVotes);
-        modifiedSource.put("updatedAt", source.get("updatedAt"));
-
-
+        // updatedAt 포맷 적용
+        Object updatedAtRaw = source.get("updatedAt");
+        if (updatedAtRaw instanceof Number) {
+            long timestamp = ((Number) updatedAtRaw).longValue();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = sdf.format(new Timestamp(timestamp));
+            modifiedSource.put("updatedAt", formattedDate);
+        } else {
+            modifiedSource.put("updatedAt", null);
+        }
 
         String owner = "";
         if (source.get("owner") != null) {
