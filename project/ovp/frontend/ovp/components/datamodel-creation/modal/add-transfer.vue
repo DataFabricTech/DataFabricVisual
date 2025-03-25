@@ -1,5 +1,5 @@
 <template>
-  <q-splitter class="transfer" v-model="verticalSplitter" :limits="[30, 70]" unit="%">
+  <splitter class="transfer" v-model="verticalSplitter" :limits="[30, 70]" unit="%">
     <template #before>
       <div class="transfer-box">
       <Tab
@@ -92,7 +92,7 @@
       </Tab>
     </div>
     </template>
-    <template v-slot:separator>
+    <template #separator>
       <!-- TODO: [퍼블리싱] inline 코드 작성됨 -->
       <div class="transfer-handle" style="height: 100%; width: 5px; border-left: 5px dashed black;">
         <button class="button button-neutral-stroke" @click="onSaveSelectedData">
@@ -132,11 +132,10 @@
       ></data-model-list>
     </div>
     </template>
-  </q-splitter>
+  </splitter>
 </template>
 <script setup lang="ts">
-import { QSplitter, QAvatar } from "quasar";
-
+import Splitter from "@extends/splitter/Splitter.vue"
 import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import DataModelApiList from "~/components/datamodel-creation/list/api/data-model-api-list.vue";
