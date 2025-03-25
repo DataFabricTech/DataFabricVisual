@@ -2,6 +2,7 @@
   @include flex($direction: column, $vertical: flex-start);
   @include box-shadow('sm');
 
+  position: relative;
   gap: $spacing-4;
   width: 100%;
   padding: $spacing-16;
@@ -9,6 +10,14 @@
   border-radius: $border-radius-4;
   cursor: pointer;
   background: $neutral-0;
+
+  &-buttons {
+    @include flex;
+    display: none;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+  }
 
   &-function {
     @include flex($horizontal: space-between);
@@ -94,6 +103,10 @@
 
   &:hover {
     border-color: $neutral-400;
+
+    .resource-box-buttons {
+      display: flex;
+    }
   }
 
   &.is-resource-box-selected {
