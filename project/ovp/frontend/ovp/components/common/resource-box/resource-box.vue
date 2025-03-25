@@ -281,11 +281,35 @@
           </dl>
         </template>
       </editable-group>
+      <dl class="resource-box-list">
+        <dt>추천 수</dt>
+        <dd>{{ dataObj.upVotes }}</dd>
+      </dl>
+      <dl class="resource-box-list">
+        <dt>최근 업데이트 날짜</dt>
+        <dd>{{ dataObj.updatedAt }}</dd>
+      </dl>
     </div>
-    <button v-show="props.usePrvBtn" @click="previewClick">미리보기</button>
-    <button v-show="props.useDetailBtn" @click="openDetailPage">상세보기</button>
-    <p>추천 수  : {{ dataObj.upVotes }}</p>
-    <p>최근 업데이트 날짜  : {{ dataObj.updatedAt }}</p>
+    <div class="resource-box-buttons">
+      <button
+          class="button button-neutral-ghost"
+          v-show="props.usePrvBtn"
+          @click="previewClick"
+          title="미리보기"
+      >
+        <span class="hidden-text">미리보기</span>
+        <svg-icon class="icons button-icon" name="details"></svg-icon>
+      </button>
+      <button
+          class="button button-neutral-ghost"
+          v-show="props.useDetailBtn"
+          @click="openDetailPage"
+          title="상세보기"
+      >
+        <span class="hidden-text">상세보기</span>
+        <svg-icon class="icons button-icon" name="popout"></svg-icon>
+      </button>
+    </div>
   </div>
 </template>
 
