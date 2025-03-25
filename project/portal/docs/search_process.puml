@@ -1,0 +1,26 @@
+@startuml
+
+autoactivate on
+
+title 통합검색
+
+actor 사용자 as user
+
+box "통합검색"
+participant Client as client
+participant UserController as userController
+participant UserService as userService
+end box
+
+box "Elasticsearch 작업수행 서버"
+participant FastApi as fastApi
+end box
+
+client -> userController : 검색 요청
+userController -> userService : 검색 요청
+userService -> fastApi : 사용자의 role_id를 함께 전달하여 검색 요청
+fastApi -> userService : 검색결과 반환
+userService -> userController : 검색결과 반환
+userController -> client : 검색결과 반환
+
+@enduml

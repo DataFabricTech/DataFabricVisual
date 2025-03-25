@@ -1,0 +1,24 @@
+@startuml
+
+autoactivate on
+
+title 메뉴 권한 설정
+
+actor 관리자 as admin
+
+box "메뉴 권한 설정"
+participant Client as client
+participant MenuController as menuController
+participant MenuService as menuService
+end box
+
+client -> menuController : 메뉴 권한 설정 요청
+menuController -> menuService : 메뉴 권한 설정 요청
+note right
+    1. 체크된 메뉴의 경우 메뉴 권한 추가
+    2. 체크 해제된 메뉴의 경우 메뉴 권한 삭제
+end note
+menuService -> menuController : 메뉴 권한 설정 결과 반환
+menuController -> client : 메뉴 권한 설정 결과 반환
+
+@enduml
