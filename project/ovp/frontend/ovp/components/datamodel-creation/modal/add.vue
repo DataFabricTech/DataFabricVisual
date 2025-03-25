@@ -19,11 +19,11 @@
     @confirm="onConfirmModal"
   >
     <template v-slot:body>
-      <q-splitter class="data-add" v-model="horizontalSplitter" :limits="[30, 70]" unit="%" horizontal>
+      <splitter class="data-add" v-model="horizontalSplitter" :limits="[30, 70]" unit="%" horizontal>
         <template #before>
           <add-transfer></add-transfer>
         </template>
-        <template v-slot:separator>
+        <template #separator>
           <!-- TODO: [퍼블리싱] 모달에서 추가해서 그런지 position:fixed를 빼면 width가 0이 되서 스플리터를 동작할 수 없음 -->
           <q-avatar style="width: 80%; border-top: 5px dashed black; position: fixed"></q-avatar>
         </template>
@@ -79,18 +79,18 @@
           </template>
         </Tab>
         </template>
-      </q-splitter>
+      </splitter>
     </template>
   </Modal>
 </template>
 <script setup lang="ts">
 import { useRouter } from "nuxt/app";
 import { storeToRefs } from "pinia";
-import { QSplitter, QAvatar } from "quasar";
 
 import $constants from "~/utils/constant";
 
 import Modal from "@extends/modal/Modal.vue";
+import Splitter from "@extends/splitter/Splitter.vue"
 import Tab from "@extends/tab/Tab.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";

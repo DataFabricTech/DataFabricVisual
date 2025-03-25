@@ -10,12 +10,12 @@
       </button>
     </div>
   </div>
-  <q-splitter class="section-contents p-0 bg-white" v-model="horizontalSplitter"
+  <splitter class="section-contents p-0 bg-white" v-model="horizontalSplitter"
        :limits="[30, 70]"
        unit="%"
        horizontal>
     <template #before>
-      <q-splitter class="l-split" v-model="verticalSplitter" :limits="[14, 70]" unit="%">
+      <splitter class="l-split" v-model="verticalSplitter" :limits="[14, 70]" unit="%">
         <template #before>
           <selected-model
             :modelList="selectedModelList"
@@ -27,16 +27,16 @@
             @bookmark-change="updateMainSelectedModelBookmark"
           ></selected-model>
         </template>
-        <template v-slot:separator>
+        <template #separator>
           <!-- TODO: [퍼블리싱] inline 코드 작성됨 -->
           <q-avatar style="height: 100%; border-left: 5px dashed black;"></q-avatar>
         </template>
         <template #after>
           <execute-query></execute-query>
         </template>
-    </q-splitter>
+    </splitter>
     </template>
-    <template v-slot:separator>
+    <template #separator>
       <!-- TODO: [퍼블리싱] inline 코드 작성됨 -->
       <q-avatar style="width: 100%; border-top: 5px dashed black;"></q-avatar>
     </template>
@@ -60,14 +60,14 @@
       ></result>
       </div>
     </template>
-  </q-splitter>
+  </splitter>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { QSplitter } from "quasar";
 import { useModal } from "vue-final-modal";
 
+import Splitter from "@extends/splitter/Splitter.vue"
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
 import executeQuery from "@/components/datamodel-creation/execute-query.vue";
 import sample from "@/components/datamodel-creation/sample.vue";
@@ -80,7 +80,7 @@ import { useDataModelSaveStore } from "@/store/datamodel-creation/save";
 import {ref} from "vue";
 
 const horizontalSplitter = ref(50); // 상단과 하단을 50%씩 분할
-const verticalSplitter = ref(14); // 상단을 좌우 50%씩 분할
+const verticalSplitter = ref(14.1); // 상단을 좌우 50%씩 분할
 
 const addModelInstance = useModal({
   component: addModel,
