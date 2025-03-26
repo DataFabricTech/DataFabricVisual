@@ -1,0 +1,56 @@
+.q-splitter.q-splitter--vertical.q-splitter--workable {
+  & > .q-splitter__separator {
+    cursor: e-resize;
+
+    &:before {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 100%;
+    }
+
+    &:hover {
+      &:before {
+        background-color: $primary-500;
+      }
+    }
+  }
+}
+
+.q-splitter.q-splitter--horizontal.q-splitter--workable {
+  & > .q-splitter__separator {
+    cursor: n-resize;
+
+    &:before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+    }
+
+    &:hover {
+      &:before {
+        background-color: $primary-500;
+      }
+    }
+  }
+}
+
+.q-splitter__panel.q-splitter__before,
+.q-splitter__panel.q-splitter__after {
+  .menu,
+  .menu-data,
+  .no-result {
+    overflow-y: auto;
+    height: calc(100% - 49px);
+  }
+}
+
+.q-splitter__panel.q-splitter__before {
+}
+
+.q-splitter__panel.q-splitter__after {
+  .tab-contents {
+    flex: 1 0 auto;
+  }
+}

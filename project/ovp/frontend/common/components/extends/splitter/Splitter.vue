@@ -1,16 +1,15 @@
 <template>
-  <q-splitter class="custom-splitter" v-model="splitterValue" :limits="props.limits" :unit="props.unit" :horizontal="props.horizontal">
+  <q-splitter v-model="splitterValue" :limits="props.limits" :unit="props.unit" :horizontal="props.horizontal">
     <template #before>
       <slot name="before">
-        {{props.limits}}
+        {{ props.limits }}
         <div class="default-panel">Before Panel</div>
       </slot>
     </template>
-
     <!-- 기본 separator로 q-avatar 제공, 하지만 사용자가 직접 제공 가능 -->
     <template v-slot:separator>
       <slot name="separator">
-        <q-avatar color="primary" text-color="white" size="40px" icon="" />
+        <q-avatar text-color="white" size="40px" icon="" />
       </slot>
     </template>
 
@@ -33,7 +32,7 @@ const props = withDefaults(defineProps<SplitterProps>(), {
   modelValue: 0, // v-model로 전달받을 값
   limits: [30, 70], // 크기 제한
   unit: "%", // 단위 (예: %, px)
-  horizontal: false, // 방향 (true면 가로)
+  horizontal: false // 방향 (true면 가로)
 });
 
 // Emits 정의 (v-model 대응)
@@ -42,7 +41,7 @@ const emit = defineEmits(["update:modelValue"]);
 // v-model 변경 이벤트 처리
 const splitterValue = computed({
   get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
+  set: (value) => emit("update:modelValue", value)
 });
 
 // Slots
@@ -50,10 +49,6 @@ const slots = useSlots();
 </script>
 
 <style scoped>
-.custom-splitter {
-  height: 100vh;
-}
-
 /* 기본 패널 스타일 */
 .default-panel {
   display: flex;
