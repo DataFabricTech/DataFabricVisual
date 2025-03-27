@@ -36,26 +36,23 @@
       </splitter>
     </template>
     <template #after>
-      <!-- TODO: [퍼블리싱] 탭 작업시 l-split 클래스 삭제 필요  -->
-      <div class="l-split h-full">
-        <sample
-          :dataModelName="dataModelName"
-          :dataModelOwner="dataModelOwner"
-          :sampleDataList="sampleDataList"
-          :isItemClicked="isItemClicked"
-          :isColumnSelected="isColumnSelected"
-          :dataProfileList="dataProfileList"
-          :columnOptions="columnOptions"
-          @profile-show="showProfile"
-        ></sample>
-        <!-- TODO: [퍼블리싱] 탭 작업후 스크롤 처리 수정해야함  -->
-        <result
-          :querySuccess="querySuccess"
-          :executeResult="executeResult"
-          :isFirstExecute="isFirstExecute"
-          :executeResultErrMsg="executeResultErrMsg"
-        ></result>
-      </div>
+      <sample
+        :dataModelName="dataModelName"
+        :dataModelOwner="dataModelOwner"
+        :sampleDataList="sampleDataList"
+        :isItemClicked="isItemClicked"
+        :isColumnSelected="isColumnSelected"
+        :dataProfileList="dataProfileList"
+        :columnOptions="columnOptions"
+        @profile-show="showProfile"
+      ></sample>
+      <!-- TODO: [개발] 검토 후 필요 없으면 삭제해주세요.  -->
+      <!--        <result-->
+      <!--          :querySuccess="querySuccess"-->
+      <!--          :executeResult="executeResult"-->
+      <!--          :isFirstExecute="isFirstExecute"-->
+      <!--          :executeResultErrMsg="executeResultErrMsg"-->
+      <!--        ></result>-->
     </template>
   </splitter>
 </template>
