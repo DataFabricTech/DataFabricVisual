@@ -1,5 +1,5 @@
 <template>
-  <div class="work-list">
+  <div class="h-full">
     <div class="l-top-bar">
       <span class="font-semibold"
         >선택된 데이터 모델 ({{ props.modelListCnt }})</span
@@ -11,7 +11,6 @@
         추가
       </button>
     </div>
-
     <data-model-list
       class="menu-lg"
       :filter="props.dataModelFilter"
