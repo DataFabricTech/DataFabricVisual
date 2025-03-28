@@ -74,7 +74,7 @@ import { useDataModelSaveStore } from "@/store/datamodel-creation/save";
 import { ref } from "vue";
 
 const horizontalSplitter = ref(50); // 상단과 하단을 50%씩 분할
-const verticalSplitter = ref(14.1); // 상단을 좌우 50%씩 분할
+const verticalSplitter = ref(20); // 상단을 좌우 50%씩 분할
 
 const addModelInstance = useModal({
   component: addModel,

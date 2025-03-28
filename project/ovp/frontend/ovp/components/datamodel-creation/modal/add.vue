@@ -8,7 +8,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="80"
-    :height="80"
+    :height="88"
     prefix="%"
     :lockScroll="true"
     swipeToClose="none"
@@ -104,7 +104,7 @@ import { ref } from "vue";
 
 const router = useRouter();
 
-const horizontalSplitter = ref(38);
+const horizontalSplitter = ref(50);
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();

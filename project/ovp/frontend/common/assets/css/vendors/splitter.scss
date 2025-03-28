@@ -36,12 +36,20 @@
   }
 }
 
+.q-splitter__separator:has(.transfer-handle) {
+  margin-inline: $spacing-24;
+}
+
 .q-splitter__panel.q-splitter__before,
 .q-splitter__panel.q-splitter__after {
   .menu,
   .menu-data {
     overflow-y: auto;
     height: calc(100% - 49px);
+  }
+
+  .no-result {
+    min-height: auto;
   }
 }
 
