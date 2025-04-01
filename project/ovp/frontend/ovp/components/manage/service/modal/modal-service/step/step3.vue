@@ -17,6 +17,7 @@
   <div class="connect-test" :style="props.isShow ? '' : { display: 'none' }">
     <button
       class="button button-secondary-stroke button-lg"
+      :disabled="isTestConnectionDisabled"
       @click="doConnectionTest"
     >
       <span class="button-title">연결테스트</span>
@@ -69,6 +70,8 @@ const {
   testConnectionStatus,
   connectionTest,
   checkValidation,
+  isTestConnectionDisabled,
+  checkRequiredValue,
 } = ModalServiceComposition(props);
 
 const connectionErrorMsg: Ref<String> = ref("");
@@ -93,6 +96,11 @@ const doConnectionTest = async () => {
     : ConnectionStatus.ERROR;
   connectionErrorMsg.value = errorMessage;
 };
+
+// 필수 항목에 값들이 비어있으면 연결테스트 비활성화 처리
+watchEffect(() => {
+  isTestConnectionDisabled.value = !checkRequiredValue();
+});
 </script>
 
 <style scoped></style>

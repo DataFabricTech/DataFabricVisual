@@ -56,8 +56,11 @@
         >
           이전
         </button>
-        <button class="button button-primary button-lg" @click="gotoNext">
-          {{ currentStep === 3 ? "저장" : "다음" }}
+        <button class="button button-primary button-lg" v-if="currentStep===3" @click="saveContent">
+         저장
+        </button>
+        <button class="button button-primary button-lg" v-else @click="gotoNext">
+          다음
         </button>
       </div>
     </template>
@@ -145,22 +148,28 @@ const resetViewData = () => {
   isDoneTestConnection.value = null;
   testConnectionStatus.value = ConnectionStatus.NONE;
 };
+
 const gotoNext = async () => {
-  // 다음 단계로 넘어가기 전에 validation 체크를 해야함.
+  // 다음 단계로 넘어가기 전에 validation 체크
   if (!(await checkValidation("submit"))) {
     return;
   }
 
-  if (currentStep.value === 3) {
-    if (await submit()) {
-      emit("close");
-      emit("loadData");
-    }
+  currentStep.value = currentStep.value + 1;
+};
+
+const saveContent = async () => {
+  // 저장|수정 단계로 넘어가기 전에 validation 체크
+  if (!(await checkValidation("submit"))) {
     return;
-  } else {
-    currentStep.value = currentStep.value + 1;
+  }
+
+  if (await submit()) {
+    emit("close");
+    emit("loadData");
   }
 };
+
 watch(
   () => currentStep.value,
   () => {
