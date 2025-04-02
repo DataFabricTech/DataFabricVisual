@@ -74,6 +74,10 @@ const {
   checkRequiredValue,
 } = ModalServiceComposition(props);
 
+const emit = defineEmits<{
+  (e: "success"): void;
+}>();
+
 const connectionErrorMsg: Ref<String> = ref("");
 
 const resetTestConnectionStatus = () => {
@@ -101,6 +105,17 @@ const doConnectionTest = async () => {
 watchEffect(() => {
   isTestConnectionDisabled.value = !checkRequiredValue();
 });
+
+// 연결테스트 변화 감지
+watch(
+    () => testConnectionStatus.value,
+    (newStatus) => {
+      if (newStatus === ConnectionStatus.SUCCESS) {
+        emit("success");
+      }
+    }
+)
+
 </script>
 
 <style scoped></style>

@@ -35,7 +35,7 @@
         <step1 :is-show="currentStep === 1" />
         <step2 ref="step2Ref" :is-show="currentStep === 2" />
       </template>
-      <step3 ref="step3Ref" :is-show="currentStep === 3" />
+      <step3 ref="step3Ref" :is-show="currentStep === 3" @success="saveServiceForm" />
     </template>
     <template #footer>
       <button class="button button-neutral-ghost button-lg" @click="onCancel">
@@ -56,7 +56,7 @@
         >
           이전
         </button>
-        <button class="button button-primary button-lg" v-if="currentStep===3" @click="saveContent">
+        <button class="button button-primary button-lg" v-if="currentStep===3" :disabled="isSaveButtonDisabled" @click="saveContent">
          저장
         </button>
         <button class="button button-primary button-lg" v-else @click="gotoNext">
@@ -95,6 +95,7 @@ const {
   checkValidation,
   serviceObj,
 } = ModalServiceComposition(props);
+const isSaveButtonDisabled = ref<boolean>(true); // 저장 | 수정 초기 비활성화
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -180,10 +181,16 @@ watch(
         step2Ref.value.$el.nextElementSibling?.scrollTo({ top: 0 });
       } else if (currentStep.value === 3 && step3Ref.value) {
         step3Ref.value.$el.nextElementSibling?.scrollTo({ top: 0 });
+        // 저장 | 수정 버튼 비활성화 처리
+        isSaveButtonDisabled.value = true;
       }
     });
   },
 );
+
+const saveServiceForm = () => {
+  isSaveButtonDisabled.value = false;
+}
 </script>
 
 <style scoped></style>
