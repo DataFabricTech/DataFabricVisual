@@ -66,7 +66,7 @@
                   placeholder="" class="mu-input" :readonly="isDetail"></td>
               <th>Schema</th>
               <td colspan="3"><input type="text" v-model="currentCollector.schema" :title="currentCollector.schema"
-                  class="mu-input" :readonly="isDetail"></td>
+                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('TIBERO')"></td>
             </tr>
             <tr>
               <th>수집 주기</th>
@@ -234,11 +234,11 @@
 </template>
 
 <script setup lang="ts">
+import { confirmAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
 import { useUserStore } from "@/store/user";
 import { useNuxtApp } from "nuxt/app";
-import { onMounted, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
-import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
+import { onMounted, ref } from 'vue';
 
 const { $ofetch } = useNuxtApp();
 const emit = defineEmits(["onCloseModal", "updateCollector"]);
@@ -336,6 +336,11 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
   // Mysql의 경우 database 값 제거
   if (newVal.toUpperCase().includes('MYSQL')) {
     if (currentCollector.value.schema != "") currentCollector.value.database = ""
+  }
+
+  // Tibero의 경우 schema 값 제거
+  if (newVal.toUpperCase().includes('TIBERO')) {
+    currentCollector.value.schema = ""
   }
 })
 
@@ -435,8 +440,12 @@ const isValidInput = () => {
     return false
   }
   if ((!currentCollector.value.schema || currentCollector.value.schema == '')) { // Schema
-    errorAlert("Schema 값을 입력해 주세요.")
-    return false
+    if (currentCollector.value.system_type.toUpperCase().includes('TIBERO')) { // Tibero는 기본 default 입력
+      currentCollector.value.schema = 'default'
+    } else {
+      errorAlert("Schema 값을 입력해 주세요.")
+      return false
+    }
   }
   if (!currentCollector.value.system_name || currentCollector.value.system_name == '') { // 시스템 명
     errorAlert("시스템 명을 입력해 주세요.")
