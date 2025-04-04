@@ -8,7 +8,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="80"
-    :height="80"
+    :height="88"
     prefix="%"
     :lockScroll="true"
     swipeToClose="none"
@@ -19,65 +19,67 @@
     @confirm="onConfirmModal"
   >
     <template v-slot:body>
-      <splitter class="data-add" v-model="horizontalSplitter" :limits="[30, 70]" unit="%" horizontal>
+      <splitter
+        class="data-add"
+        v-model="horizontalSplitter"
+        :limits="[30, 70]"
+        unit="%"
+        horizontal
+      >
         <template #before>
           <add-transfer></add-transfer>
         </template>
-        <template #separator>
-          <!-- TODO: [퍼블리싱] 모달에서 추가해서 그런지 position:fixed를 빼면 width가 0이 되서 스플리터를 동작할 수 없음 -->
-          <q-avatar style="width: 80%; border-top: 5px dashed black; position: fixed"></q-avatar>
-        </template>
         <template #after>
           <Tab
-          class="h-[350px]"
-          :data="$constants.DATAMODEL_CREATION.ADD.DETAIL_TAB"
-          label-key="label"
-          value-key="value"
-          current-item-type="value"
-          :current-item="currDetailTab"
-          @change="changeDetailTab"
-        >
-          <template #sample>
-            <add-detail-grid
-              :data="sampleData"
-              :owner="selectedItemOwner"
-              no-data-msg="샘플 데이터가 없습니다."
-            ></add-detail-grid>
-          </template>
-          <template #profile>
-            <add-detail-grid
-              :data="profileData"
-              :owner="selectedItemOwner"
-              no-data-msg="데이터 프로파일링 정보가 없습니다."
-            ></add-detail-grid>
-          </template>
-          <template #recommend>
-            <div class="data-list" v-if="recommendData.length > 0">
-              <template v-for="Data in recommendData">
-                <resource-box
-                  class="is-resource-box-no-action"
-                  :data-obj="Data"
-                  :is-box-selected-style="true"
-                  :show-owner="true"
-                  :show-category="true"
-                  :use-data-nm-link="true"
-                  :use-context-box="false"
-                  :use-detail-btn="true"
-                  @open-detail-page="openDetailPage"
-                />
-              </template>
-            </div>
-
-            <div v-else class="no-result">
-              <div class="notification">
-                <svg-icon class="notification-icon" name="info"></svg-icon>
-                <p class="notification-detail">
-                  추천 데이터 모델 정보가 없습니다.
-                </p>
+            class="h-full"
+            :data="$constants.DATAMODEL_CREATION.ADD.DETAIL_TAB"
+            label-key="label"
+            value-key="value"
+            current-item-type="value"
+            :current-item="currDetailTab"
+            @change="changeDetailTab"
+          >
+            <template #sample>
+              <add-detail-grid
+                :data="sampleData"
+                :owner="selectedItemOwner"
+                no-data-msg="샘플 데이터가 없습니다."
+              ></add-detail-grid>
+            </template>
+            <template #profile>
+              <add-detail-grid
+                :data="profileData"
+                :owner="selectedItemOwner"
+                no-data-msg="데이터 프로파일링 정보가 없습니다."
+              ></add-detail-grid>
+            </template>
+            <template #recommend>
+              <div class="data-list" v-if="recommendData.length > 0">
+                <template v-for="Data in recommendData">
+                  <resource-box
+                    class="is-resource-box-no-action"
+                    :data-obj="Data"
+                    :is-box-selected-style="true"
+                    :show-owner="true"
+                    :show-category="true"
+                    :use-data-nm-link="true"
+                    :use-context-box="false"
+                    :use-detail-btn="true"
+                    @open-detail-page="openDetailPage"
+                  />
+                </template>
               </div>
-            </div>
-          </template>
-        </Tab>
+
+              <div v-else class="no-result">
+                <div class="notification">
+                  <svg-icon class="notification-icon" name="info"></svg-icon>
+                  <p class="notification-detail">
+                    추천 데이터 모델 정보가 없습니다.
+                  </p>
+                </div>
+              </div>
+            </template>
+          </Tab>
         </template>
       </splitter>
     </template>
@@ -90,7 +92,7 @@ import { storeToRefs } from "pinia";
 import $constants from "~/utils/constant";
 
 import Modal from "@extends/modal/Modal.vue";
-import Splitter from "@extends/splitter/Splitter.vue"
+import Splitter from "@extends/splitter/Splitter.vue";
 import Tab from "@extends/tab/Tab.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";
@@ -98,11 +100,11 @@ import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid
 import ResourceBox from "~/components/common/resource-box/resource-box.vue";
 
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
-import {ref} from "vue";
+import { ref } from "vue";
 
 const router = useRouter();
 
-const horizontalSplitter = ref(38);
+const horizontalSplitter = ref(50);
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
@@ -176,6 +178,5 @@ function openDetailPage(data: object) {
 
   window.open(fullPath, "_blank", "noopener,noreferrer");
 }
-
 </script>
 <style lang="scss" scoped></style>
