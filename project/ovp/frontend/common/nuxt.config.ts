@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     { src: "~/plugins/vue-final-modal", mode: "client" },
     { src: "~/plugins/ag-grid-vue", mode: "client" },
     { src: "~/plugins/vue-datepicker-next", mode: "client" },
-    { src: "~/plugins/code-mirror", mode: "client" },
     { src: "~/plugins/vue3-tooltip", mode: "client" }
   ],
 
