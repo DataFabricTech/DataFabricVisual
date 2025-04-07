@@ -5,14 +5,14 @@
     </button>
   </div>
   <agGrid
-      :style="'width: 100%; height: 300px'"
-      class="ag-theme-alpine ag-theme-quartz"
-      domLayout="autoHeight"
-      :columnDefs="historyColumnDefs"
-      :rowData="classificationTagList"
-      :context="gridContext"
-      :setColumnFit="true"
-      :useColumnResize="true"
+    :style="'width: 100%; height: 300px'"
+    class="ag-theme-alpine ag-theme-quartz"
+    domLayout="autoHeight"
+    :columnDefs="historyColumnDefs"
+    :rowData="classificationTagList"
+    :context="gridContext"
+    :setColumnFit="true"
+    :useColumnResize="true"
   ></agGrid>
 </template>
 
@@ -87,27 +87,17 @@ const historyColumnDefs = ref([
     headerName: "태그",
     headerClass: "ag-header-center",
     field: "tag",
-    cellStyle: { textAlign: "center" },
-  valueGetter: ({
-                  data,
-                }: {
-  data: { displayName: string; name: string };
-}) => {
-  return data.displayName || data.name;
-},
+    cellStyle: {textAlign: "center"},
+    valueGetter: ({data}: { data: { displayName: string; name: string }; }) => {
+      return data.displayName || data.name;
+    },
   },
   {
     headerName: "설명",
     headerClass: "ag-header-center",
     field: "description",
     cellStyle: { textAlign: "center" },
-    valueGetter: ({
-                    data,
-                  }: {
-      data: { description: string; };
-    }) => {
-      return data.description;
-    },
+    valueGetter: ({ data }: { data: { description: string } }) => data.description
   },
   {
     headerName: "관리",
