@@ -100,6 +100,7 @@ const termColumnDefs = ref([
   },
   {
     headerName: "관리",
+    headerClass: "ag-header-center",
     field: "",
     cellStyle: {
       display: "flex",
