@@ -5,6 +5,7 @@
     </button>
   </div>
   <agGrid
+    v-if="classificationTagList.length > 0"
     :style="'width: 100%; height: 300px'"
     class="ag-theme-alpine ag-theme-quartz"
     domLayout="autoHeight"
@@ -13,7 +14,15 @@
     :context="gridContext"
     :setColumnFit="true"
     :useColumnResize="true"
-  ></agGrid>
+  />
+  <div v-else>
+    <div class="no-result">
+      <div class="notification">
+        <svg-icon class="notification-icon" name="info" />
+        <p class="notification-detail">등록된 정보가 없습니다.</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
