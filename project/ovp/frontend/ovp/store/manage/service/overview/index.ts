@@ -55,7 +55,9 @@ export const useOverviewStore = defineStore("overview", () => {
   const getServiceResponseData = async () => {
     responsePageSize.value = 20;
     const { data } = await getServiceResponseAPI();
-    serviceResponseData.value = data;
+    const responseTimesResult = data?.responseTimes ?? [];
+
+    serviceResponseData.value = responseTimesResult;
   };
 
   const addServiceResponseData = async () => {
@@ -66,35 +68,48 @@ export const useOverviewStore = defineStore("overview", () => {
     }
 
     const { data } = await getServiceResponseAPI();
-    serviceResponseData.value = data;
+    const responseTimesResult = data?.responseTimes ?? [];
+
+    serviceResponseData.value = responseTimesResult;
   };
 
   const getDataCurrentSituationData = async (
-    startStandard: number = 0,
-    count: number = 5,
+      startStandard: number = 0,
+      count: number = 5,
   ) => {
-    const { data } = await $api(
-      `/api/service/overview/service-models?pageNumber=0`,
-    );
+    try {
+      const { data: result } = await $api(
+          `/api/service/overview/service-models?pageNumber=0`,
+      );
 
-    if (data.data !== null) {
-      for (const element of data.data) {
-        const serviceItem = [];
-        serviceItem.push(element.serviceName);
-        serviceItem.push(element.modelCount);
-        serviceItem.push(element.omModelCount);
-        allCurrentSituationData.value.push(serviceItem);
+      allCurrentSituationData.value = []; // 기존 데이터 초기화
+
+      const models = result?.data?.models ?? [];
+
+      if (models.length > 0) {
+        for (const element of models) {
+          const serviceItem = [];
+          serviceItem.push(element.serviceName);
+          serviceItem.push(element.modelCount);
+          serviceItem.push(element.openMetadataModelCount); // 변경된 필드명 사용
+          allCurrentSituationData.value.push(serviceItem);
+        }
+
+        slicedCurrentSituationData.value = allCurrentSituationData.value.slice(
+            startStandard,
+            startStandard + count,
+        );
+      } else {
+        slicedCurrentSituationData.value = [];
       }
 
-      slicedCurrentSituationData.value = allCurrentSituationData.value.slice(
-        startStandard,
-        startStandard + count,
-      );
-    } else {
+      currentSituationData.value = slicedCurrentSituationData.value;
+    } catch (error) {
+      console.error("getDataCurrentSituationData error:", error);
+      // 이전에 남아있던 데이터 초기화
       slicedCurrentSituationData.value = [];
+      currentSituationData.value = [];
     }
-
-    currentSituationData.value = slicedCurrentSituationData.value;
   };
 
   const convertDateTime = (date: string) => {
@@ -133,8 +148,9 @@ export const useOverviewStore = defineStore("overview", () => {
             const { data: result } = await $api(
               `/api/service/overview/ingestion-history?pageNumber=0`,
             );
+            const histories = result?.data?.ingestionHistories ?? [];
 
-            const data = result.data.map((item: any) => ({
+            const data = histories.map((item: any) => ({
               ...item,
               serviceNameFormatted: item.serviceDisplayName ?? item.serviceName,
               eventAtFormatted: convertDateTime(item.eventAt),
@@ -187,7 +203,7 @@ export const useOverviewStore = defineStore("overview", () => {
             const rowsThisPage = data.slice(params.startRow, params.endRow);
             const lastRow = data.length <= params.endRow ? data.length : -1;
             collectedDateTime.value = convertDateTime(
-              result.recentCollectedTime,
+                result.data.recentCollectedTime,
             );
             isEmptyServiceStatus.value = data.length === 0;
             params.successCallback(rowsThisPage, lastRow);
