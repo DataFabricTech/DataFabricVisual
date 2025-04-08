@@ -178,7 +178,9 @@ export const useOverviewStore = defineStore("overview", () => {
               `/api/service/overview/connection-history?pageNumber=0`,
             );
 
-            const data = result.data.map((item: any) => ({
+            const connectionHistories = result.data?.connectionHistories ?? [];
+
+            const data = connectionHistories.map((item: any) => ({
               ...item,
               serviceNameFormatted: item.serviceDisplayName ?? item.serviceName,
             }));
