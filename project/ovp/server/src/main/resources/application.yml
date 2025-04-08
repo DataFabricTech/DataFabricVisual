@@ -133,7 +133,7 @@ properties:
     # openMetadata 연동 URL
     open-metadata-url: http://192.168.109.254:31751/api/v1
     dolphin-server-url: http://192.168.109.254:30733/dolphin/v1
-    monitoring-service-url: http://192.168.109.254:31245/api/v1
+    monitoring-service-url: http://192.168.109.254:31923/api/v1
     recommend-data-model-url: http://192.168.109.254:30628/api/recommend
 
     # 비밀번호 재설정 관련 설
