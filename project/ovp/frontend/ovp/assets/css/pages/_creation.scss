@@ -106,6 +106,7 @@
   .transfer {
     .tab-contents {
       height: calc(100% - 36px);
+      overflow: visible;
     }
 
     & + .tab {
