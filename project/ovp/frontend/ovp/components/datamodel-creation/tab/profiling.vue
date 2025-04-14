@@ -19,7 +19,7 @@
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <div class="profiling" style="height: 480px">
+      <div class="profiling">
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
           :columnDefs="COLUMN_DEFS"

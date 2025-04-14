@@ -15,7 +15,7 @@
   <div
     class="data-detail"
     v-if="sampleList.length > 0 && !exceptExtSampleData"
-    style="height: 500px"
+    style="height: calc(100% - 28px)"
   >
     <agGrid
       class="ag-theme-alpine ag-theme-quartz"

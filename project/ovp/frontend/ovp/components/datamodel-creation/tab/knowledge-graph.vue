@@ -1,6 +1,6 @@
 <template>
-  <div class="data-detail-group h-auto pb-3">
-    <div class="visual visual-detail" style="">
+  <div class="data-detail-group">
+    <div class="visual visual-detail">
       <div class="visual-legend">
         <button
           class="button button-lg button-neutral-stroke"

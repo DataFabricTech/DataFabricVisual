@@ -1,5 +1,5 @@
 <template>
-  <div class="work-list" style="width: 100%">
+  <div class="w-full h-full">
     <tab
       class="tab-line"
       :data="tabOptions"
