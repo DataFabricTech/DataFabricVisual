@@ -74,12 +74,29 @@ public class SearchService {
     }
 
     public Map<String, Object> getFilter(MultiValueMap<String, String> params) {
-        params.set("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}},{\"terms\":{\"_index\":[\"" + Constants.CONTAINER_INDEX + "\",\"" + Constants.TABLE_INDEX + "\"]}}]}}}");
+        params.set("q", "{\"query\":{\"bool\":{\"must\":[]}}}");
         params.set("value", ".*.*");
-        params.set("index", "all");
+        params.set("index", "table_search_index");
         return convertAggregations(searchClient.getFilter(params));
     }
 
+    /**
+     * 탐색 - 목록  (Storage) - filter 복수건 파라미터 생성 및 convert 수행
+     *
+     * @return
+     */
+    public Map<String, Object> getStorageFilter(MultiValueMap<String, String> params) {
+        params.set("q", "{\"query\":{\"bool\":{\"must\":[]}}}");
+        params.set("value", ".*.*");
+        params.set("index", "container_search_index");
+        return convertAggregations(searchClient.getFilter(params));
+    }
+
+    /**
+     * 탐색 - 목록  (Table / model) - filter 복수건 조회
+     *
+     * @return
+     */
     public Map<String, Object> getFilters() throws Exception {
         List<String> tagArrays = Arrays.asList(
                 "owner.displayName.keyword",
@@ -97,6 +114,33 @@ public class SearchService {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.set("field", tag);
             Map<String, Object> filterResult = getFilter(params);
+            responseMap.putAll(filterResult);
+        }
+
+        return responseMap;
+    }
+    /**
+     * 탐색 - 목록  (Storage) - filter 복수건 조회
+     *
+     * @return
+     */
+    public Map<String, Object> getStorageFilters() throws Exception {
+        List<String> tagArrays = Arrays.asList(
+                "dataModel.owner.displayName.keyword",
+                "dataModel.tags.tagFQN",
+                "dataModel.service.displayName.keyword",
+                "dataModel.serviceType",
+                "dataModel.database.displayName.keyword",
+                "dataModel.databaseSchema.displayName.keyword",
+                "dataModel.columns.name.keyword"
+        );
+
+        Map<String, Object> responseMap = new HashMap<>();
+
+        for (String tag : tagArrays) {
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.set("field", tag);
+            Map<String, Object> filterResult = getStorageFilter(params);
             responseMap.putAll(filterResult);
         }
 

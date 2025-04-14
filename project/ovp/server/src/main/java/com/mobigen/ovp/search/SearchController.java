@@ -47,6 +47,19 @@ public class SearchController {
     }
 
     /**
+     * 탐색 - 목록  (Storage) - filter 복수건 조회
+     *
+     * @return
+     */
+    @ResponseJsonResult(errorMessage = "filter 목록 조회 오류")
+    @GetMapping("/filters/storage")
+    public Object getStorageFilters() throws Exception {
+        Map<String, Object> responseMap = searchService.getStorageFilters();
+        responseMap.put("category", categoryService.getCategories());
+        return responseMap;
+    }
+
+    /**
      * 탐색 - 목록 - 데이터 모델 조회
      *
      * @return
