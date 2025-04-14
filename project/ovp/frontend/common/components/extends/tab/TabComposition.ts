@@ -10,6 +10,8 @@ const INDEX = "index";
 interface TabComposition extends TabProps, NavigationFunctionality, NavigationEvents {
   currentIndex: Ref<number>;
 
+  isHided(value: string | number): boolean;
+
   changeCurrentTabClass(index: number): boolean;
 }
 
@@ -18,8 +20,18 @@ export function TabComposition(props: TabProps, onchange: (value: string | numbe
 
   // currentItem 변경을 감지해 값 변경 (부모 컴포넌트에서 선택 값을 초기화하는 경우 존재)
   watch(
-    () => [props.currentItem],
-    () => {
+    () => props.currentItem,
+    (newVal) => {
+      if ((props.currentItemType === INDEX && newVal < 0) || newVal === "" || newVal === null) {
+        return;
+      }
+
+      const disabledList = props.disabledList ?? [];
+      const hidedList = props.hidedList ?? [];
+      if (_.includes(disabledList, newVal) || _.includes(hidedList, newVal)) {
+        return;
+      }
+
       setCurrentIndex();
     }
   );
@@ -36,31 +48,30 @@ export function TabComposition(props: TabProps, onchange: (value: string | numbe
 
   setCurrentIndex();
 
-  watch(
-    () => props.currentItem,
-    (newVal) => {
-      if (props.currentItemType === INDEX) {
-        currentIndex.value = typeof newVal === "number" ? newVal : 0;
-      } else {
-        currentIndex.value = _.findIndex(props.data, ["value", newVal]);
-      }
-    }
-  );
-
   const move: (index: number) => void = (index) => {
-    currentIndex.value = index;
-
-    if (props.currentItemType === INDEX) {
+    if (props.currentItemType === INDEX && !isDisabled(index) && !isHided(index)) {
       onChange(index);
+      currentIndex.value = index;
     } else {
       const clickedValue: string | number = (props.data?.[index] as any)?.[props.valueKey];
+
+      if (!clickedValue || isDisabled(clickedValue) || isHided(clickedValue)) {
+        return;
+      }
+
       onChange(clickedValue);
+      currentIndex.value = index;
     }
   };
 
   const isDisabled: (value: string | number) => boolean = (value) => {
     const disabledList = props.disabledList ?? [];
     return disabledList.includes(value);
+  };
+
+  const isHided: (value: string | number) => boolean = (value) => {
+    const hidedList = props.hidedList ?? [];
+    return hidedList.includes(value);
   };
 
   const changeCurrentTabClass: (index: number) => boolean = (index) => {
@@ -73,5 +84,5 @@ export function TabComposition(props: TabProps, onchange: (value: string | numbe
 
   const toggleList: () => void = () => {};
 
-  return { ...props, currentIndex, move, isDisabled, toggleList, changeCurrentTabClass, onChange };
+  return { ...props, currentIndex, move, isDisabled, isHided, toggleList, changeCurrentTabClass, onChange };
 }

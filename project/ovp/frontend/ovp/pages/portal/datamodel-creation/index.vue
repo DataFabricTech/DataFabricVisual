@@ -36,23 +36,7 @@
       </splitter>
     </template>
     <template #after>
-      <sample
-        :dataModelName="dataModelName"
-        :dataModelOwner="dataModelOwner"
-        :sampleDataList="sampleDataList"
-        :isItemClicked="isItemClicked"
-        :isColumnSelected="isColumnSelected"
-        :dataProfileList="dataProfileList"
-        :columnOptions="columnOptions"
-        @profile-show="showProfile"
-      ></sample>
-      <!-- TODO: [개발] 검토 후 필요 없으면 삭제해주세요.  -->
-      <!--        <result-->
-      <!--          :querySuccess="querySuccess"-->
-      <!--          :executeResult="executeResult"-->
-      <!--          :isFirstExecute="isFirstExecute"-->
-      <!--          :executeResultErrMsg="executeResultErrMsg"-->
-      <!--        ></result>-->
+      <bottom-tab></bottom-tab>
     </template>
   </splitter>
 </template>
@@ -64,8 +48,6 @@ import { useModal } from "vue-final-modal";
 import Splitter from "@extends/splitter/Splitter.vue";
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
 import executeQuery from "@/components/datamodel-creation/execute-query.vue";
-import sample from "@/components/datamodel-creation/sample.vue";
-import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
 import { useCreationStore } from "@/store/datamodel-creation";
