@@ -227,7 +227,7 @@ export const useSearchCommonStore = defineStore(
         const defaultFilters = await createDefaultFilters() as Filters;
 
         const filtersData = await getUseFilters(defaultFilters, tab);
-        filters.value = filterData;
+        filters.value = filtersData;
 
         if (filters.value[FILTER_KEYS.CATEGORY]?.data?.children) {
             UNDEFINED_TAG_ID = filters.value[FILTER_KEYS.CATEGORY].data.children[0].id;
