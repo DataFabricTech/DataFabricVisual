@@ -126,16 +126,18 @@ public class SearchService {
      */
     public Map<String, Object> getStorageFilters() throws Exception {
         List<String> tagArrays = Arrays.asList(
-                "dataModel.owner.displayName.keyword",
-                "dataModel.tags.tagFQN",
-                "dataModel.service.displayName.keyword",
-                "dataModel.serviceType",
-                "dataModel.database.displayName.keyword",
-                "dataModel.databaseSchema.displayName.keyword",
+                "owner.displayName.keyword",
+                "tags.tagFQN",
+                "service.displayName.keyword",
+                "serviceType",
                 "dataModel.columns.name.keyword"
         );
 
         Map<String, Object> responseMap = new HashMap<>();
+
+        // 빈 배열 설정
+        responseMap.put("database.displayName.keyword", List.of());
+        responseMap.put("databaseSchema.displayName.keyword", List.of());
 
         for (String tag : tagArrays) {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
