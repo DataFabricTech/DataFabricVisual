@@ -4,4 +4,5 @@ import { NavigationProps } from "@/components/extends/common/interfaces/props/Na
 export interface TabProps extends NavigationProps {
   tabSize?: number;
   useTabContents?: boolean;
+  hidedList?: (string | number)[];
 }
