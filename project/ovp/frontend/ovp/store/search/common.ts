@@ -223,28 +223,35 @@ export const useSearchCommonStore = defineStore(
       selectedFilters.value = {};
     };
 
-    const getFilters = async () => {
-      filters.value = (await getUseFilters(createDefaultFilters())) as Filters;
+    const getFilters = async (tab: string) => {
+        const defaultFilters = await createDefaultFilters() as Filters;
 
-      // 미분류 카테고리 ID 저장
-      UNDEFINED_TAG_ID =
-        filters.value[FILTER_KEYS.CATEGORY].data.children[0].id;
+        const filtersData = await getUseFilters(defaultFilters, tab);
+        filters.value = filterData;
+
+        if (filters.value[FILTER_KEYS.CATEGORY]?.data?.children) {
+            UNDEFINED_TAG_ID = filters.value[FILTER_KEYS.CATEGORY].data.children[0].id;
+        }
     };
 
     const getUseFilters = async (
       defaultFilters: Filters | Partial<Filters>,
+      tab: string
     ) => {
-      const { data } = await $api(`/api/search/filters`);
+        // currentTab이 스토리지인 경우와 그외의 탭일 경우 호출 API를 다르게 함.
+        const url =
+            tab === "storage"
+                ? `/api/search/filters/storage`
+                : `/api/search/filters`;
 
-      // 기본값 기준 사용할 필터 key 를 정리
-      const useFilters = Object.keys(defaultFilters);
+        const { data } = await $api(url);
+        const filtersData = defaultFilters;
 
-      const filtersData = defaultFilters;
-      useFilters.forEach((key: string) => {
-        (filtersData as Filters)[key].data = data[key];
-      });
+        Object.keys(defaultFilters).forEach((key: string) => {
+            filtersData[key].data = data[key];
+        });
 
-      return filtersData;
+        return filtersData;
     };
 
     const getFilter = async (filterKey: string) => {
@@ -340,6 +347,9 @@ export const useSearchCommonStore = defineStore(
       showDropDown.value = false;
       showGraphModelListMenu.value = false;
       currentTab.value = item;
+
+      // 탭에 맞는 필터 API 호출
+      await getFilters(item);
 
       if (loadList) {
         resetReloadList();
