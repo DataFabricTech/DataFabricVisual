@@ -22,6 +22,7 @@ export const useCreationStore = defineStore("creation", () => {
   const isExecuteQuery = ref(false);
   // NOTE: 쿼리 비어있음여부
   const isQueryEmpty = ref(true);
+  const isRunQuery = ref(false);
 
   const executeResult = ref([]);
   const executeResultErrMsg = ref("");
@@ -36,12 +37,15 @@ export const useCreationStore = defineStore("creation", () => {
   const columnOptions = ref([]);
   const dataProfileList = ref([]);
 
+  const selectedDataModel: Ref<any> = ref({});
+
   /**
    * 데이터 모델 생성 > 목록 리스트의 항목 삭제
    */
   const deleteDataModel = (value: string) => {
     selectedModelList.value = value;
     isItemClicked.value = false;
+    selectedDataModel.value = {};
   };
 
   /**
@@ -50,35 +54,11 @@ export const useCreationStore = defineStore("creation", () => {
   const onClickDataModelItem = async (value: string) => {
     isColumnSelected.value = false;
 
-    const selectedModel = _.find(selectedModelList.value, ["id", value]);
-    dataModelName.value = selectedModel.modelNm;
-    dataModelOwner.value = selectedModel.ownerDisplayName;
-
-    sampleDataList.value = await getSampleData(
-      selectedModel.id,
-      selectedModel.fqn,
-      selectedModel.type,
-    );
-    if (sampleDataList.value) {
-      sampleDataList.value.columnDefs = sampleDataList.value.columnDefs.map(
-        (column) => {
-          return {
-            ...column, // 기존 속성들 복사
-            minWidth: 140, // minWidth 추가
-            flex: 1
-          };
-        },
-      );
+    const dataModel = _.find(selectedModelList.value, ["id", value]);
+    if (!_.isEmpty(dataModel)) {
+      selectedDataModel.value = dataModel;
       isItemClicked.value = true;
     }
-
-    const result = await getProfileData(selectedModel.fqn, selectedModel.type);
-    dataProfileList.value = result.rowData;
-    columnOptions.value = result.rowData
-      .filter((item: any) => item.name)
-      .map((item: any) => ({ id: item.name, name: item.name }));
-
-    columnOptions.value.unshift({ id: "choose", name: "선택하세요" });
   };
 
   const showProfile = () => {
@@ -89,6 +69,7 @@ export const useCreationStore = defineStore("creation", () => {
    * 데이터 모델 생성 > 쿼리 실행
    * */
   async function runQuery() {
+    isRunQuery.value = true;
 
     if (_.isEmpty(query.value)) {
       querySuccess.value = false;
@@ -121,13 +102,13 @@ export const useCreationStore = defineStore("creation", () => {
         executeResult.value = res.data;
         if (executeResult.value) {
           executeResult.value.columnDefs = executeResult.value.columnDefs.map(
-              (column) => {
-                return {
-                  ...column, // 기존 속성들 복사
-                  minWidth: 140, // minWidth 추가
-                  flex: 1
-                };
-              },
+            (column) => {
+              return {
+                ...column, // 기존 속성들 복사
+                minWidth: 140, // minWidth 추가
+                flex: 1,
+              };
+            },
           );
         }
         isFirstExecute.value = true;
@@ -155,10 +136,12 @@ export const useCreationStore = defineStore("creation", () => {
   };
 
   return {
+    selectedDataModel,
     selectedModelList,
     query,
     referenceModels,
     querySuccess,
+    isRunQuery,
     isQueryEmpty,
     isExecuteQuery,
     isFirstExecute,
