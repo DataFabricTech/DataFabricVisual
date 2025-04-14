@@ -1,6 +1,6 @@
 .q-splitter.q-splitter--vertical.q-splitter--workable {
   & > .q-splitter__separator {
-    cursor: e-resize;
+    cursor: ew-resize;
 
     &:before {
       content: '';
@@ -19,7 +19,7 @@
 
 .q-splitter.q-splitter--horizontal.q-splitter--workable {
   & > .q-splitter__separator {
-    cursor: n-resize;
+    cursor: ns-resize;
 
     &:before {
       content: '';
@@ -42,9 +42,11 @@
 
 .q-splitter__panel.q-splitter__before,
 .q-splitter__panel.q-splitter__after {
-  .menu,
+  overflow: visible;
+  z-index: auto;
+
   .menu-data {
-    overflow-y: auto;
+  //  overflow-y: auto;
     height: calc(100% - 49px);
   }
 
