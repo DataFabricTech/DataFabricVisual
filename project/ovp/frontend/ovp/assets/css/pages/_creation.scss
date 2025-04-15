@@ -130,6 +130,19 @@
   .q-splitter__separator {
     width: 100%;
   }
+
+  .ag-grid {
+    height: calc(100% - 28px);
+  }
+
+  &:has(.data-list) {
+    .tab-contents {
+      height: calc(100% - 20px);
+    }
+  }
+  .data-list {
+    height: 100%;
+  }
 }
 
 //transfer 스타일
