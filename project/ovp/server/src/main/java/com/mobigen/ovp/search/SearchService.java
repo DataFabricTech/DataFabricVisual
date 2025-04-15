@@ -13,10 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.cloud.openfeign.Targeter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,7 @@ public class SearchService {
     private final ModelConvertUtil modelConvertUtil;
     private final CategoryRepository categoryRepository;
     private final CategoryConvertUtil categoryConvertUtil;
+    private final Targeter targeter;
 
     private Map<String, Object> convertAggregations(Map<String, Object> response) {
         Map<String, Object> aggregations = (Map<String, Object>) response.get("aggregations");
@@ -65,7 +68,10 @@ public class SearchService {
                             resultMap.put(newKey, filteredBuckets);
                         }
                     } else {
-                        resultMap.put(newKey, buckets);
+                        if (newKey.equals("dataModel.columns.name.keyword"))
+                            resultMap.put("columns.name.keyword", value);
+                        else
+                            resultMap.put(newKey, buckets);
                     }
                 }
             }
@@ -74,28 +80,38 @@ public class SearchService {
     }
 
     public Map<String, Object> getFilter(MultiValueMap<String, String> params) {
-        params.set("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}},{\"terms\":{\"_index\":[\"" + Constants.CONTAINER_INDEX + "\",\"" + Constants.TABLE_INDEX + "\"]}}]}}}");
+        params.set("q", "{\"query\":{\"bool\":{\"must\":[]}}}");
         params.set("value", ".*.*");
-        params.set("index", "all");
         return convertAggregations(searchClient.getFilter(params));
     }
 
-    public Map<String, Object> getFilters() throws Exception {
-        List<String> tagArrays = Arrays.asList(
+    public Map<String, Object> getFilters(String dataModelType) throws Exception {
+        List<String> tagArrays = new ArrayList<>(Arrays.asList(
                 "owner.displayName.keyword",
                 "tags.tagFQN",
                 "service.displayName.keyword",
-                "serviceType",
-                "database.displayName.keyword",
-                "databaseSchema.displayName.keyword",
-                "columns.name.keyword"
-        );
-
+                "serviceType"
+        ));
+        // dataModelType에 따른 tagArrays 추가
+        if ("storage".equalsIgnoreCase(dataModelType)) {
+            tagArrays.add("dataModel.columns.name.keyword");
+        } else {
+            tagArrays.addAll(Arrays.asList(
+                    "database.displayName.keyword",
+                    "databaseSchema.displayName.keyword",
+                    "columns.name.keyword"
+            ));
+        }
         Map<String, Object> responseMap = new HashMap<>();
 
         for (String tag : tagArrays) {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.set("field", tag);
+            if(dataModelType.equalsIgnoreCase("table") || dataModelType.equalsIgnoreCase("model")) {
+                params.set("index", "table_search_index");
+            } else {
+                params.set("index", "container_search_index");
+            }
             Map<String, Object> filterResult = getFilter(params);
             responseMap.putAll(filterResult);
         }

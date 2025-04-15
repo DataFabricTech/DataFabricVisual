@@ -40,8 +40,8 @@ public class SearchController {
      */
     @ResponseJsonResult(errorMessage = "filter 목록 조회 오류")
     @GetMapping("/filters")
-    public Object getFilters() throws Exception {
-        Map<String, Object> responseMap = searchService.getFilters();
+    public Object getFilters(@RequestParam ("dataModelType") String dataModelType) throws Exception {
+        Map<String, Object> responseMap = searchService.getFilters(dataModelType);
         responseMap.put("category", categoryService.getCategories());
         return responseMap;
     }
