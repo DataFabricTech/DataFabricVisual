@@ -302,8 +302,12 @@ export const useSearchCommonStore = defineStore(
           key === "category"
             ? getCtgIds(undefinedTagId, selectedFilters)
             : (selectedFilters as SelectedFilters)[key];
-        const keyValue = key === "category" ? "tags.tagFQN" : key;
+        let keyValue = key === "category" ? "tags.tagFQN" : key;
 
+        // 'storage' 탭일 경우 키 값을 변경
+        if (currentTab.value === "storage" && keyValue === "columns.name.keyword") {
+          keyValue = "dataModel.columns.name.keyword";
+        }
         queryFilter.query.bool.must.push(
           setQueryFilterByDepth(keyValue, value),
         );
@@ -553,7 +557,6 @@ export const useSearchCommonStore = defineStore(
       lowestCategoryIdList,
       addSearchList,
       getSearchList,
-      getFilter,
       getFilters,
       getUseFilters,
       createDefaultPreview,
