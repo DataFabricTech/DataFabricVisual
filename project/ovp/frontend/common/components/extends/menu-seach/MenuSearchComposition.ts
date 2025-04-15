@@ -44,7 +44,10 @@ export function MenuSearchComposition(
     if (_.isEmpty(props.data)) {
       return;
     }
-    const result = props.data.map((item) => {
+    // 'buckets' 키가 존재하면 해당 배열을 사용
+    const dataList = props.data.hasOwnProperty('buckets') ? props.data.buckets : props.data;
+
+    const result = dataList.map((item) => {
       const isChecked = isCheckedData(item);
       return {
         id: uuid.v4(),
