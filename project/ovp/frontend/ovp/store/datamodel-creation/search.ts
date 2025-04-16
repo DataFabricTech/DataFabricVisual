@@ -305,11 +305,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 중분류 Tab 변경
    * @param item
    */
-  const changeTypeTab = (item: string) => {
+  const changeTypeTab = async (item: string) => {
     cancelAllSelection();
     setSelectedItem({});
     currTypeTab.value = item;
     resetReloadList(nSelectedListData.value);
+    await getFilters(item);
   };
 
   /**
@@ -367,6 +368,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const cancelAllSelection = () => {
     // 탭 초기화
     currDetailTab.value = DEFAULT_DETAIL_TAB;
+    // dataModelType 탭 초기화
+    currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
 
     nSelectedListData.value = updateSelection(nSelectedListData.value, "");
     searchResult.value = updateSelection(searchResult.value, "");
@@ -546,11 +549,13 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API- 필터 조회
    */
-  const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`, { showLoader: false });
+  const getFilters = async (dataModelType: string = "table") => {
+    const { data } = await $api(`/api/search/filters?dataModelType=${dataModelType}`, { showLoader: false });
 
     // 기본값 기준 사용할 필터 key 를 정리
     const defaultFilters = createDefaultFilters();
+    // 필터 초기화
+    selectedFilters.value = [];
     const useFilters = Object.keys(defaultFilters);
 
     useFilters.forEach((key: string) => {
