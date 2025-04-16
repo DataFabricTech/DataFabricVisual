@@ -95,8 +95,11 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
   /**
    * 필터 조회
    */
-  const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`);
+  const getFilters = async (dataModelType: string = "table") => {
+    // TODO : 필터 초기화함수로, 추후 불필요시 제거.
+    setEmptyFilter();
+
+    const { data } = await $api(`/api/search/filters?dataModelType=${dataModelType}`);
 
     const defaultFilters = createDefaultFilters();
     const useFilters = Object.keys(defaultFilters);
