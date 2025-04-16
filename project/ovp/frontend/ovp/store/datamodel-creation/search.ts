@@ -309,6 +309,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     cancelAllSelection();
     setSelectedItem({});
     currTypeTab.value = item;
+    searchResult.value = [];
     resetReloadList(nSelectedListData.value);
     await getFilters(item);
   };
