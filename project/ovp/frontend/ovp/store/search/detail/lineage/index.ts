@@ -3,7 +3,6 @@ import { FILTER_KEYS, useSearchCommonStore } from "@/store/search/common";
 import { ref } from "vue";
 import _ from "lodash";
 import type { PreviewData } from "@/type/common";
-import {storeToRefs} from "pinia";
 
 export interface lineageData {
   nodes: any[];
@@ -20,9 +19,6 @@ export const useLineageStore = defineStore("lineage", () => {
     getPreviewAPI,
     getContainerPreviewAPI,
   } = searchCommonStore;
-  const {
-    currentTab
-  } = storeToRefs(searchCommonStore);
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Partial<Filters> => {
@@ -44,11 +40,11 @@ export const useLineageStore = defineStore("lineage", () => {
   const lineageFilterRef = ref(null);
   const previewData: Ref<PreviewData> = ref(createDefaultPreview());
 
-  const getFilters = async () => {
+  const getFilters = async (dataModelType: string) => {
     filters.value = (await getUseFilters(
-      createDefaultFilters(),
-      currentTab,
-    )) as Partial<Filters>;
+      createDefaultFilters() as Partial<Filters>,
+      dataModelType,
+    ));
 
     // 미분류 카테고리 ID 저장
     const categoryData = filters.value[FILTER_KEYS.CATEGORY]?.data;
