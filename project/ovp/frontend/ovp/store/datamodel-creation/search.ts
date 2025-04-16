@@ -335,6 +335,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     setSearchKeyword("");
     setSearchMyKeyword("");
 
+    // 탭 변경 시 하위 버튼 초기화
+    currTypeMyTab.value = $constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB[0].value;
+    currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
+
     nextTick(() => {
       // 두 tab 다 infinite scroll 이 설정 되어 있기 때문에 tab 전환시 설정 flag 를 초기화해준다.
       // dom 에 infinite scroll 이 적용될 tag가 생성 된 후에 infinite scroll 을 설정해줘야 동작하기 때문에 nextTick 에서 설정함.
@@ -368,8 +372,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const cancelAllSelection = () => {
     // 탭 초기화
     currDetailTab.value = DEFAULT_DETAIL_TAB;
-    // dataModelType 탭 초기화
-    currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
 
     nSelectedListData.value = updateSelection(nSelectedListData.value, "");
     searchResult.value = updateSelection(searchResult.value, "");
