@@ -246,17 +246,15 @@ export const useSearchCommonStore = defineStore(
 
       const filtersData = defaultFilters;
       useFilters.forEach((key: string) => {
-        (filtersData as Filters)[key].data = data[key];
+          // 스토리지 탭 > 'buckets' 키가 존재시,
+          const filterData = data[key];
+          (filtersData as Filters)[key].data = _.has(filterData, "buckets")
+              ? filterData.buckets
+              : filterData;
       });
 
       return filtersData;
     };
-
-    // const getFilter = async (filterKey: string) => {
-    //   // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    //   const data = await $api(`/api/search/filter?field=${filterKey}`);
-    //   (filters.value as Filters)[filterKey].data = data.data[filterKey];
-    // };
 
     const getPreviewData = async (fqn: string) => {
       const data = await getPreviewAPI(fqn);
