@@ -239,7 +239,7 @@ export const useSearchCommonStore = defineStore(
       defaultFilters: Filters | Partial<Filters>,
       dataModelType: string
     ) => {
-        const { data } = await $api(`/api/search/filters?dataModelType=${dataModelType}`);
+      const { data } = await $api(`/api/search/filters?dataModelType=${dataModelType}`);
 
       // 기본값 기준 사용할 필터 key 를 정리
       const useFilters = Object.keys(defaultFilters);
