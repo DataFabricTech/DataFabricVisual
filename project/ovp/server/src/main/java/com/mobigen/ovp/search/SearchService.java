@@ -92,30 +92,27 @@ public class SearchService {
                 "service.displayName.keyword",
                 "serviceType"
         ));
-        // dataModelType에 따른 tagArrays 추가
+
+        Map<String, Object> responseMap = new HashMap<>();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
         if ("storage".equalsIgnoreCase(dataModelType)) {
+            params.set("index", "container_search_index");
             tagArrays.add("dataModel.columns.name.keyword");
         } else {
+            params.set("index", "table_search_index");
             tagArrays.addAll(Arrays.asList(
                     "database.displayName.keyword",
                     "databaseSchema.displayName.keyword",
                     "columns.name.keyword"
             ));
         }
-        Map<String, Object> responseMap = new HashMap<>();
 
         for (String tag : tagArrays) {
-            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.set("field", tag);
-            if(dataModelType.equalsIgnoreCase("table") || dataModelType.equalsIgnoreCase("model")) {
-                params.set("index", "table_search_index");
-            } else {
-                params.set("index", "container_search_index");
-            }
             Map<String, Object> filterResult = getFilter(params);
             responseMap.putAll(filterResult);
         }
-
         return responseMap;
     }
 
