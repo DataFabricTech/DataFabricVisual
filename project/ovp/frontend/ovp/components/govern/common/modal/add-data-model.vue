@@ -211,8 +211,8 @@ const inputSearchKeyword = (searchKeyword?: string) => {
 
 const changeTab = async (item: string) => {
   currentTab.value = item;
-  getDataModelList();
   await getFilters(item);
+  await getDataModelList();
 };
 
 const selectedDataModelCount = computed(() => {
