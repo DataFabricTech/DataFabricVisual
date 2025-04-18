@@ -251,7 +251,6 @@ export function DataModelListComposition(
   watch(
     () => props.initChangeTabCount,
     () => {
-      console.log("탭 변경 감지!");
       onResetSelectedFilter();
     },
   );

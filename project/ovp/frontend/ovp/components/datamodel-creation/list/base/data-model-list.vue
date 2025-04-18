@@ -141,7 +141,7 @@ const emitDeleteItem = (value: any[]) => {
 const emitItemCheck = (value: any[]) => {
   emit("item-check", value);
 };
-console.log("initChangeTabCountinitChangeTabCount", props.initChangeTabCount);
+
 const {
   listData,
   searchLabel,

@@ -226,7 +226,7 @@ const onChangeTypeTab = (value: string) => {
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   changeTypeTab(value);
-  // 탭 변경시 증가
+  // 탭 변경시 count 증가
   initChangeTabCount.value++;
 };
 const onChangeTypeMyTab = (value: string) => {
