@@ -111,6 +111,7 @@ const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],
   sortList: () => [],
   filter: () => {},
+  initChangeTabCount: () => 0,
   isMulti: false,
   useItemDeleteBtn: false,
   valueKey: "id",
@@ -140,7 +141,7 @@ const emitDeleteItem = (value: any[]) => {
 const emitItemCheck = (value: any[]) => {
   emit("item-check", value);
 };
-
+console.log("initChangeTabCountinitChangeTabCount", props.initChangeTabCount);
 const {
   listData,
   searchLabel,
