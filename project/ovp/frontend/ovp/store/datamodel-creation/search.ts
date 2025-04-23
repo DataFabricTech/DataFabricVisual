@@ -55,6 +55,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
 
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
+  // 선택된 데이터모델의 filter 정보
+  const selectedDataModelFilters = ref<Filters>(createDefaultFilters());
+  // 최초 1회만 selectedDataModelFilters 값 세팅을 위한 플래그
+  let selectedDataModelFiltersAlreadySet = false;
 
   // Tab 정보
   const TAB_DEFAULT = $constants.DATAMODEL_CREATION.ADD.TAB[0].value;
@@ -550,7 +554,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * API- 필터 조회
    */
   const getFilters = async (dataModelType: string = "table") => {
-    const { data } = await $api(`/api/search/filters?dataModelType=${dataModelType}`, { showLoader: false });
+    const { data } = await $api(
+      `/api/search/filters?dataModelType=${dataModelType}`,
+      { showLoader: false },
+    );
 
     // 기본값 기준 사용할 필터 key 를 정리
     const defaultFilters = createDefaultFilters();
@@ -561,6 +568,45 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     useFilters.forEach((key: string) => {
       (filters.value as Filters)[key].data = data[key];
     });
+
+    // 최초 1회만 selectedDataModelFilters 세팅
+    if (!selectedDataModelFiltersAlreadySet) {
+      selectedDataModelFiltersAlreadySet = true;
+      selectedDataModelFilters.value["category"] = _.cloneDeep(
+        filters.value.category,
+      );
+      selectedDataModelFilters.value["tags.tagFQN"] = _.cloneDeep(
+        filters.value["tags.tagFQN"],
+      );
+      // 서비스타입 필터항목 별도 API 호출 후, 세팅
+      selectedDataModelFilters.value["serviceType"].data =
+        await getSelectedDataFilters();
+    }
+  };
+
+  /**
+   * API- 선택된 데이터 모델 필터내 서비스타입필터 가공
+   */
+  const getSelectedDataFilters = async () => {
+    const { data } = await $api(`/api/search/allServiceTypeFilter/list`, {
+      showLoader: false,
+    });
+    // 변환 및 필터링 처리
+    const serviceTypeList = data.serviceType || [];
+
+    // openmetadata & trino 제외할 키값
+    const excludeKeys = ["openmetadata", "trino"];
+
+    const filtered = _.uniqBy(
+      serviceTypeList
+        .map((item: any) => ({
+          ...item,
+          key: item.key.toLowerCase(), //key를 소문자로 변환
+        }))
+        .filter((item: any) => !excludeKeys.includes(item.key)), // 제외 키 필터링
+      "key", // key 기준 중복 제거
+    );
+    return filtered;
   };
 
   /**
@@ -712,6 +758,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     currTypeMyTab,
     currTypeTab,
     filters,
+    selectedDataModelFilters,
     searchResult,
     mySearchResult,
     selectedFilters,
@@ -753,5 +800,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     updateMainSelectedModelBookmark,
     setNSelectedListData,
     cancelAllSelection,
+    getSelectedDataFilters,
   };
 });

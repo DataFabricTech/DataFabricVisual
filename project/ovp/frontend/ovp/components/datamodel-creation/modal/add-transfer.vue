@@ -123,7 +123,7 @@
           <span>선택된 데이터 모델({{ selectedListLength }})</span>
         </div>
         <data-model-list
-          :filter="filters"
+          :filter="selectedDataModelFilters"
           :data="nSelectedListData"
           :initChangeTabCount="initChangeTabCount"
           label-key="modelNm"
@@ -182,6 +182,7 @@ const {
 } = dataModelSearchStore;
 const {
   filters,
+  selectedDataModelFilters,
   selectedFilters,
   searchResult,
   searchResultLength,

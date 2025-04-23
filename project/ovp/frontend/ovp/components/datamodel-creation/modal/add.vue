@@ -120,7 +120,6 @@ const {
 } = storeToRefs(dataModelSearchStore);
 const {
   resetReloadList,
-  getFilters,
   changeDetailTab,
   resetDetailBox,
   setNSelectedListData,
@@ -131,7 +130,7 @@ const {
   cancelAllSelection,
 } = dataModelSearchStore;
 
-Promise.all([resetReloadList(), getFilters(), resetDetailBox()]);
+Promise.all([resetReloadList(), resetDetailBox()]);
 
 const onOpenModal = async () => {
   cancelAllSelection();

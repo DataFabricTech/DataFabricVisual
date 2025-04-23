@@ -22,7 +22,7 @@
         <template #before>
           <selected-model
             :modelList="selectedModelList"
-            :dataModelFilter="filters"
+            :dataModelFilter="selectedDataModelFilters"
             :modelListCnt="selectedModelListCnt"
             @change="addModelInstance.open()"
             @delete="deleteDataModel"
@@ -96,9 +96,9 @@ const { deleteDataModel, onClickDataModelItem, resetQuery, showProfile } =
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
-const { filters, selectedModelList, selectedModelListCnt } =
+const { selectedModelList, selectedModelListCnt, selectedDataModelFilters } =
   storeToRefs(dataModelSearchStore);
-const { updateMainSelectedModelBookmark } = dataModelSearchStore;
+const { updateMainSelectedModelBookmark, getFilters } = dataModelSearchStore;
 
 const dataModelSaveStore = useDataModelSaveStore();
 const { getCategoryList, getTagList } = dataModelSaveStore;
@@ -114,4 +114,6 @@ onMounted(() => {
 
 await getCategoryList();
 await getTagList();
+// 필터내 항목 값 호출
+await getFilters();
 </script>
