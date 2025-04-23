@@ -47,6 +47,17 @@ public class SearchController {
     }
 
     /**
+     * 탐색 - 목록 - 서비스타입 전체 filter 목록 조회
+     *
+     * @return
+     */
+    @ResponseJsonResult(errorMessage = "allServiceTypeFilter 목록 조회 오류")
+    @GetMapping("/allServiceTypeFilter/list")
+    public Object getAllServiceTypeFilterList() throws Exception {
+        return searchService.getAllServiceTypeFilterList();
+    }
+
+    /**
      * 탐색 - 목록 - 데이터 모델 조회
      *
      * @return

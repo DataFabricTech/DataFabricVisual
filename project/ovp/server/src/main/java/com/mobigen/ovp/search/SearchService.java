@@ -117,6 +117,25 @@ public class SearchService {
     }
 
     /**
+     * Open Metadata - 전체 서비스 타입 조회
+     *
+     * @param
+     * @return
+     * @throws Exception
+     */
+    public Map<String, Object> getAllServiceTypeFilterList() throws Exception {
+        Map<String, Object> responseMap = new HashMap<>();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        params.set("field", "serviceType");
+        params.set("index", "*");
+
+        Map<String, Object> filterResult = getFilter(params);
+        responseMap.putAll(filterResult);
+
+        return responseMap;
+    }
+    /**
      * Open Metadata - 탐색 목록 조회(RequestParam 사용)
      *
      * @param params
