@@ -216,6 +216,9 @@ const searchListDetailTab = computed(() => {
 });
 
 const onChangeTab = (value: string) => {
+  // 목록 초기화
+  searchResult.value = [];
+  mySearchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   tempMyListSelectedListData.value = [];
@@ -224,6 +227,8 @@ const onChangeTab = (value: string) => {
   initChangeTabCount.value++;
 };
 const onChangeTypeTab = (value: string) => {
+  // 목록 초기화
+  searchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   changeTypeTab(value);
@@ -231,6 +236,8 @@ const onChangeTypeTab = (value: string) => {
   initChangeTabCount.value++;
 };
 const onChangeTypeMyTab = (value: string) => {
+  // 목록 초기화
+  mySearchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempMyListSelectedListData.value = [];
   changeTypeMyTab(value);

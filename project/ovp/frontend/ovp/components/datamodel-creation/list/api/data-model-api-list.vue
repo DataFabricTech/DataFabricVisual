@@ -82,14 +82,14 @@
     </div>
 
     <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" v-if="!isDoneFirModelListLoad">
+    <div class="no-result" v-if="listData.length === 0">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">{{ props.noDataMsg }}</p>
       </div>
     </div>
 
-    <ul id="dataListModal" class="menu-list" v-if="infiniteScrollSettingDone">
+    <ul id="dataListModal" class="menu-list" v-else>
       <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="!item.isSelected"
