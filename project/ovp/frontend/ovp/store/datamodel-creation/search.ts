@@ -39,8 +39,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const selectedModelListCnt = computed(() => {
     return selectedModelList.value.length;
   });
-  const isDoneFirModelListLoad = ref(false);
-  const infiniteScrollSettingDone = ref(false);
 
   const { setQueryFilterByDepth } = useQueryHelpers();
 
@@ -196,19 +194,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 갱신
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
-    isDoneFirModelListLoad.value = false;
-
     const { data, totalCount } = await getSearchListAPI(selectedList);
     searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
-
-    const types = ["table", "storage", "model"];
-    if (
-      types.includes(currTypeTab.value) &&
-      searchResultLength.value[currTypeTab.value] > 0
-    ) {
-      isDoneFirModelListLoad.value = true;
-    }
 
     // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
     setDataLoadDone();
@@ -230,14 +218,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const { data, totalCount } = await getMyListAPI(selectedList, true);
     mySearchResult.value = data[currTypeMyTab.value];
     mySearchResultLength.value = totalCount;
-
-    const types = ["owner", "bookmark"];
-    if (
-      types.includes(currTypeMyTab.value) &&
-      mySearchResultLength.value[currTypeMyTab.value] > 0
-    ) {
-      isDoneFirModelListLoad.value = true;
-    }
   };
   /**
    * 데이터 조회 > 누적
@@ -338,15 +318,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     currTab.value = item;
     setSearchKeyword("");
     setSearchMyKeyword("");
-
-    nextTick(() => {
-      // 두 tab 다 infinite scroll 이 설정 되어 있기 때문에 tab 전환시 설정 flag 를 초기화해준다.
-      // dom 에 infinite scroll 이 적용될 tag가 생성 된 후에 infinite scroll 을 설정해줘야 동작하기 때문에 nextTick 에서 설정함.
-      infiniteScrollSettingDone.value = false;
-      infiniteScrollSettingDone.value = true;
-    }).then(() => {
-      resetReloadList(nSelectedListData.value);
-    });
+    resetReloadList(nSelectedListData.value);
   };
   const setSelectedData = (value: string) => {
     const selectedModelItem = _.find(searchResult.value, { id: value });
@@ -773,8 +745,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     nSelectedListData,
     selectedModelList,
     selectedModelListCnt,
-    isDoneFirModelListLoad,
-    infiniteScrollSettingDone,
     addSearchList,
     addMySearchList,
     getSearchList,
