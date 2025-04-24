@@ -116,7 +116,8 @@ const {
   selectedItemOwner,
   selectedModelList,
   nSelectedListData,
-  infiniteScrollSettingDone,
+  searchResult,
+  mySearchResult,
 } = storeToRefs(dataModelSearchStore);
 const {
   resetReloadList,
@@ -134,6 +135,9 @@ Promise.all([resetReloadList(), resetDetailBox()]);
 
 const onOpenModal = async () => {
   cancelAllSelection();
+  // 처음 모달 띄울 경우 데이터모델 목록 초기화
+  searchResult.value = [];
+  mySearchResult.value = [];
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
   setNSelectedListData($_cloneDeep(selectedModelList.value));
 };
@@ -162,7 +166,6 @@ const onCloseModal = () => {
   setNSelectedListData([]);
   setSelectedItem({});
   setCurrTab(TAB_DEFAULT);
-  infiniteScrollSettingDone.value = false;
 };
 
 function openDetailPage(data: object) {

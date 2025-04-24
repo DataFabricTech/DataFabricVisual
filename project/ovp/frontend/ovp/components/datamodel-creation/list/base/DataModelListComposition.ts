@@ -219,6 +219,11 @@ export function DataModelListComposition(
     });
     const selectedList = $_reject(listData.value, { id: value });
     emitDeleteItem(selectedList);
+
+    // 필터 초기화 추가
+    for (const key in selectedFilter) {
+      selectedFilter[key] = [];
+    }
   };
 
   /**

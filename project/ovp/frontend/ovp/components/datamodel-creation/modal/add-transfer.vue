@@ -33,7 +33,6 @@
               :use-infinite="true"
               :use-live-search="false"
               :addSearchList="addSearchList"
-              :isDoneFirModelListLoad="isDoneFirModelListLoad"
               list-type="non-selected"
               no-data-msg="데이터 모델이 없습니다."
               @item-check="onSelectApiData"
@@ -73,7 +72,6 @@
               :use-sort="false"
               :use-infinite="true"
               :addSearchList="addMySearchList"
-              :isDoneFirModelListLoad="isDoneFirModelListLoad"
               list-type="non-selected"
               no-data-msg="데이터 모델이 없습니다."
               @item-check="onSelectMyListData"
@@ -192,7 +190,6 @@ const {
   mySearchResult,
   mySearchResultLength,
   nSelectedListData,
-  isDoneFirModelListLoad,
 } = storeToRefs(dataModelSearchStore);
 
 const selectedListLength = computed(() => {

@@ -129,14 +129,12 @@ import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 const dataModelSearchStore = useDataModelSearchStore();
-const { infiniteScrollSettingDone, currTypeTab, currTypeMyTab } =
-  storeToRefs(dataModelSearchStore);
+const { currTypeTab, currTypeMyTab } = storeToRefs(dataModelSearchStore);
 
 const props = withDefaults(
   defineProps<
     DataModelApiListProps & {
       onAddTransfer?: () => void;
-      isDoneFirModelListLoad?: boolean;
     }
   >(),
   {
@@ -158,7 +156,6 @@ const props = withDefaults(
     noDataMsg: "데이터 모델이 없습니다.",
     listType: "non-selected",
     useItemDeleteBtn: false,
-    isDoneFirModelListLoad: false,
   },
 );
 
@@ -252,23 +249,6 @@ const { scrollTrigger, mount } = useIntersectionObserver({
   targetId: "dataListModal",
   loaderId: "dataModelApiListLoader",
 });
-
-onMounted(() => {
-  // 2. 갱신 api 호출 완료됨.
-  // dom v-if=true 설정
-  infiniteScrollSettingDone.value = true;
-});
-
-// infinite scroll flag 가 true 로 설정되면
-// intesection observer 를 mount 시켜준다.
-watch(
-  () => infiniteScrollSettingDone.value,
-  (value) => {
-    if (value) {
-      mount();
-    }
-  },
-);
 
 watch(
   [() => currTypeTab.value, () => currTypeMyTab.value],
