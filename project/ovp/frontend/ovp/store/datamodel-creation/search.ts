@@ -344,9 +344,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const cancelAllSelection = () => {
     // 탭 초기화
     currDetailTab.value = DEFAULT_DETAIL_TAB;
-    // dataModelType 탭 초기화
-    currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
-
     nSelectedListData.value = updateSelection(nSelectedListData.value, "");
     searchResult.value = updateSelection(searchResult.value, "");
     mySearchResult.value = updateSelection(mySearchResult.value, "");
