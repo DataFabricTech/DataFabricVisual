@@ -89,6 +89,7 @@
           required
           id="title-modify"
           class="text-input w-2/4"
+          type="text"
         />
       </template>
       <template #view-slot>

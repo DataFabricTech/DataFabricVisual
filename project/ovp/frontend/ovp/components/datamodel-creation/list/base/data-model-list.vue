@@ -10,6 +10,7 @@
           >
           <input
             id="data-menu-search"
+            type="text"
             class="text-input"
             :value="searchLabel"
             @input="onSearchText($event.target.value)"

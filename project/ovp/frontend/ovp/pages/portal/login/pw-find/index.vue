@@ -20,6 +20,7 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpEmail"
+                    type="email"
                     class="text-input text-input-lg"
                     placeholder="이메일 입력"
                     v-model="email"

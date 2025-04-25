@@ -14,6 +14,7 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpId"
+                    type="text"
                     class="text-input text-input-lg"
                     placeholder="아이디 또는 이메일 입력"
                     v-model="loginEmailOrId"

@@ -5,6 +5,7 @@
     <input
       :id="inpId"
       class="text-input"
+      type="text"
       :value="inpValue"
       @keyup.enter="onClickSearch"
       @change="onChange"
