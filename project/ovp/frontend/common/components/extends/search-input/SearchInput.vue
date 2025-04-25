@@ -4,7 +4,7 @@
     <label class="hidden-text" :for="inpId">{{ labelText }}</label>
     <input
       :id="inpId"
-      class="text-input dd"
+      class="text-input"
       type="text"
       :value="inpValue"
       @keyup.enter="onClickSearch"
