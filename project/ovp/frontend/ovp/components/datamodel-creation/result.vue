@@ -1,6 +1,6 @@
 <template>
-  <div class="work-page">
-    <div class="l-top-bar py-3">
+  <div class="v-group-8 justify-start h-full">
+    <div class="h-group justify-between w-full">
       <div class="h-group gap-2">
         <span class="font-semibold">실행 결과</span>
         <div

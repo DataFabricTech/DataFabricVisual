@@ -41,7 +41,7 @@
         @onItemChecked="onNodeChecked"
         @onItemSelected="onNodeClicked"
       ></tree-vue>
-      <div class="menu-item" v-if="listData.length < 1">
+      <div class="menu-item is-menu-item-empty" v-if="listData.length < 1">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
           <p class="notification-detail">{{ props.noSearchMsg }}</p>

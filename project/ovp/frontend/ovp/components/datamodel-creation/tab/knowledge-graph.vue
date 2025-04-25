@@ -1,6 +1,6 @@
 <template>
-  <div class="data-detail-group h-auto pb-3">
-    <div class="visual visual-detail" style="">
+  <div class="data-model-group">
+    <div class="visual visual-detail">
       <div class="visual-legend">
         <button
           class="button button-lg button-neutral-stroke"
@@ -150,7 +150,7 @@
       </div>
       <!-- TODO: [개발] intersection observer 적용  -->
     </div>
-    <div class="data-detail-list">
+    <div class="data-list">
       <template v-for="card in 10" :key="card">
         <resource-box
           class="is-resource-box-no-action"
@@ -207,14 +207,4 @@ function openDetailPage(data: object) {
 </script>
 
 <style lang="scss" scoped>
-.visual-detail-sample {
-  background: url("../../../assets/images/knowledge-graph-sample.png") no-repeat
-    center/contain;
-  width: 60%;
-  height: 550px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 </style>

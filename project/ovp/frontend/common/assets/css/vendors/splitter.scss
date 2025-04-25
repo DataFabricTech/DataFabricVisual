@@ -61,6 +61,10 @@
 .q-splitter__panel.q-splitter__after {
   .tab-contents {
     flex: 1 0 auto;
+
+    &:has(.data-model-group) {
+      height: calc(100% - 46px);
+    }
   }
 
   .tab.tab-line {

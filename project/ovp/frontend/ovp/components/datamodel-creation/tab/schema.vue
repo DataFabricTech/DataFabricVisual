@@ -1,5 +1,5 @@
 <template>
-  <div class="data-detail" v-if="schemaList.length > 0" style="height: 500px">
+  <div class="data-detail" v-if="schemaList.length > 0">
     <agGrid
       class="ag-theme-alpine ag-theme-quartz"
       :columnDefs="COLUMN_DEFS"
