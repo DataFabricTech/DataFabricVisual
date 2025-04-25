@@ -11,6 +11,7 @@
         <label class="hidden-text" for="text-input-example-4">label</label>
         <input
           id="text-input-example-4"
+          type="text"
           class="text-input"
           placeholder="이름으로 검색하세요."
           v-model="keyword"

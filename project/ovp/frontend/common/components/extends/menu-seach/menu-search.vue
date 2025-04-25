@@ -9,6 +9,7 @@
         <input
           id="text-input-example-11"
           class="text-input"
+          type="text"
           :value="searchLabel"
           @input="onSearchText($event.target.value)"
           placeholder="검색어를 입력하세요"

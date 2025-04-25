@@ -22,6 +22,7 @@
             <div class="form-detail">
               <input
                 id="data-model-save-name"
+                type="text"
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="termForm.name"
@@ -112,6 +113,7 @@
             <div class="form-detail">
               <input
                 id="data-model-save-name"
+                type="text"
                 class="text-input text-input-lg"
                 placeholder="콤마로 구분해서 추가"
                 v-model="synonyms"
