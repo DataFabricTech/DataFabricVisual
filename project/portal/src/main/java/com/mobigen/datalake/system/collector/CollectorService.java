@@ -1,7 +1,10 @@
 package com.mobigen.datalake.system.collector;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -17,11 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.datalake.post.file.FileMapper;
 import com.mobigen.framework.utility.AESGCMUtil;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -170,12 +170,17 @@ public class CollectorService {
   // 수집대상 삭제
   public Object deleteCollector(String system_id) throws Exception {
     boolean result = false;
-    int deleteCount = collectorMapper.deleteCollector(system_id);
-    if (deleteCount > 0) {
-      // 실제 파일 삭제 처리
-      deleteRealFileFromSystemId(system_id);
-      result = true;
-      deleteIngestionDagApi(system_id);
+
+    // Airflow Dag 삭제 성공 시 DB에서 수집 시스템 정보 제거
+    boolean dagDeleteResult = deleteIngestionDagApi(system_id);
+    
+    if (dagDeleteResult) {
+      int deleteCount = collectorMapper.deleteCollector(system_id);
+      if (deleteCount > 0) {
+        // 실제 파일 삭제 처리
+        deleteRealFileFromSystemId(system_id);
+        result = true;
+      }
     }
     return result;
   }
