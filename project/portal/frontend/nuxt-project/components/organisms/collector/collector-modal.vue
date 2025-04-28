@@ -81,8 +81,8 @@
               <td>
                 <div class="mu-selectbox">
                   <select v-model="currentCollector.collect_flag" :disabled="isDetail">
-                    <option :value="false">미수집</option>
-                    <option :value="true">수집</option>
+                    <option :value="false">비활성화</option>
+                    <option :value="true">활성화</option>
                   </select>
                 </div>
               </td>

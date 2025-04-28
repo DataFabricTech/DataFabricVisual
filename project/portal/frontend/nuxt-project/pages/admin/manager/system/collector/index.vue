@@ -90,14 +90,14 @@
 </template>
 
 <script setup lang="ts">
-import PageSize from "@organisms/collector/page-size.vue";
-import Pagination from "@functional/pagination/pagination";
-import { errorAlert } from "@functional/alert/alert-default";
+import { confirmAlert, successAlert } from "@/components/functional/alert/alert-default";
 import { useUserStore } from "@/store/user";
-import { onMounted, ref } from "vue";
+import { errorAlert } from "@functional/alert/alert-default";
+import Pagination from "@functional/pagination/pagination";
 import CollectorBoardListSearch from "@organisms/collector/collector-board-list-search.vue";
 import CollectorModal from "@organisms/collector/collector-modal.vue";
-import { confirmAlert, successAlert } from "@/components/functional/alert/alert-default";
+import PageSize from "@organisms/collector/page-size.vue";
+import { onMounted, ref } from "vue";
 
 definePageMeta({
   name: "AdminManagerSystemCollector",
@@ -186,8 +186,8 @@ const searchObj = ref({
 
 // 한글명
 const getKrCollectFlag = (content) => {
-  if (content) return '수집'
-  else return '미수집'
+  if (content) return '활성화'
+  else return '비활성화'
 }
 
 // 수집대상 목록 조회
