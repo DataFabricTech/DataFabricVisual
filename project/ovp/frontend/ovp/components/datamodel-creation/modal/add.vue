@@ -27,7 +27,7 @@
         horizontal
       >
         <template #before>
-          <add-transfer></add-transfer>
+          <add-transfer v-if="firstAPIDone"></add-transfer>
         </template>
         <template #after>
           <Tab
@@ -94,7 +94,6 @@ import $constants from "~/utils/constant";
 import Modal from "@extends/modal/Modal.vue";
 import Splitter from "@extends/splitter/Splitter.vue";
 import Tab from "@extends/tab/Tab.vue";
-import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";
 import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid.vue";
 import ResourceBox from "~/components/common/resource-box/resource-box.vue";
@@ -109,6 +108,7 @@ const horizontalSplitter = ref(50);
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
 const {
+  selectedFilters,
   currDetailTab,
   sampleData,
   profileData,
@@ -116,11 +116,14 @@ const {
   selectedItemOwner,
   selectedModelList,
   nSelectedListData,
-  infiniteScrollSettingDone,
+  searchResult,
+  mySearchResult,
+  currTypeTab,
+  firstAPIDone,
 } = storeToRefs(dataModelSearchStore);
 const {
-  resetReloadList,
   getFilters,
+  resetReloadList,
   changeDetailTab,
   resetDetailBox,
   setNSelectedListData,
@@ -131,12 +134,18 @@ const {
   cancelAllSelection,
 } = dataModelSearchStore;
 
-Promise.all([resetReloadList(), getFilters(), resetDetailBox()]);
+Promise.all([resetReloadList(), resetDetailBox()]);
 
 const onOpenModal = async () => {
+  // filter 값 초기화 세팅
+  await getFilters(currTypeTab.value);
   cancelAllSelection();
+  // 처음 모달 띄울 경우 데이터모델 목록 초기화
+  searchResult.value = [];
+  mySearchResult.value = [];
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
   setNSelectedListData($_cloneDeep(selectedModelList.value));
+  firstAPIDone.value = true;
 };
 
 const emit = defineEmits<{
@@ -163,7 +172,9 @@ const onCloseModal = () => {
   setNSelectedListData([]);
   setSelectedItem({});
   setCurrTab(TAB_DEFAULT);
-  infiniteScrollSettingDone.value = false;
+  selectedFilters.value = {};
+  // 중분류 탭 초기화
+  currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
 };
 
 function openDetailPage(data: object) {

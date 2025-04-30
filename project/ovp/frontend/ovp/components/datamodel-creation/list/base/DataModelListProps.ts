@@ -9,6 +9,7 @@ export interface DataModelListProps {
   filter: any;
   isMulti?: boolean;
   useItemDeleteBtn?: boolean;
+  initChangeTabCount?: number; // 추가
   valueKey: string;
   labelKey: string;
   noDataMsg?: string;

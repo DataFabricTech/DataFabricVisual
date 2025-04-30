@@ -49,6 +49,15 @@ export function DataModelListComposition(
   };
 
   /**
+   * 선택된 데이터 모델 필터 초기화
+   */
+  const onResetSelectedFilter: () => void = () => {
+    for (const key in selectedFilter) {
+      selectedFilter[key] = [];
+    }
+  };
+
+  /**
    * (이벤트) 필터 값 변경 검색
    * @param value
    */
@@ -239,6 +248,12 @@ export function DataModelListComposition(
     return !_.every(listData.value, { isShow: false });
   });
 
+  watch(
+    () => props.initChangeTabCount,
+    () => {
+      onResetSelectedFilter();
+    },
+  );
   return {
     ...props,
     listData,
@@ -246,6 +261,7 @@ export function DataModelListComposition(
     selectedFilter,
     checkShowListData,
     setSearchFilter,
+    onResetSelectedFilter,
     setListData,
     onSelectFilter,
     onSearchText,

@@ -74,7 +74,7 @@ let previewModelType = "table";
 onBeforeMount(async () => {
   isShowPreview.value = false;
   setEmptyFilter();
-  await getFilters();
+  await getFilters(dataModelType.value);
   await getLineageData(dataModelType.value, getDataModelFqn());
 });
 

@@ -40,10 +40,11 @@ export const useLineageStore = defineStore("lineage", () => {
   const lineageFilterRef = ref(null);
   const previewData: Ref<PreviewData> = ref(createDefaultPreview());
 
-  const getFilters = async () => {
+  const getFilters = async (dataModelType: string) => {
     filters.value = (await getUseFilters(
-      createDefaultFilters(),
-    )) as Partial<Filters>;
+      createDefaultFilters() as Partial<Filters>,
+      dataModelType,
+    ));
 
     // 미분류 카테고리 ID 저장
     const categoryData = filters.value[FILTER_KEYS.CATEGORY]?.data;

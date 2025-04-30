@@ -213,6 +213,9 @@ export const useSearchCommonStore = defineStore(
       setSize(stackedFromCount.value);
 
       const { data, totalCount } = await getSearchListAPI();
+
+      if (data[currentTab.value].size === 0) currentTab.value = "storage";
+
       searchResult.value = data[currentTab.value];
       searchResultLength.value = totalCount;
       isSearchResultNoData.value = searchResult.value.length === 0;
@@ -223,9 +226,11 @@ export const useSearchCommonStore = defineStore(
       selectedFilters.value = {};
     };
 
-    const getFilters = async () => {
-      filters.value = (await getUseFilters(createDefaultFilters())) as Filters;
-
+    const getFilters = async (dataModelType: string = "table") => {
+      filters.value = (await getUseFilters(
+        createDefaultFilters(),
+        dataModelType,
+      )) as Filters;
       // 미분류 카테고리 ID 저장
       UNDEFINED_TAG_ID =
         filters.value[FILTER_KEYS.CATEGORY].data.children[0].id;
@@ -233,24 +238,25 @@ export const useSearchCommonStore = defineStore(
 
     const getUseFilters = async (
       defaultFilters: Filters | Partial<Filters>,
+      dataModelType: string,
     ) => {
-      const { data } = await $api(`/api/search/filters`);
+      const { data } = await $api(
+        `/api/search/filters?dataModelType=${dataModelType}`,
+      );
 
       // 기본값 기준 사용할 필터 key 를 정리
       const useFilters = Object.keys(defaultFilters);
 
       const filtersData = defaultFilters;
       useFilters.forEach((key: string) => {
-        (filtersData as Filters)[key].data = data[key];
+        // 스토리지 탭 > 'buckets' 키가 존재시,
+        const filterData = data[key];
+        (filtersData as Filters)[key].data = _.has(filterData, "buckets")
+          ? filterData.buckets
+          : filterData;
       });
 
       return filtersData;
-    };
-
-    const getFilter = async (filterKey: string) => {
-      // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-      const data = await $api(`/api/search/filter?field=${filterKey}`);
-      (filters.value as Filters)[filterKey].data = data.data[filterKey];
     };
 
     const getPreviewData = async (fqn: string) => {
@@ -297,8 +303,15 @@ export const useSearchCommonStore = defineStore(
           key === "category"
             ? getCtgIds(undefinedTagId, selectedFilters)
             : (selectedFilters as SelectedFilters)[key];
-        const keyValue = key === "category" ? "tags.tagFQN" : key;
+        let keyValue = key === "category" ? "tags.tagFQN" : key;
 
+        // 'storage' 탭일 경우 키 값을 변경
+        if (
+          currentTab.value === "storage" &&
+          keyValue === "columns.name.keyword"
+        ) {
+          keyValue = "dataModel.columns.name.keyword";
+        }
         queryFilter.query.bool.must.push(
           setQueryFilterByDepth(keyValue, value),
         );
@@ -340,7 +353,10 @@ export const useSearchCommonStore = defineStore(
       showDropDown.value = false;
       showGraphModelListMenu.value = false;
       currentTab.value = item;
-
+      // 필터 탭 초기화
+      setEmptyFilter();
+      // 탭[테이블 / 스토리지 / 융합모델] 종류에 따른 필터항목 조회
+      await getFilters(currentTab.value);
       if (loadList) {
         resetReloadList();
         viewType.value === "graphView" ? await getGraphData() : null;
@@ -547,7 +563,6 @@ export const useSearchCommonStore = defineStore(
       lowestCategoryIdList,
       addSearchList,
       getSearchList,
-      getFilter,
       getFilters,
       getUseFilters,
       createDefaultPreview,

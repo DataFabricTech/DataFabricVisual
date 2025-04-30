@@ -111,6 +111,7 @@ const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],
   sortList: () => [],
   filter: () => {},
+  initChangeTabCount: () => 0,
   isMulti: false,
   useItemDeleteBtn: false,
   valueKey: "id",

@@ -33,7 +33,6 @@
               :use-infinite="true"
               :use-live-search="false"
               :addSearchList="addSearchList"
-              :isDoneFirModelListLoad="isDoneFirModelListLoad"
               list-type="non-selected"
               no-data-msg="데이터 모델이 없습니다."
               @item-check="onSelectApiData"
@@ -73,7 +72,6 @@
               :use-sort="false"
               :use-infinite="true"
               :addSearchList="addMySearchList"
-              :isDoneFirModelListLoad="isDoneFirModelListLoad"
               list-type="non-selected"
               no-data-msg="데이터 모델이 없습니다."
               @item-check="onSelectMyListData"
@@ -123,8 +121,9 @@
           <span>선택된 데이터 모델({{ selectedListLength }})</span>
         </div>
         <data-model-list
-          :filter="filters"
+          :filter="selectedDataModelFilters"
           :data="nSelectedListData"
+          :initChangeTabCount="initChangeTabCount"
           label-key="modelNm"
           value-key="id"
           :use-item-delete-btn="true"
@@ -156,6 +155,9 @@ import _ from "lodash";
 
 const verticalSplitter = ref(50);
 
+// 탭 change시 증가되는 변수
+const initChangeTabCount = ref(0);
+
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
 const {
@@ -178,6 +180,7 @@ const {
 } = dataModelSearchStore;
 const {
   filters,
+  selectedDataModelFilters,
   selectedFilters,
   searchResult,
   searchResultLength,
@@ -187,7 +190,7 @@ const {
   mySearchResult,
   mySearchResultLength,
   nSelectedListData,
-  isDoneFirModelListLoad,
+  firstAPIDone,
 } = storeToRefs(dataModelSearchStore);
 
 const selectedListLength = computed(() => {
@@ -211,17 +214,28 @@ const searchListDetailTab = computed(() => {
 });
 
 const onChangeTab = (value: string) => {
+  // 목록 초기화
+  searchResult.value = [];
+  mySearchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   tempMyListSelectedListData.value = [];
   changeTab(value);
+  // 탭 변경시 count 증가
+  initChangeTabCount.value++;
 };
 const onChangeTypeTab = (value: string) => {
+  // 목록 초기화
+  searchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   changeTypeTab(value);
+  // 탭 변경시 count 증가
+  initChangeTabCount.value++;
 };
 const onChangeTypeMyTab = (value: string) => {
+  // 목록 초기화
+  mySearchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempMyListSelectedListData.value = [];
   changeTypeMyTab(value);
@@ -334,6 +348,9 @@ const onClickApiFilterChange = async (value: []) => {
   await resetReloadList(nSelectedListData.value);
 };
 const onClickApiSortChange = async (value: string) => {
+  if (firstAPIDone.value) {
+    return;
+  }
   setSortInfo(value);
   await resetReloadList(nSelectedListData.value);
 };
