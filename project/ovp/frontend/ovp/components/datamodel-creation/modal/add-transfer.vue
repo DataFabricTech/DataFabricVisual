@@ -190,6 +190,7 @@ const {
   mySearchResult,
   mySearchResultLength,
   nSelectedListData,
+  firstAPIDone,
 } = storeToRefs(dataModelSearchStore);
 
 const selectedListLength = computed(() => {
@@ -347,6 +348,9 @@ const onClickApiFilterChange = async (value: []) => {
   await resetReloadList(nSelectedListData.value);
 };
 const onClickApiSortChange = async (value: string) => {
+  if (firstAPIDone.value) {
+    return;
+  }
   setSortInfo(value);
   await resetReloadList(nSelectedListData.value);
 };

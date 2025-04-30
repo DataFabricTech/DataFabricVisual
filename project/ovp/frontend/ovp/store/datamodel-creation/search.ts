@@ -96,6 +96,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const sampleData: Ref<object> = ref<object>({});
   const profileData: Ref<object> = ref<object>({});
   const recommendData: Ref<object> = ref<object>({});
+
+  //처음 페이지 로드 후, API를 불러오면 true
+  const firstAPIDone = ref(false);
+
   /**
    * 데이터 조회 > 쿼리 파라미터 처리
    */
@@ -531,7 +535,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     // 기본값 기준 사용할 필터 key 를 정리
     const defaultFilters = createDefaultFilters();
     // 필터 초기화
-    selectedFilters.value = [];
+    selectedFilters.value = {};
     const useFilters = Object.keys(defaultFilters);
 
     useFilters.forEach((key: string) => {
@@ -726,6 +730,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     currTab,
     currTypeMyTab,
     currTypeTab,
+    firstAPIDone,
     filters,
     selectedDataModelFilters,
     searchResult,
