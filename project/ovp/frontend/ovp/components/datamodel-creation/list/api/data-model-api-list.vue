@@ -12,7 +12,7 @@
             id="data-menu-search"
             class="text-input"
             :value="searchLabel"
-            @keydown.enter="onSearchText($event.target.value)"
+            @keydown.enter.stop.prevent="onSearchText($event.target.value)"
             placeholder="검색어를 입력하세요"
           />
           <svg-icon class="text-input-icon" name="search"></svg-icon>
