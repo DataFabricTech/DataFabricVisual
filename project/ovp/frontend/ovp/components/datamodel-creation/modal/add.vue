@@ -120,6 +120,8 @@ const {
   mySearchResult,
   currTypeTab,
   firstAPIDone,
+  searchResultLength,
+  mySearchResultLength,
 } = storeToRefs(dataModelSearchStore);
 const {
   getFilters,
@@ -175,6 +177,9 @@ const onCloseModal = () => {
   selectedFilters.value = {};
   // 중분류 탭 초기화
   currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
+  // 문제 상황: 필터를 적용한 후 닫기 버튼을 누르고 다시 열면 필터 초기화 되지 않는 문제를 해결하기 위해 search 결과를 초기화
+  searchResultLength.value = 0;
+  mySearchResultLength.value = 0;
 };
 
 function openDetailPage(data: object) {

@@ -177,6 +177,7 @@ const {
   onClickBookmark,
   updateSelectedModelBookmark,
   cancelAllSelection,
+  resetSelectedFilters,
 } = dataModelSearchStore;
 const {
   filters,
@@ -184,11 +185,11 @@ const {
   selectedFilters,
   searchResult,
   searchResultLength,
+  mySearchResultLength,
   currTab,
   currTypeMyTab,
   currTypeTab,
   mySearchResult,
-  mySearchResultLength,
   nSelectedListData,
   firstAPIDone,
 } = storeToRefs(dataModelSearchStore);
@@ -214,22 +215,35 @@ const searchListDetailTab = computed(() => {
 });
 
 const onChangeTab = (value: string) => {
+  // 필터된 result값 초기화
+  searchResultLength.value = 0;
+  mySearchResultLength.value = 0;
+  // 중분류 탭 초기화
+  currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
+  currTypeMyTab.value = $constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB[0].value;
   // 목록 초기화
   searchResult.value = [];
   mySearchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   tempMyListSelectedListData.value = [];
+  // 대분류 탭 이동 시 필터 상태 초기화
+  resetSelectedFilters();
   changeTab(value);
   // 탭 변경시 count 증가
   initChangeTabCount.value++;
 };
-const onChangeTypeTab = (value: string) => {
+
+const onChangeTypeTab = async (value: string) => {
   // 목록 초기화
   searchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
-  changeTypeTab(value);
+  // 기존 필터 초기화
+  resetSelectedFilters();
+  setSearchKeyword("");
+  await changeTypeTab(value);
+
   // 탭 변경시 count 증가
   initChangeTabCount.value++;
 };

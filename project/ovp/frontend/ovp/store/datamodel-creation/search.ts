@@ -279,6 +279,14 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const setSelectedFilter = (value: any[]) => {
     selectedFilters.value = value;
   };
+
+  // 선택된 필터 키에 대해 빈 배열([])로 재설정
+  const resetSelectedFilters = () => {
+    Object.keys(selectedFilters.value).forEach((key) => {
+      selectedFilters.value[key] = [];
+    });
+  };
+
   const setSelectedItem = (value: any) => {
     selectedItem.value = value;
     sampleData.value = value;
@@ -298,7 +306,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     setSelectedItem({});
     currTypeTab.value = item;
     await getFilters(item);
-    await resetReloadList(nSelectedListData.value);
   };
 
   /**
@@ -773,5 +780,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     setNSelectedListData,
     cancelAllSelection,
     getSelectedDataFilters,
+    resetSelectedFilters,
   };
 });
