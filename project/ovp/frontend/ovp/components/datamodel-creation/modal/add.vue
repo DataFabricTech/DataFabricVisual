@@ -7,8 +7,9 @@
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="900"
-    :height="837"
+    :width="80"
+    :height="88"
+    prefix="%"
     :lockScroll="true"
     swipeToClose="none"
     @closed="onCloseModal"
@@ -18,80 +19,96 @@
     @confirm="onConfirmModal"
   >
     <template v-slot:body>
-      <div class="data-add">
-        <add-transfer></add-transfer>
-        <Tab
-          class="h-[350px]"
-          :data="$constants.DATAMODEL_CREATION.ADD.DETAIL_TAB"
-          label-key="label"
-          value-key="value"
-          current-item-type="value"
-          :current-item="currDetailTab"
-          @change="changeDetailTab"
-        >
-          <template #sample>
-            <add-detail-grid
-              :data="sampleData"
-              :owner="selectedItemOwner"
-              no-data-msg="샘플 데이터가 없습니다."
-            ></add-detail-grid>
-          </template>
-          <template #profile>
-            <add-detail-grid
-              :data="profileData"
-              :owner="selectedItemOwner"
-              no-data-msg="데이터 프로파일링 정보가 없습니다."
-            ></add-detail-grid>
-          </template>
-          <template #recommend>
-            <div class="data-list" v-if="recommendData.length > 0">
-              <template v-for="Data in recommendData">
-                <resource-box
-                  class="is-resource-box-no-action"
-                  :data-obj="Data"
-                  :is-box-selected-style="true"
-                  :show-owner="true"
-                  :show-category="true"
-                  :use-data-nm-link="true"
-                  :use-context-box="false"
-                  :use-detail-btn="true"
-                  @open-detail-page="openDetailPage"
-                />
-              </template>
-            </div>
-
-            <div v-else class="no-result">
-              <div class="notification">
-                <svg-icon class="notification-icon" name="info"></svg-icon>
-                <p class="notification-detail">
-                  추천 데이터 모델 정보가 없습니다.
-                </p>
+      <splitter
+        class="data-add"
+        v-model="horizontalSplitter"
+        :limits="[30, 70]"
+        unit="%"
+        horizontal
+      >
+        <template #before>
+          <add-transfer v-if="firstAPIDone"></add-transfer>
+        </template>
+        <template #after>
+          <Tab
+            class="h-full"
+            :data="$constants.DATAMODEL_CREATION.ADD.DETAIL_TAB"
+            label-key="label"
+            value-key="value"
+            current-item-type="value"
+            :current-item="currDetailTab"
+            @change="changeDetailTab"
+          >
+            <template #sample>
+              <add-detail-grid
+                :data="sampleData"
+                :owner="selectedItemOwner"
+                no-data-msg="샘플 데이터가 없습니다."
+              ></add-detail-grid>
+            </template>
+            <template #profile>
+              <add-detail-grid
+                :data="profileData"
+                :owner="selectedItemOwner"
+                no-data-msg="데이터 프로파일링 정보가 없습니다."
+              ></add-detail-grid>
+            </template>
+            <template #recommend>
+              <div class="data-list" v-if="recommendData.length > 0">
+                <template v-for="Data in recommendData">
+                  <resource-box
+                    class="is-resource-box-no-action"
+                    :data-obj="Data"
+                    :is-box-selected-style="true"
+                    :show-owner="true"
+                    :show-category="true"
+                    :use-data-nm-link="true"
+                    :use-context-box="false"
+                    :use-detail-btn="true"
+                    @open-detail-page="openDetailPage"
+                  />
+                </template>
               </div>
-            </div>
-          </template>
-        </Tab>
-      </div>
+
+              <div v-else class="no-result">
+                <div class="notification">
+                  <svg-icon class="notification-icon" name="info"></svg-icon>
+                  <p class="notification-detail">
+                    추천 데이터 모델 정보가 없습니다.
+                  </p>
+                </div>
+              </div>
+            </template>
+          </Tab>
+        </template>
+      </splitter>
     </template>
   </Modal>
 </template>
 <script setup lang="ts">
-import Modal from "@extends/modal/Modal.vue";
-import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";
-import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
-import { storeToRefs } from "pinia";
-import Tab from "@extends/tab/Tab.vue";
-import $constants from "~/utils/constant";
-import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid.vue";
-import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
-
 import { useRouter } from "nuxt/app";
+import { storeToRefs } from "pinia";
+
+import $constants from "~/utils/constant";
+
+import Modal from "@extends/modal/Modal.vue";
+import Splitter from "@extends/splitter/Splitter.vue";
+import Tab from "@extends/tab/Tab.vue";
+import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";
+import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid.vue";
 import ResourceBox from "~/components/common/resource-box/resource-box.vue";
 
+import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
+import { ref } from "vue";
+
 const router = useRouter();
+
+const horizontalSplitter = ref(50);
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
 const {
+  selectedFilters,
   currDetailTab,
   sampleData,
   profileData,
@@ -99,11 +116,16 @@ const {
   selectedItemOwner,
   selectedModelList,
   nSelectedListData,
-  infiniteScrollSettingDone,
+  searchResult,
+  mySearchResult,
+  currTypeTab,
+  firstAPIDone,
+  searchResultLength,
+  mySearchResultLength,
 } = storeToRefs(dataModelSearchStore);
 const {
-  resetReloadList,
   getFilters,
+  resetReloadList,
   changeDetailTab,
   resetDetailBox,
   setNSelectedListData,
@@ -114,12 +136,18 @@ const {
   cancelAllSelection,
 } = dataModelSearchStore;
 
-Promise.all([resetReloadList(), getFilters(), resetDetailBox()]);
+Promise.all([resetReloadList(), resetDetailBox()]);
 
 const onOpenModal = async () => {
+  // filter 값 초기화 세팅
+  await getFilters(currTypeTab.value);
   cancelAllSelection();
+  // 처음 모달 띄울 경우 데이터모델 목록 초기화
+  searchResult.value = [];
+  mySearchResult.value = [];
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
   setNSelectedListData($_cloneDeep(selectedModelList.value));
+  firstAPIDone.value = true;
 };
 
 const emit = defineEmits<{
@@ -146,7 +174,12 @@ const onCloseModal = () => {
   setNSelectedListData([]);
   setSelectedItem({});
   setCurrTab(TAB_DEFAULT);
-  infiniteScrollSettingDone.value = false;
+  selectedFilters.value = {};
+  // 중분류 탭 초기화
+  currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
+  // 문제 상황: 필터를 적용한 후 닫기 버튼을 누르고 다시 열면 필터 초기화 되지 않는 문제를 해결하기 위해 search 결과를 초기화
+  searchResultLength.value = 0;
+  mySearchResultLength.value = 0;
 };
 
 function openDetailPage(data: object) {
@@ -161,6 +194,5 @@ function openDetailPage(data: object) {
 
   window.open(fullPath, "_blank", "noopener,noreferrer");
 }
-
 </script>
 <style lang="scss" scoped></style>

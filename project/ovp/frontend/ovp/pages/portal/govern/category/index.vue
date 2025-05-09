@@ -78,6 +78,7 @@
                   maxlength="20"
                   required
                   id="title-modify"
+                  type="text"
                   class="text-input"
                 />
               </template>
@@ -197,7 +198,6 @@
                     :use-detail-btn="true"
                     :is-box-selected-style="isBoxSelectedStyle"
                     :selected-model-list="selectedModelList"
-                    @modelNmClick="modelNmClick"
                     @open-detail-page="openDetailPage"
                     @previewClick="previewClick"
                     @checkedValueChanged="checked"

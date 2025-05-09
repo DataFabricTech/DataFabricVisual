@@ -21,6 +21,7 @@
         <input
           id="title-modify"
           class="text-input"
+          type="text"
           v-model.trim="editData.displayName"
           maxlength="20"
         />

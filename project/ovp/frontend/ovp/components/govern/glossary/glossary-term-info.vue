@@ -17,6 +17,7 @@
         <label class="hidden-text" for="title-modify">용어 수정</label>
         <input
           id="title-modify"
+          type="text"
           class="text-input"
           v-model="editData.name"
           maxlength="20"

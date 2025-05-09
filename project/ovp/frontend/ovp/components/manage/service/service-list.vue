@@ -18,6 +18,7 @@
             >
             <input
               id="data-menu-search"
+              type="text"
               class="text-input"
               placeholder="검색어 입력"
               v-model="keyword"

@@ -5,6 +5,7 @@ export interface DataModelListEvent {
   // 필터
   onSelectFilter(filterKey: string, value: string): void;
   onResetSearchFilter(): void;
+  onResetSelectedFilter(): void; // selectedFilter 초기화 함수
   // Context-menu
   onShowContextMenu(itemValue: string, checked: boolean | null): void;
   onShowContextMenuBtn(itemValue: string, checked: boolean | null): void;

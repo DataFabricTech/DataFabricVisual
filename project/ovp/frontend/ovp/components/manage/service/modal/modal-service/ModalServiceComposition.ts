@@ -43,6 +43,8 @@ export interface ModalServiceComposition extends ModalServiceProps {
   isDoneTestConnection: Ref<boolean | null>;
   testConnectionStatus: Ref<ConnectionStatus>;
   openEyeValues: Ref<string[]>;
+  isTestConnectionDisabled: Ref<boolean>; // 연결테스트 비활성화 유무
+
 
   setValue(serviceObjPath: string, value: any): void;
 
@@ -116,6 +118,7 @@ export function ModalServiceComposition(
     isDoneTestConnection,
     testConnectionStatus,
     openEyeValues,
+    isTestConnectionDisabled,
   } = storeToRefs(serviceStore);
   const {
     setValue,
@@ -574,5 +577,6 @@ export function ModalServiceComposition(
     connectionTest,
     submit,
     checkValidation,
+    isTestConnectionDisabled,
   };
 }

@@ -198,6 +198,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       const { data } = await $api(
         `/api/search/detail/sample-data/${dataModelId}?type=${dataModelType.value}`,
       );
+
       if (data !== null) {
         sampleColumns.value = _.map(data.columns, (value) => {
           return {
@@ -347,7 +348,6 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const makeUserBody = (data: any) => {
-    console.log(data);
     const user = _.find(userList.value, { id: data.id });
     let body: any[] = [];
 
@@ -448,6 +448,15 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     recommendDataModels.value = res.data;
   };
 
+  const initTabData = () => {
+    schemaList.value = [];
+    sampleColumns.value = [];
+    sampleList.value = [];
+    profileList.value = [];
+    queryList.value = [];
+    dataLineage.value = {};
+  };
+
   return {
     dataModelType,
     userList,
@@ -489,5 +498,6 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     changeTag,
     removeDataModel,
     getRecommendDataModels,
+    initTabData,
   };
 });

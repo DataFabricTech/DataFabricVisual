@@ -17,6 +17,7 @@
               v-model.trim="newData.displayName"
               placeholder="분류명에 대한 영역입니다."
               required
+              type="text"
               id="title-modify"
               class="text-input"
               maxlength="20"

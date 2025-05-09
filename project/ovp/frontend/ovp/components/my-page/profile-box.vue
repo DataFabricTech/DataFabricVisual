@@ -25,6 +25,7 @@
         >
         <input
           id="profile-name-modify"
+          type="text"
           class="text-input w-1/4"
           :placeholder="localDisplayName ? '' : '이름을 입력해주세요.'"
           v-model="localDisplayName"

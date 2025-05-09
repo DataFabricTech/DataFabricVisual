@@ -101,6 +101,12 @@
       margin-left: auto;
     }
   }
+
+  &:has(.menu-item.is-menu-item-empty) {
+    .tree {
+      display: none;
+    }
+  }
 }
 
 

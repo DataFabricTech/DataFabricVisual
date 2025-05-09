@@ -1,133 +1,149 @@
 <template>
-  <div class="transfer">
-    <div class="transfer-box">
-      <Tab
-        class="h-full"
-        :data="$constants.DATAMODEL_CREATION.ADD.TAB"
-        label-key="label"
-        value-key="value"
-        current-item-type="value"
-        :current-item="currTab"
-        @change="onChangeTab"
-      >
-        <template #all>
-          <data-model-api-list
-            class="h-full"
-            :filter="filters"
-            :data="searchResult"
-            :selectedFilters="selectedFilters"
-            :sort-list="$constants.COMMON.SORT_FILTER"
-            :selected-items="nSelectedListData"
-            label-key="modelNm"
-            value-key="id"
-            :use-item-delete-btn="false"
-            :is-multi="true"
-            :use-filter="true"
-            :use-sort="true"
-            :use-infinite="true"
-            :use-live-search="false"
-            :addSearchList="addSearchList"
-            :isDoneFirModelListLoad="isDoneFirModelListLoad"
-            list-type="non-selected"
-            no-data-msg="데이터 모델이 없습니다."
-            @item-check="onSelectApiData"
-            @item-click="onClickData"
-            @bookmark-change="onClickBookmark"
-            @filter-change="onClickApiFilterChange"
-            @sort-change="onClickApiSortChange"
-            @search-change="onClickApiSearchChange"
-            @filter-reset="onClickApiReset"
-          >
-            <template v-slot:tab>
-              <Tab
-                class="tab-line"
-                :data="searchListDetailTab"
-                label-key="label"
-                value-key="value"
-                current-item-type="value"
-                :current-item="currTypeTab"
-                @change="onChangeTypeTab"
-              ></Tab>
-            </template>
-          </data-model-api-list>
-        </template>
-        <template #my>
-          <data-model-api-list
-            class="h-full"
-            :data="mySearchResult"
-            :filter="[]"
-            :selected-filters="[]"
-            :selected-items="nSelectedListData"
-            label-key="modelNm"
-            value-key="id"
-            :use-item-delete-btn="false"
-            :is-multi="true"
-            :use-filter="false"
-            :use-live-search="false"
-            :use-sort="false"
-            :use-infinite="true"
-            :addSearchList="addMySearchList"
-            :isDoneFirModelListLoad="isDoneFirModelListLoad"
-            list-type="non-selected"
-            no-data-msg="데이터 모델이 없습니다."
-            @item-check="onSelectMyListData"
-            @item-click="onClickData"
-            @bookmark-change="onClickBookmark"
-            @search-change="onClickMyListSearchChange"
-          >
-            <template v-slot:tab>
-              <Tab
-                class="tab-line"
-                :data="myListDetailTab"
-                label-key="label"
-                value-key="value"
-                current-item-type="value"
-                :current-item="currTypeMyTab"
-                @change="onChangeTypeMyTab"
-              ></Tab>
-            </template>
-          </data-model-api-list>
-        </template>
-      </Tab>
-    </div>
-    <div class="transfer-handle">
-      <button class="button button-neutral-stroke" @click="onSaveSelectedData">
-        <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-        <span class="hidden-text">오른쪽 이동</span>
-      </button>
-      <button
-        class="button button-neutral-stroke"
-        @click="onDeleteSelectedData"
-      >
-        <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-        <span class="hidden-text">왼쪽 이동</span>
-      </button>
-    </div>
-    <div class="transfer-box">
-      <div class="transfer-head">
-        <span>선택된 데이터 모델({{ selectedListLength }})</span>
+  <splitter
+    class="transfer"
+    v-model="verticalSplitter"
+    :limits="[30, 70]"
+    unit="%"
+  >
+    <template #before>
+      <div class="transfer-box">
+        <Tab
+          class="h-full"
+          :data="$constants.DATAMODEL_CREATION.ADD.TAB"
+          label-key="label"
+          value-key="value"
+          current-item-type="value"
+          :current-item="currTab"
+          @change="onChangeTab"
+        >
+          <template #all>
+            <data-model-api-list
+              class="h-full"
+              :filter="filters"
+              :data="searchResult"
+              :selectedFilters="selectedFilters"
+              :sort-list="$constants.COMMON.SORT_FILTER"
+              :selected-items="nSelectedListData"
+              label-key="modelNm"
+              value-key="id"
+              :use-item-delete-btn="false"
+              :is-multi="true"
+              :use-filter="true"
+              :use-sort="true"
+              :use-infinite="true"
+              :use-live-search="false"
+              :addSearchList="addSearchList"
+              list-type="non-selected"
+              no-data-msg="데이터 모델이 없습니다."
+              @item-check="onSelectApiData"
+              @item-click="onClickData"
+              @bookmark-change="onClickBookmark"
+              @filter-change="onClickApiFilterChange"
+              @sort-change="onClickApiSortChange"
+              @search-change="onClickApiSearchChange"
+              @filter-reset="onClickApiReset"
+            >
+              <template v-slot:tab>
+                <Tab
+                  class="tab-line"
+                  :data="searchListDetailTab"
+                  label-key="label"
+                  value-key="value"
+                  current-item-type="value"
+                  :current-item="currTypeTab"
+                  @change="onChangeTypeTab"
+                ></Tab>
+              </template>
+            </data-model-api-list>
+          </template>
+          <template #my>
+            <data-model-api-list
+              class="h-full"
+              :data="mySearchResult"
+              :filter="[]"
+              :selected-filters="[]"
+              :selected-items="nSelectedListData"
+              label-key="modelNm"
+              value-key="id"
+              :use-item-delete-btn="false"
+              :is-multi="true"
+              :use-filter="false"
+              :use-live-search="false"
+              :use-sort="false"
+              :use-infinite="true"
+              :addSearchList="addMySearchList"
+              list-type="non-selected"
+              no-data-msg="데이터 모델이 없습니다."
+              @item-check="onSelectMyListData"
+              @item-click="onClickData"
+              @bookmark-change="onClickBookmark"
+              @search-change="onClickMyListSearchChange"
+            >
+              <template v-slot:tab>
+                <Tab
+                  class="tab-line"
+                  :data="myListDetailTab"
+                  label-key="label"
+                  value-key="value"
+                  current-item-type="value"
+                  :current-item="currTypeMyTab"
+                  @change="onChangeTypeMyTab"
+                ></Tab>
+              </template>
+            </data-model-api-list>
+          </template>
+        </Tab>
       </div>
-      <data-model-list
-        :filter="filters"
-        :data="nSelectedListData"
-        label-key="modelNm"
-        value-key="id"
-        :use-item-delete-btn="true"
-        :is-multi="true"
-        :use-sort="false"
-        :use-infinite="false"
-        :use-live-search="true"
-        list-type="selected"
-        no-data-msg="선택된 데이터 모델이 없습니다."
-        @delete="onDeleteListData"
-        @item-check="onSelectListData"
-        @item-click="onClickSelectedData"
-        @bookmark-change="updateSelectedModelBookmark"
-      ></data-model-list>
-    </div>
-  </div>
+    </template>
+    <template #separator>
+      <div class="transfer-handle">
+        <button
+          class="button button-primary-stroke"
+          @click="onSaveSelectedData"
+          title="모델 추가"
+        >
+          <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
+          <span class="hidden-text">선택된 항목 오른쪽 이동시켜 추가</span>
+        </button>
+        <button
+          class="button button-primary-stroke"
+          @click="onDeleteSelectedData"
+          title="추가 해제"
+        >
+          <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
+          <span class="hidden-text">선택된 항목 왼쪽 이동시켜 해제</span>
+        </button>
+      </div>
+    </template>
+    <template #after>
+      <div class="transfer-box">
+        <div class="transfer-head">
+          <span>선택된 데이터 모델({{ selectedListLength }})</span>
+        </div>
+        <data-model-list
+          :filter="selectedDataModelFilters"
+          :data="nSelectedListData"
+          :initChangeTabCount="initChangeTabCount"
+          label-key="modelNm"
+          value-key="id"
+          :use-item-delete-btn="true"
+          :is-multi="true"
+          :use-sort="false"
+          :use-infinite="false"
+          :use-live-search="true"
+          list-type="selected"
+          no-data-msg="선택된 데이터 모델이 없습니다."
+          @delete="onDeleteListData"
+          @item-check="onSelectListData"
+          @item-click="onClickSelectedData"
+          @bookmark-change="updateSelectedModelBookmark"
+        ></data-model-list>
+      </div>
+    </template>
+  </splitter>
 </template>
 <script setup lang="ts">
+import Splitter from "@extends/splitter/Splitter.vue";
 import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import DataModelApiList from "~/components/datamodel-creation/list/api/data-model-api-list.vue";
@@ -136,6 +152,11 @@ import { ref } from "vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
+
+const verticalSplitter = ref(50);
+
+// 탭 change시 증가되는 변수
+const initChangeTabCount = ref(0);
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
@@ -156,19 +177,21 @@ const {
   onClickBookmark,
   updateSelectedModelBookmark,
   cancelAllSelection,
+  resetSelectedFilters,
 } = dataModelSearchStore;
 const {
   filters,
+  selectedDataModelFilters,
   selectedFilters,
   searchResult,
   searchResultLength,
+  mySearchResultLength,
   currTab,
   currTypeMyTab,
   currTypeTab,
   mySearchResult,
-  mySearchResultLength,
   nSelectedListData,
-  isDoneFirModelListLoad,
+  firstAPIDone,
 } = storeToRefs(dataModelSearchStore);
 
 const selectedListLength = computed(() => {
@@ -192,17 +215,41 @@ const searchListDetailTab = computed(() => {
 });
 
 const onChangeTab = (value: string) => {
+  // 필터된 result값 초기화
+  searchResultLength.value = 0;
+  mySearchResultLength.value = 0;
+  // 중분류 탭 초기화
+  currTypeTab.value = $constants.COMMON.DATA_TYPE[0].value;
+  currTypeMyTab.value = $constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB[0].value;
+  // 목록 초기화
+  searchResult.value = [];
+  mySearchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   tempMyListSelectedListData.value = [];
+  // 대분류 탭 이동 시 필터 상태 초기화
+  resetSelectedFilters();
   changeTab(value);
+  // 탭 변경시 count 증가
+  initChangeTabCount.value++;
 };
-const onChangeTypeTab = (value: string) => {
+
+const onChangeTypeTab = async (value: string) => {
+  // 목록 초기화
+  searchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
-  changeTypeTab(value);
+  // 기존 필터 초기화
+  resetSelectedFilters();
+  setSearchKeyword("");
+  await changeTypeTab(value);
+
+  // 탭 변경시 count 증가
+  initChangeTabCount.value++;
 };
 const onChangeTypeMyTab = (value: string) => {
+  // 목록 초기화
+  mySearchResult.value = [];
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempMyListSelectedListData.value = [];
   changeTypeMyTab(value);
@@ -315,6 +362,9 @@ const onClickApiFilterChange = async (value: []) => {
   await resetReloadList(nSelectedListData.value);
 };
 const onClickApiSortChange = async (value: string) => {
+  if (firstAPIDone.value) {
+    return;
+  }
   setSortInfo(value);
   await resetReloadList(nSelectedListData.value);
 };

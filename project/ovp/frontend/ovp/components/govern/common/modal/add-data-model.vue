@@ -197,7 +197,7 @@ const emit = defineEmits<{
 }>();
 
 const beforeOpen = async () => {
-  await getFilters();
+  await getFilters(currentTab.value);
 };
 
 const inputSearchKeyword = (searchKeyword?: string) => {
@@ -209,9 +209,10 @@ const inputSearchKeyword = (searchKeyword?: string) => {
   getDataModelList();
 };
 
-const changeTab = (item: string) => {
+const changeTab = async (item: string) => {
   currentTab.value = item;
-  getDataModelList();
+  await getFilters(item);
+  await getDataModelList();
 };
 
 const selectedDataModelCount = computed(() => {

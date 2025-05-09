@@ -10,10 +10,11 @@
       <div class="search-input search-input-lg w-96">
         <label class="hidden-text" for="text-input-example-4">label</label>
         <input
-            id="text-input-example-4"
-            class="text-input"
-            placeholder="이름으로 검색하세요."
-            v-model="keyword"
+          id="text-input-example-4"
+          type="text"
+          class="text-input"
+          placeholder="이름으로 검색하세요."
+          v-model="keyword"
         />
         <svg-icon class="text-input-icon" name="search"></svg-icon>
         <button

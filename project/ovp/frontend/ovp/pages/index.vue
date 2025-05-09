@@ -58,7 +58,6 @@
           :show-owner="true"
           :show-category="true"
           :is-box-selected-style="false"
-          @modelNmClick="modelNmClick"
         />
       </div>
       <div class="main-content">
@@ -84,7 +83,6 @@
           :show-owner="true"
           :show-category="true"
           :is-box-selected-style="false"
-          @modelNmClick="modelNmClick"
         />
       </div>
     </div>

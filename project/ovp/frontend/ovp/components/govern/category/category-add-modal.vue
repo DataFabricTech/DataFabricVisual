@@ -28,6 +28,7 @@
             <div class="form-detail">
               <input
                 id="categoryAddName"
+                type="text"
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="categoryAddName"

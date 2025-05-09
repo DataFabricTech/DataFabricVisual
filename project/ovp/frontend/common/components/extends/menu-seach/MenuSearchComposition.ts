@@ -44,6 +44,7 @@ export function MenuSearchComposition(
     if (_.isEmpty(props.data)) {
       return;
     }
+
     const result = props.data.map((item) => {
       const isChecked = isCheckedData(item);
       return {

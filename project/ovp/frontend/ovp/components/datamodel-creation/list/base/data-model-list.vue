@@ -10,6 +10,7 @@
           >
           <input
             id="data-menu-search"
+            type="text"
             class="text-input"
             :value="searchLabel"
             @input="onSearchText($event.target.value)"
@@ -111,6 +112,7 @@ const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],
   sortList: () => [],
   filter: () => {},
+  initChangeTabCount: () => 0,
   isMulti: false,
   useItemDeleteBtn: false,
   valueKey: "id",

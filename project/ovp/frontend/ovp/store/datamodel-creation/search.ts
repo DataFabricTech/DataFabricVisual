@@ -39,8 +39,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const selectedModelListCnt = computed(() => {
     return selectedModelList.value.length;
   });
-  const isDoneFirModelListLoad = ref(false);
-  const infiniteScrollSettingDone = ref(false);
 
   const { setQueryFilterByDepth } = useQueryHelpers();
 
@@ -55,6 +53,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
 
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
+  // 선택된 데이터모델의 filter 정보
+  const selectedDataModelFilters = ref<Filters>(createDefaultFilters());
+  // 최초 1회만 selectedDataModelFilters 값 세팅을 위한 플래그
+  let selectedDataModelFiltersAlreadySet = false;
 
   // Tab 정보
   const TAB_DEFAULT = $constants.DATAMODEL_CREATION.ADD.TAB[0].value;
@@ -94,6 +96,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const sampleData: Ref<object> = ref<object>({});
   const profileData: Ref<object> = ref<object>({});
   const recommendData: Ref<object> = ref<object>({});
+
+  //처음 페이지 로드 후, API를 불러오면 true
+  const firstAPIDone = ref(false);
+
   /**
    * 데이터 조회 > 쿼리 파라미터 처리
    */
@@ -192,19 +198,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 갱신
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
-    isDoneFirModelListLoad.value = false;
-
     const { data, totalCount } = await getSearchListAPI(selectedList);
     searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
-
-    const types = ["table", "storage", "model"];
-    if (
-      types.includes(currTypeTab.value) &&
-      searchResultLength.value[currTypeTab.value] > 0
-    ) {
-      isDoneFirModelListLoad.value = true;
-    }
 
     // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
     setDataLoadDone();
@@ -226,14 +222,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const { data, totalCount } = await getMyListAPI(selectedList, true);
     mySearchResult.value = data[currTypeMyTab.value];
     mySearchResultLength.value = totalCount;
-
-    const types = ["owner", "bookmark"];
-    if (
-      types.includes(currTypeMyTab.value) &&
-      mySearchResultLength.value[currTypeMyTab.value] > 0
-    ) {
-      isDoneFirModelListLoad.value = true;
-    }
   };
   /**
    * 데이터 조회 > 누적
@@ -291,6 +279,14 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const setSelectedFilter = (value: any[]) => {
     selectedFilters.value = value;
   };
+
+  // 선택된 필터 키에 대해 빈 배열([])로 재설정
+  const resetSelectedFilters = () => {
+    Object.keys(selectedFilters.value).forEach((key) => {
+      selectedFilters.value[key] = [];
+    });
+  };
+
   const setSelectedItem = (value: any) => {
     selectedItem.value = value;
     sampleData.value = value;
@@ -305,11 +301,11 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 중분류 Tab 변경
    * @param item
    */
-  const changeTypeTab = (item: string) => {
+  const changeTypeTab = async (item: string) => {
     cancelAllSelection();
     setSelectedItem({});
     currTypeTab.value = item;
-    resetReloadList(nSelectedListData.value);
+    await getFilters(item);
   };
 
   /**
@@ -333,15 +329,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     currTab.value = item;
     setSearchKeyword("");
     setSearchMyKeyword("");
-
-    nextTick(() => {
-      // 두 tab 다 infinite scroll 이 설정 되어 있기 때문에 tab 전환시 설정 flag 를 초기화해준다.
-      // dom 에 infinite scroll 이 적용될 tag가 생성 된 후에 infinite scroll 을 설정해줘야 동작하기 때문에 nextTick 에서 설정함.
-      infiniteScrollSettingDone.value = false;
-      infiniteScrollSettingDone.value = true;
-    }).then(() => {
-      resetReloadList(nSelectedListData.value);
-    });
+    resetReloadList(nSelectedListData.value);
   };
   const setSelectedData = (value: string) => {
     const selectedModelItem = _.find(searchResult.value, { id: value });
@@ -367,7 +355,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const cancelAllSelection = () => {
     // 탭 초기화
     currDetailTab.value = DEFAULT_DETAIL_TAB;
-
     nSelectedListData.value = updateSelection(nSelectedListData.value, "");
     searchResult.value = updateSelection(searchResult.value, "");
     mySearchResult.value = updateSelection(mySearchResult.value, "");
@@ -546,16 +533,60 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API- 필터 조회
    */
-  const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`, { showLoader: false });
+  const getFilters = async (dataModelType: string = "table") => {
+    const { data } = await $api(
+      `/api/search/filters?dataModelType=${dataModelType}`,
+      { showLoader: false },
+    );
 
     // 기본값 기준 사용할 필터 key 를 정리
     const defaultFilters = createDefaultFilters();
+    // 필터 초기화
+    selectedFilters.value = {};
     const useFilters = Object.keys(defaultFilters);
 
     useFilters.forEach((key: string) => {
       (filters.value as Filters)[key].data = data[key];
     });
+
+    // 최초 1회만 selectedDataModelFilters 세팅
+    if (!selectedDataModelFiltersAlreadySet) {
+      selectedDataModelFiltersAlreadySet = true;
+      selectedDataModelFilters.value["category"] = _.cloneDeep(
+        filters.value.category,
+      );
+      selectedDataModelFilters.value["tags.tagFQN"] = _.cloneDeep(
+        filters.value["tags.tagFQN"],
+      );
+      // 서비스타입 필터항목 별도 API 호출 후, 세팅
+      selectedDataModelFilters.value["serviceType"].data =
+        await getSelectedDataFilters();
+    }
+  };
+
+  /**
+   * API- 선택된 데이터 모델 필터내 서비스타입필터 가공
+   */
+  const getSelectedDataFilters = async () => {
+    const { data } = await $api(`/api/search/allServiceTypeFilter/list`, {
+      showLoader: false,
+    });
+    // 변환 및 필터링 처리
+    const serviceTypeList = data.serviceType || [];
+
+    // openmetadata & trino 제외할 키값
+    const excludeKeys = ["openmetadata", "trino"];
+
+    const filtered = _.uniqBy(
+      serviceTypeList
+        .map((item: any) => ({
+          ...item,
+          key: item.key.toLowerCase(), //key를 소문자로 변환
+        }))
+        .filter((item: any) => !excludeKeys.includes(item.key)), // 제외 키 필터링
+      "key", // key 기준 중복 제거
+    );
+    return filtered;
   };
 
   /**
@@ -706,7 +737,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     currTab,
     currTypeMyTab,
     currTypeTab,
+    firstAPIDone,
     filters,
+    selectedDataModelFilters,
     searchResult,
     mySearchResult,
     selectedFilters,
@@ -721,8 +754,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     nSelectedListData,
     selectedModelList,
     selectedModelListCnt,
-    isDoneFirModelListLoad,
-    infiniteScrollSettingDone,
     addSearchList,
     addMySearchList,
     getSearchList,
@@ -748,5 +779,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     updateMainSelectedModelBookmark,
     setNSelectedListData,
     cancelAllSelection,
+    getSelectedDataFilters,
+    resetSelectedFilters,
   };
 });

@@ -54,6 +54,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
   const currentStep = ref<number>(1);
   const inValidMsg = ref<string>("");
   const isValid = ref<boolean>(true);
+  const isTestConnectionDisabled = ref<boolean>(true);
 
   const resetServiceObj = () => {
     // serviceId 는 리셋하지 않음.
@@ -554,5 +555,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
     checkServiceNameDuplicate,
     connectionTest,
     submit,
+    isTestConnectionDisabled,
   };
 });

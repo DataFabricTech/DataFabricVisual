@@ -11,8 +11,9 @@
           <input
             id="data-menu-search"
             class="text-input"
+            type="text"
             :value="searchLabel"
-            @keydown.enter="onSearchText($event.target.value)"
+            @keydown.enter.stop.prevent="onSearchText($event.target.value)"
             placeholder="검색어를 입력하세요"
           />
           <svg-icon class="text-input-icon" name="search"></svg-icon>
@@ -82,14 +83,14 @@
     </div>
 
     <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" v-if="!isDoneFirModelListLoad">
+    <div class="no-result" v-show="listData.length === 0">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">{{ props.noDataMsg }}</p>
       </div>
     </div>
 
-    <ul id="dataListModal" class="menu-list" v-if="infiniteScrollSettingDone">
+    <ul id="dataListModal" class="menu-list" v-show="listData.length > 0">
       <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="!item.isSelected"
@@ -129,14 +130,12 @@ import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 const dataModelSearchStore = useDataModelSearchStore();
-const { infiniteScrollSettingDone, currTypeTab, currTypeMyTab } =
-  storeToRefs(dataModelSearchStore);
+const { currTypeTab, currTypeMyTab } = storeToRefs(dataModelSearchStore);
 
 const props = withDefaults(
   defineProps<
     DataModelApiListProps & {
       onAddTransfer?: () => void;
-      isDoneFirModelListLoad?: boolean;
     }
   >(),
   {
@@ -158,7 +157,6 @@ const props = withDefaults(
     noDataMsg: "데이터 모델이 없습니다.",
     listType: "non-selected",
     useItemDeleteBtn: false,
-    isDoneFirModelListLoad: false,
   },
 );
 
@@ -252,23 +250,6 @@ const { scrollTrigger, mount } = useIntersectionObserver({
   targetId: "dataListModal",
   loaderId: "dataModelApiListLoader",
 });
-
-onMounted(() => {
-  // 2. 갱신 api 호출 완료됨.
-  // dom v-if=true 설정
-  infiniteScrollSettingDone.value = true;
-});
-
-// infinite scroll flag 가 true 로 설정되면
-// intesection observer 를 mount 시켜준다.
-watch(
-  () => infiniteScrollSettingDone.value,
-  (value) => {
-    if (value) {
-      mount();
-    }
-  },
-);
 
 watch(
   [() => currTypeTab.value, () => currTypeMyTab.value],

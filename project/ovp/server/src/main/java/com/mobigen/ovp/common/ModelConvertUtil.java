@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,11 +70,24 @@ public class ModelConvertUtil {
      */
     public Map<String, Object> convertSourceDataOne(String index, Map<String, Object> source) {
         Map<String, Object> modifiedSource = new HashMap<>();
-        Map<String, Object> sourceService = (Map<String, Object>) source.get("service");
+        Optional<Map<String, Object>> sourceService = Optional.ofNullable(source.get("service"))
+                .filter(Map.class::isInstance)
+                .map(m -> (Map<String, Object>) m);
 
-        String serviceName = Optional.ofNullable(sourceService.get("displayName"))
+        Map<String, Object> sourceVotes = Optional.ofNullable(source.get("votes"))
+                .filter(Map.class::isInstance)
+                .map(m -> (Map<String, Object>) m)
+                .orElse(new HashMap<>());
+
+        String serviceName = Optional.ofNullable(sourceService.get().get("displayName"))
                 .map(Object::toString)
-                .orElse(sourceService.get("name").toString());
+                .orElse(sourceService.get().get("name").toString());
+
+        Integer upVotes = Optional.ofNullable(sourceVotes)
+                .map(m -> m.get("upVotes"))
+                .filter(Number.class::isInstance)
+                .map(val -> ((Number) val).intValue())
+                .orElse(0);
 
         // serviceType 가져오기
         String serviceType = Optional.ofNullable(source.get("serviceType"))
@@ -94,7 +109,7 @@ public class ModelConvertUtil {
 
 
         List<String> resultList = new ArrayList<>();
-        resultList.add(serviceName);  // ✅ 첫 번째 값으로 `service.displayName` 추가
+        resultList.add(serviceName);  // 첫 번째 값으로 `service.displayName` 추가
         resultList.addAll(Arrays.asList(splitArray).subList(1, splitArray.length)); // 나머지 값 추가
 
         // 어떤 경우에도 맨 앞에는 service displayname이 들어감
@@ -111,6 +126,17 @@ public class ModelConvertUtil {
         modifiedSource.put("modelDesc", source.get("description"));
         modifiedSource.put("fqn", source.get("fullyQualifiedName"));
         modifiedSource.put("owner", source.get("owner"));
+        modifiedSource.put("upVotes", upVotes);
+        // updatedAt 포맷 적용
+        Object updatedAtRaw = source.get("updatedAt");
+        if (updatedAtRaw instanceof Number) {
+            long timestamp = ((Number) updatedAtRaw).longValue();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = sdf.format(new Timestamp(timestamp));
+            modifiedSource.put("updatedAt", formattedDate);
+        } else {
+            modifiedSource.put("updatedAt", null);
+        }
 
         String owner = "";
         if (source.get("owner") != null) {

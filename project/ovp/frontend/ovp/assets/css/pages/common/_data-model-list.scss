@@ -1,0 +1,16 @@
+.data-model-group {
+  overflow-y: auto;
+  display: flex;
+  gap: $spacing-12;
+  height: 100%;
+  padding: $spacing-4 0;
+
+  .data-list {
+    @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
+
+    overflow-y: auto;
+    height: 100%;
+    width: 40%;
+    padding: $spacing-4;
+  }
+}

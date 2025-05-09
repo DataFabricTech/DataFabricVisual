@@ -40,10 +40,21 @@ public class SearchController {
      */
     @ResponseJsonResult(errorMessage = "filter 목록 조회 오류")
     @GetMapping("/filters")
-    public Object getFilters() throws Exception {
-        Map<String, Object> responseMap = searchService.getFilters();
+    public Object getFilters(@RequestParam ("dataModelType") String dataModelType) throws Exception {
+        Map<String, Object> responseMap = searchService.getFilters(dataModelType);
         responseMap.put("category", categoryService.getCategories());
         return responseMap;
+    }
+
+    /**
+     * 탐색 - 목록 - 서비스타입 전체 filter 목록 조회
+     *
+     * @return
+     */
+    @ResponseJsonResult(errorMessage = "allServiceTypeFilter 목록 조회 오류")
+    @GetMapping("/allServiceTypeFilter/list")
+    public Object getAllServiceTypeFilterList() throws Exception {
+        return searchService.getAllServiceTypeFilterList();
     }
 
     /**
