@@ -17,6 +17,7 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpName"
+                    type="text"
                     class="text-input text-input-lg"
                     placeholder="이름 입력"
                     autocomplete="off"
@@ -44,6 +45,7 @@
                     id="inpEmail"
                     class="text-input text-input-lg"
                     placeholder="이메일 입력"
+                    type="email"
                     autocomplete="off"
                     v-model="form.email"
                     @input="validateEmail"

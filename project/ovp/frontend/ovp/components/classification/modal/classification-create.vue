@@ -24,6 +24,7 @@
               <input
                 id="data-model-save-name"
                 class="text-input text-input-lg"
+                type="text"
                 placeholder="이름을 입력하세요."
                 v-model="classificationForm.name"
                 maxlength="20"

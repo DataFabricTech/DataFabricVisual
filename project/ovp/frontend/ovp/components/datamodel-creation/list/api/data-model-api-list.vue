@@ -11,6 +11,7 @@
           <input
             id="data-menu-search"
             class="text-input"
+            type="text"
             :value="searchLabel"
             @keydown.enter.stop.prevent="onSearchText($event.target.value)"
             placeholder="검색어를 입력하세요"

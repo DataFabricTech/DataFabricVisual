@@ -22,6 +22,7 @@
             <div class="form-detail">
               <input
                 id="data-model-save-name"
+                type="text"
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="tagFormState.name"

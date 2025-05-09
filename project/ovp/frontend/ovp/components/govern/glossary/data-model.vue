@@ -6,6 +6,7 @@
         <input
           id="text-input-example-11"
           class="text-input"
+          type="text"
           placeholder="검색어 입력"
           v-model="keyword"
           @keypress.enter="searchDataModel"

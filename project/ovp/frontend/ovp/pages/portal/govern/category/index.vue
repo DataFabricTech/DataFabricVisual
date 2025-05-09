@@ -78,6 +78,7 @@
                   maxlength="20"
                   required
                   id="title-modify"
+                  type="text"
                   class="text-input"
                 />
               </template>
