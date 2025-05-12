@@ -12,22 +12,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
-const emit = defineEmits(['onSelectTab'])
-const props = defineProps(['isAdmin', 'tabs', 'activeTab'])
+const emit = defineEmits(['onSelectTab']);
+const props = defineProps(['isAdmin', 'tabs', 'activeTab']);
 
-const activeTab = ref(0)
+const activeTab = ref(0);
 
+// 초기값 설정
 onMounted(() => {
-  activeTab.value = props.activeTab
-})
+  activeTab.value = props.activeTab;
+});
 
-// 탭 변경
+watch(() => props.activeTab, (newVal) => {
+  activeTab.value = newVal;
+});
+
+// 탭 클릭 시 emit
 const onSelectTab = (tabObj, index) => {
-  activeTab.value = index
-  emit('onSelectTab', tabObj)
+  activeTab.value = index;
+  emit('onSelectTab', tabObj);
 };
+
 
 </script>
 
