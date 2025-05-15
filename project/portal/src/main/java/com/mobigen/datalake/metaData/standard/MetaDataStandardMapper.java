@@ -53,5 +53,13 @@ public interface MetaDataStandardMapper {
     List<Map<String, Object>> getAllTermsForDuplicateCheck() throws Exception;
     List<String> getAllDomainNames() throws Exception;
 
+    List<Map<String, Object>> getAllWordsForDuplicateCheck() throws Exception;
+
     Integer insertStandardTerms(List<Map<String, Object>> standardTerms) throws Exception;
+    Integer insertStandardWords(List<Map<String, Object>> standardWords) throws Exception;
+    Integer insertStandardDomains(List<Map<String, Object>> standardDomains) throws Exception;
+
+    List<Map<String, Object>> getMetaDataStandardTermListForDownload(Map<String, Object> param) throws Exception;
+    List<Map<String, Object>> getMetaDataStandardWordListForDownload(Map<String, Object> param) throws Exception;
+    List<Map<String, Object>> getMetaDataStandardDomainListForDownload(Map<String, Object> param) throws Exception;
 }

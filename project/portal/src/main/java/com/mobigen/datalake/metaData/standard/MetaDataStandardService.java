@@ -1,10 +1,13 @@
 package com.mobigen.datalake.metaData.standard;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,12 +16,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mobigen.datalake.metaData.standard.type.DataType;
 import com.mobigen.datalake.metaData.standard.util.ExcelUtils;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -455,6 +464,54 @@ public class MetaDataStandardService {
         return result;
     }
 
+    public Map<String, Object> uploadExcel(MultipartFile file, Map<String, Object> params) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer insertCount = 0;
+        boolean result = false;
+        try (InputStream is = file.getInputStream();
+            Workbook workbook = new XSSFWorkbook(is);) {
+            
+            Sheet sheet = workbook.getSheetAt(0);
+    
+            List<Map<String, Object>> dataList = new ArrayList<>();
+            // 표준 용어
+            if (params.get("search_type") != null && params.get("search_type").equals("term")) {
+                dataList = this.excelRowsToTerm(sheet.iterator(), params);
+                if (dataList != null && dataList.size() > 0) {
+                    insertCount = metaDataStandardMapper.insertStandardTerms(dataList);
+                }
+            }
+            // 표준 단어
+            if (params.get("search_type") != null && params.get("search_type").equals("word")) {
+                dataList = this.excelRowsToWord(sheet.iterator(), params);
+                if (dataList != null && dataList.size() > 0) {
+                    insertCount = metaDataStandardMapper.insertStandardWords(dataList);
+                }
+            }
+            // 표준 도메인
+            if (params.get("search_type") != null && params.get("search_type").equals("domain")) {
+                dataList = this.excelRowsToDomain(sheet.iterator(), params);
+                if (dataList != null && dataList.size() > 0) {
+                    insertCount = metaDataStandardMapper.insertStandardDomains(dataList);
+                }
+            }
+
+            if (insertCount != null && insertCount > 0) {
+                result = true;
+            } else {
+                result = false;
+            }
+
+            resultMap.put("insertCount", insertCount);
+            resultMap.put("result", result);
+        } catch(Exception e) {
+            log.error("excel upload error !!");
+            resultMap.put("insertCount", insertCount);
+            resultMap.put("result", result);
+        }
+
+        return resultMap;
+    }
 
     private List<Map<String, Object>> excelRowsToTerm(Iterator<Row> rowIterator, Map<String, Object> params) throws Exception {
 		// 중복 체크용
@@ -481,11 +538,13 @@ public class MetaDataStandardService {
 				break;
 			}
             Map<String, Object> term = new HashMap<>();
-			String final_version_date = ExcelUtils.getStringCellValue(row.getCell(1), false);
+			
+
+            String id = UUID.randomUUID().toString();
+            String final_version_date = ExcelUtils.getStringCellValue(row.getCell(1), false);
 			if (final_version_date.isEmpty()) {
 				final_version_date = LocalDate.now().toString();
 			}
-
 			String name = ExcelUtils.getStringCellValue(row.getCell(2), false);
 			String description = ExcelUtils.getStringCellValue(row.getCell(3), false);
 			String english_sign = ExcelUtils.getStringCellValue(row.getCell(4), false);
@@ -496,7 +555,9 @@ public class MetaDataStandardService {
 			String admin_standard_code_name = ExcelUtils.getStringCellValue(row.getCell(9), true);
 			String competent_authority = ExcelUtils.getStringCellValue(row.getCell(10), true);
 			String synonym = ExcelUtils.getStringCellValue(row.getCell(11), true);
+            String used = "Y";
 
+            term.put("id", id);
             term.put("name", name);
             term.put("description", description);
             term.put("english_sign", english_sign);
@@ -507,23 +568,23 @@ public class MetaDataStandardService {
             term.put("admin_standard_code_name", admin_standard_code_name);
             term.put("competent_authority", competent_authority);
             term.put("synonym", synonym);
-            term.put("used", name);
-            term.put("final_version_date", name);
+            term.put("used", used);
+            term.put("final_version_date", final_version_date);
             term.put("creator", creator);
             term.put("modifier", modifier);
 
 			// 중복 validation
-			boolean validateResult = validate(allTerms, allDomainNames, term);
+			boolean validateResult = validateTerm(allTerms, allDomainNames, term);
 			if (!validateResult) {
-				throw new Exception("vlidate Error !!");
+				throw new Exception("term validate Error !!");
 			}
 
 			termList.add(term);
 		}
 		return termList;
 	}
-
-    public boolean validate(List<Map<String, Object>> allTerms, List<String> allDomainNames, Map<String, Object> term) {
+    
+    public boolean validateTerm(List<Map<String, Object>> allTerms, List<String> allDomainNames, Map<String, Object> term) {
         boolean nameDuplicated = false;
         boolean englishSignDuplicated = false;
         boolean domainNameDoesntExist = true;
@@ -558,8 +619,317 @@ public class MetaDataStandardService {
             log.error("English Sign Duplicated !! - " + "(" + term.get("english_sign") + ")");
         }
         if (domainNameDoesntExist) {
-            log.error("domain Duplicated !! - " + "(" + term.get("domain") + ")");
+            log.error("domain Doesnt Exist !! - " + "(" + term.get("domain") + ")");
         }
         return false;
+    }
+
+    private List<Map<String, Object>> excelRowsToWord(Iterator<Row> rowIterator, Map<String, Object> params) throws Exception {
+		// 중복 체크용
+		List<Map<String, Object>> allWords = metaDataStandardMapper.getAllWordsForDuplicateCheck();
+
+		//신규 생성
+		List<Map<String, Object>> wordList = new ArrayList<>();
+
+		int lineNumber = 0;
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+			lineNumber++;
+
+			// 헤더, 1번행 패스
+			if (lineNumber < 2) {
+				continue;
+			}
+			if (ExcelUtils.isRowEmpty(row)) {
+				break;
+			}
+            Map<String, Object> word = new HashMap<>();
+			
+            String id = UUID.randomUUID().toString();
+            String final_version_date = ExcelUtils.getStringCellValue(row.getCell(1), false);
+			if (final_version_date.isEmpty()) {
+				final_version_date = LocalDate.now().toString();
+			}
+			String name = ExcelUtils.getStringCellValue(row.getCell(2), false);
+			String english_sign = ExcelUtils.getStringCellValue(row.getCell(3), false);
+			String word_eng = ExcelUtils.getStringCellValue(row.getCell(4), false);
+			String description = ExcelUtils.getStringCellValue(row.getCell(5), false);
+			String form_checked = ExcelUtils.getStringCellValue(row.getCell(6), true);
+			String domain_classified_name = ExcelUtils.getStringCellValue(row.getCell(7), true);
+			String synonym = ExcelUtils.getStringCellValue(row.getCell(8), true);
+			String forbidden = ExcelUtils.getStringCellValue(row.getCell(9), true);
+            String used = "Y";
+
+            word.put("id", id);
+            word.put("final_version_date", final_version_date);
+            word.put("name", name);
+            word.put("english_sign", english_sign);
+            word.put("word_eng", word_eng);
+            word.put("description", description);
+            word.put("form_checked", form_checked);
+            word.put("domain_classified_name", domain_classified_name);
+            word.put("synonym", synonym);
+            word.put("forbidden", forbidden);
+            word.put("used", used);
+
+			// 중복 validation
+			boolean validateResult = validateWord(allWords, word);
+			if (!validateResult) {
+				throw new Exception("word vlidate Error !!");
+			}
+
+			wordList.add(word);
+		}
+		return wordList;
+	}
+
+    public boolean validateWord(List<Map<String, Object>> allWords, Map<String, Object> word) {
+        boolean nameDuplicated = false;
+        boolean englishSignDuplicated = false;
+        boolean domainClassifiedNameRequiredError = false;
+      
+        Set<String> allWordNames = new HashSet<>();
+        Set<String> allWordEnglishSigns = new HashSet<>();
+        for (Map<String, Object> item : allWords) {
+            allWordNames.add(item.get("name").toString());
+            allWordEnglishSigns.add(item.get("english_sign").toString());
+        }
+
+        if (!allWordNames.add(word.get("name").toString())) {
+            nameDuplicated = true;
+        }
+        if (!allWordEnglishSigns.add(word.get("english_sign").toString())) {
+            englishSignDuplicated = true;
+        }
+        // 형식단어인데, 도메인 분류어가 비어있는 경우
+        if (word.get("form_checked").toString().equals("Y")) {
+            if (word.get("domain_classified_name") != null && !word.get("domain_classified_name").toString().equals("")) {
+                domainClassifiedNameRequiredError = false;
+            } else {
+                domainClassifiedNameRequiredError = true;
+            }
+        }
+
+        if (!nameDuplicated && !englishSignDuplicated && !domainClassifiedNameRequiredError) {
+            return true;
+        }
+
+        if (nameDuplicated) {
+            log.error("name duplicated !! - " + "(" + word.get("name") + ")");
+        }
+        if (englishSignDuplicated) {
+            log.error("english_sign duplicated !! - " + "(" + word.get("english_sign") + ")");
+        }
+        if (domainClassifiedNameRequiredError) {
+            log.error("no domain_classified_name !! - " + "(" + word.get("name") + ")");
+        }
+        return false;
+    }
+
+    private List<Map<String, Object>> excelRowsToDomain(Iterator<Row> rowIterator, Map<String, Object> params) throws Exception {
+		// 중복 체크용
+		List<String> allDomainNames = metaDataStandardMapper.getAllDomainNames();
+        Map<String, String> dataTypeMap = new HashMap<>(); // key: dataType, value: 약어
+        for (DataType dataType : DataType.values()) {
+            dataTypeMap.put(dataType.name(), dataType.getSign());
+        }
+        
+		// 신규 생성
+		List<Map<String, Object>> domainList = new ArrayList<>();
+		int lineNumber = 0;
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+			lineNumber++;
+
+			// 헤더, 1번행 패스
+			if (lineNumber < 2) {
+				continue;
+			}
+			if (ExcelUtils.isRowEmpty(row)) {
+				break;
+			}
+            Map<String, Object> domain = new HashMap<>();
+
+			String id = UUID.randomUUID().toString();
+            String final_version_date = ExcelUtils.getStringCellValue(row.getCell(1), false);
+			if (final_version_date.isEmpty()) {
+				final_version_date = LocalDate.now().toString();
+			}
+			String group_name = ExcelUtils.getStringCellValue(row.getCell(2), false);
+			String domain_classified_name = ExcelUtils.getStringCellValue(row.getCell(3), false);
+			String name = ExcelUtils.getStringCellValue(row.getCell(4), false);
+			String description = ExcelUtils.getStringCellValue(row.getCell(5), false);
+			String dataTypeString = ExcelUtils.getStringCellValue(row.getCell(6), false);
+			if (!DataType.isValidDataTypeString(dataTypeString)) {
+                log.error("invalid data_type !! - " + "(" + dataTypeString + ")");
+				continue;
+			}
+			DataType data_type = DataType.from(dataTypeString);
+
+			// null or "" 처리
+			String dataSizeString = ExcelUtils.getStringCellValue(row.getCell(7), false);
+			Long data_size = ExcelUtils.stringToLong(dataSizeString);
+
+			// null or "" 처리
+			String decimalPointSizeString = ExcelUtils.getStringCellValue(row.getCell(8));
+			Long decimal_point_size = ExcelUtils.stringToLong(decimalPointSizeString);
+
+			String save_format = ExcelUtils.getStringCellValue(row.getCell(9), true);
+			String expression_format = ExcelUtils.getStringCellValue(row.getCell(10), true);
+			String unit = ExcelUtils.getStringCellValue(row.getCell(11), true);
+			String permission_value = ExcelUtils.getStringCellValue(row.getCell(12), true);
+            String used = "Y";
+
+            domain.put("id", id);
+            domain.put("final_version_date", final_version_date);
+            domain.put("group_name", group_name);
+            domain.put("domain_classified_name", domain_classified_name);
+            domain.put("name", name);
+            domain.put("description", description);
+            domain.put("data_type", data_type);
+            domain.put("data_size", data_size);
+            domain.put("decimal_point_size", decimal_point_size);
+            domain.put("save_format", save_format);
+            domain.put("expression_format", expression_format);
+            domain.put("unit", unit);
+            domain.put("permission_value", permission_value);
+            domain.put("used", used);
+
+			// 중복 validation
+			boolean validateResult = validateDomain(allDomainNames, domain, dataTypeMap);
+			if (!validateResult) {
+				throw new Exception("word vlidate Error !!");
+			}
+
+			domainList.add(domain);
+		}
+		return domainList;
+	}
+
+    public boolean validateDomain(List<String> allDomains, Map<String, Object> domain, Map<String, String> dataTypeMap) throws Exception {
+        boolean nameDuplicated = false;
+        Set<String> allDomainNames = new HashSet<>(allDomains);
+        if (!allDomainNames.add(domain.get("name").toString())) {
+            nameDuplicated = true;
+        }
+        boolean unformattedDomainName = false;
+        
+        String dataTypeSign = dataTypeMap.getOrDefault(domain.get("data_type").toString(), null);
+        if (dataTypeSign == null) {
+            unformattedDomainName = true;
+        } else {
+            String domainName = domain.get("name").toString();
+            String domainClassifiedName = domain.get("domain_classified_name").toString();
+            if(!domainName.startsWith(domainClassifiedName)) {
+                unformattedDomainName = true;
+            }
+            if(!domainName.substring(domainClassifiedName.length()).startsWith(dataTypeSign)){
+                unformattedDomainName = true;
+            }
+        }
+
+        if (!nameDuplicated && !unformattedDomainName) {
+            return true;
+        }
+
+        if (nameDuplicated) {
+            log.error("domain name duplicated !! - " + "(" + domain.get("name") + ")");
+        }
+        if (unformattedDomainName) {
+            log.error("invalid domain name format !! - " + "(" + domain.get("name") + ")");
+        }
+        return false;
+    }
+
+    public void downloadExcelFile(Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String select_type = params.get("select_type") != null ? params.get("select_type").toString() : "";
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            List<Map<String, Object>> list = new ArrayList<>();
+            Sheet sheet = workbook.createSheet("표준 데이터");
+
+            int colIndex = 0;
+
+            // 표준 용어, 표준 단어, 표준 도메인
+            if (select_type.equals("term")) {
+                list = metaDataStandardMapper.getMetaDataStandardTermListForDownload(params);
+            } else if (select_type.equals("word")) {
+                list = metaDataStandardMapper.getMetaDataStandardWordListForDownload(params);
+            } else if (select_type.equals("domain")) {
+                list = metaDataStandardMapper.getMetaDataStandardDomainListForDownload(params);
+            }
+            if (list.isEmpty())
+                throw new Exception("Standard Data List is Empty !!");
+
+            // 1. 헤더 작성 (한글명 설정)
+            Map<String, Object> firstRow = new LinkedHashMap<>(list.get(0));
+            Map<String, String> columnNameToKoreanMap = new LinkedHashMap<>(getKoreanHeaderMap(select_type)); // 한글명 키 매핑 데이터
+            Row headerRow = sheet.createRow(0);
+            for (String key : firstRow.keySet()) {
+                headerRow.createCell(colIndex++).setCellValue(columnNameToKoreanMap.get(key));
+            }
+
+            // 2. 데이터 작성
+            for (int i = 0; i < list.size(); i++) {
+                Row dataRow = sheet.createRow(i + 1);
+            
+                Map<String, Object> data = list.get(i);
+            
+                colIndex = 0; // ✅ 셀 인덱스는 매 행마다 초기화
+                for (String key : firstRow.keySet()) {
+                    Object value = data.get(key);
+                    dataRow.createCell(colIndex++).setCellValue(value != null ? value.toString() : "");
+                }
+            }
+
+            // 3. 응답 설정
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=download.xlsx");
+            response.setCharacterEncoding("UTF-8");
+
+            try (OutputStream os = response.getOutputStream()) {
+                workbook.write(os);
+                os.flush();
+            }
+        } catch(Exception e) {
+            log.error("Fail to download Standard Data !!");
+            throw new Exception("엑셀 다운로드 실패");
+        }
+	}
+
+    private Map<String, String> getKoreanHeaderMap(String selectType) {
+        Map<String, String> map = new HashMap<>();
+        if (selectType.equals("term")) {
+            map.put("name", "용어명");
+            map.put("english_sign", "영문약어명");
+            map.put("domain", "도메인명");
+            map.put("final_version_date", "출처");
+            map.put("created_date", "등록일자");
+            map.put("used", "사용여부");
+        }
+
+        if (selectType.equals("word")) {
+            map.put("name", "단어명");
+            map.put("english_sign", "영문약어명");
+            map.put("word_eng", "단어영문명");
+            map.put("form_checked", "형식단어여부");
+            map.put("domain_classified_name", "도메인분류명");
+            map.put("final_version_date", "출처");
+            map.put("created_date", "등록일자");
+            map.put("used", "사용여부");
+        }
+
+        if (selectType.equals("domain")) {
+            map.put("name", "도메인명");
+            map.put("data_type", "데이터 타입");
+            map.put("data_size", "데이터 길이");
+            map.put("group_name", "도메인 그룹명");
+            map.put("domain_classified_name", "도메인 분류명");
+            map.put("final_version_date", "출처");
+            map.put("created_date", "등록일자");
+            map.put("used", "사용여부");
+        }
+
+        return map;
     }
 }

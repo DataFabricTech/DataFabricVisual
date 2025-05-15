@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mobigen.datalake.metaData.manage.MetaDataManageController;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
@@ -279,4 +281,48 @@ public class MetaDataStandardController {
         return metaDataStandardService.updateDomain(params);
     }
 
+    /**
+     * 엑셀 업로드
+     * @param file 업로드 파일
+     * @param search_type 표준 데이터 타입
+     */
+    @ResponseJsonResult
+    @PostMapping("/uploadExcel")
+    public Object uploadExcel(@RequestParam("file") MultipartFile file, @RequestParam String search_type, HttpServletRequest request) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        try {
+            // 업로드 등록자
+            Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+            String user_id = "";
+            if (user != null) {
+                user_id = user.get("user_id").toString();
+            }        
+            params.put("modifier", user_id);
+            params.put("creator", user_id);
+
+            // 업로드 타입(용어, 단어, 도메인)
+            params.put("search_type", search_type);
+
+            Map<String, Object> uploadResult = metaDataStandardService.uploadExcel(file, params);
+            if (uploadResult != null && uploadResult.get("result") != null && (boolean) uploadResult.get("result")) {
+                return ResponseEntity.ok("엑셀 업로드 성공");
+            } else {
+                return ResponseEntity.internalServerError().body("엑셀 업로드 실패");
+            }
+        } catch (Exception e) {
+            log.error("fail to uploadExcel !!");
+            return ResponseEntity.internalServerError().body("엑셀 업로드 실패");
+        }
+    }
+
+    /**
+     * 엑셀 다운로드
+     * @param params 표준 데이터 조회 쿼리관련 파라미터
+     */
+    @ResponseJsonResult
+    @PostMapping("/downloadStandardData")
+	public void downloadExcel(@RequestBody Map<String, Object> params, HttpServletRequest request,
+    HttpServletResponse response) throws Exception {
+		metaDataStandardService.downloadExcelFile(params, request, response);
+	}
 }

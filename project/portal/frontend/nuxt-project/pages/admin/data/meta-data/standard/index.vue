@@ -8,15 +8,16 @@
             <!-- board-list-search -->
             <standard-border-list-search :searchObj="searchObj" @searchMethod="getMetaDataStandardList"
               :searchList="searchList" />
-              <!-- <button @click="downloadSampleFile" type="button" class="mu-btn mu-btn" style="margin-left: 5px;">
+              <button @click="downloadSampleFile" type="button" class="mu-btn mu-btn" style="margin-left: 5px;">
                 <span>엑셀 샘플</span>
-              </button> -->
-              <!-- <button @click="downloadSampleFile" type="button" class="mu-btn mu-btn" style="margin-left: 5px;">
+              </button>
+              <button @click="openFileDialog" type="button" class="mu-btn mu-btn" style="margin-left: 5px;">
                 <span>엑셀 업로드</span>
               </button>
-              <button @click="downloadSampleFile" type="button" class="mu-btn mu-btn" style="margin-left: 5px;">
-                <span>엑셀 데이터</span>
-              </button> -->
+              <input ref="fileInput" type="file" accept=".xlsx, .xls, .csv" @change="uploadExcel" style="display: none;"/>
+              <button @click="downloadExcel" type="button" class="mu-btn mu-btn" style="margin-left: 5px;">
+                <span>엑셀 추출</span>
+              </button>
             <!-- //board-list-search -->
             <div class="mu-item-group">
               <div class="mu-selectbox w120" v-if="currentTab == 1">
@@ -222,6 +223,8 @@ definePageMeta({
 
 const { $ofetch } = useNuxtApp();
 
+const fileInput = ref(null)
+
 const tabs = ref([
   { idx: 0, key: "표준 용어", type: "term" },
   { idx: 1, key: "표준 단어", type: "word" },
@@ -296,7 +299,7 @@ const route = useRoute();
 const router = useRouter();
 
 const getMetaDataStandardList = async (offset = 1) => {
-  const param = {
+  const params = {
     select_type: selectType.value,
     offset,
     limit: pagingObj.value.limit,
@@ -308,7 +311,7 @@ const getMetaDataStandardList = async (offset = 1) => {
 
   await $ofetch("/api/metadata/standard/list", {
     method: 'POST',
-    body: JSON.stringify(param),
+    body: JSON.stringify(params),
     headers: {
       'Content-Type': 'application/json'
     }
@@ -520,8 +523,74 @@ const downloadSampleFile = () => {
   link.click();
 }
 
-// 액셀 일괄 업로드
-const popupFileBrowser = () => {
+// 액셀 파일 업로드 창 출력
+const openFileDialog = () => {
+  fileInput.value?.click()
+}
 
+// 액셀 일괄 업로드
+const uploadExcel = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  // 동일 파일 재선택도 감지되도록 value 초기화
+  event.target.value = ''
+
+  const formData = new FormData()
+  formData.append('file', file)
+
+  await $ofetch(`/api/metadata/standard/uploadExcel?search_type=${selectType.value}`, {
+    method: 'POST',
+    body: formData
+  }).then((res) => {
+    console.log(res)
+    if (res && res.data && res.data.statusCode == 'OK') {
+      successAlert(res.data.body);
+      initSearchOption()
+      getMetaDataStandardList(1, 'term')
+    } else {
+      errorAlert("엑셀 업로드 실패..")
+    }
+  }).catch((err) => {
+    errorAlert("엑셀 업로드 실패..")
+  })
+}
+
+// 액셀 데이터 추출
+const downloadExcel = async () => {
+  const params = {
+    select_type: selectType.value,
+    offset: pagingObj.value.currentPage,
+    limit: pagingObj.value.limit,
+    searchType: searchObj.value.searchType,
+    searchWord: searchObj.value.searchWord,
+    used: currentUsed.value,
+    formChecked: currentFormCheckedOnly.value
+  };
+
+  const res = await $ofetch(`/api/metadata/standard/downloadStandardData`, {
+    method: 'POST',
+    body: params,
+    responseType: 'blob'
+  })
+
+  // 성공시 {}
+  if (res && res.errorMessage && res.errorMessage != "") {
+    errorAlert("CSV 다운로드에 실패하였습니다.")
+    return;
+  }
+
+  if (res.size && res.size > 0) {
+    await new Response(res).blob().then((data) => {
+      const url = URL.createObjectURL(data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `standard_${selectType.value}` + ".xlsx");
+      link.style.cssText = "display:none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    })
+  }
 }
 </script>
