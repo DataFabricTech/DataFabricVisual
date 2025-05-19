@@ -126,7 +126,7 @@
                   <td>{{ $yyyyMMdd(item.created_date) }}</td>
                   <td>{{ getUsed(item.used) }}</td>
                   <td>
-                    <button type="button" class="mu-btn mu-btn-sm" @click="deleteSoft(item.id, 'word')"><i
+                    <button type="button" v-if="item.used && item.used == 'Y'" class="mu-btn mu-btn-sm" @click="deleteSoft(item.id, 'word')"><i
                       class="mu-icon-svg del"></i><span>삭제</span>
                     </button>
                   </td>
@@ -180,7 +180,7 @@
                   <td>{{ $yyyyMMdd(item.created_date) }}</td>
                   <td>{{ getUsed(item.used) }}</td>
                   <td>
-                    <button type="button" class="mu-btn mu-btn-sm" @click="deleteSoft(item.id, 'domain')"><i
+                    <button type="button" v-if="item.used && item.used == 'Y'" class="mu-btn mu-btn-sm" @click="deleteSoft(item.id, 'domain')"><i
                       class="mu-icon-svg del"></i><span>삭제</span>
                     </button>
                   </td>
@@ -212,6 +212,8 @@
 import { confirmAlert, errorAlert, successAlert } from '@/components/functional/alert/alert-default';
 import selectTab from "@/components/functional/selectTab/select-tab.vue";
 import PageSize from "@/pages/admin/manager/system/user/page-size";
+import { useStandardStore } from '@/store/standard';
+import { useUserStore } from '@/store/user';
 import Pagination from "@functional/pagination/pagination";
 import StandardBorderListSearch from "@organisms/standard/standard-border-list-search.vue";
 import { useRouter } from 'vue-router';
@@ -222,6 +224,9 @@ definePageMeta({
 })
 
 const { $ofetch } = useNuxtApp();
+
+const userStore = useUserStore()
+const standardStore = useStandardStore();
 
 const fileInput = ref(null)
 
@@ -298,16 +303,46 @@ const searchList = ref([
 const route = useRoute();
 const router = useRouter();
 
+onMounted(() => {
+  const fromPath = userStore.getFromPath
+  // 등록, 상세 페이지에서 돌아온 경우 검색 파라미터 유지
+  if (fromPath
+    && (fromPath.includes("term/detail") || fromPath.includes("word/detail") || fromPath.includes("domain/detail"))
+  ) {
+    setCurrentTab(standardStore.getSelectType)
+    pagingObj.value = standardStore.getPagingObj ? standardStore.getPagingObj : pagingObj.value
+    searchObj.value = standardStore.getSearchObj ? standardStore.getSearchObj : searchObj.value
+    currentUsed.value = standardStore.getUsed ? standardStore.getUsed : "Y",
+    currentFormCheckedOnly.value = standardStore.getFormChecked ? standardStore.getFormChecked : ""
+    getMetaDataStandardList(pagingObj.value.currentPage);
+  } else {
+    getMetaDataStandardList();
+  }
+
+});
+
 const getMetaDataStandardList = async (offset = 1) => {
+  pagingObj.value.currentPage = offset
+
   const params = {
     select_type: selectType.value,
-    offset,
+    offset: pagingObj.value.currentPage,
     limit: pagingObj.value.limit,
     searchType: searchObj.value.searchType,
     searchWord: searchObj.value.searchWord,
     used: currentUsed.value,
     formChecked: currentFormCheckedOnly.value
   };
+
+  // 마지막 검색조건 저장
+  const searchParams = {
+    select_type: selectType.value,
+    pagingObj: pagingObj.value,
+    searchObj: searchObj.value,
+    used: currentUsed.value,
+    formChecked: currentFormCheckedOnly.value
+  }
+  standardStore.setSearchParams(searchParams)
 
   await $ofetch("/api/metadata/standard/list", {
     method: 'POST',
@@ -343,10 +378,6 @@ const goToDetail = (item, selectType) => {
 const onClickPage = (page) => {
   getMetaDataStandardList(page);
 };
-
-onMounted(() => {
-  getMetaDataStandardList();
-});
 
 // 표준 용어: term / 표준 단어: word / 표준 도메인: domain
 const onSelectCurrentTab = (curTabObj) => {
@@ -592,5 +623,14 @@ const downloadExcel = async () => {
       document.body.removeChild(link);
     })
   }
+}
+
+const setCurrentTab = (type) => {
+  selectType.value = type ? type : "term"
+  if (selectType.value == "term") currentTab.value = 0
+  else if (selectType.value == "word") currentTab.value = 1
+  else if (selectType.value == "domain") currentTab.value = 2
+  else currentTab.value = 0
+
 }
 </script>

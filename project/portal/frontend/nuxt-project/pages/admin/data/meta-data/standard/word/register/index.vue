@@ -97,7 +97,7 @@
                 <td>
                   <div class="mu-radio" v-for="(used, idx) in usedList">
                     <input type="radio" :id="'rd_' + idx" name="used" :value="used.name"
-                      v-model="formData.used" readonly/>
+                      v-model="formData.used" disabled/>
                     <label :for="'rd_' + idx"><span>{{ used.description }}</span></label>
                   </div>
                 </td>
