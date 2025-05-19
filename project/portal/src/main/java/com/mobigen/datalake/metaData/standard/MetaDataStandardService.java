@@ -893,7 +893,35 @@ public class MetaDataStandardService {
             }
         } catch(Exception e) {
             log.error("Fail to download Standard Data !!");
-            throw new Exception("엑셀 다운로드 실패");
+            e.printStackTrace();;
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            // 추출 데이터 0건
+            if (e.getMessage().indexOf("Standard Data List is Empty") != -1) {
+                Map<String, String> responseMap = new HashMap<>();
+                responseMap.put("errorMessage", "");
+
+                String errorMessage = "추출할 데이터가 없습니다.";
+                responseMap.put("errorMessage", errorMessage);
+                String errorResult = convertMapToJson(responseMap);
+                response.getOutputStream().write(errorResult.getBytes("UTF-8"));
+                response.getOutputStream().flush();
+            } else {
+                Map<String, String> responseMap = new HashMap<>();
+                responseMap.put("errorMessage", "");
+
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+
+                String errorMessage = "엑셀 다운로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
+                responseMap.put("errorMessage", errorMessage);
+                String errorResult = convertMapToJson(responseMap);
+                response.getOutputStream().write(errorResult.getBytes("UTF-8"));
+                response.getOutputStream().flush();
+            }
+            
         }
 	}
 
@@ -931,5 +959,24 @@ public class MetaDataStandardService {
         }
 
         return map;
+    }
+
+    // Map을 JSON 문자열로 변환하는 메서드
+    private String convertMapToJson(Map<String, String> map) {
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append("{");
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            jsonBuilder.append("\"").append(entry.getKey()).append("\": ")
+                    .append("\"").append(entry.getValue()).append("\", ");
+        }
+
+        // 마지막 쉼표 제거
+        if (jsonBuilder.length() > 1) {
+            jsonBuilder.setLength(jsonBuilder.length() - 2);
+        }
+
+        jsonBuilder.append("}");
+        return jsonBuilder.toString();
     }
 }

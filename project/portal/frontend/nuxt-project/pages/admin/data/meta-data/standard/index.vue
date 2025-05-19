@@ -602,16 +602,9 @@ const downloadExcel = async () => {
   const res = await $ofetch(`/api/metadata/standard/downloadStandardData`, {
     method: 'POST',
     body: params,
-    responseType: 'blob'
   })
 
-  // 성공시 {}
-  if (res && res.errorMessage && res.errorMessage != "") {
-    errorAlert("CSV 다운로드에 실패하였습니다.")
-    return;
-  }
-
-  if (res.size && res.size > 0) {
+  if (res && res.size && res.size > 0) {
     await new Response(res).blob().then((data) => {
       const url = URL.createObjectURL(data);
       const link = document.createElement("a");
@@ -622,6 +615,8 @@ const downloadExcel = async () => {
       link.click();
       document.body.removeChild(link);
     })
+  } else {
+    errorAlert(res.errorMessage)
   }
 }
 
