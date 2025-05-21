@@ -6,14 +6,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Collections;
-import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -382,11 +382,13 @@ public class SearchDetailService {
 
                 // 샘플데이터 조회를 위한 정보 조회
                 String connectionUrl = "";
-                Map<String, Object> dbInfo = searchDetailMapper.getDbInfo(params.get("system_name").toString());
+                String[] queryStrSplit = params.get("qualified_name").toString().split("\\.");
+                String system_id = queryStrSplit[0];
+                Map<String, Object> dbInfo = searchDetailMapper.getDbInfo(system_id);
                 if (dbInfo != null) {
                     properties.setProperty("user", "admin");
                     // properties.setProperty("password", dbInfo.get("password").toString());
-                    connectionUrl = trinoJdbcUrl + dbInfo.get("system_name").toString().toLowerCase() + "/"
+                    connectionUrl = trinoJdbcUrl + dbInfo.get("system_id").toString().toLowerCase() + "/"
                             + dbInfo.get("database");
                 }
 
