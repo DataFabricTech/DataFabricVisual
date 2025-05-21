@@ -89,7 +89,7 @@ const descriptionEllipsis = (val, entity) => {
     const columns = attributes.columns
     if (columns) {
       columns.filter((item) => {
-        if (item.meta_name === val) {
+        if (item.meta_name.toUpperCase() === val.toUpperCase()) {
           if (item.description != null && item.description != "") {
             description = item.description;
           } else {
@@ -117,7 +117,7 @@ const typeEllipsis = (val, entity) => {
     const columns = attributes.columns
     if (columns) {
       columns.filter((item) => {
-        if (item.meta_name === val) {
+        if (val && item.meta_name.toUpperCase() === val.toUpperCase()) {
           if (item.column_type !== "") {
             dataType = item.column_type;
           }
