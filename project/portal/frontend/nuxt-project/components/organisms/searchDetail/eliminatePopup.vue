@@ -93,7 +93,7 @@
                         <div class="mu-selectbox w160">
                           <select title="검색조건 선택" v-model="value.filterHeader">
                             <option value="" selected>선택 없음</option>
-                            <option v-for="(item, index) in sampleDataHeader" :value="index">
+                            <option v-for="(item, index) in sampleDataHeader" :value="item">
                               {{ item }}
                             </option>
                           </select>

@@ -45,17 +45,12 @@
               <tbody>
 
                 <tr v-for="(item, index) in postList" :key="index">
-                  <td>{{ item.rownum }}</td>
-                  <td>
-                    <a @click="onClickDataName(item)" :title="item.description ? item.description : '-'">
-                      {{ item.description ? item.description : '-' }}
-                    </a>
-                  </td>
+                  <td :title="item.rownum ? item.rownum : '-'">{{ item.rownum }}</td>
+                  <td :title="item.description ? item.description : '-'"><a @click="onClickDataName(item)">{{ item.description ? item.description : '-' }}</a></td>
                   <td :title="item.meta_name ? item.meta_name : '-'">{{ item.meta_name ? item.meta_name : '-' }}</td>
-                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}
-                  </td>
-                  <td>{{ getDownloadType(item.download_type) }}</td>
-                  <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
+                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}</td>
+                  <td :title="getDownloadType(item.download_type)">{{ getDownloadType(item.download_type) }}</td>
+                  <td :title="$yyyyMMddHHmmSS(item.download_date)">{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
                 </tr>
                 <tr v-if="postList.length === 0">
                   <td colspan="6">
@@ -97,26 +92,21 @@
               <tbody>
 
                 <tr v-for="(item, index) in postList" :key="index">
-                  <td>{{ item.rownum }}</td>
-                  <td>
-                    <a @click="onClickDataName(item)" :title="item.description ? item.description : '-'">
-                      {{ item.description ? item.description : '-' }}
-                    </a>
-                  </td>
+                  <td :title="item.rownum ? item.rownum : '-'">{{ item.rownum }}</td>
+                  <td :title="item.description ? item.description : '-'"><a @click="onClickDataName(item)" :title="item.description ? item.description : '-'">{{ item.description ? item.description : '-' }}</a></td>
                   <td :title="item.meta_name ? item.meta_name : '-'">{{ item.meta_name ? item.meta_name : '-' }}</td>
-                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}
-                  </td>
-                  <td>{{ getDownloadType(item.download_type) }}</td>
-                  <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
-                  <td>{{ $yyyyMMddHHmmSS(item.end_time) }}</td>
-                  <td>{{ $yyyyMMddHHmmSS(item.download_limit_time) }}</td>
-                  <td v-if="item.status && item.status == 2">
+                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}</td>
+                  <td :title="getDownloadType(item.download_type)">{{ getDownloadType(item.download_type) }}</td>
+                  <td :title="$yyyyMMddHHmmSS(item.download_date)">{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
+                  <td :title="$yyyyMMddHHmmSS(item.end_time)">{{ $yyyyMMddHHmmSS(item.end_time) }}</td>
+                  <td :title="$yyyyMMddHHmmSS(item.download_limit_time)">{{ $yyyyMMddHHmmSS(item.download_limit_time) }}</td>
+                  <td title="다운로드" v-if="item.status && item.status == 2">
                     <button type="button" class="mu-btn mu-btn-sm mu-icon-svg download" @click="downloadBigFile(item)">
                       <span class="blind">다운로드</span>
                     </button>
                   </td>
                   <td v-else>-</td>
-                  <td><em :class="getStatusStyle(item.status)">{{ getStatus(item.status) }}</em></td>
+                  <td :title="getStatus(item.status)"><em :class="getStatusStyle(item.status)">{{ getStatus(item.status) }}</em></td>
 
                 </tr>
                 <tr v-if="postList.length === 0">
@@ -137,12 +127,12 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-import PageSize from "@/pages/admin/manager/system/user/page-size";
-import Pagination from "@functional/pagination/pagination";
-import selectTab from "@/components/functional/selectTab/select-tab.vue";
-import BorderListSearch from "@functional/border-list-search/border-list-search.vue";
 import { defaultAlert, errorAlert } from '@/components/functional/alert/alert-default';
+import selectTab from "@/components/functional/selectTab/select-tab.vue";
+import PageSize from "@/pages/admin/manager/system/user/page-size";
+import BorderListSearch from "@functional/border-list-search/border-list-search.vue";
+import Pagination from "@functional/pagination/pagination";
+import { useRouter } from 'vue-router';
 
 definePageMeta({
   name: "MyExtractedData",

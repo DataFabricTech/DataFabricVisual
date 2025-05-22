@@ -11,14 +11,14 @@
               <option v-for="item in props.searchObj.searchTypeList" :value="item.name">{{ item.description }}</option>
             </select>
           </div>
-          <div class="mu-input-icon">
-            <input type="text" class="mu-input" style="min-width: 300px;" placeholder="Search" title="검색어입력"
+          <div class="mu-input-icon w250">
+            <input type="text" class="mu-input" style="min-width: 250px;" placeholder="Search" title="검색어입력"
               v-model="props.searchObj.searchWord" @keypress.enter.prevent="onSearch()" />
             <button type="button" class="mu-btn mu-btn-sch" @click="onSearch()">
               <i class="mu-icon-svg search"></i>
               <span>검색</span>
             </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;
             <div class="mu-search-item">
               <div class="mu-item-group item-ml-auto">
                 <!-- period-set : 기간 -->
@@ -35,9 +35,10 @@
                 </button>
                 <div class="mu-search-btn">
                   <button type="button" class="mu-btn mu-btn-primary" @click="onSearch"><i
-                      class="mu-icon-svg search"></i><span>검색</span></button>
+                      class="mu-icon-svg search"></i><span>검색</span>
+                  </button>
                 </div>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                 <div class="mu-search-btn">
                   <button type="button" class="mu-btn mu-btn" @click="downloadCsvFile(props.historyType)"><span>CSV
                       다운로드</span></button>

@@ -43,19 +43,19 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in collectorList" :key="index">
-                <td>{{ item.rownum }}</td>
-                <td>{{ item.system_type ? item.system_type : "-" }}</td>
-                <td><a @click="popupCollectorDetailModal(item)">{{ item.system_name ? item.system_name : "-" }}</a></td>
-                <td>{{ item.host ? item.host : "-" }}</td>
-                <td>{{ item.database ? item.database : "-" }}</td>
-                <td>{{ item.interval ? item.interval : "-" }}</td>
-                <td>{{ item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-" }}</td>
-                <td>{{ getKrCollectFlag(item.collect_flag) }}</td>
+                <td :title="item.rownum ? item.rownum : '-'">{{ item.rownum }}</td>
+                <td :title="item.system_type ? item.system_type : '-'">{{ item.system_type ? item.system_type : "-" }}</td>
+                <td :title="item.system_name ? item.system_name : '-'"><a @click="popupCollectorDetailModal(item)">{{ item.system_name ? item.system_name : "-" }}</a></td>
+                <td :title="item.host ? item.host : '-'">{{ item.host ? item.host : "-" }}</td>
+                <td :title="item.database ? item.database : '-'">{{ item.database ? item.database : "-" }}</td>
+                <td :title="item.interval ? item.interval : '-'">{{ item.interval ? item.interval : "-" }}</td>
+                <td :title='item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-"'>{{ item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-" }}</td>
+                <td :title="getKrCollectFlag(item.collect_flag)">{{ getKrCollectFlag(item.collect_flag) }}</td>
                 <td>
                   <button :disabled="!item.isActiveIngestion" type="button" class="mu-btn mu-btn-sm"
                     @click="startCollecton(item, index)"><span>실행</span></button>
                 </td>
-                <td>{{ item.status_value ? item.status_value : "-" }}</td>
+                <td :title="item.status_value ? item.status_value : '-'">{{ item.status_value ? item.status_value : "-" }}</td>
                 <td>
                   <button type="button" class="mu-btn mu-btn-sm" @click="popupCollectorUpdateModal(item)"><i
                       class="mu-icon-svg edit"></i><span>수정</span></button>
@@ -64,7 +64,7 @@
                       class="mu-icon-svg del"></i><span>삭제</span></button>
                 </td>
                 <td>
-                  <button type="button" class="mu-btn mu-btn-icon-only" title="초기화"
+                  <button type="button" class="mu-btn mu-btn-sm mu-btn-icon-only" title="초기화"
                     @click="onClickReloadOneButton(item, index)">
                     <i class="mu-icon-svg refresh"></i>
                     <span>초기화</span>

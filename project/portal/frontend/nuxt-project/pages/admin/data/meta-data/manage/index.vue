@@ -161,27 +161,24 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@store/user.ts";
+import PageSize from "@/pages/admin/manager/system/user/page-size";
+import { isEmpties } from "@composables/ramda";
+import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
+import portalConfirm from "@functional/confirm/portal-confirm";
+import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
+import Pagination from "@functional/pagination/pagination";
+import ManageRoleMappingModal from "@functional/roleMappingModal/manage-role-mapping-modal";
+import CategoryGroup from "@molecules/metaDataManage/category-group";
+import MetaDataTooltip from "@molecules/metaDataManage/meta-data-tooltip";
+import ClassificationInfo from "@organisms/metaDataManage/classification-info";
 import { useCategoryStore } from "@store/category.ts";
 import { useCategoryTreeStore } from "@store/categoryTree.ts";
 import { useEventStore } from "@store/event.ts";
-import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
-import ClassificationInfo from "@organisms/metaDataManage/classification-info";
-import MetaDataTooltip from "@molecules/metaDataManage/meta-data-tooltip";
-import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
-import ManageRoleMappingModal from "@functional/roleMappingModal/manage-role-mapping-modal";
+import { useUserStore } from "@store/user.ts";
 import ObjectUtils from "@utils/ObjectUtils";
-import Pagination from "@functional/pagination/pagination";
-import { useNuxtApp, useRoute, useRouter, useRuntimeConfig } from "nuxt/app";
+import { useNuxtApp, useRouter } from "nuxt/app";
 import { onMounted, onUnmounted, ref } from "vue";
-import portalConfirm from "@functional/confirm/portal-confirm";
-import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
-import { isEmpties } from "@composables/ramda";
-import { storeToRefs } from "pinia";
-import { useApi } from "@composables/useApi";
-import { useConstants } from "@composables/useConstants";
-import PageSize from "@/pages/admin/manager/system/user/page-size";
-import CategoryGroup from "@molecules/metaDataManage/category-group";
 
 definePageMeta({
   name: "AdminMetaDataManage",
@@ -435,7 +432,7 @@ onUnmounted(() => {
   const paging = pagingObj.value.currentPage !== 1 ? pagingObj.value : null;
 
   // 조회 조건 중 검색어 변경 시 필터검색 제어 파라미터 저장
-  const condition = filterSearchObj.value.searchType1 === "all" ? null : filterSearchObj.value;
+  const condition = filterSearchObj.value;
 
   // 좌측 메뉴 목록에서 카테고리 선택하여 조회 시 선택된 카테고리 정보 저장
   const category = selectedId.value ? selectedCategory.value : null;
@@ -1007,6 +1004,9 @@ const onFilterSearch = () => {
 
 // 메타 데이터 통합 관리 목록 조회
 const onSearchDataList = async (offset = 0, item = {}) => {
+
+  categoryStore.setSelectedItemId(selectedCategory.value && selectedCategory.value.id ? selectedCategory.value.id : "");
+
   // 체크한 데이터 목록 초기화
   selectedData.value = [];
 

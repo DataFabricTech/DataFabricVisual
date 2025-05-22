@@ -87,29 +87,29 @@
 </template>
 
 <script setup lang="ts">
+import { defaultAlert } from "@/components/functional/alert/alert-default";
 import ObjectUtils from "@/utils/ObjectUtils";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
-import DataInfoArea from "@molecules/searchDetail/data-info-area";
-import DataDetailHead from "@molecules/searchDetail/data-detail-head";
-import UserDescriptionArea from "@molecules/searchDetail/user-description-area";
-import TagKeywordArea from "@molecules/searchDetail/tag-keyword-area";
-import DataProfileArea from "@molecules/searchDetail/data-profile-area";
-import SampleDataArea from "@molecules/searchDetail/sample-data-area";
-import DataLineageArea from "@molecules/searchDetail/data-lineage-area"
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
-import RelatedData from "@molecules/searchDetail/related-data";
-import UserReviewArea from "@molecules/searchDetail/user-review-area";
-import DataRecommendStatus from "@molecules/searchDetail/data-recommend-status";
-import EliminateModal from "@organisms/searchDetail/eliminatePopup";
+import ScrollToBottom from "@functional/scroll/scroll-to-bottom";
 import ScrollToTab from "@functional/scroll/scroll-to-tab";
 import ScrollToTop from "@functional/scroll/scroll-to-top";
-import ScrollToBottom from "@functional/scroll/scroll-to-bottom";
-import { useUserStore } from "~/store/user.ts";
+import DataDetailHead from "@molecules/searchDetail/data-detail-head";
+import DataInfoArea from "@molecules/searchDetail/data-info-area";
+import DataLineageArea from "@molecules/searchDetail/data-lineage-area";
+import DataProfileArea from "@molecules/searchDetail/data-profile-area";
+import DataRecommendStatus from "@molecules/searchDetail/data-recommend-status";
+import RelatedData from "@molecules/searchDetail/related-data";
+import SampleDataArea from "@molecules/searchDetail/sample-data-area";
+import TagKeywordArea from "@molecules/searchDetail/tag-keyword-area";
+import UserDescriptionArea from "@molecules/searchDetail/user-description-area";
+import UserReviewArea from "@molecules/searchDetail/user-review-area";
+import EliminateModal from "@organisms/searchDetail/eliminatePopup";
+import { ref } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import { useCategoryStore } from "~/store/category.ts";
 import { useCategoryTreeStore } from "~/store/categoryTree.ts";
-import { onBeforeRouteLeave } from "vue-router";
-import { ref } from "vue";
-import { defaultAlert } from "@/components/functional/alert/alert-default";
+import { useUserStore } from "~/store/user.ts";
 
 const { $ofetch } = useNuxtApp();
 
