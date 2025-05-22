@@ -14,17 +14,16 @@
             <colgroup>
               <col style="width: 5%" />
               <col style="width: 10%" />
-              <col style="width: 14%" />
-              <col style="width: 14%" />
+              <col style="width: 15%" />
               <col style="width: 10%" />
               <col style="width: 10%" />
+              <col style="width: 10%" />
               <col style="width: 8%" />
               <col style="width: 8%" />
               <col style="width: 8%" />
-              <col style="width: 8%" />
+              <col style="width: 7%" />
               <col style="width: 6%" />
-              <col style="width: 6%" />
-              <col />
+              <col colspan="2" style="width: 3%" />
             </colgroup>
             <thead>
               <tr>
@@ -72,8 +71,8 @@
                 </td>
               </tr>
               <tr v-if="collectorList.length === 0">
-                <td colspan="11">
-                  <p class="nodata">이력이 존재하지 않습니다.</p>
+                <td colspan="12">
+                  <p class="nodata">수집 시스템이 존재하지 않습니다.</p>
                 </td>
               </tr>
             </tbody>
