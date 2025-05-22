@@ -236,6 +236,10 @@ const tabs = ref([
   { idx: 2, key: "표준 도메인", type: "domain" },
 ])
 
+// 엑셀 다운로드시 검색하지 않고 입력만 해도 바인딩되지 않도록 하기 위해 생성
+const keyword = ref("");
+const searchType = ref("");
+
 // 사용/미사용 필터 항목
 const filterStatusList = ref([
   {
@@ -323,6 +327,10 @@ onMounted(() => {
 
 const getMetaDataStandardList = async (offset = 1) => {
   pagingObj.value.currentPage = offset
+
+  // 엑셀 다운로드시 검색어를 입력하고 검색한 경우의 키워드를 반영하기 위해 따로 저장
+  keyword.value = searchObj.value.searchWord;
+  searchType.value = searchObj.value.searchType;
 
   const params = {
     select_type: selectType.value,
@@ -574,50 +582,51 @@ const uploadExcel = async (event) => {
     method: 'POST',
     body: formData
   }).then((res) => {
-    console.log(res)
-    if (res && res.data && res.data.statusCode == 'OK') {
-      successAlert(res.data.body);
+    if (res && res.data && res.data.result) {
+      successAlert("데이터가 등록되었습니다.");
       initSearchOption()
       getMetaDataStandardList(1, 'term')
     } else {
-      errorAlert("엑셀 업로드 실패..")
+      errorAlert(res.data.resultMessage)
     }
   }).catch((err) => {
-    errorAlert("엑셀 업로드 실패..")
+    errorAlert("엑셀 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
   })
 }
 
 // 액셀 데이터 추출
 const downloadExcel = async () => {
-  const params = {
-    select_type: selectType.value,
-    offset: pagingObj.value.currentPage,
-    limit: pagingObj.value.limit,
-    searchType: searchObj.value.searchType,
-    searchWord: searchObj.value.searchWord,
-    used: currentUsed.value,
-    formChecked: currentFormCheckedOnly.value
-  };
+    const params = {
+      select_type: selectType.value,
+      offset: pagingObj.value.currentPage,
+      limit: pagingObj.value.limit,
+      searchType: searchType.value,
+      searchWord: keyword.value,
+      used: currentUsed.value,
+      formChecked: currentFormCheckedOnly.value
+    };
 
-  const res = await $ofetch(`/api/metadata/standard/downloadStandardData`, {
-    method: 'POST',
-    body: params,
-  })
-
-  if (res && res.size && res.size > 0) {
-    await new Response(res).blob().then((data) => {
-      const url = URL.createObjectURL(data);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `standard_${selectType.value}` + ".xlsx");
-      link.style.cssText = "display:none";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    await $ofetch(`/api/metadata/standard/downloadStandardData`, {
+      method: 'POST',
+      body: params,
+    }).then(async (res) => {
+      if (res && res.size && res.size > 0) {
+        await new Response(res).blob().then((data) => {
+          const url = URL.createObjectURL(data);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `standard_${selectType.value}` + ".xlsx");
+          link.style.cssText = "display:none";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+      } else {
+        errorAlert(res.errorMessage)
+      }
+    }).catch((err) => {
+      errorAlert("엑셀 추출에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
     })
-  } else {
-    errorAlert(res.errorMessage)
-  }
 }
 
 const setCurrentTab = (type) => {

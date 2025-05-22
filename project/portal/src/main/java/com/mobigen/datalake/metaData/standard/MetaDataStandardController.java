@@ -302,27 +302,20 @@ public class MetaDataStandardController {
 
             // 업로드 타입(용어, 단어, 도메인)
             params.put("search_type", search_type);
-
-            Map<String, Object> uploadResult = metaDataStandardService.uploadExcel(file, params);
-            if (uploadResult != null && uploadResult.get("result") != null && (boolean) uploadResult.get("result")) {
-                return ResponseEntity.ok("엑셀 업로드 성공");
-            } else {
-                return ResponseEntity.internalServerError().body("엑셀 업로드 실패");
-            }
         } catch (Exception e) {
             log.error("fail to uploadExcel !!");
-            return ResponseEntity.internalServerError().body("엑셀 업로드 실패");
+            return ResponseEntity.internalServerError().body("엑셀 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
         }
+
+        return metaDataStandardService.uploadExcel(file, params);
     }
 
     /**
      * 엑셀 다운로드
      * @param params 표준 데이터 조회 쿼리관련 파라미터
      */
-    @ResponseJsonResult
     @PostMapping("/downloadStandardData")
-	public void downloadExcel(@RequestBody Map<String, Object> params, HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
-		metaDataStandardService.downloadExcelFile(params, request, response);
+	public ResponseEntity<byte[]> downloadExcel(@RequestBody Map<String, Object> params) throws Exception {
+		return metaDataStandardService.downloadExcelFile(params);
 	}
 }

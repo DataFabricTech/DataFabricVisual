@@ -1,7 +1,8 @@
 package com.mobigen.datalake.metaData.standard;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,15 +20,19 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.datalake.metaData.standard.type.DataType;
 import com.mobigen.datalake.metaData.standard.util.ExcelUtils;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -468,6 +473,7 @@ public class MetaDataStandardService {
         Map<String, Object> resultMap = new HashMap<>();
         Integer insertCount = 0;
         boolean result = false;
+        String resultMessage = "";
         try (InputStream is = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(is);) {
             
@@ -499,13 +505,17 @@ public class MetaDataStandardService {
             if (insertCount != null && insertCount > 0) {
                 result = true;
             } else {
+                resultMessage = "저장된 데이터가 없습니다.";
                 result = false;
             }
 
+            resultMap.put("resultMessage", resultMessage);
             resultMap.put("insertCount", insertCount);
             resultMap.put("result", result);
         } catch(Exception e) {
             log.error("excel upload error !!");
+            resultMessage = e.getMessage();
+            resultMap.put("resultMessage", resultMessage);
             resultMap.put("insertCount", insertCount);
             resultMap.put("result", result);
         }
@@ -574,9 +584,9 @@ public class MetaDataStandardService {
             term.put("modifier", modifier);
 
 			// 중복 validation
-			boolean validateResult = validateTerm(allTerms, allDomainNames, term);
-			if (!validateResult) {
-				throw new Exception("term validate Error !!");
+			Map<String, Object> validateResult = validateTerm(allTerms, allDomainNames, term);
+			if (!(boolean) validateResult.get("validateResult")) {
+				throw new Exception(validateResult.get("validateResultMessage").toString());
 			}
 
 			termList.add(term);
@@ -584,44 +594,41 @@ public class MetaDataStandardService {
 		return termList;
 	}
     
-    public boolean validateTerm(List<Map<String, Object>> allTerms, List<String> allDomainNames, Map<String, Object> term) {
-        boolean nameDuplicated = false;
-        boolean englishSignDuplicated = false;
-        boolean domainNameDoesntExist = true;
+    public Map<String, Object> validateTerm(List<Map<String, Object>> allTerms, List<String> allDomainNames, Map<String, Object> term) {
+        Map<String, Object> validateResultMap = new HashMap<>();
+        boolean validateResult = false;
+        String validateResultMessage = "";
 
-        Set<String> allTermNames = new HashSet<>();
-        Set<String> allTermEnglishSigns = new HashSet<>();;
-        Set<String> domainNames = new HashSet<>(allDomainNames);
+        try {
+            Set<String> allTermNames = new HashSet<>();
+            Set<String> allTermEnglishSigns = new HashSet<>();;
+            Set<String> domainNames = new HashSet<>(allDomainNames);
+            for (Map<String, Object> item : allTerms) {
+                allTermNames.add(item.get("name").toString());
+                allTermEnglishSigns.add(item.get("english_sign").toString());
+            }
+
+            if (!allTermNames.add(term.get("name").toString())) {
+                validateResultMessage = "중복된 용어명이 있습니다. - " + "(" + term.get("name") + ")";
+            } else if (!allTermEnglishSigns.add(term.get("english_sign").toString())) {
+                validateResultMessage = "중복된 영문약어명이 있습니다. - " + "(" + term.get("english_sign") + ")";
+            } else {
+                if (!domainNames.contains(term.get("domain").toString())) {
+                    validateResultMessage = "도메인명이 존재하지 않습니다. - " + "(" + term.get("domain") + ")";
+                } else {
+                    validateResult = true;
+                }
+            }
+        } catch(Exception e) {
+            validateResult = false;
+            validateResultMessage = "용어 유효성 검사에 실패하였습니다.";
+            log.error(validateResultMessage);
+        }
         
-        for (Map<String, Object> item : allTerms) {
-            allTermNames.add(item.get("name").toString());
-            allTermEnglishSigns.add(item.get("english_sign").toString());
-        }
+        validateResultMap.put("validateResult", validateResult);
+        validateResultMap.put("validateResultMessage", validateResultMessage);
 
-        if (!allTermNames.add(term.get("name").toString())) {
-            nameDuplicated = true;
-        }
-        if (!allTermEnglishSigns.add(term.get("english_sign").toString())) {
-            englishSignDuplicated = true;
-        }
-        if (domainNames.contains(term.get("domain").toString())) {
-            domainNameDoesntExist = false;
-        }
-
-        if (!nameDuplicated && !englishSignDuplicated && !domainNameDoesntExist) {
-            return true;
-        }
-
-        if (nameDuplicated) {
-            log.error("Name Duplicated !! - " + "(" + term.get("name") + ")");
-        }
-        if (englishSignDuplicated) {
-            log.error("English Sign Duplicated !! - " + "(" + term.get("english_sign") + ")");
-        }
-        if (domainNameDoesntExist) {
-            log.error("domain Doesnt Exist !! - " + "(" + term.get("domain") + ")");
-        }
-        return false;
+        return validateResultMap;
     }
 
     private List<Map<String, Object>> excelRowsToWord(Iterator<Row> rowIterator, Map<String, Object> params) throws Exception {
@@ -672,10 +679,10 @@ public class MetaDataStandardService {
             word.put("forbidden", forbidden);
             word.put("used", used);
 
-			// 중복 validation
-			boolean validateResult = validateWord(allWords, word);
-			if (!validateResult) {
-				throw new Exception("word vlidate Error !!");
+            // 중복 validation
+			Map<String, Object> validateResult = validateWord(allWords, word);
+			if (!(boolean) validateResult.get("validateResult")) {
+				throw new Exception(validateResult.get("validateResultMessage").toString());
 			}
 
 			wordList.add(word);
@@ -683,47 +690,45 @@ public class MetaDataStandardService {
 		return wordList;
 	}
 
-    public boolean validateWord(List<Map<String, Object>> allWords, Map<String, Object> word) {
-        boolean nameDuplicated = false;
-        boolean englishSignDuplicated = false;
-        boolean domainClassifiedNameRequiredError = false;
-      
-        Set<String> allWordNames = new HashSet<>();
-        Set<String> allWordEnglishSigns = new HashSet<>();
-        for (Map<String, Object> item : allWords) {
-            allWordNames.add(item.get("name").toString());
-            allWordEnglishSigns.add(item.get("english_sign").toString());
-        }
+    public Map<String, Object> validateWord(List<Map<String, Object>> allWords, Map<String, Object> word) {
+        Map<String, Object> validateResultMap = new HashMap<>();
+        boolean validateResult = false;
+        String validateResultMessage = "";
 
-        if (!allWordNames.add(word.get("name").toString())) {
-            nameDuplicated = true;
-        }
-        if (!allWordEnglishSigns.add(word.get("english_sign").toString())) {
-            englishSignDuplicated = true;
-        }
-        // 형식단어인데, 도메인 분류어가 비어있는 경우
-        if (word.get("form_checked").toString().equals("Y")) {
-            if (word.get("domain_classified_name") != null && !word.get("domain_classified_name").toString().equals("")) {
-                domainClassifiedNameRequiredError = false;
-            } else {
-                domainClassifiedNameRequiredError = true;
+        try {
+            Set<String> allWordNames = new HashSet<>();
+            Set<String> allWordEnglishSigns = new HashSet<>();
+            for (Map<String, Object> item : allWords) {
+                allWordNames.add(item.get("name").toString());
+                allWordEnglishSigns.add(item.get("english_sign").toString());
             }
-        }
 
-        if (!nameDuplicated && !englishSignDuplicated && !domainClassifiedNameRequiredError) {
-            return true;
+            if (!allWordNames.add(word.get("name").toString())) {
+                validateResultMessage = "중복된 단어명이 있습니다. - " + "(" + word.get("name") + ")";
+            } else if (!allWordEnglishSigns.add(word.get("english_sign").toString())) {
+                validateResultMessage = "중복된 영문약어명이 있습니다. - " + "(" + word.get("english_sign") + ")";
+            } else {
+                // 형식단어인데, 도메인 분류어가 비어있는 경우
+                if (word.get("form_checked").toString().equals("Y")) {
+                    if (word.get("domain_classified_name") != null && !word.get("domain_classified_name").toString().equals("")) {
+                        validateResult = true;
+                    } else {
+                        validateResultMessage = "형식단어는 도메인 분류어가 필수로 입력되어야합니다. - " + "(" + word.get("name") + ")";
+                    }
+                } else {
+                    validateResult = true;
+                }
+            }
+        } catch(Exception e) {
+            validateResult = false;
+            validateResultMessage = "단어 유효성 검사에 실패하였습니다.";
+            log.error(validateResultMessage);
         }
-
-        if (nameDuplicated) {
-            log.error("name duplicated !! - " + "(" + word.get("name") + ")");
-        }
-        if (englishSignDuplicated) {
-            log.error("english_sign duplicated !! - " + "(" + word.get("english_sign") + ")");
-        }
-        if (domainClassifiedNameRequiredError) {
-            log.error("no domain_classified_name !! - " + "(" + word.get("name") + ")");
-        }
-        return false;
+        
+        validateResultMap.put("validateResult", validateResult);
+        validateResultMap.put("validateResultMessage", validateResultMessage);
+        
+        return validateResultMap;
     }
 
     private List<Map<String, Object>> excelRowsToDomain(Iterator<Row> rowIterator, Map<String, Object> params) throws Exception {
@@ -795,10 +800,10 @@ public class MetaDataStandardService {
             domain.put("permission_value", permission_value);
             domain.put("used", used);
 
-			// 중복 validation
-			boolean validateResult = validateDomain(allDomainNames, domain, dataTypeMap);
-			if (!validateResult) {
-				throw new Exception("word vlidate Error !!");
+            // 중복 validation
+			Map<String, Object> validateResult = validateDomain(allDomainNames, domain, dataTypeMap);
+			if (!(boolean) validateResult.get("validateResult")) {
+				throw new Exception(validateResult.get("validateResultMessage").toString());
 			}
 
 			domainList.add(domain);
@@ -806,124 +811,124 @@ public class MetaDataStandardService {
 		return domainList;
 	}
 
-    public boolean validateDomain(List<String> allDomains, Map<String, Object> domain, Map<String, String> dataTypeMap) throws Exception {
-        boolean nameDuplicated = false;
-        Set<String> allDomainNames = new HashSet<>(allDomains);
-        if (!allDomainNames.add(domain.get("name").toString())) {
-            nameDuplicated = true;
+    public Map<String, Object> validateDomain(List<String> allDomains, Map<String, Object> domain, Map<String, String> dataTypeMap) throws Exception {
+        Map<String, Object> validateResultMap = new HashMap<>();
+        boolean validateResult = false;
+        String validateResultMessage = "";
+
+        try {
+            Set<String> allDomainNames = new HashSet<>(allDomains);
+            if (!allDomainNames.add(domain.get("name").toString())) {
+                validateResultMessage = "중복된 도메인명이 있습니다. - " + "(" + domain.get("name") + ")";
+            } else {
+                String dataTypeSign = dataTypeMap.getOrDefault(domain.get("data_type").toString(), null);
+                if (dataTypeSign == null) {
+                    validateResultMessage = "도메인 형식이 잘못되었습니다. - " + "(" + domain.get("name") + ")";
+                } else {
+                    String domainName = domain.get("name").toString();
+                    String domainClassifiedName = domain.get("domain_classified_name").toString();
+                    if(!domainName.startsWith(domainClassifiedName)) {
+                        validateResultMessage = "도메인 형식이 잘못되었습니다. - " + "(" + domain.get("name") + ")";
+                    } else if (!domainName.substring(domainClassifiedName.length()).startsWith(dataTypeSign)){
+                        validateResultMessage = "도메인 형식이 잘못되었습니다. - " + "(" + domain.get("name") + ")";
+                    } else {
+                        validateResult = true;
+                    }
+                }
+            }
+        } catch(Exception e) {
+            validateResult = false;
+            validateResultMessage = "도메인 유효성 검사에 실패하였습니다.";
+            log.error(validateResultMessage);
         }
-        boolean unformattedDomainName = false;
         
-        String dataTypeSign = dataTypeMap.getOrDefault(domain.get("data_type").toString(), null);
-        if (dataTypeSign == null) {
-            unformattedDomainName = true;
-        } else {
-            String domainName = domain.get("name").toString();
-            String domainClassifiedName = domain.get("domain_classified_name").toString();
-            if(!domainName.startsWith(domainClassifiedName)) {
-                unformattedDomainName = true;
-            }
-            if(!domainName.substring(domainClassifiedName.length()).startsWith(dataTypeSign)){
-                unformattedDomainName = true;
-            }
-        }
+        validateResultMap.put("validateResult", validateResult);
+        validateResultMap.put("validateResultMessage", validateResultMessage);
 
-        if (!nameDuplicated && !unformattedDomainName) {
-            return true;
-        }
-
-        if (nameDuplicated) {
-            log.error("domain name duplicated !! - " + "(" + domain.get("name") + ")");
-        }
-        if (unformattedDomainName) {
-            log.error("invalid domain name format !! - " + "(" + domain.get("name") + ")");
-        }
-        return false;
+        return validateResultMap;
     }
 
-    public void downloadExcelFile(Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String select_type = params.get("select_type") != null ? params.get("select_type").toString() : "";
-
+    public ResponseEntity<byte[]> downloadExcelFile(Map<String, Object> params) {
         try (Workbook workbook = new XSSFWorkbook()) {
-            List<Map<String, Object>> list = new ArrayList<>();
-            Sheet sheet = workbook.createSheet("표준 데이터");
+            List<Map<String, Object>> list;
 
-            int colIndex = 0;
-
-            // 표준 용어, 표준 단어, 표준 도메인
-            if (select_type.equals("term")) {
-                list = metaDataStandardMapper.getMetaDataStandardTermListForDownload(params);
-            } else if (select_type.equals("word")) {
-                list = metaDataStandardMapper.getMetaDataStandardWordListForDownload(params);
-            } else if (select_type.equals("domain")) {
-                list = metaDataStandardMapper.getMetaDataStandardDomainListForDownload(params);
+            String select_type = params.get("select_type") != null ? params.get("select_type").toString() : "";
+            // 1. 데이터 조회
+            switch (select_type) {
+                case "term":
+                    list = metaDataStandardMapper.getMetaDataStandardTermListForDownload(params);
+                    break;
+                case "word":
+                    list = metaDataStandardMapper.getMetaDataStandardWordListForDownload(params);
+                    break;
+                case "domain":
+                    list = metaDataStandardMapper.getMetaDataStandardDomainListForDownload(params);
+                    break;
+                default:
+                    return buildErrorResponse("엑셀 다운로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
             }
-            if (list.isEmpty())
-                throw new Exception("Standard Data List is Empty !!");
 
-            // 1. 헤더 작성 (한글명 설정)
+            if (list == null || list.isEmpty()) {
+                return buildErrorResponse("추출할 데이터가 없습니다.");
+            }
+
+            // 2. 엑셀 생성
+            Sheet sheet = workbook.createSheet("표준 데이터");
             Map<String, Object> firstRow = new LinkedHashMap<>(list.get(0));
-            Map<String, String> columnNameToKoreanMap = new LinkedHashMap<>(getKoreanHeaderMap(select_type)); // 한글명 키 매핑 데이터
+            Map<String, String> columnNameToKoreanMap = new LinkedHashMap<>(getKoreanHeaderMap(select_type));
+
+            // 2-1. 헤더
             Row headerRow = sheet.createRow(0);
+            int colIndex = 0;
             for (String key : firstRow.keySet()) {
                 headerRow.createCell(colIndex++).setCellValue(columnNameToKoreanMap.get(key));
             }
 
-            // 2. 데이터 작성
+            // 2-2. 데이터
             for (int i = 0; i < list.size(); i++) {
                 Row dataRow = sheet.createRow(i + 1);
-            
                 Map<String, Object> data = list.get(i);
-            
-                colIndex = 0; // ✅ 셀 인덱스는 매 행마다 초기화
+                colIndex = 0;
                 for (String key : firstRow.keySet()) {
                     Object value = data.get(key);
                     dataRow.createCell(colIndex++).setCellValue(value != null ? value.toString() : "");
                 }
             }
 
-            // 3. 응답 설정
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment; filename=download.xlsx");
-            response.setCharacterEncoding("UTF-8");
+            // 3. 엑셀 파일을 byte[]로 변환
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            workbook.close();
 
-            try (OutputStream os = response.getOutputStream()) {
-                workbook.write(os);
-                os.flush();
-            }
-        } catch(Exception e) {
-            log.error("Fail to download Standard Data !!");
-            e.printStackTrace();;
+            byte[] fileBytes = out.toByteArray();
 
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDisposition(ContentDisposition.attachment().filename("standard-data.xlsx", StandardCharsets.UTF_8).build());
 
-            // 추출 데이터 0건
-            if (e.getMessage().indexOf("Standard Data List is Empty") != -1) {
-                Map<String, String> responseMap = new HashMap<>();
-                responseMap.put("errorMessage", "");
+            return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
 
-                String errorMessage = "추출할 데이터가 없습니다.";
-                responseMap.put("errorMessage", errorMessage);
-                String errorResult = convertMapToJson(responseMap);
-                response.getOutputStream().write(errorResult.getBytes("UTF-8"));
-                response.getOutputStream().flush();
-            } else {
-                Map<String, String> responseMap = new HashMap<>();
-                responseMap.put("errorMessage", "");
-
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-
-                String errorMessage = "엑셀 다운로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
-                responseMap.put("errorMessage", errorMessage);
-                String errorResult = convertMapToJson(responseMap);
-                response.getOutputStream().write(errorResult.getBytes("UTF-8"));
-                response.getOutputStream().flush();
-            }
-            
+        } catch (Exception e) {
+            log.error("엑셀 다운로드 실패", e);
+            return buildErrorResponse("엑셀 다운로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
         }
-	}
+    }
+
+    // 에러 응답 생성
+    private ResponseEntity<byte[]> buildErrorResponse(String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorMessage", message);
+
+        try {
+            String json = new ObjectMapper().writeValueAsString(error);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            return new ResponseEntity<>(json.getBytes(StandardCharsets.UTF_8), headers, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(("{" + "\"errorMessage\":\"" + message + "\"}").getBytes(StandardCharsets.UTF_8),
+                    new HttpHeaders(), HttpStatus.OK);
+        }
+    }
 
     private Map<String, String> getKoreanHeaderMap(String selectType) {
         Map<String, String> map = new HashMap<>();
@@ -959,24 +964,5 @@ public class MetaDataStandardService {
         }
 
         return map;
-    }
-
-    // Map을 JSON 문자열로 변환하는 메서드
-    private String convertMapToJson(Map<String, String> map) {
-        StringBuilder jsonBuilder = new StringBuilder();
-        jsonBuilder.append("{");
-
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            jsonBuilder.append("\"").append(entry.getKey()).append("\": ")
-                    .append("\"").append(entry.getValue()).append("\", ");
-        }
-
-        // 마지막 쉼표 제거
-        if (jsonBuilder.length() > 1) {
-            jsonBuilder.setLength(jsonBuilder.length() - 2);
-        }
-
-        jsonBuilder.append("}");
-        return jsonBuilder.toString();
     }
 }
