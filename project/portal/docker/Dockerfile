@@ -21,9 +21,10 @@ RUN mkdir /data_catalog_portal/logs
 RUN mkdir /data_catalog_portal/keystore
 RUN mkdir /data_catalog_portal/conf
 RUN mkdir /data_catalog_portal/data
-RUN mkdir /data_catalog_portal/data/csv
-RUN mkdir /data_catalog_portal/data/sample
-RUN mkdir /data_catalog_portal/data/hive_system_config
+RUN mkdir /data_catalog_portal/csv
+# RUN mkdir /data_catalog_portal/sample
+RUN mkdir /data_catalog_portal/hive_system_config
+RUN mkdir /data_catalog_portal/unstructured_data
 
 #volume 구성을 위한 기본 복제
 RUN mkdir /defaultfile
@@ -39,5 +40,8 @@ RUN cp -r /data_catalog_portal /defaultfile/data_catalog_portal
 
 #권한 설정
 RUN chmod 755 /data_catalog_portal/*.sh
+
+# bashrc 설정 추가
+RUN echo 'alias ll="ls -alF"' >> /root/.bashrc
 
 CMD ["sh", "-c", "set -e; /data_catalog_solution/docker_start.sh"]
