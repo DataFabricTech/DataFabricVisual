@@ -1,9 +1,9 @@
 package com.mobigen.datalake.menu;
 
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Repository;
 
 @Repository("menuMapper")
 public interface MenuMapper {
@@ -15,7 +15,7 @@ public interface MenuMapper {
 
     List getUserMenubyRole(String roleId) throws Exception;
 
-    Integer clickMenu(String userID, String menuID, String deptID) throws Exception;
+    Integer clickMenu(Map<String, Object> params) throws Exception;
 
     List getMenuHistory() throws Exception;
 

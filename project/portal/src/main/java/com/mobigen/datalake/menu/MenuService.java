@@ -1,16 +1,5 @@
 package com.mobigen.datalake.menu;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.mobigen.datalake.user.UserMapper;
-import com.mobigen.framework.iris.IRISProperties;
-import com.mobigen.framework.security.SessionManager;
-
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.mobigen.datalake.user.UserMapper;
+import com.mobigen.framework.iris.IRISProperties;
+import com.mobigen.framework.security.SessionManager;
+
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
@@ -199,8 +199,8 @@ public class MenuService {
     }
 
     //
-    public Object clickMenu(String userID, String menuID, String deptID) throws Exception {
-        return menuMapper.clickMenu(userID, menuID, deptID);
+    public Object clickMenu(Map<String, Object> params) throws Exception {
+        return menuMapper.clickMenu(params);
     }
 
     //

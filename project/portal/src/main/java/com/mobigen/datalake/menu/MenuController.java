@@ -1,18 +1,13 @@
 package com.mobigen.datalake.menu;
 
-import com.mobigen.framework.result.annotation.ResponseJsonResult;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,12 +21,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mobigen.framework.result.annotation.ResponseJsonResult;
+import com.mobigen.framework.security.SessionManager;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RequestMapping("/api")
 @Controller
 @AllArgsConstructor
 public class MenuController {
 
+    private final SessionManager sessionManager;
     private final MenuService menuService;
 
     @GetMapping("/images")
@@ -89,8 +92,18 @@ public class MenuController {
     @ResponseJsonResult
     @GetMapping("/menu/click")
     public Object clickMenu(@RequestParam String menuID, @RequestParam String userID,
-            @RequestParam String deptID) throws Exception {
-        return menuService.clickMenu(userID, menuID, deptID);
+            @RequestParam String deptID, HttpServletRequest request) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("menu_id", menuID);
+
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        if (user != null) {
+            params.put("user_id", user.get("user_id").toString());
+            params.put("user_name", user.get("username").toString());
+            params.put("dept_id", user.get("dept_id") != null ? user.get("dept_id").toString() : "-");
+            params.put("dept_name", user.get("dept_nm").toString());
+        }
+        return menuService.clickMenu(params);
     }
 
     @ResponseJsonResult
