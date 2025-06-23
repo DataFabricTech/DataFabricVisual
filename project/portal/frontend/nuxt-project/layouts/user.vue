@@ -53,10 +53,10 @@
 </template>
 
 <script setup lang="ts">
-import { ModalsContainer } from "vue-final-modal";
 import { useUserStore } from "@/store/user";
 import { useRoute, useRouter } from "nuxt/app";
-import { watch, onMounted } from "vue";
+import { onMounted, watch } from "vue";
+import { ModalsContainer } from "vue-final-modal";
 
 const route = useRoute();
 const router = useRouter();
@@ -93,8 +93,11 @@ const checkCurrentPath = (): boolean => {
   const path = userStore.getTab.currentPath
   const cleanPath = path.split('?')[0];
 
-  // 데이터 검색 > 통합검색 > 상세조회 페이지의 경우 표기
-  if (cleanPath == '/search/detail') return true
+  // 데이터 검색 > 통합검색 > 상세조회, 카탈로그 표준의 상세 페이지의 경우 표기
+  if (cleanPath == '/search/detail'
+  || cleanPath == '/search/standard/term/detail'
+  || cleanPath == '/search/standard/word/detail'
+  || cleanPath == '/search/standard/domain/detail') return true
 
   return !cleanPath.endsWith('/detail')
 }

@@ -1,8 +1,8 @@
-import { jwtDecode } from "jwt-decode"
+import { defaultAlert, errorAlert } from "@/components/functional/alert/alert-default";
+import { jwtDecode } from "jwt-decode";
+import { navigateTo } from "nuxt/app";
 import { useCookies } from 'vue3-cookies';
 import { useUserStore } from '~/store/user';
-import { defaultAlert, errorAlert } from "@/components/functional/alert/alert-default";
-import { navigateTo } from "nuxt/app";
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const { $ofetch } = useNuxtApp()
@@ -190,7 +190,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   // 실행 코드 시작 부분
   userStore.setFromPath(from.path) // 이전경로 저장
   // 공지사항, 데이터 요청 상세페이지의 배너 배경 제거 flag
-  if (to.path != '/search/detail' && to.path.endsWith('/detail')) {
+  console.log(to.path)
+  if ((to.path != '/search/detail' && to.path != '/search/standard/term/detail' && to.path != '/search/standard/word/detail' && to.path != '/search/standard/domain/detail') && to.path.endsWith('/detail')) {
     userStore.setIsDetailBannerVisible(true)
   } else {
     userStore.setIsDetailBannerVisible(false)
