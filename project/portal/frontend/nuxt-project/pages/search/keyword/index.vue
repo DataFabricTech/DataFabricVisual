@@ -179,14 +179,14 @@
 </template>
 
 <script setup lang="ts">
-import pagination from "@functional/pagination/pagination.vue";
-import { useUserStore } from "~/store/user.ts";
-import { useCategoryStore } from "~/store/category.ts";
+import { useSearchStore } from "@/store/search";
 import { errorAlert } from "@functional/alert/alert-default.ts";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
+import pagination from "@functional/pagination/pagination.vue";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
-import { useSearchStore } from "@/store/search";
+import { useCategoryStore } from "~/store/category.ts";
+import { useUserStore } from "~/store/user.ts";
 import searchfilter from "./searchfilter.vue";
 
 definePageMeta({
@@ -256,6 +256,23 @@ const detailFilters = ref({
         "id": 1,
         "name": "Postgres",
         "description": "Postgres",
+        "count": 0,
+        "checked": false,
+      },
+    ],
+    checkedCount: 0
+  },
+  METATYPE: {
+    all: true,
+    ord: 3,
+    name: '메타 타입',
+    content: [
+      {
+        "root": "METATYPE",
+        "rootDescription": "메타 타입",
+        "id": 1,
+        "name": "table",
+        "description": "table",
         "count": 0,
         "checked": false,
       },
@@ -519,7 +536,7 @@ onMounted(async () => {
       }
 
       system_type.value = searchParams.value.system_type ? searchParams.value.system_type : "" // 시스템타입
-      meta_type.value = searchParams.value.meta_type ? searchParams.value.meta_type : "table" // 메타타입
+      meta_type.value = searchParams.value.meta_type ? searchParams.value.meta_type : "" // 메타타입
       sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
       pagingObj.value.currentPage = searchParams.value.pagingObj.currentPage // 현재 페이지
       pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
@@ -656,6 +673,7 @@ const getDetailFilters = async () => {
         }
       });
       detailFilters.value = reorderedObject
+      console.log(detailFilters.value)
 
       let searchParams = {
         query: word.value,
@@ -720,7 +738,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   const params = {
     query: word.value ? word.value : "",
     system_type: system_type.value ? system_type.value : "",
-    meta_type: meta_type.value ? meta_type.value : "table",
+    meta_type: meta_type.value ? meta_type.value : "",
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
@@ -1016,10 +1034,12 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
   // 상세필터 항목 사용중인경우 처리
   if (detailFilters.value['CATEGORY']
     && detailFilters.value['SYSTEMTYPE']
+    && detailFilters.value['METATYPE']
     && detailFilters.value['ORDER']
   ) {
     if (!detailFilters.value['CATEGORY'].allChecked
       || !detailFilters.value['SYSTEMTYPE'].allChecked
+      || !detailFilters.value['METATYPE'].allChecked
       || !detailFilters.value['ORDER'].allChecked) {
       return true
     }
@@ -1062,6 +1082,8 @@ const clearFilter = (key) => {
     leftMenuToggleAndBold("") // 왼쪽메뉴 연동
   } else if (key == 'SYSTEMTYPE') {
     system_type.value = ""
+  } else if (key == 'METATYPE') {
+    meta_type.value = ""
   } else if (key == 'ORDER') {
     sortOrder.value = ""
   } else {
@@ -1288,6 +1310,7 @@ const onChangeCheckBox = async (key, event: any) => {
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
         if (key == 'SYSTEMTYPE') system_type.value = el.name
+        if (key == 'METATYPE') meta_type.value = el.name
         if (key == 'ORDER') sortOrder.value = el.name
       } else {
         el.checked = false // 단일로 체크되도록 설정

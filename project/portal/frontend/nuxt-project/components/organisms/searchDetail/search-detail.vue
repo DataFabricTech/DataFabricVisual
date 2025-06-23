@@ -609,7 +609,7 @@ const getDetailDataProfile = () => {
 
 // 샘플 데이터 목록 조회
 const getSampleData = () => {
-  const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "table")
+  const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
   const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "")
   const system_name = ObjectUtils.getPropertyValue(entity.value, "system_name", "")
 

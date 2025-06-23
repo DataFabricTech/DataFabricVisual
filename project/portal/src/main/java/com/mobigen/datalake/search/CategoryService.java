@@ -83,6 +83,7 @@ public class CategoryService {
         Map<String, Object> detailFilters = new HashMap<>();
         Map<String, Object> categoryInfo = new HashMap<>();
         Map<String, Object> systemInfo = new HashMap<>();
+        Map<String, Object> metaInfo = new HashMap<>();
         Map<String, Object> orderInfo = new HashMap<>();
 
         // 카테고리 카운트 정보
@@ -175,6 +176,57 @@ public class CategoryService {
         }
         systemInfo.put("checkedCount", 0);
 
+        // 메타 타입 정보
+        List<Map<String, Object>> metaList = categoryMapper.getMetaListForFilter();
+        metaInfo.put("allChecked", true);
+        metaInfo.put("ord", 3);
+        metaInfo.put("name", "메타 타입");
+        metaInfo.put("content", new ArrayList<Map<String, Object>>());
+
+        // 코드 테이블에 선언한 시스템 타입 항목이 없는 정보는 제거
+        List<String> metaTypes = categoryMapper.getMetaTypes();
+        metaList.removeIf(item -> !metaTypes.contains(item.get("meta_type")));
+
+        int j = 0;
+        for (String metaType : metaTypes) {
+            j = j + 1;
+            boolean added = false;
+            for (Map<String, Object> meta : metaList) {
+                // 코드 테이블에 있는 값만 추가
+                if (meta.get("meta_type").toString().equals(metaType)) {
+
+                    Map<String, Object> content = new HashMap<>();
+
+                    content.put("root", "METATYPE");
+                    content.put("rootDescription", "메타 타입");
+
+                    content.put("id", j);
+                    content.put("name", meta.get("meta_type"));
+                    content.put("description", meta.get("meta_type"));
+                    content.put("count", meta.get("type_count"));
+                    content.put("checked", false);
+                    ((List<Map<String, Object>>) metaInfo.get("content")).add(content);
+                    added = true;
+                    break;
+                }
+            }
+
+            if (!added) {
+                Map<String, Object> content = new HashMap<>();
+
+                content.put("root", "METATYPE");
+                content.put("rootDescription", "메타 타입");
+
+                content.put("id", i);
+                content.put("name", metaType);
+                content.put("description", metaType);
+                content.put("count", 0);
+                content.put("checked", false);
+                ((List<Map<String, Object>>) metaInfo.get("content")).add(content);
+            }
+        }
+        metaInfo.put("checkedCount", 0);
+
         // 정렬 오름차순, 내림차순
         orderInfo.put("allChecked", true);
         orderInfo.put("ord", 5);
@@ -204,6 +256,7 @@ public class CategoryService {
 
         detailFilters.put("CATEGORY", categoryInfo);
         detailFilters.put("SYSTEMTYPE", systemInfo);
+        detailFilters.put("METATYPE", metaInfo);
         detailFilters.put("ORDER", orderInfo);
 
         return detailFilters;
