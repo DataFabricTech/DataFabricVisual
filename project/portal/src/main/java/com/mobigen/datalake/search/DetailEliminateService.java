@@ -5,11 +5,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.OutputStream;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -174,7 +177,8 @@ public class DetailEliminateService {
 
             rs = statement.executeQuery(query);
 
-            int columnCount = rs.getMetaData().getColumnCount();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
 
             Date currentDate = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -253,7 +257,20 @@ public class DetailEliminateService {
             log.info("start csv write !!");
             while (rs.next()) {
                 for (int i = 1; i <= columnCount; i++) {
-                    csvPrinter.print(rs.getObject(i));
+                    int columnType = metaData.getColumnType(i); // java.sql.Types.XXX
+                    Object value = rs.getObject(i);
+
+                    if (value instanceof byte[]) {
+                        // VARBINARY, BLOB 등 byte[] 처리
+                        csvPrinter.print(bytesToHex((byte[]) value));
+                    } else if (columnType == Types.CLOB) {
+                        Clob clob = rs.getClob(i);
+                        String text = clob.getSubString(1, (int) clob.length());
+                        csvPrinter.print(text);
+                    } else {
+                        // 기본 문자열 처리
+                        csvPrinter.print(value);
+                    }
                     File f = new File(filePath);
                     long fileSize = f.length();
                     if (fileSize > parseFileSize(maxFileSize)) {
@@ -447,6 +464,15 @@ public class DetailEliminateService {
                 }
             }
         }
+    }
+
+    public static String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        // sb.append("0x");
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 
     // 대용량 다운로드 요청

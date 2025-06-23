@@ -421,10 +421,22 @@ const getReferredEntities = () => {
 };
 
 const fnSelectQueryMake = () => {
+  // Altibase에서 바이너리 타입으로 간주할 컬럼
+  const binaryColumns = ["COL_BLOB", "COL_VARBYTE", "COL_VARBIT"];
+
   // select 쿼리 작성, 날짜타입 trino 조회시 date타입에 timestamp로 들어가있는 데이터를 조회시 오류 발생으로 모두 string으로 타입변환
   for (var i = 0; i < columnPositionData.value.length; i++) {
-    if (columnUpdateIndex.value.findIndex((item) => item === i) < 0)
-      columnPositionData.value[i] = `CAST ("${columnPositionData.value[i]}" AS VARCHAR) as "${columnPositionData.value[i]}"`;
+    if (columnUpdateIndex.value.findIndex((item) => item === i) < 0) {
+      // 바이너리 타입 컬럼은 바이너리로 조회
+      if (binaryColumns.includes(typeEllipsis(columnPositionData.value[i], props.eliminateModal.entity))) {
+        columnPositionData.value[i] = `CAST ("${columnPositionData.value[i]}" AS BINARY) as "${columnPositionData.value[i]}"`;
+      } else if (typeEllipsis(columnPositionData.value[i], props.eliminateModal.entity).includes("timestamp") || typeEllipsis(columnPositionData.value[i], props.eliminateModal.entity).includes("date")) {
+        columnPositionData.value[i] = `CAST ("${columnPositionData.value[i]}" AS VARCHAR) as "${columnPositionData.value[i]}"`;
+      } else {
+        columnPositionData.value[i] = `"${columnPositionData.value[i]}"`;
+      }
+    }
+
     if (i < columnPositionData.value.length - 1)
       querySelect.value += columnPositionData.value[i] + " , ";
     else querySelect.value += columnPositionData.value[i];
