@@ -1343,14 +1343,14 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 /* ---------------------------------------
 /* 어드민분리용 : 나중에 따로 뺄수있음
    --------------------------------------- */
-.admin-wrapper {min-width:1280px; background-color:#fff;}
+.admin-wrapper {min-width:1400px; background-color:#fff;}
 .admin-wrapper .header-sub .header > .inner,
 .admin-wrapper .header-sub .header .sitemap .inner,
 .admin-wrapper footer > .inner,
 .admin-wrapper #main.main-sub ~ footer > .inner,
 .admin-wrapper .breadcrumbs-wrap,
-.admin-wrapper .contents-wrap .contents > div > .inner {width:1280px; margin:0 auto;}
-.admin-wrapper .contents-wrap .contents {max-width:1280px;}
+.admin-wrapper .contents-wrap .contents > div > .inner {width:1400px; margin:0 auto;}
+.admin-wrapper .contents-wrap .contents {max-width:1400px;}
 .admin-wrapper .main-sub {min-height:calc(100vh - 300px);}
 
 /* footer */
