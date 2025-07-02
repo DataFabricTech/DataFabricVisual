@@ -1,10 +1,10 @@
 package com.mobigen.datalake.metaData.manage;
 
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 @Repository("metaDataManageMapper")
 public interface MetaDataManageMapper {
@@ -28,7 +28,7 @@ public interface MetaDataManageMapper {
     int deleteMetaDataClassification(Map<String, Object> params) throws Exception;
 
     // 검색 필터옵션 조회
-    List<String> getFilterOptions() throws Exception;
+    List<Map<String, Object>> getFilterOptions() throws Exception;
 
     // 메타 데이터 권한 수정
     int updateMetaDataRelease(Map<String, Object> params) throws Exception;

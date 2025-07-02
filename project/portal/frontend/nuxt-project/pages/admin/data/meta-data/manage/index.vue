@@ -27,7 +27,7 @@
                     <legend>게시물검색</legend>
                     <div class="inner-search">
                       <div class="mu-selectbox w120">
-                        <select name="searchType2" :value="filterSearchObj.searchType2" @change="onChange">
+                        <select name="searchType" :value="filterSearchObj.searchType" @change="onChange">
                           <option v-for="(option, index) in filterSearchObj.options" :key="index" :value="option.value">
                             {{ option.desc }}
                           </option>
@@ -46,6 +46,13 @@
               </div>
               <!-- //board-list-search -->
               <div class="mu-item-group">
+                <div class="mu-selectbox w120">
+                  <select name="searchType2" :value="currentMetaType" @change="onChangeMetaType">
+                    <option v-for="(item, index) in filterMetaTypeList" :key="index" :value="item.value">
+                      {{ item.desc }}
+                    </option>
+                  </select>
+                </div>
                 <div class="mu-selectbox w120">
                   <select name="searchType3" :value="currentRelease" @change="onChangeRelease">
                     <option v-for="(item, index) in filterReleaseList" :key="index" :value="item.value">
@@ -206,13 +213,17 @@ interface FilterOption {
 }
 
 interface FilterSearchObj {
-  searchType1: string; // 첫번째 필터 조건 - table or column
-  searchType2: string; // 두번째 필터 조건 - 데이터명, 오너 등
+  searchType: string; // 필터 조건
   word: string; // 검색어
   options: FilterOption[];
 }
 
 interface FilterRelease {
+  value: number | string; // 두번째 필터 조건 - 데이터명, 오너 등
+  desc: string; // 검색어
+}
+
+interface FilterMetaType {
   value: number | string; // 두번째 필터 조건 - 데이터명, 오너 등
   desc: string; // 검색어
 }
@@ -286,7 +297,7 @@ interface Params {
   word: string;
   offset: number;
   limit: number;
-  searchType2?: string;
+  searchType?: string;
   entityFilters?: EntityFilters;
   classification?: string;
   typeName?: string;
@@ -306,10 +317,8 @@ const selectedData = ref<any>([]); // 테이블 내 체크박스 체크한 데�
 const catSelectedData = ref<any>(null); // 카테고리 체크박스 체크한 데이터 목록
 
 // 필터검색 제어
-const filterOptions = ref<any[]>([]); // 필터옵션 첫번째 항목 데이터
 const filterSearchObj = ref<FilterSearchObj>({
-  searchType1: "all",
-  searchType2: "",
+  searchType: "",
   word: "",
   options: [
     {
@@ -352,6 +361,15 @@ const filterReleaseList = ref<Array<FilterRelease>>([
   },
 ])
 const currentRelease = ref<number | string>("");
+
+// 메타 데이터 유형 필터 항목
+const filterMetaTypeList = ref<Array<FilterMetaType>>([
+  {
+    value: "",
+    desc: "전체"
+  }
+])
+const currentMetaType = ref<number | string>("");
 
 // 선택된 카테고리 정보
 const selectedCategory = ref<SelectedCategory>({
@@ -465,7 +483,10 @@ onUnmounted(() => {
 const getFilterOptions = () => {
   $ofetch(`/api/metadata/manage/getFilterOptions`).then((res) => {
     if (res && res.data && !res.errorMessage) {
-      filterOptions.value = res.data;
+      if (res.data.length > 0) {
+        const merged = [...filterMetaTypeList.value, ...res.data]
+        filterMetaTypeList.value = merged;
+      }
     }
   });
 };
@@ -479,10 +500,6 @@ const fetchCategories = async (payload: any) => {
 const setSelectedItemId = (guid: string) => {
   categoryStore.setSelectedItemId(guid);
 };
-
-const setToggleTargetOnClick = (value) => {
-  categoryStore.setToggleTargetOnClick(value);
-}
 
 const setParams = (params: any) => {
   userStore.setParams(params);
@@ -845,7 +862,6 @@ const onSubmitCategory = async (params: any) => {
               }
             }).catch((err) => {
               const msg = "ES SYNC 요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
-              console.log(msg);
             })
 
             onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
@@ -976,25 +992,16 @@ const onChange = (e) => {
   } = e;
   const searchObj = JSON.parse(JSON.stringify(filterSearchObj.value)) as FilterSearchObj;
   searchObj[name] = value;
-
-  if (name === "searchType1") {
-    let options: FilterOption[] = [];
-
-    // 첫번째 검색 조건 옵션 선택 시 두번째 검색 조건 옵션 관련 값 세팅
-    options = [
-      { value: "", desc: "전체" },
-      { value: "description", desc: "데이터 설명" },
-      { value: "meta_name", desc: "데이터명" }
-    ];
-
-    searchObj.options = options;
-  }
-
   filterSearchObj.value = searchObj;
 };
 
 const onChangeRelease = (e) => {
   currentRelease.value = e.target.value
+  onSearchDataList();
+}
+
+const onChangeMetaType = (e) => {
+  currentMetaType.value = e.target.value
   onSearchDataList();
 }
 
@@ -1019,9 +1026,9 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   // 카테고리 검색
   params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "");
 
-  const { searchType1, word } = filterSearchObj.value;
-  params.searchType1 = searchType1;
-  params.searchType2 = filterSearchObj.value.searchType2 === "" ? "all" : filterSearchObj.value.searchType2;
+  const { word } = filterSearchObj.value;
+  params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;
+  params.metaType = currentMetaType.value
   params.release = currentRelease.value
   params.word = word.trim();
 

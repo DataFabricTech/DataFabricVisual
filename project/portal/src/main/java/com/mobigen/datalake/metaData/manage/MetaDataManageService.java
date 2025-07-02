@@ -1,17 +1,17 @@
 package com.mobigen.datalake.metaData.manage;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -57,7 +57,7 @@ public class MetaDataManageService {
         return metaDataManageMapper.deleteMetaDataClassification(params);
     }
 
-    public List<String> getFilterOptions() throws Exception {
+    public List<Map<String, Object>> getFilterOptions() throws Exception {
         return metaDataManageMapper.getFilterOptions();
     }
 
