@@ -33,4 +33,6 @@ public interface MetaDataManageMapper {
     // 메타 데이터 권한 수정
     int updateMetaDataRelease(Map<String, Object> params) throws Exception;
 
+    // 메타 데이터 유형 목록 조회
+    List<Map<String, Object>> getMetaTypeList() throws Exception;
 }

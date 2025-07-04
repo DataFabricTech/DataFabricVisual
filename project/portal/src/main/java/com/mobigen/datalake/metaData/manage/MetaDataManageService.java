@@ -31,9 +31,21 @@ public class MetaDataManageService {
         int totCnt = 0;
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 
+        // 전체 검색일 경우 메타 데이터 유형 목록 조회
+        List<Map<String, Object>> metaTypeList = new ArrayList<>();
+        if (params.get("metaType") != null && !"".equals(params.get("metaType").toString())) {
+
+        } else {
+            metaTypeList = metaDataManageMapper.getMetaTypeList();
+
+            if (metaTypeList != null && metaTypeList.size() > 0) {
+                params.put("metaTypeList", metaTypeList);
+            }
+        }
+
         totCnt = metaDataManageMapper.getMetaDataManageListTotCnt(params);
         resultList = metaDataManageMapper.getMetaDataManageList(params);
-
+        
         result.put("totalCount", totCnt);
         result.put("list", resultList);
 
