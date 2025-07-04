@@ -158,7 +158,7 @@
                     <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">size :
                       <strong>{{ data.attributes.size }}</strong>
                     </p>
-                    <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
+                    <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.qualified_name && data.system_type && data.qualified_name.split('.')[1] && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
                       데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
                     <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.system_type && data.qualified_name && data.qualified_name.split('.')[2]">스키마 :
                       <strong>{{ getSchemaName(data.qualified_name) }}</strong>
