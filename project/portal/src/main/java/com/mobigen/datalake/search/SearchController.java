@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -17,13 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @RequestMapping("/api")
@@ -130,5 +129,12 @@ public class SearchController {
     public Object getRelatedData(@RequestBody Map<String, Object> param, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         return searchService.getRelatedData(param);
+    }
+
+    // 메타타입 기본값 조회
+    @ResponseJsonResult
+    @GetMapping("/search/metaType")
+    public Object getDefaultMetaType() throws Exception {
+        return searchService.getDefaultMetaType();
     }
 }

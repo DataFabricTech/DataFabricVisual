@@ -20,4 +20,6 @@ public interface SearchMapper {
     List<String> getMetaDataInfoFromClassifications(Map<String, Object> params) throws Exception;
 
     List<String> getRoleIdsFromUser(String user_id, String dept_id) throws Exception;
+
+    List<Map<String, Object>> getDefaultMetaType() throws Exception;
 }

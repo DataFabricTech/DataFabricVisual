@@ -105,4 +105,21 @@ public class SearchService {
         return result;
     }
 
+    // 메타 타입 기본값 조회
+    public List<Map<String, Object>> getDefaultMetaType() throws Exception {
+        List<Map<String, Object>> result = new ArrayList<>();
+        try {
+            // 1. 메타 타입 기본값 조회
+            result = searchMapper.getDefaultMetaType();
+            if (result != null && result.size() > 0) {
+            } else {
+                log.warn("메타 타입 기본값이 없습니다.");
+            }
+        } catch (Exception e) {
+            log.error("메타 타입 기본값 조회 중 오류 발생", e);
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
 }

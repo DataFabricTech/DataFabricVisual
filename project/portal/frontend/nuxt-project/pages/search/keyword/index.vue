@@ -153,10 +153,14 @@
                   </div>
                   <div class="inner-data option">
                     <p>시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
-                    <p
-                      v-if="data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
+                    <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
+                      확장자 : <strong>{{ data.attributes.extension }}</strong></p>
+                    <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">size :
+                      <strong>{{ data.attributes.size }}</strong>
+                    </p>
+                    <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
                       데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
-                    <p v-if="data.system_type && data.qualified_name && data.qualified_name.split('.')[2]">스키마 :
+                    <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.system_type && data.qualified_name && data.qualified_name.split('.')[2]">스키마 :
                       <strong>{{ getSchemaName(data.qualified_name) }}</strong>
                     </p>
                     <p>최종 수집일 : <strong>{{ $yyyyMMddHHmmSS(data.meta_sync_time ? data.meta_sync_time : null) }}</strong>
@@ -211,7 +215,7 @@ const searchParams = ref({
   detailFilters: {},
   pagingObj: {},
   system_type: "",
-  meta_type: "table",
+  meta_type: "",
   tag: "",
   limit: 10,
   offset: 0,
@@ -317,7 +321,8 @@ const leftWidth = ref<number>(0); // 왼쪽 DOM 너비
 const word = ref<string>(""); // 검색어
 
 const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
-const meta_type = ref<string>("table"); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미, TABLE만 조회
+const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
+const default_meta_type_list = ref<Array<string>>([]); // 메타타입 기본값 목록
 const sortBy = ref<string>("create_time") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
@@ -446,6 +451,16 @@ const entityFilterCriterion = ref([
     displayName: "meta_sync_time",
     typeName: "date"
   },
+  {
+    name: "extention",
+    displayName: "extention",
+    typeName: "string"
+  },
+  {
+    name: "size",
+    displayName: "size",
+    typeName: "int"
+  },
 ])
 const entityFilterCondition = ref({
   condition1: [
@@ -505,6 +520,9 @@ const listData = ref<any>([]); // 통합 검색 결과 리스트
 await categoryStore.fetchCategories();
 
 onMounted(async () => {
+  // 메타타입 기본값 조회
+  getDefaultMetaType()
+
   // 조절할 창 및 조절 요소 설정
   divider.value = document.getElementById("divider");
   leftSide.value = divider.value.previousElementSibling;
@@ -656,6 +674,21 @@ onMounted(async () => {
 
 });
 
+// 메타타입 기본값 조회
+const getDefaultMetaType = async () => {
+  await $ofetch('/api/search/metaType').then((res) => {
+    if (res && res.data && res.data.length > 0) {
+      const tmpList = res.data;
+      // 메타타입 목록에서 name 값만 추출하여 새로운 배열 생성
+      default_meta_type_list.value = tmpList.map((item) => item.name);
+    } else {
+      console.log("메타타입 기본값 조회 실패");
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
 // 가공된 상세필터 정보 가져오기
 const getDetailFilters = async () => {
   // 카테고리, 시스템, 태그, 등록일
@@ -738,7 +771,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   const params = {
     query: word.value ? word.value : "",
     system_type: system_type.value ? system_type.value : "",
-    meta_type: meta_type.value ? meta_type.value : "",
+    meta_type: meta_type.value ? meta_type.value : default_meta_type_list.value,
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
