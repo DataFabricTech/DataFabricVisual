@@ -1,5 +1,5 @@
 <template>
-  <div class="category-wrap">
+  <div class="category-wrap manage">
     <div class="category-options">
       <button class="mu-btn mu-btn-sm mu-btn-icon-only" title="조직 추가" @click.stop="() => onClickButton('add')">
         <i class="mu-icon-svg add"></i><span>추가</span>
@@ -31,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useDeptStore } from "@store/dept.ts";
-import { useEventStore } from "~/store/event.ts";
 import MenuItem from "@/pages/admin/manager/system/user/menu-item";
+import { useDeptStore } from "@store/dept.ts";
+import { computed } from "vue";
+import { useEventStore } from "~/store/event.ts";
 
 const emit = defineEmits([
   "onClickMenuItem",

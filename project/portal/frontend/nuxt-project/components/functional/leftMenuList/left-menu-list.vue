@@ -1,5 +1,5 @@
 <template>
-  <div class="category-wrap">
+  <div class="category-wrap manage">
     <!-- category-options: 메타 데이터 통합 관리 페이지에서 호출 시에만 옵션 버튼 세팅 -->
     <div class="category-options" v-if="calledFrom === 'metaDataManage'">
       <button class="mu-btn mu-btn-sm mu-btn-icon-only" title="카테고리 추가" @click.stop="() => onClickButton('add')">
@@ -32,10 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import MenuItem from "./menu-item";
+import { computed } from "vue";
 import { useCategoryStore } from "~/store/category";
 import { useEventStore } from "~/store/event.ts";
-import { computed } from "vue";
+import MenuItem from "./menu-item";
 
 const emit = defineEmits([
   "onClickMenuItem", // 메뉴 클릭 이벤트 핸들러

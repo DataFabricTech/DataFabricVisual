@@ -606,3 +606,10 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 
 /* footer logo */
 .footer-logo-custom {width:120px; height:44px; background:"no-repeat center center";}
+
+/* 메타 데이터 통합 관리 오른쪽 상단 카테고리 수정 버튼 */
+.data-box.manage { min-height: 60px; }
+.data-box .inner-data.buttons.right {display:flex; flex-direction:column; flex:none; padding: 0 16px 0 16px; border-left:1px solid #eee;}
+
+/* 관리자 - 왼쪽메뉴 가로, 세로 최소길이 설정 */
+.category-wrap.manage {min-width: 250px; min-height: 900px;}

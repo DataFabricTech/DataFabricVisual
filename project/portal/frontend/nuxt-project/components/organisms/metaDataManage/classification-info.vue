@@ -1,6 +1,6 @@
 <template>
   <!-- data-box : 카테고리 영역 -->
-  <div class="data-box">
+  <div class="data-box manage">
     <div class="inner-data">
       <!-- title-group -->
       <div class="title-group">
@@ -10,7 +10,7 @@
       <!-- //title-group -->
       <!-- //connect-info -->
     </div>
-    <div class="inner-data buttons">
+    <div class="inner-data buttons right">
       <button type="button" class="mu-btn mu-btn-primary" v-if="!isReadOnly" @click.stop="onClick">
         <span>카테고리 수정</span><i class="mu-icon-svg modify"></i>
       </button>

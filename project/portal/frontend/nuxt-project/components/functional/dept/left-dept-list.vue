@@ -1,5 +1,5 @@
 <template>
-  <div class="category-wrap">
+  <div class="category-wrap manage">
     <div class="category-body">
       <ul class="category-menu slim-scroll">
         <li :class="[toggleTargets.all ? 'open' : '', 'has-sub']">
@@ -19,11 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { onMounted, computed } from 'vue';
-import { useDeptStore } from "@store/dept.ts";
-import { useEventStore } from "~/store/event.ts";
 import MenuItem from "@/pages/admin/manager/system/user/menu-item";
+import { useDeptStore } from "@store/dept.ts";
+import { computed, onMounted } from 'vue';
+import { useEventStore } from "~/store/event.ts";
 
 const emit = defineEmits([
   "onClickMenuItem",
