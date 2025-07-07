@@ -154,9 +154,9 @@
                   <div class="inner-data option">
                     <p>시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
                     <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
-                      확장자 : <strong>{{ data.attributes.extension }}</strong></p>
-                    <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">size :
-                      <strong>{{ data.attributes.size }}</strong>
+                      확장자 : <strong>{{ data.attributes.extension ? data.attributes.extension : "-" }}</strong></p>
+                    <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
+                      size : <strong>{{ data.attributes.size ?? "-" }}</strong>
                     </p>
                     <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.qualified_name && data.system_type && data.qualified_name.split('.')[1] && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
                       데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
