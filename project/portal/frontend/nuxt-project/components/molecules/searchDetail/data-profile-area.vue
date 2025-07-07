@@ -12,7 +12,7 @@
         </div>
       </div>
       <div
-        v-if="(props.userDataAuth == 1 || props.userDataAuth == 2) && ((table && table.status) || (column && column.status))">
+        v-if="(props.userDataAuth == 1 || props.userDataAuth == 2) && ((table && table.status) || (column && column.length > 0))">
         <!-- detail-box : 테이블 프로필 -->
         <div class="detail-box" v-if="showTableArea">
           <div class="mu-heading">
