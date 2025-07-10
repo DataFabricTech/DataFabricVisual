@@ -57,7 +57,10 @@
               <th>Database</th>
               <td colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database"
                   class="mu-input"
-                  :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('HIVE') || currentCollector.system_type.toUpperCase().includes('MYSQL')">
+                  :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('HIVE')
+                  || currentCollector.system_type.toUpperCase().includes('MYSQL')
+                  || currentCollector.system_type.toUpperCase().includes('S3')
+                  || currentCollector.system_type.toUpperCase().includes('MINIO')">
               </td>
             </tr>
             <tr>
@@ -66,13 +69,15 @@
                   placeholder="" class="mu-input" :readonly="isDetail"></td>
               <th>Schema</th>
               <td colspan="3"><input type="text" v-model="currentCollector.schema" :title="currentCollector.schema"
-                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('TIBERO')"></td>
+                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('TIBERO')
+                  || currentCollector.system_type.toUpperCase().includes('S3')
+                  || currentCollector.system_type.toUpperCase().includes('MINIO')"></td>
             </tr>
             <tr>
               <th>수집 주기</th>
               <td><input type="text" v-model="currentCollector.interval" :title="currentCollector.interval"
                   placeholder="ex) * * * * *" class="mu-input" :readonly="isDetail"></td>
-              <th>Login</th>
+              <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Access Key' : 'Login' }}</th>
               <td colspan="3"><input type="text" v-model="currentCollector.login" :title="currentCollector.login"
                   class="mu-input" :readonly="isDetail"></td>
             </tr>
@@ -86,7 +91,7 @@
                   </select>
                 </div>
               </td>
-              <th>Password</th>
+              <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Secret Key' : 'Password' }}</th>
               <td colspan="3"><input type="text" v-model="currentCollector.password" :title="currentCollector.password"
                   class="mu-input" :readonly="isDetail"></td>
             </tr>
@@ -342,6 +347,12 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
   if (newVal.toUpperCase().includes('TIBERO')) {
     currentCollector.value.schema = ""
   }
+
+  // S3, MinIO의 경우 database, schema 값 제거
+  if (newVal.toUpperCase().includes('S3') || newVal.toUpperCase().includes('MINIO')) {
+    currentCollector.value.database = ""
+    currentCollector.value.schema = ""
+  }
 })
 
 // 시스템 타입 조회
@@ -435,7 +446,12 @@ const isValidInput = () => {
     errorAlert("시스템 타입을 선택해 주세요.")
     return false
   }
-  if (!currentCollector.value.system_type.toUpperCase().includes('HIVE') && !currentCollector.value.system_type.toUpperCase().includes('MYSQL') && !currentCollector.value.system_type.toUpperCase().includes('MSSQL') && (!currentCollector.value.database || currentCollector.value.database == '')) { // Database
+  if (!currentCollector.value.system_type.toUpperCase().includes('HIVE')
+  && !currentCollector.value.system_type.toUpperCase().includes('MYSQL')
+  && !currentCollector.value.system_type.toUpperCase().includes('MSSQL')
+  && !currentCollector.value.system_type.toUpperCase().includes('S3')
+  && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
+  && (!currentCollector.value.database || currentCollector.value.database == '')) { // Database
     errorAlert("Database 값을 입력해 주세요.")
     return false
   }
@@ -443,8 +459,11 @@ const isValidInput = () => {
     if (currentCollector.value.system_type.toUpperCase().includes('TIBERO')) { // Tibero는 기본 default 입력
       currentCollector.value.schema = 'default'
     } else {
-      errorAlert("Schema 값을 입력해 주세요.")
-      return false
+      if (!currentCollector.value.system_type.toUpperCase().includes('S3')
+      && !currentCollector.value.system_type.toUpperCase().includes('MINIO')) {
+        errorAlert("Schema 값을 입력해 주세요.")
+        return false
+      }
     }
   }
   if (!currentCollector.value.system_name || currentCollector.value.system_name == '') { // 시스템 명
@@ -462,8 +481,11 @@ const isValidInput = () => {
 
   if (!currentCollector.value.password || currentCollector.value.password == '') { // Password
     if (!props.isUpdate) {
-      errorAlert("Password를 입력해 주세요.")
-      return false
+      if (!currentCollector.value.system_type.toUpperCase().includes('S3')
+      && !currentCollector.value.system_type.toUpperCase().includes('MINIO')) {
+        errorAlert("Password를 입력해 주세요.")
+        return false
+      }
     }
   }
 

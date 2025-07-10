@@ -152,6 +152,19 @@ public class CollectorController {
     }
 
     /**
+     * 비정형 전용 수집시스템 조회 (minIO)
+     * 
+     * @param system_name 검색 종류
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/minioSystemInfo")
+    public Object getMinioSystemInfo() throws Exception {
+        return collectorService.getMinioSystemInfo();
+    }
+
+    /**
      * Hive 수집대상 파일저장
      * 
      * @param uploadForm 파일

@@ -22,7 +22,7 @@
             <th scope="col">Value</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="props.attributes && props.attributes.length > 0">
           <tr v-for="(item, index) in props.attributes" :key="index">
             <td v-if="props.isAdmin">
               <input type="text" id="businessName01" placeholder="Key값을 입력하세요" :class="inputClass('key', item)"
@@ -39,6 +39,13 @@
               </div>
             </td>
             <td v-else>{{ item.value }}</td>
+          </tr>
+        </tbody>
+        <tbody v-else-if="props.isAdmin" style="height: 52px;">
+          <tr>
+            <td colspan="2">
+              <p class="nodatas">비즈니스 속성을 추가해 주세요.</p>
+            </td>
           </tr>
         </tbody>
       </table>

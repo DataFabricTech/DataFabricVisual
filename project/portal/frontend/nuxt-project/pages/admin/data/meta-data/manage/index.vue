@@ -151,6 +151,11 @@
             <!-- //메타 테이블 -->
 
             <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+            <div class="mu-button-wrap">
+              <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="goToFileRegister">
+                <span>비정형 데이터 추가</span>
+              </button>
+            </div>
           </div>
         </div>
         <!-- //page-content -->
@@ -1228,6 +1233,10 @@ const onSubmitAuth = async (params: any) => {
       });
   }
 };
+
+const goToFileRegister = () => {
+  router.push("/admin/data/meta-data/register")
+}
 </script>
 <style lang="scss">
 @import "index";

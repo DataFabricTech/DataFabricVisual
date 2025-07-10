@@ -339,6 +339,67 @@ public class CollectorService {
     return result;
   }
 
+  public Map<String, Object> getMinioSystemInfo() throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    try {
+      String system_type = ""; // 시스템 타입
+      String system_name = ""; // 시스템 명
+      String meta_type = ""; // 데이터 타입
+      String bucket_name = ""; // 파일 위치 (버켓명)
+      // 1. code테이블에서 비정형 전용 시스템 타입, 시스템 명 조회
+      List<Map<String, Object>> minioCodeList = collectorMapper.getMinioCodeInfo();
+      if (minioCodeList != null && minioCodeList.size() > 0) {
+        for (int i=0; i<minioCodeList.size(); i++) {
+          if (minioCodeList.get(i).get("name") != null && minioCodeList.get(i).get("name").equals("system_type"))
+            system_type = minioCodeList.get(i).get("value").toString();
+            
+          if (minioCodeList.get(i).get("name") != null && minioCodeList.get(i).get("name").equals("system_name"))
+            system_name = minioCodeList.get(i).get("value").toString();
+
+          if (minioCodeList.get(i).get("name") != null && minioCodeList.get(i).get("name").equals("meta_type"))
+            meta_type = minioCodeList.get(i).get("value").toString();
+
+          if (minioCodeList.get(i).get("name") != null && minioCodeList.get(i).get("name").equals("bucket_name"))
+            bucket_name = minioCodeList.get(i).get("value").toString();
+        }
+
+        if (system_name != null && !system_name.equals("") && system_type != null && !system_type.equals("")) {
+          Map<String, Object> collectorMap = collectorMapper.getMinioSystemInfo(system_name, system_type);
+          if (collectorMap != null) {
+            collectorMap.put("meta_type", meta_type);
+            collectorMap.put("bucket_name", bucket_name);
+            result.put("result", true);
+            result.put("minioInfo", collectorMap);
+          } else {
+            log.error("Fail to select one for system info.. - no info");
+
+            result.put("result", false);
+            result.put("minioInfo", null);
+          }
+        } else {
+          log.error("Fail to select one for system info.. - no system_name or system_type");
+
+          result.put("result", false);
+          result.put("minioInfo", null);
+        }
+      } else {
+        log.error("Fail to select one for system info.. - no code list");
+
+        result.put("result", false);
+        result.put("minioInfo", null);
+      }
+
+    } catch (Exception e) {
+      log.error("Fail to select one system info.. - exception");
+
+      result.put("result", false);
+      result.put("minioInfo", null);
+    }
+    
+    return result;
+  }
+
   // 실제 파일 삭제
   private void deleteRealFileFromSystemId(String system_id) throws Exception {
     List<Map<String, Object>> fileInfoList = new ArrayList<>();

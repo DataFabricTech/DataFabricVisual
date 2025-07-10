@@ -324,7 +324,7 @@ pre code {
 }
 
 /* 태그/키워드 */
-.tags-setting .nodatas {flex-direction:row; gap:10px; padding:20px 0; font-weight:500; font-size:16px; color:#0a2469;}
+.tags-setting .nodatas {max-height: 36px;flex-direction:row; gap:10px; padding:6px; font-weight:500; font-size:16px; color:#0a2469;}
 .tags-setting p { text-align: center; }
 
 
@@ -613,3 +613,8 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 
 /* 관리자 - 왼쪽메뉴 가로, 세로 최소길이 설정 */
 .category-wrap.manage {min-width: 250px; min-height: 900px;}
+
+/* 비정형 데이터 등록 -> 카테고리 아이콘 세로 가운데 정렬 */
+.category-group2 {position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:6px;}
+.category-group2 .category {display:inline-flex; align-items:center; height:24px; padding:0 12px; border-radius:6px; background-color:#f0f1f5;}
+.category-group2 .category .category-label {overflow:hidden; max-width:100px; color:#2855ce; font-size:13px; text-overflow:ellipsis; white-space:nowrap;}

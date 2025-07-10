@@ -5,14 +5,19 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mobigen.datalake.metaData.manage.DTO.UploadMinioFileForm;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
+import com.mobigen.framework.security.SessionManager;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 public class MetaDataManageController {
+    private final SessionManager sessionManager;
     private final MetaDataManageService metaDataManageService;
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaDataManageController.class);
 
@@ -60,4 +66,54 @@ public class MetaDataManageController {
         return metaDataManageService.setDataAuth(param);
     }
 
+    /**
+     * 메타데이터 ID 중복확인
+     * 
+     * @param meta_id 메타데이터 ID
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/metaIdDupCheck")
+    public Object metaIdDupCheck(@RequestParam String meta_id) throws Exception {
+        return metaDataManageService.metaIdDupCheck(meta_id);
+    }
+
+    /**
+     * 메타 데이터 통합 관리 > 비정형 데이터 메타 등록
+     *
+     * @params Object 비정형 데이터 정보
+     * @return Object 등록 결과 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/saveFileMetaData")
+    public Object saveFileMetaData(@RequestBody Map<String, Object> metadata, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);       
+        return metaDataManageService.saveFileMetaData(metadata, user);
+    }
+
+    /**
+     * 메타 데이터 통합 관리 > 비정형 데이터 메타 파일 Minio 업로드
+     *
+     * @params Multipart 비정형 파일 데이터
+     * @return Object minio 업로드 결과 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/uploadFileToMinio")
+    public Object uploadFileToMinio(@ModelAttribute UploadMinioFileForm fileForm, HttpServletRequest request) throws Exception {
+        return metaDataManageService.uploadFile(fileForm);
+    }
+
+    /**
+     * 수동 수집 실행
+     * 
+     * @param system_id 시스템 ID
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/executeCollect")
+    public Object executeCollect() throws Exception {
+        return metaDataManageService.executeCollect();
+    }
 }
