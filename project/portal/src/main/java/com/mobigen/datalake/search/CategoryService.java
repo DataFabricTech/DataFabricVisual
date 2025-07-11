@@ -136,16 +136,24 @@ public class CategoryService {
         systemInfo.put("content", new ArrayList<Map<String, Object>>());
 
         // 코드 테이블에 선언한 시스템 타입 항목이 없는 정보는 제거
-        List<String> systemTypes = categoryMapper.getSystemTypes();
-        systemList.removeIf(item -> !systemTypes.contains(item.get("system_type")));
+        List<Map<String, Object>> systemTypes = categoryMapper.getSystemTypes();
+        Set<String> validSystemTypeNames = systemTypes.stream()
+            .map(map -> (String) map.get("name"))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+
+        systemList.removeIf(map -> {
+            String systemType = (String) map.get("system_type");
+            return systemType == null || !validSystemTypeNames.contains(systemType);
+        });
 
         int i = 0;
-        for (String systemType : systemTypes) {
+        for (Map<String, Object> systemType : systemTypes) {
             i = i + 1;
             boolean added = false;
             for (Map<String, Object> system : systemList) {
                 // 코드 테이블에 있는 값만 추가
-                if (system.get("system_type").toString().equals(systemType)) {
+                if (system.get("system_type").toString().equals(systemType.get("name"))) {
 
                     Map<String, Object> content = new HashMap<>();
 
@@ -153,8 +161,8 @@ public class CategoryService {
                     content.put("rootDescription", "시스템 타입");
 
                     content.put("id", i);
-                    content.put("name", system.get("system_type"));
-                    content.put("description", system.get("system_type"));
+                    content.put("name", systemType.get("name"));
+                    content.put("description", systemType.get("value"));
                     content.put("count", system.get("type_count"));
                     content.put("checked", false);
                     ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
@@ -170,8 +178,8 @@ public class CategoryService {
                 content.put("rootDescription", "시스템 타입");
 
                 content.put("id", i);
-                content.put("name", systemType);
-                content.put("description", systemType);
+                content.put("name", systemType.get("name"));
+                content.put("description", systemType.get("value"));
                 content.put("count", 0);
                 content.put("checked", false);
                 ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
@@ -189,16 +197,14 @@ public class CategoryService {
         // 코드 테이블에 선언한 시스템 타입 항목이 없는 정보는 제거
         List<Map<String, String>> metaTypes = categoryMapper.getMetaTypes();
 
-        // B 리스트에서 name 값을 모두 추출해서 Set으로 만듬
-        Set<String> validNames = metaTypes.stream()
+        Set<String> validMetaTypeNames = metaTypes.stream()
             .map(map -> (String) map.get("name"))
             .filter(Objects::nonNull)
             .collect(Collectors.toSet());
 
-        // A 리스트에서 meta_type이 validNames에 없는 항목 제거
         metaList.removeIf(map -> {
             String metaType = (String) map.get("meta_type");
-            return metaType == null || !validNames.contains(metaType);
+            return metaType == null || !validMetaTypeNames.contains(metaType);
         });
 
         int j = 0;
