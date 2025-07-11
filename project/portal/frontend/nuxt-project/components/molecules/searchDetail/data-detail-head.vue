@@ -178,6 +178,7 @@ const getMetaIcon = (type) => {
   if (type && type.toUpperCase() == 'STORAGESERVICE') return "ico-data data-04"
   if (type && type.toUpperCase() == 'TABLE') return "ico-data data-05"
   if (type && type.toUpperCase() == 'COLUMN') return "ico-data data-01"
+  if (type && type.toUpperCase() == 'FILE') return "ico-data data-10"
 
   return 'ico-data data-06'
 }

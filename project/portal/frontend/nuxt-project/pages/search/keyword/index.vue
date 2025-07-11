@@ -154,9 +154,9 @@
                   <div class="inner-data option">
                     <p>시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
                     <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
-                      확장자 : <strong>{{ data.attributes.extension ? data.attributes.extension : "-" }}</strong></p>
+                      확장자 : <strong>{{ data.attributes && data.attributes.extension ? data.attributes.extension : "-" }}</strong></p>
                     <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
-                      size : <strong>{{ data.attributes.size ?? "-" }}</strong>
+                      size : <strong>{{ data.attributes && data.attributes.size ? data.attributes.size : "-" }}</strong>
                     </p>
                     <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.qualified_name && data.system_type && data.qualified_name.split('.')[1] && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
                       데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
@@ -706,7 +706,6 @@ const getDetailFilters = async () => {
         }
       });
       detailFilters.value = reorderedObject
-      console.log(detailFilters.value)
 
       let searchParams = {
         query: word.value,
@@ -1408,6 +1407,7 @@ const getMetaIcon = (type) => {
   if (type && type.toUpperCase() == 'STORAGESERVICE') return "ico-data data-04"
   if (type && type.toUpperCase() == 'TABLE') return "ico-data data-05"
   if (type && type.toUpperCase() == 'COLUMN') return "ico-data data-01"
+  if (type && type.toUpperCase() == 'FILE') return "ico-data data-10"
 
   return 'ico-data data-06'
 }
