@@ -47,7 +47,7 @@
                 <td :title="item.system_name ? item.system_name : '-'"><a @click="popupCollectorDetailModal(item)">{{ item.system_name ? item.system_name : "-" }}</a></td>
                 <td :title="item.host ? item.host : '-'">{{ item.host ? item.host : "-" }}</td>
                 <td :title="item.database ? item.database : '-'">{{ item.database ? item.database : "-" }}</td>
-                <td :title="item.interval ? item.interval : '-'">{{ item.interval ? item.interval : "-" }}</td>
+                <td @click="airflow(item)" :title="item.interval ? item.interval : '-'">{{ item.interval ? item.interval : "-" }}</td>
                 <td :title='item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-"'>{{ item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-" }}</td>
                 <td :title="getKrCollectFlag(item.collect_flag)">{{ getKrCollectFlag(item.collect_flag) }}</td>
                 <td>
@@ -85,6 +85,10 @@
     <collector-modal :isDetail="isDetail" :isUpdate="isUpdate" :collector="collector"
       :toggleCollectorModal="toggleCollectorModal" @updateCollector="updateCollector"
       @onCloseModal="onCloseCollectorModal" />
+
+    <test :airflowUrl="airflowUrl" :isDetail="isDetail" :isUpdate="isUpdate" :collector="collector"
+      :toggleCollectorModal="toggleCollectorModal" @updateCollector="updateCollector"
+      @onCloseModal="onCloseCollectorModal" />
   </div>
 </template>
 
@@ -96,6 +100,7 @@ import Pagination from "@functional/pagination/pagination";
 import CollectorBoardListSearch from "@organisms/collector/collector-board-list-search.vue";
 import CollectorModal from "@organisms/collector/collector-modal.vue";
 import PageSize from "@organisms/collector/page-size.vue";
+import Test from "@organisms/collector/test.vue";
 import { onMounted, ref } from "vue";
 
 definePageMeta({
@@ -301,6 +306,8 @@ const deleteCollector = async (system_id) => {
 // 수집대상 등록 모달 닫기
 const onCloseCollectorModal = async () => {
   toggleCollectorModal.value = false
+  tog.value = false
+  airflowUrl.value = ''
 }
 
 // 수집대상 등록, 수정
@@ -374,6 +381,19 @@ const onClickReloadOneButton = async (collector, index) => {
   }).catch(async (err) => {
     errorAlert("수집 항목 새로고침 실패");
   })
+
+}
+
+const tog = ref(false)
+const airflowUrl = ref("")
+const airflow = () => {
+  console.log('testtest')
+  tog.value = !tog.value
+  if (tog.value) {
+    airflowUrl.value = 'http://<INTERNAL_HOST>:28080/dags/example_dag/grid'
+  } else {
+    airflowUrl.value = ''
+  }
 
 }
 
