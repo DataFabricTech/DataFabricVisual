@@ -35,13 +35,13 @@
                 </div>
                 <div class="scroll-box">
                   <div
-                    v-for="(item, index) in systemStatusData"
+                    v-for="(item, index) in systemResponseData"
                     :key="index"
                     class="response-item"
                   >
                     <span class="service-name">{{ item.system_name }}</span>
                     <span class="divider-line"></span>
-                    <span class="response-time">{{ item.response_time ? getResponseTime(item.response_time) : '-' }} sec</span>
+                    <span class="response-time">{{ getResponseTime(item.response_time) }} sec</span>
                   </div>
                 </div>
               </div>
@@ -114,7 +114,10 @@ const colorList = ref([
 
 const systemTypeCountChartData = ref([])
 const metaTypeCountChartData = ref([])
-const systemStatusData = ref([])
+const systemResponseData = ref([])
+const systemUsageCpuChartData = ref([])
+const systemUsageMemoryChartData = ref([])
+const systemQuerySuccessFailedChartData = ref([])
 
 const pieChartOptions = ref({
   chart: {
@@ -236,7 +239,7 @@ const pieChart2Options = ref({
         enabled: true,
         formatter: function() {
           return `  <b>${this.point.name}</b><br/>
-          <span>${ObjectUtils.numberFormatter(this.point.y)} 개</span>`;
+          <span>${ObjectUtils.numberFormatter(this.point.y)}개</span>`;
         },
         distance: 15,
         style: {
@@ -293,12 +296,13 @@ const lineChartOptions = ref({
     text: ''
   },
   xAxis: {
-    categories: []
+    categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
   },
   yAxis: {
     title: {
       text: ''
     },
+    tickInterval: 1000
   },
   plotOptions: {
     line: {
@@ -309,15 +313,32 @@ const lineChartOptions = ref({
     }
   },
   series: [
-    // {
-    //   name: 'A 시스템',
-    //   data: [10, 15, 20, 30, 25, 35, 40, 38, 32, 28, 22, 18]
-    // },
-    // {
-    //   name: 'B 시스템',
-    //   data: [5, 10, 15, 22, 27, 33, 37, 36, 31, 25, 20, 15]
-    // }
-  ]
+    {
+      name: 'A 시스템',
+      data: [10, 15, 20, 30, 25, 35, 40, 38, 32, 28, 22, 18]
+    },
+    {
+      name: 'B 시스템',
+      data: [5, 10, 15, 22, 27, 33, 37, 36, 31, 25, 20, 15]
+    }
+  ],
+  tooltip: {
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    shadow: false,
+    borderRadius: 0,
+    shared: false,
+    useHTML: true,
+    formatter: function() {
+      return `<b>${this.point.category}</b>
+          <br />${ObjectUtils.numberFormatter(this.point.y)}`;
+    },
+    style: {
+      fontFamily: 'NanumSquare',
+      fontSize: '14px',
+      color: '#222',
+      textOverflow: 'none',
+    }
+  }
 })
 
 
@@ -332,28 +353,45 @@ const lineChart2Options = ref({
     text: ''
   },
   xAxis: {
-    categories: []
+    categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
   },
   yAxis: {
     title: {
       text: ''
     },
-    tickInterval: 10000000
+    tickInterval: 1000
   },
   plotOptions: {
     line: {
       dataLabels: {
         enabled: true
       },
-      enableMouseTracking: false
+      enableMouseTracking: true
     }
   },
   series: [
-    // {
-    //   name: 'Reggane',
-    //   data: [16.0, 18.2, 23.1, 27.9, 32.2, 36.4, 39.8, 38.4, 35.5, 29.2, 22.0, 17.8]
-    // }
-  ]
+    {
+      name: 'Reggane',
+      data: [16.0, 18.2, 23.1, 27.9, 32.2, 36.4, 39.8, 38.4, 35.5, 29.2, 22.0, 17.8]
+    }
+  ],
+  tooltip: {
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    shadow: false,
+    borderRadius: 0,
+    shared: false,
+    useHTML: true,
+    formatter: function() {
+      return `<b>${this.point.category}</b>
+          <br />${ObjectUtils.numberFormatter(this.point.y)}`;
+    },
+    style: {
+      fontFamily: 'NanumSquare',
+      fontSize: '14px',
+      color: '#222',
+      textOverflow: 'none',
+    }
+  }
 })
 
 const columnChartOptions = ref({
@@ -365,8 +403,9 @@ const columnChartOptions = ref({
   },
   xAxis: {
     title: {
-      text: ''
+      text: '',
     },
+    categories: [],
     tickInterval: 1
   },
   yAxis: {
@@ -376,12 +415,37 @@ const columnChartOptions = ref({
     min: 0,
     tickInterval: 100000,
   },
+  plotOptions: {
+    line: {
+      dataLabels: {
+        enabled: true
+      },
+      enableMouseTracking: true
+    }
+  },
   series: [
-    // {
-    //   name: 'Jane',
-    //   data: [1, 0, 4]
-    // }
-  ]
+    {
+      name: 'Jane',
+      data: [1, 0, 4]
+    }
+  ],
+  tooltip: {
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    shadow: false,
+    borderRadius: 0,
+    shared: false,
+    useHTML: true,
+    formatter: function() {
+      return `<b>${this.point.category}</b>
+          <br />${ObjectUtils.numberFormatter(this.point.y)}개`;
+    },
+    style: {
+      fontFamily: 'NanumSquare',
+      fontSize: '14px',
+      color: '#222',
+      textOverflow: 'none',
+    }
+  }
 })
 
 onMounted(() => {
@@ -406,41 +470,69 @@ const initColor = async (list) => {
 };
 
 // 라인 차트에 맞게 데이터 변환
-const convertToCpuSeries = (list) => {
-  const series = list.map((item) => {return { name: item.system_name, data: [item.usage_cpu]}})
+const getUsageCpuSeries = (raw) => {
+  const cpu_systems = [...new Set(raw.map(r => r.system_name))];
+  const series = cpu_systems.map(system => {
+    const monthlyData = Array(12).fill(0)
+    raw
+      .filter(r => r.system_name === system)
+      .forEach(r => {
+        monthlyData[r.month_num - 1] = r.total_count; // 1월 = index 0
+      });
 
-  return series;
+    return {
+      name: system,
+      data: monthlyData
+    };
+  })
+
+  return series
 };
 
 // 라인 차트에 맞게 데이터 변환
-const convertToMemorySeries = (list) => {
-  const series = list.map((item) => {return { name: item.system_name, data: [item.usage_cpu]}})
+const getUsageMemorySeries = (raw) => {
+  const memory_systems = [...new Set(raw.map(r => r.system_name))];
+  const series = memory_systems.map(system => {
+    const monthlyData = Array(12).fill(0)
+    raw
+      .filter(r => r.system_name === system)
+      .forEach(r => {
+        monthlyData[r.month_num - 1] = r.total_count; // 1월 = index 0
+      });
 
-  return series;
+    return {
+      name: system,
+      data: monthlyData
+    };
+  })
+
+  return series
 };
 
 // 막대 차트에 맞게 데이터 변환
-const convertToQuerySeries = (list) => {
-  const queryCategories = list.map(item => item.system_name);
-  const querySeries = [
+const getQuerySuccessFailedSeries = (raw) => {
+  const querySuccessFailedCategories = raw.map(row => row.system_name);
+  const successData = raw.map(row => row.query_success_count);
+  const failedData = raw.map(row => row.query_fail_count);
+
+  const querySuccessFailedSeries = [
     {
-      name: '성공',
-      data: list.map(item => item.query_success_count)
+      name: "성공",
+      data: successData,
     },
     {
-      name: '실패',
-      // data: list.map(item => item.query_fail_count)
+      name: "실패",
+      data: failedData
     }
-  ];
+  ]
 
-  return { queryCategories, querySeries };
-};
+  return { querySuccessFailedCategories, querySuccessFailedSeries }
+}
 
 const getChartData = async () => {
   const charData = []
 
   await $ofetch(`/api/monitoring/chartData`).then((res) => {
-    console.log(res)
     if (res && res.data) {
       // 시스템 타입별 메타데이터 수
       systemTypeCountChartData.value = res.data.systemTypeCountChartData.map((el) => { return { name: el.system_type, y: el.count }})
@@ -452,32 +544,39 @@ const getChartData = async () => {
       initColor(metaTypeCountChartData.value)
       pieChart2Options.value.series[0].data = metaTypeCountChartData.value;
 
-      systemStatusData.value = res.data.systemStatusChartData
+      systemResponseData.value = res.data.systemResponseData
 
       // 시스템별 CPU 사용량
       lineChartOptions.value.yAxis.title.text = 'CPU 사용량' // y축 설정
-      lineChartOptions.value.xAxis.categories = systemStatusData.value.map((el) => el.system_name) // x축 설정
-      lineChartOptions.value.series = convertToCpuSeries(systemStatusData.value)
+      lineChartOptions.value.yAxis.tickInterval = 1000 // y축 간격
+      // lineChartOptions.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
+      // lineChartOptions.value.series = getUsageCpuSeries(res.data.systemUsageCpuChartData)
 
       // 시스템별 Memory 사용량
       lineChart2Options.value.yAxis.title.text = 'Memory 사용량' // y축 설정
-      lineChart2Options.value.xAxis.categories = systemStatusData.value.map((el) => el.system_name) // x축 설정
-      lineChart2Options.value.series = convertToMemorySeries(systemStatusData.value)
+      lineChart2Options.value.yAxis.tickInterval = 1000 // y축 간격
+      // lineChart2Options.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
+      // lineChart2Options.value.series = getUsageMemorySeries(res.data.systemUsageMemoryChartData)
 
       // 시스템별 Query (성공/실패) count
       columnChartOptions.value.yAxis.title.text = '쿼리 성공/실패 카운트' // y축 설정
-
-      const { queryCategories, querySeries } = convertToQuerySeries(systemStatusData.value)
-      columnChartOptions.value.xAxis.categories = queryCategories // x축 설정
-      columnChartOptions.value.series = querySeries
-      console.log(querySeries)
+      lineChart2Options.value.yAxis.tickInterval = 1000 // y축 간격
+      const { querySuccessFailedCategories, querySuccessFailedSeries }= getQuerySuccessFailedSeries(res.data.systemQuerySuccessFailedChartData)
+      columnChartOptions.value.xAxis.categories = querySuccessFailedCategories // x축 설정
+      columnChartOptions.value.series = querySuccessFailedSeries
+      columnChartOptions.value.colors = ['#28a745', '#dc3545'] // 초록, 빨강
     }
   })
 }
 
 const getResponseTime = (ms_time) => {
-  const seconds = (ms_time / 1000).toFixed(2);  // "123.46" (문자열)
-  return seconds
+  if (ms_time) {
+    const seconds = (ms_time / 1000000).toFixed(2);  // "123.46" (문자열)
+    return seconds
+  } else {
+    if (ms_time == 0) return 0
+    else return '-'
+  }
 }
 
 </script>

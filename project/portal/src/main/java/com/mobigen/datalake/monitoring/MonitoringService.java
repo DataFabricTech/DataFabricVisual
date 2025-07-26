@@ -1,5 +1,6 @@
 package com.mobigen.datalake.monitoring;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,18 +22,30 @@ public class MonitoringService {
         Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> systemTypeCountChartData = new ArrayList<>();
         List<Map<String, Object>> metaTypeCountChartData = new ArrayList<>();
-        List<Map<String, Object>> systemStatusChartData = new ArrayList<>();
+        List<Map<String, Object>> systemResponseData = new ArrayList<>();
+        List<Map<String, Object>> systemUsageCpuChartData = new ArrayList<>();
+        List<Map<String, Object>> systemUsageMemoryChartData = new ArrayList<>();
+        List<Map<String, Object>> systemQuerySuccessFailedChartData = new ArrayList<>();
             
         
-        try {
+        try {            
             // 시스템 타입별 메타데이터 수
             systemTypeCountChartData = monitoringMapper.getSystemTypeCountData();
             
             // 메타 타입별 메타데이터 수
             metaTypeCountChartData = monitoringMapper.getMetaTypeCountData();
 
-            // 시스템별 응답시간, 시스템별 CPU 사용량, 시스템별 Memory, 시스템별 Query (성공/실패) 수
-            systemStatusChartData = monitoringMapper.getSystemStatusData();
+            // 시스템별 응답시간
+            systemResponseData = monitoringMapper.systemResponseData();
+            
+            // 시스템별 CPU 사용량
+            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData();
+            
+            // 시스템별 Memory
+            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData();
+            
+            // 시스템별 Query (성공/실패) 수
+            systemQuerySuccessFailedChartData = monitoringMapper.systemQuerySuccessFailedChartData();
         } catch(Exception e) {
             e.printStackTrace();
             log.error("Failed to load monitoring chart data !!");
@@ -40,7 +53,10 @@ public class MonitoringService {
 
         result.put("systemTypeCountChartData", systemTypeCountChartData);
         result.put("metaTypeCountChartData", metaTypeCountChartData);
-        result.put("systemStatusChartData", systemStatusChartData);
+        result.put("systemResponseData", systemResponseData);
+        result.put("systemUsageCpuChartData", systemUsageCpuChartData);
+        result.put("systemUsageMemoryChartData", systemUsageMemoryChartData);
+        result.put("systemQuerySuccessFailedChartData", systemQuerySuccessFailedChartData);
 
         return result;
     }
