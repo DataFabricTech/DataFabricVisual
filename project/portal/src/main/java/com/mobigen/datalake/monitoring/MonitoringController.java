@@ -3,6 +3,7 @@ package com.mobigen.datalake.monitoring;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 
@@ -23,5 +24,17 @@ public class MonitoringController {
     @GetMapping("/chartData")
     public Object chartData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return monitoringService.getChartData();
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/usageCpuChartData")
+    public Object usageCpuChartData(@RequestParam int year, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return monitoringService.getUsageCpuChartData(year);
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/usageMemoryChartData")
+    public Object usageMemoryChartData(@RequestParam int year, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return monitoringService.getUsageMemoryChartData(year);
     }
 }

@@ -14,7 +14,7 @@ public interface MonitoringMapper {
     List<Map<String, Object>> getMetaTypeCountData();
 
     List<Map<String, Object>> systemResponseData();
-    List<Map<String, Object>> systemUsageCpuChartData();
-    List<Map<String, Object>> systemUsageMemoryChartData();
+    List<Map<String, Object>> systemUsageCpuChartData(int year);
+    List<Map<String, Object>> systemUsageMemoryChartData(int year);
     List<Map<String, Object>> systemQuerySuccessFailedChartData();
 }

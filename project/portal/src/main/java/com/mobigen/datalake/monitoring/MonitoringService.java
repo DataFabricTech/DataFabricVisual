@@ -29,6 +29,8 @@ public class MonitoringService {
             
         
         try {            
+            int currentYear = LocalDate.now().getYear();
+
             // 시스템 타입별 메타데이터 수
             systemTypeCountChartData = monitoringMapper.getSystemTypeCountData();
             
@@ -39,10 +41,10 @@ public class MonitoringService {
             systemResponseData = monitoringMapper.systemResponseData();
             
             // 시스템별 CPU 사용량
-            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData();
+            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData(currentYear);
             
             // 시스템별 Memory
-            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData();
+            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData(currentYear);
             
             // 시스템별 Query (성공/실패) 수
             systemQuerySuccessFailedChartData = monitoringMapper.systemQuerySuccessFailedChartData();
@@ -57,6 +59,41 @@ public class MonitoringService {
         result.put("systemUsageCpuChartData", systemUsageCpuChartData);
         result.put("systemUsageMemoryChartData", systemUsageMemoryChartData);
         result.put("systemQuerySuccessFailedChartData", systemQuerySuccessFailedChartData);
+
+        return result;
+    }
+
+    // 모니터링 CPU 사용량 차트 데이터 조회
+    public Map<String, Object> getUsageCpuChartData(int year) {
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> systemUsageCpuChartData = new ArrayList<>();
+            
+        
+        try {            
+            // 시스템별 CPU 사용량
+            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData(year);
+        } catch(Exception e) {
+            e.printStackTrace();
+            log.error("Failed to load monitoring chart data !!");
+        }    
+        result.put("systemUsageCpuChartData", systemUsageCpuChartData);
+
+        return result;
+    }
+
+    // 모니터링 Memory 사용량 차트 데이터 조회
+    public Map<String, Object> getUsageMemoryChartData(int year) {
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> systemUsageMemoryChartData = new ArrayList<>();
+            
+        try {            
+            // 시스템별 Memory
+            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData(year);
+        } catch(Exception e) {
+            e.printStackTrace();
+            log.error("Failed to load monitoring chart data !!");
+        }    
+        result.put("systemUsageMemoryChartData", systemUsageMemoryChartData);
 
         return result;
     }

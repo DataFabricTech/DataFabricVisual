@@ -48,8 +48,15 @@
             </div>
             <div class="mu-row gap-20">
               <div class="mu-col mu-col">
-                <div class="mu-heading">
+                <div class="mu-heading" style="display: flex; justify-content: space-between;">
                   <h4>시스템별 CPU 사용량</h4>
+                  <div class="mu-selectbox w120">
+                    <select name="searchType2" :value="currentUsageCpuYear" @change="onChangeUsageCpuYear">
+                      <option v-for="(item, index) in years" :key="index" :value="item">
+                        {{ item }}년
+                      </option>
+                    </select>
+                  </div>
                 </div>
                 <div class="chart-wrap">
                   <div class="chart-box">
@@ -58,8 +65,15 @@
                 </div>
               </div>
               <div class="mu-col mu-col">
-                <div class="mu-heading">
+                <div class="mu-heading" style="display: flex; justify-content: space-between;">
                   <h4>시스템별 Memory 사용량</h4>
+                  <div class="mu-selectbox w120">
+                    <select name="searchType2" :value="currentUsageMemoryYear" @change="onChangeUsageMemoryYear">
+                      <option v-for="(item, index) in years" :key="index" :value="item">
+                        {{ item }}년
+                      </option>
+                    </select>
+                  </div>
                 </div>
                 <div class="chart-wrap">
                   <div class="chart-box">
@@ -111,6 +125,13 @@ const colorList = ref([
   "#FF6BB5", // 핑크계열
   "#999999"  // 중립 회색 (보조 색)
 ]);
+
+const currentYear = new Date().getFullYear()
+const startYear = 2000
+const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i).reverse();
+
+const currentUsageCpuYear = ref(currentYear)
+const currentUsageMemoryYear = ref(currentYear)
 
 const systemTypeCountChartData = ref([])
 const metaTypeCountChartData = ref([])
@@ -456,7 +477,6 @@ onMounted(() => {
 const onClickPieChart = (e) => {
   e.stopPropagation();
   const target = ObjectUtils.getPropertyValue(e, 'point/options', {});
-  console.log(target)
 }
 
 // 아이콘 영역 렌더에 사용하는 데이터 값 설정
@@ -470,50 +490,66 @@ const initColor = async (list) => {
 };
 
 // 라인 차트에 맞게 데이터 변환
-const getUsageCpuSeries = (raw) => {
-  const cpu_systems = [...new Set(raw.map(r => r.system_name))];
-  const series = cpu_systems.map(system => {
-    const monthlyData = Array(12).fill(0)
-    raw
-      .filter(r => r.system_name === system)
-      .forEach(r => {
-        monthlyData[r.month_num - 1] = r.total_count; // 1월 = index 0
-      });
-
-    return {
-      name: system,
-      data: monthlyData
-    };
+const getUsageCpuSeries = (rawData) => {
+  // 1. x축에 사용할 월
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const month = (i + 1).toString().padStart(2, '0')
+    return `2025-${month}`
   })
+
+  // 2. 시스템별 데이터 정리
+  const systemsMap = {}
+  rawData.forEach(row => {
+    const key = `${row.system_name}`
+    if (!systemsMap[key]) {
+      systemsMap[key] = {}
+    }
+    systemsMap[key][row.month] = row.total_cpu_usage
+  })
+
+  // 3. series 구성 (모든 월 포함, 없으면 0)
+  const series = Object.entries(systemsMap).map(([name, usageMap]) => ({
+    name,
+    type: 'line',
+    data: months.map(month => usageMap[month] ?? 0)
+  }))
 
   return series
 };
 
 // 라인 차트에 맞게 데이터 변환
-const getUsageMemorySeries = (raw) => {
-  const memory_systems = [...new Set(raw.map(r => r.system_name))];
-  const series = memory_systems.map(system => {
-    const monthlyData = Array(12).fill(0)
-    raw
-      .filter(r => r.system_name === system)
-      .forEach(r => {
-        monthlyData[r.month_num - 1] = r.total_count; // 1월 = index 0
-      });
-
-    return {
-      name: system,
-      data: monthlyData
-    };
+const getUsageMemorySeries = (rawData) => {
+  // 1. x축에 사용할 월
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const month = (i + 1).toString().padStart(2, '0')
+    return `2025-${month}`
   })
+
+  // 2. 시스템별 데이터 정리
+  const systemsMap = {}
+  rawData.forEach(row => {
+    const key = `${row.system_name}`
+    if (!systemsMap[key]) {
+      systemsMap[key] = {}
+    }
+    systemsMap[key][row.month] = row.total_memory_usage
+  })
+
+  // 3. series 구성 (모든 월 포함, 없으면 0)
+  const series = Object.entries(systemsMap).map(([name, usageMap]) => ({
+    name,
+    type: 'line',
+    data: months.map(month => usageMap[month] ?? 0)
+  }))
 
   return series
 };
 
 // 막대 차트에 맞게 데이터 변환
 const getQuerySuccessFailedSeries = (raw) => {
-  const querySuccessFailedCategories = raw.map(row => row.system_name);
-  const successData = raw.map(row => row.query_success_count);
-  const failedData = raw.map(row => row.query_fail_count);
+  const querySuccessFailedCategories = raw ? raw.map(row => row.system_name) : [];
+  const successData = raw ? raw.map(row => row.query_success_count) : [];
+  const failedData = raw ? raw.map(row => row.query_fail_count) : [];
 
   const querySuccessFailedSeries = [
     {
@@ -544,29 +580,42 @@ const getChartData = async () => {
       initColor(metaTypeCountChartData.value)
       pieChart2Options.value.series[0].data = metaTypeCountChartData.value;
 
-      systemResponseData.value = res.data.systemResponseData
-
-      // 시스템별 CPU 사용량
-      lineChartOptions.value.yAxis.title.text = 'CPU 사용량' // y축 설정
-      lineChartOptions.value.yAxis.tickInterval = 1000 // y축 간격
-      // lineChartOptions.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
-      // lineChartOptions.value.series = getUsageCpuSeries(res.data.systemUsageCpuChartData)
-
-      // 시스템별 Memory 사용량
-      lineChart2Options.value.yAxis.title.text = 'Memory 사용량' // y축 설정
-      lineChart2Options.value.yAxis.tickInterval = 1000 // y축 간격
-      // lineChart2Options.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
-      // lineChart2Options.value.series = getUsageMemorySeries(res.data.systemUsageMemoryChartData)
-
-      // 시스템별 Query (성공/실패) count
-      columnChartOptions.value.yAxis.title.text = '쿼리 성공/실패 카운트' // y축 설정
-      lineChart2Options.value.yAxis.tickInterval = 1000 // y축 간격
-      const { querySuccessFailedCategories, querySuccessFailedSeries }= getQuerySuccessFailedSeries(res.data.systemQuerySuccessFailedChartData)
-      columnChartOptions.value.xAxis.categories = querySuccessFailedCategories // x축 설정
-      columnChartOptions.value.series = querySuccessFailedSeries
-      columnChartOptions.value.colors = ['#28a745', '#dc3545'] // 초록, 빨강
+      systemResponseData.value = res.data.systemResponseData // 시스템별 응답시간
+      setSystemUsageCpuChartData(res.data.systemUsageCpuChartData) // 시스템별 CPU 사용량
+      setSystemUsageMemoryChartData(res.data.systemUsageMemoryChartData) // 시스템별 Memory 사용량
+      setSystemQuerySuccessFailedChartData(res.data.systemQuerySuccessFailedChartData) // 시스템별 Query (성공/실패) 수
     }
   })
+}
+
+// 시스템별 CPU 사용량 차트 데이터 설정
+const setSystemUsageCpuChartData = (data) => {
+  systemUsageCpuChartData.value = data
+  lineChartOptions.value.yAxis.title.text = 'CPU 사용량 (sec)' // y축 설정
+  lineChartOptions.value.yAxis.tickInterval = 1000 // y축 간격
+  lineChartOptions.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
+  lineChartOptions.value.series = getUsageCpuSeries(systemUsageCpuChartData.value)
+}
+
+// 시스템별 Memory 사용량 차트 데이터 설정
+const setSystemUsageMemoryChartData = (data) => {
+  systemUsageMemoryChartData.value = data
+  lineChart2Options.value.yAxis.title.text = 'Memory 사용량 (sec)' // y축 설정
+  lineChart2Options.value.yAxis.tickInterval = 1000 // y축 간격
+  lineChart2Options.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
+  lineChart2Options.value.series = getUsageMemorySeries(systemUsageMemoryChartData.value)
+}
+
+// 시스템별 Query (성공/실패) 수 차트 데이터 설정
+const setSystemQuerySuccessFailedChartData = (data) => {
+  systemQuerySuccessFailedChartData.value = data
+  columnChartOptions.value.yAxis.title.text = '쿼리 성공/실패 카운트' // y축 설정
+  columnChartOptions.value.yAxis.tickInterval = 1000 // y축 간격
+
+  const { querySuccessFailedCategories, querySuccessFailedSeries }= getQuerySuccessFailedSeries(systemQuerySuccessFailedChartData.value)
+  columnChartOptions.value.xAxis.categories = querySuccessFailedCategories // x축 설정
+  columnChartOptions.value.series = querySuccessFailedSeries
+  columnChartOptions.value.colors = ['#28a745', '#dc3545'] // 초록, 빨강
 }
 
 const getResponseTime = (ms_time) => {
@@ -577,6 +626,27 @@ const getResponseTime = (ms_time) => {
     if (ms_time == 0) return 0
     else return '-'
   }
+}
+
+const onChangeUsageCpuYear = async (e) => {
+  currentUsageCpuYear.value = e.target.value
+  await $ofetch(`/api/monitoring/usageCpuChartData?year=${currentUsageCpuYear.value}`).then((res) => {
+    if (res && res.data) {
+      systemUsageCpuChartData.value = res.data.systemUsageCpuChartData
+      lineChartOptions.value.series = getUsageCpuSeries(systemUsageCpuChartData.value)
+
+    }
+  })
+}
+
+const onChangeUsageMemoryYear = async (e) => {
+  currentUsageMemoryYear.value = e.target.value
+  await $ofetch(`/api/monitoring/usageMemoryChartData?year=${currentUsageMemoryYear.value}`).then((res) => {
+    if (res && res.data) {
+      systemUsageMemoryChartData.value = res.data.systemUsageMemoryChartData
+      lineChart2Options.value.series = getUsageMemorySeries(systemUsageMemoryChartData.value)
+    }
+  })
 }
 
 </script>
