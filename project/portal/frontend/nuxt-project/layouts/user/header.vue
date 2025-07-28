@@ -48,12 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { useCookies } from 'vue3-cookies';
-import { computed, ref ,onMounted, onUnmounted } from 'vue';
-import { useUserStore } from '@/store/user';
-import { useRouter } from 'vue-router';
 import { useCategoryStore } from '@/store/category';
+import { useUserStore } from '@/store/user';
 import { useNuxtApp } from 'nuxt/app';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useCookies } from 'vue3-cookies';
 
 const { $ofetch } = useNuxtApp()
 const router = useRouter()
@@ -106,7 +106,7 @@ const clearStore = (): void => {
     dept_nm: ""
   };
   let tab = {
-    adminPath: '/admin/data/status/lookup',
+    adminPath: '/admin/data/system/monitoring', // 사용자 화면에서 메뉴바의 'ADMIN' 버튼 클릭 시 이동 대상 메뉴 path
     userPath: '/search/keyword',
     currentPath: '/',
     currentPathDepth1: '',
@@ -122,7 +122,7 @@ const goToMyCatalog = () => {
 }
 
 const goToAdminPage = () => {
-  router.push('/admin/data/status/lookup')
+  router.push('/admin/data/system/monitoring')
 }
 
 const logout = () => {
@@ -147,7 +147,7 @@ const getSubDepthHref = (subMenu: any): string => {
 
 const onClickLogo = (): void => {
   let tab = {
-    adminPath: '/admin/data/status/lookup',
+    adminPath: '/admin/data/system/monitoring',
     userPath: '/search/keyword',
     currentPath: '/',
     currentPathDepth1: '',

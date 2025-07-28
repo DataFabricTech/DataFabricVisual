@@ -10,12 +10,12 @@
 </template>
 
 <script setup leng="ts">
-import { useCookies } from "vue3-cookies";
-import RSA from "rsajs";
-import { jwtDecode } from "jwt-decode";
-import { useUserStore } from "~/store/user";
-import Register from "@functional/register/register"
 import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
+import Register from "@functional/register/register";
+import { jwtDecode } from "jwt-decode";
+import RSA from "rsajs";
+import { useCookies } from "vue3-cookies";
+import { useUserStore } from "~/store/user";
 
 const { $ofetch } = useNuxtApp();
 const router = useRouter();
@@ -86,7 +86,7 @@ const onLogin = async (param) => {
         adminMenu: adminMenu,
       };
       let tab = {
-        adminPath: "/admin/data/status/lookup",
+        adminPath: "/admin/data/system/monitoring",
         userPath: "/search/keyword",
         currentPath: "/",
         currentPathDepth1: "",
