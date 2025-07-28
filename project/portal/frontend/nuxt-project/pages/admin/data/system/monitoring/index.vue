@@ -50,13 +50,6 @@
               <div class="mu-col mu-col">
                 <div class="mu-heading" style="display: flex; justify-content: space-between;">
                   <h4>시스템별 CPU 사용량</h4>
-                  <div class="mu-selectbox w120">
-                    <select name="searchType2" :value="currentUsageCpuYear" @change="onChangeUsageCpuYear">
-                      <option v-for="(item, index) in years" :key="index" :value="item">
-                        {{ item }}년
-                      </option>
-                    </select>
-                  </div>
                 </div>
                 <div class="chart-wrap">
                   <div class="chart-box">
@@ -67,13 +60,6 @@
               <div class="mu-col mu-col">
                 <div class="mu-heading" style="display: flex; justify-content: space-between;">
                   <h4>시스템별 Memory 사용량</h4>
-                  <div class="mu-selectbox w120">
-                    <select name="searchType2" :value="currentUsageMemoryYear" @change="onChangeUsageMemoryYear">
-                      <option v-for="(item, index) in years" :key="index" :value="item">
-                        {{ item }}년
-                      </option>
-                    </select>
-                  </div>
                 </div>
                 <div class="chart-wrap">
                   <div class="chart-box">
@@ -317,7 +303,7 @@ const lineChartOptions = ref({
     text: ''
   },
   xAxis: {
-    categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+    categories: []
   },
   yAxis: {
     title: {
@@ -374,7 +360,7 @@ const lineChart2Options = ref({
     text: ''
   },
   xAxis: {
-    categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+    categories: []
   },
   yAxis: {
     title: {
@@ -491,58 +477,55 @@ const initColor = async (list) => {
 
 // 라인 차트에 맞게 데이터 변환
 const getUsageCpuSeries = (rawData) => {
-  // 1. x축에 사용할 월
-  const months = Array.from({ length: 12 }, (_, i) => {
-    const month = (i + 1).toString().padStart(2, '0')
-    return `2025-${month}`
-  })
+  const months = [...new Set(rawData.map(row => row.month))];
 
-  // 2. 시스템별 데이터 정리
-  const systemsMap = {}
+  const systemsMap = {};
   rawData.forEach(row => {
-    const key = `${row.system_name}`
-    if (!systemsMap[key]) {
-      systemsMap[key] = {}
-    }
-    systemsMap[key][row.month] = row.total_cpu_usage
-  })
+    const key = `${row.system_name}`;
+    if (!systemsMap[key]) systemsMap[key] = {};
+    systemsMap[key][row.month] = row.total_cpu_usage;
+  });
 
-  // 3. series 구성 (모든 월 포함, 없으면 0)
   const series = Object.entries(systemsMap).map(([name, usageMap]) => ({
     name,
     type: 'line',
     data: months.map(month => usageMap[month] ?? 0)
-  }))
+  }));
 
   return series
 };
 
 // 라인 차트에 맞게 데이터 변환
 const getUsageMemorySeries = (rawData) => {
-  // 1. x축에 사용할 월
-  const months = Array.from({ length: 12 }, (_, i) => {
-    const month = (i + 1).toString().padStart(2, '0')
-    return `2025-${month}`
-  })
+  const months = [...new Set(rawData.map(row => row.month))];
 
-  // 2. 시스템별 데이터 정리
-  const systemsMap = {}
+  const systemsMap = {};
   rawData.forEach(row => {
-    const key = `${row.system_name}`
-    if (!systemsMap[key]) {
-      systemsMap[key] = {}
-    }
-    systemsMap[key][row.month] = row.total_memory_usage
-  })
+    const key = `${row.system_name}`;
+    if (!systemsMap[key]) systemsMap[key] = {};
+    systemsMap[key][row.month] = row.total_memory_usage;
+  });
 
-  // 3. series 구성 (모든 월 포함, 없으면 0)
+  console.log(systemsMap)
+
   const series = Object.entries(systemsMap).map(([name, usageMap]) => ({
     name,
     type: 'line',
     data: months.map(month => usageMap[month] ?? 0)
-  }))
+  }));
+  console.log(series)
 
   return series
+};
+
+// 라인 차트1 카테고리
+const getUsageCpuCategories = (rawData) => {
+  return [...new Set(rawData.map(row => row.month))]
+};
+
+// 라인 차트2 카테고리
+const getUsageMemoryCategories = (rawData) => {
+  return [...new Set(rawData.map(row => row.month))]
 };
 
 // 막대 차트에 맞게 데이터 변환
@@ -593,7 +576,8 @@ const setSystemUsageCpuChartData = (data) => {
   systemUsageCpuChartData.value = data
   lineChartOptions.value.yAxis.title.text = 'CPU 사용량 (sec)' // y축 설정
   lineChartOptions.value.yAxis.tickInterval = 1000 // y축 간격
-  lineChartOptions.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
+  lineChartOptions.value.xAxis.categories = getUsageCpuCategories(systemUsageCpuChartData.value)
+  console.log(lineChartOptions.value.xAxis)
   lineChartOptions.value.series = getUsageCpuSeries(systemUsageCpuChartData.value)
 }
 
@@ -602,7 +586,7 @@ const setSystemUsageMemoryChartData = (data) => {
   systemUsageMemoryChartData.value = data
   lineChart2Options.value.yAxis.title.text = 'Memory 사용량 (sec)' // y축 설정
   lineChart2Options.value.yAxis.tickInterval = 1000 // y축 간격
-  lineChart2Options.value.xAxis.categories = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] // x축 설정
+  lineChart2Options.value.xAxis.categories = getUsageMemoryCategories(systemUsageMemoryChartData.value)
   lineChart2Options.value.series = getUsageMemorySeries(systemUsageMemoryChartData.value)
 }
 
@@ -626,27 +610,6 @@ const getResponseTime = (ms_time) => {
     if (ms_time == 0) return 0
     else return '-'
   }
-}
-
-const onChangeUsageCpuYear = async (e) => {
-  currentUsageCpuYear.value = e.target.value
-  await $ofetch(`/api/monitoring/usageCpuChartData?year=${currentUsageCpuYear.value}`).then((res) => {
-    if (res && res.data) {
-      systemUsageCpuChartData.value = res.data.systemUsageCpuChartData
-      lineChartOptions.value.series = getUsageCpuSeries(systemUsageCpuChartData.value)
-
-    }
-  })
-}
-
-const onChangeUsageMemoryYear = async (e) => {
-  currentUsageMemoryYear.value = e.target.value
-  await $ofetch(`/api/monitoring/usageMemoryChartData?year=${currentUsageMemoryYear.value}`).then((res) => {
-    if (res && res.data) {
-      systemUsageMemoryChartData.value = res.data.systemUsageMemoryChartData
-      lineChart2Options.value.series = getUsageMemorySeries(systemUsageMemoryChartData.value)
-    }
-  })
 }
 
 </script>

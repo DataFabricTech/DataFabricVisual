@@ -41,10 +41,10 @@ public class MonitoringService {
             systemResponseData = monitoringMapper.systemResponseData();
             
             // 시스템별 CPU 사용량
-            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData(currentYear);
+            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData();
             
             // 시스템별 Memory
-            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData(currentYear);
+            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData();
             
             // 시스템별 Query (성공/실패) 수
             systemQuerySuccessFailedChartData = monitoringMapper.systemQuerySuccessFailedChartData();
@@ -64,14 +64,14 @@ public class MonitoringService {
     }
 
     // 모니터링 CPU 사용량 차트 데이터 조회
-    public Map<String, Object> getUsageCpuChartData(int year) {
+    public Map<String, Object> getUsageCpuChartData() {
         Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> systemUsageCpuChartData = new ArrayList<>();
             
         
         try {            
             // 시스템별 CPU 사용량
-            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData(year);
+            systemUsageCpuChartData = monitoringMapper.systemUsageCpuChartData();
         } catch(Exception e) {
             e.printStackTrace();
             log.error("Failed to load monitoring chart data !!");
@@ -82,13 +82,13 @@ public class MonitoringService {
     }
 
     // 모니터링 Memory 사용량 차트 데이터 조회
-    public Map<String, Object> getUsageMemoryChartData(int year) {
+    public Map<String, Object> getUsageMemoryChartData() {
         Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> systemUsageMemoryChartData = new ArrayList<>();
             
         try {            
             // 시스템별 Memory
-            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData(year);
+            systemUsageMemoryChartData = monitoringMapper.systemUsageMemoryChartData();
         } catch(Exception e) {
             e.printStackTrace();
             log.error("Failed to load monitoring chart data !!");
