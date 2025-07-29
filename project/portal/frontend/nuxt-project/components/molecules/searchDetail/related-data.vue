@@ -17,11 +17,11 @@
             <ul class="connection-list">
               <li v-for="(item, index) in classifications" :key="index">
                 <div class="datatype">
-                  <em class="datatype-label">{{ item.system_type }}</em>
+                  <em class="datatype-label">{{ item.classifications[0] ? item.classifications[0].c_description : '-' }}</em>
                 </div>
                 <a v-on:click="onClickDataName(item)">
+                  <span class="datatype-desc" v-if="item.description">{{ item.description }} &nbsp;&nbsp;&nbsp;</span>
                   <span>{{ item.meta_name }}</span>
-                  <span class="datatype-desc" v-if="item.description"> - {{ item.description }}</span>
                 </a>
               </li>
             </ul>
@@ -99,7 +99,13 @@ watch(() => props.classifications, (newVal) => {
 
 // 네트워크 차트 설정
 const networkChartOptions = ref({
-  chart: { type: 'networkgraph', height: '300px', width: "500", backgroundColor: '#fafafa',  },
+  chart: {
+    type: 'networkgraph',
+    height: '300px',
+    width: "500",
+    backgroundColor: '#fafafa',
+    borderWidth: 1,
+    borderColor: '#ddd',},
   title: { text: '' },
   plotOptions: {
     networkgraph: {
