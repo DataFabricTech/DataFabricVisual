@@ -44,7 +44,7 @@
         </div>
         <!-- detail-section : 연관 데이터 -->
         <div :ref="el => sectionRefs['related-data'] = el" class="content-block">
-          <related-data :isAdmin="props.isAdmin" :classifications="classifications_data"
+          <related-data :isAdmin="props.isAdmin" :classifications="classifications_data" :entity="entity"
             @onClickData="getAllDataByGuid" />
         </div>
         <!-- detail-section : 사용자 리뷰 -->
