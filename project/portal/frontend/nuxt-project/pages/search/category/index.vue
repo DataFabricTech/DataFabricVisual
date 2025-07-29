@@ -34,8 +34,16 @@
 
         <!-- visual-map-wrap : 맵영역 -->
         <div class="visual-map-wrap" id="chart-map-wrap">
-          <div class="inner">
+          <select-tab
+            :tabs="tabs"
+            :activeTab="currentChartTab"
+            @onSelectTab="onSelectCurrentTab"
+          />
+          <div v-show="currentChartTab == 0" class="inner">
             <highcharts :constructorType="'chart'" :options="chartOptions" ref="chart" :callback="chartInit" />
+          </div>
+          <div v-if="currentChartTab == 1" class="inner">
+            <highcharts :constructorType="'chart'" :options="networkChartOptions" ref="networkChart"/>
           </div>
         </div>
         <!-- //visual-map-wrap -->
@@ -46,11 +54,12 @@
 </template>
 
 <script setup lang="ts">
-import ObjectUtils from "@utils/ObjectUtils";
-import LeftMenuList from "@functional/leftMenuList/left-menu-list";
-import { errorAlert } from "@functional/alert/alert-default";
+import selectTab from "@/components/functional/selectTab/select-tab.vue";
 import { useCategoryStore } from "@/store/category";
 import { useSearchStore } from "@/store/search";
+import { errorAlert } from "@functional/alert/alert-default";
+import LeftMenuList from "@functional/leftMenuList/left-menu-list";
+import ObjectUtils from "@utils/ObjectUtils";
 
 definePageMeta({
   name: "SearchCategory",
@@ -62,6 +71,12 @@ const route = useRoute();
 const router = useRouter();
 const categoryStore = useCategoryStore();
 const searchStore = useSearchStore();
+
+const tabs = ref([
+  {idx: 0, key: "트리맵"},
+  {idx: 1, key: "네트워크맵"},
+])
+const currentChartTab = ref(0)
 
 const heatmap = ref({});
 const currentClassification = ref({
@@ -269,7 +284,172 @@ const chartOptions = ref({
   }
 });
 
-await categoryStore.fetchCategories();
+// network 차트 옵션
+
+// 레벨별 색/크기
+const levelColors = {
+  1: '#FF4C4C', // 파랑
+  2: '#FF914D', // 청록
+  3: '#FFD93B', // 주황
+  4: '#6BD96B', // 보라
+  5: '#4DA6FF', // 보라
+  default: '#999999'
+}
+
+const levelRadius = {
+  1: 26,
+  2: 22,
+  3: 18,
+  4: 14,
+  5: 10,
+  default: 10
+}
+
+// 부모별 색 팔레트 (parent_id 기준)
+// 부모마다 고유 색 원할 때 사용 (없으면 levelColors 우선)
+const parentPalette = ['#e57373','#64b5f6','#81c784','#ffb74d','#ba68c8','#4db6ac','#9575cd']
+
+const networkRoot = ref({
+    "id": -1,
+    "ord_no": 0,
+    "level": "0",
+    "parent_id": null,
+    "name": "category",
+    "description": "카테고리",
+})
+
+const list = await categoryStore.fetchCategories();
+
+const buildNetwork = (raw) => {
+  // id ↔ description 매핑
+  const id2desc = Object.fromEntries(raw.map(r => [String(r.id), r.description]))
+
+  const nodes: Record<string, any> = {}
+  const links: any[] = []
+
+  // 루트 노드
+  nodes[networkRoot.value.description] = {
+    id: networkRoot.value.description,
+    name: networkRoot.value.description,
+    color: '#999999',
+    marker: { radius: 40 },
+    x: 0,
+    y: 0,
+    fixedPosition: {
+      x: 0,
+      y: 0
+    }
+  }
+
+  let paletteIdx = 0
+
+  raw.forEach(row => {
+    const lvl = + row.level
+    const toDesc = row.description
+    const tableCount = row.tableCount
+
+    // 노드가 없으면 생성
+    if (!nodes[toDesc]) {
+      nodes[toDesc] = {
+        id: toDesc,
+        name: toDesc,
+        tableCount: tableCount,
+        marker: { radius: levelRadius[lvl] ?? 6 }
+      }
+    }
+
+    // 부모-자식 링크 만들기
+    if (row.parent_id == null) {
+      // (루트 → 레벨1)
+      nodes[toDesc].color = parentPalette[paletteIdx++ % parentPalette.length]
+      links.push({ from: networkRoot.value.description, to: toDesc, color: nodes[toDesc].color})
+    } else {
+      const fromDesc = id2desc[String(row.parent_id)] ?? String(row.parent_id)
+
+      // 부모 색 상속
+      const parentColor = nodes[fromDesc]?.color
+      if (parentColor && !nodes[toDesc].color) nodes[toDesc].color = parentColor
+
+      links.push({ from: fromDesc, to: toDesc, color: nodes[toDesc].color })
+    }
+  })
+
+  return {
+    nodes: Object.values(nodes), // 배열화
+    links                       // [{from,to,color}, ...]
+  }
+}
+
+
+// network 차트 데이터 설정
+const { nodes, links } = await buildNetwork(list);
+
+// 0. 초기 옵션
+const networkChartOptions = ref({
+  chart: { type: 'networkgraph', height: '850px', width: "1030" },
+  title: { text: '' },
+  plotOptions: {
+    networkgraph: {
+      keys: ['from', 'to'],          // 4. data는 [[from,to], ...]
+      layoutAlgorithm: {
+        enableSimulation: true,
+        linkLength: 50,
+        friction: -0.9
+      },
+      dataLabels: {
+        enabled: true,          // 라벨 표시
+        linkFormat: '',         // 링크 라벨 숨김
+        style: {
+          fontSize: '0.8em',
+          fontWeight: 'normal',
+          textOutline: '2px contrast'
+        },
+        formatter() { return this.point.name || this.point.id }
+      }
+    }
+  },
+  tooltip: {
+    useHTML: true,         // 원하는 HTML 구성 가능
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderRadius: 4,
+    shadow: false,
+    // 🔍 노드·링크 구분
+    formatter() {
+      // 링크(간선)일 때: this.from / this.to 존재
+      if (this.from && this.to) {
+        return `<b>${this.from}</b> → <b>${this.to}</b>`
+      }
+      // 노드일 때: this.point
+      const p = this.point
+      return `
+        <b>${p.options.name}</b><br/>
+      `
+    },
+    style: {
+      fontSize: '12px',
+      fontFamily: 'NanumSquare',
+      textOutline: 'none',   // 글자 테두리 제거
+      color: '#222'
+    }
+  },
+  series: [{
+    accessibility: {
+      enabled: false
+    },
+    dataLabels: {
+      enabled: true,
+      linkFormat: '',
+      style: {
+        fontSize: '14px',
+        fontWeight: 'normal',
+      }
+    },
+    id: 'lang-tree',
+    data: links,
+    nodes: nodes
+  }]
+})
+
 
 onMounted(async () => {
   await initSearchParams(); // 검색조건 초기화 처리
@@ -590,4 +770,11 @@ const moveToSearchPage = (obj) => {
   })
   router.push("/search/keyword")
 };
+
+// 차트 탭 변경 이벤트 핸들러
+// 데이터 추출 방법 탭
+const onSelectCurrentTab = (curTabObj) => {
+  if (curTabObj.idx === currentChartTab.value) return; // 현재 탭과 동일한 경우 리턴
+  currentChartTab.value = curTabObj.idx; // 현재 탭 변경
+}
 </script>
