@@ -59,6 +59,7 @@
                   class="mu-input"
                   :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('HIVE')
                   || currentCollector.system_type.toUpperCase().includes('MYSQL')
+                  || currentCollector.system_type.toUpperCase().includes('MARIADB')
                   || currentCollector.system_type.toUpperCase().includes('S3')
                   || currentCollector.system_type.toUpperCase().includes('MINIO')">
               </td>
@@ -343,6 +344,11 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
     if (currentCollector.value.schema != "") currentCollector.value.database = ""
   }
 
+  // MariaDB의 경우 database 값 제거
+  if (newVal.toUpperCase().includes('MARIADB')) {
+    if (currentCollector.value.schema != "") currentCollector.value.database = ""
+  }
+
   // Tibero의 경우 schema 값 제거
   if (newVal.toUpperCase().includes('TIBERO')) {
     currentCollector.value.schema = ""
@@ -448,6 +454,7 @@ const isValidInput = () => {
   }
   if (!currentCollector.value.system_type.toUpperCase().includes('HIVE')
   && !currentCollector.value.system_type.toUpperCase().includes('MYSQL')
+  && !currentCollector.value.system_type.toUpperCase().includes('MARIADB')
   && !currentCollector.value.system_type.toUpperCase().includes('MSSQL')
   && !currentCollector.value.system_type.toUpperCase().includes('S3')
   && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
