@@ -604,7 +604,7 @@ const setSystemQuerySuccessFailedChartData = (data) => {
 
 const getResponseTime = (ms_time) => {
   if (ms_time) {
-    const seconds = (ms_time / 1000000).toFixed(2);  // "123.46" (문자열)
+    const seconds = (ms_time / 1000);
     return seconds
   } else {
     if (ms_time == 0) return 0
