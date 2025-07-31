@@ -86,7 +86,7 @@ const onLogin = async (param) => {
         adminMenu: adminMenu,
       };
       let tab = {
-        adminPath: "/admin/data/system/monitoring",
+        adminPath: "/admin/data/status/lookup",
         userPath: "/search/keyword",
         currentPath: "/",
         currentPathDepth1: "",

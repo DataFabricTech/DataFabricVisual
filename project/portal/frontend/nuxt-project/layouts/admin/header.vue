@@ -96,7 +96,7 @@ const clearStore = (): void => {
     dept_nm: ""
   };
   let tab = {
-    adminPath: '/admin/data/system/monitoring', // 사용자 화면에서 메뉴바의 'ADMIN' 버튼 클릭 시 이동 대상 메뉴 path
+    adminPath: '/admin/data/status/lookup', // 사용자 화면에서 메뉴바의 'ADMIN' 버튼 클릭 시 이동 대상 메뉴 path
     userPath: '/search/keyword',
     currentPath: '/',
     currentPathDepth1: '',
@@ -133,7 +133,7 @@ const getSubDepthHref = (subMenu: any): string => {
 
 const onClickLogo = (): void => {
   let tab = {
-    adminPath: '/admin/data/system/monitoring',
+    adminPath: '/admin/data/status/lookup',
     userPath: '/search/keyword',
     currentPath: '/',
     currentPathDepth1: '',
