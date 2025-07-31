@@ -154,7 +154,7 @@
                   <div class="inner-data option">
                     <p>시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
                     <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
-                      확장자 : <strong>{{ data.attributes && data.attributes.extension ? data.attributes.extension : "-" }}</strong></p>
+                      확장자 : <strong>{{ data.attributes && data.attributes.file_format ? data.attributes.file_format : "-" }}</strong></p>
                     <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
                       size : <strong>{{ data.attributes && data.attributes.size ? data.attributes.size : "-" }}</strong>
                     </p>
