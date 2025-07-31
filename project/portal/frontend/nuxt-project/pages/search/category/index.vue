@@ -333,8 +333,6 @@ const buildNetwork = (raw) => {
     name: networkRoot.value.description,
     color: '#999999',
     marker: { radius: 40 },
-    x: 0,
-    y: 0,
     fixedPosition: {
       x: 0,
       y: 0
@@ -343,6 +341,7 @@ const buildNetwork = (raw) => {
 
   let paletteIdx = 0
 
+  let tableTotal = 0
   raw.forEach(row => {
     const lvl = + row.level
     const toDesc = row.description
@@ -372,7 +371,13 @@ const buildNetwork = (raw) => {
 
       links.push({ from: fromDesc, to: toDesc, color: nodes[toDesc].color })
     }
+
+    // 테이블 개수 합산
+    tableTotal += tableCount
   })
+
+  // 루트 노드에 테이블 개수 추가
+  nodes[networkRoot.value.description].tableCount = tableTotal
 
   return {
     nodes: Object.values(nodes), // 배열화
@@ -393,7 +398,7 @@ const networkChartOptions = ref({
       keys: ['from', 'to'],          // 4. data는 [[from,to], ...]
       layoutAlgorithm: {
         enableSimulation: true,
-        linkLength: 50,
+        linkLength: 20,
         friction: -0.9
       },
       dataLabels: {
@@ -423,6 +428,7 @@ const networkChartOptions = ref({
       const p = this.point
       return `
         <b>${p.options.name}</b><br/>
+        <span>${p.options.tableCount} 개</span>
       `
     },
     style: {
