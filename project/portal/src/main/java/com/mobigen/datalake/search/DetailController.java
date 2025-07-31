@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
-import com.mobigen.framework.utility.RegexUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -95,7 +94,7 @@ public class DetailController {
 
         // qualified_name 검증
         String qualified_name = params.get("qualified_name").toString();
-        RegexUtils.sanitizeInput(qualified_name);
+        // RegexUtils.sanitizeInput(qualified_name);
 
         return searchDetailService.getSampleData(params);
     }

@@ -47,7 +47,11 @@
                 <td :title="item.system_name ? item.system_name : '-'"><a @click="popupCollectorDetailModal(item)">{{ item.system_name ? item.system_name : "-" }}</a></td>
                 <td :title="item.host ? item.host : '-'">{{ item.host ? item.host : "-" }}</td>
                 <td :title="item.database ? item.database : '-'">{{ item.database ? item.database : "-" }}</td>
-                <td @click="airflow(item)" :title="item.interval ? item.interval : '-'">{{ item.interval ? item.interval : "-" }}</td>
+                <td @click="airflow(item)" :title="item.interval ? item.interval : '-'">
+                  <a :class="item.interval ? 'interval_label' : ''">
+                    {{ item.interval ? item.interval : "-" }}
+                  </a>
+                </td>
                 <td :title='item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-"'>{{ item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-" }}</td>
                 <td :title="getKrCollectFlag(item.collect_flag)">{{ getKrCollectFlag(item.collect_flag) }}</td>
                 <td>
@@ -86,7 +90,7 @@
       :toggleCollectorModal="toggleCollectorModal" @updateCollector="updateCollector"
       @onCloseModal="onCloseCollectorModal" />
 
-    <test :airflowUrl="airflowUrl" :isDetail="isDetail" :isUpdate="isUpdate" :collector="collector"
+    <collector-history-modal :airflowUrl="airflowUrl" :isDetail="isDetail" :isUpdate="isUpdate" :collector="collector"
       :toggleCollectorModal="toggleCollectorModal" @updateCollector="updateCollector"
       @onCloseModal="onCloseCollectorModal" />
   </div>
@@ -98,9 +102,9 @@ import { useUserStore } from "@/store/user";
 import { errorAlert } from "@functional/alert/alert-default";
 import Pagination from "@functional/pagination/pagination";
 import CollectorBoardListSearch from "@organisms/collector/collector-board-list-search.vue";
+import CollectorHistoryModal from "@organisms/collector/collector-history-modal.vue";
 import CollectorModal from "@organisms/collector/collector-modal.vue";
 import PageSize from "@organisms/collector/page-size.vue";
-import Test from "@organisms/collector/test.vue";
 import { onMounted, ref } from "vue";
 
 definePageMeta({
@@ -303,7 +307,7 @@ const deleteCollector = async (system_id) => {
   }
 }
 
-// 수집대상 등록 모달 닫기
+// 수집 히스토리 이력 모달 닫기
 const onCloseCollectorModal = async () => {
   toggleCollectorModal.value = false
   tog.value = false
@@ -326,7 +330,6 @@ const updateCollector = async (newCollector) => {
       method: 'POST',
       body: formData
     }).then(async (res) => {
-      console.log(res)
       if (res) {
         if ((res.errorMessage && res.errorMessage != "")) {
           await errorAlert("파일 저장에 실패하였습니다.");
@@ -342,7 +345,6 @@ const updateCollector = async (newCollector) => {
     method: 'POST',
     body: newCollector
   }).then(async (res) => {
-    console.log(res)
     if (suffix == 'add') {
       if (res && res.data && res.data.addCount > 0) {
         await successAlert("등록되었습니다.")
@@ -384,17 +386,17 @@ const onClickReloadOneButton = async (collector, index) => {
 
 }
 
+// Airflow 수집 히스토리 조회 iframe
 const tog = ref(false)
 const airflowUrl = ref("")
-const airflow = () => {
-  console.log('testtest')
+const airflow = (item) => {
+  const dag_id = "metadata_ingestion_" + item.system_id
   tog.value = !tog.value
   if (tog.value) {
-    airflowUrl.value = 'http://<INTERNAL_HOST>:28080/dags/example_dag/grid'
+    airflowUrl.value = `http://<INTERNAL_HOST>:28080/dagrun/list/?_flt_3_dag_id=${dag_id}&_iframe=1`
   } else {
-    airflowUrl.value = ''
+    airflowUrl.value = ""
   }
-
 }
 
 </script>

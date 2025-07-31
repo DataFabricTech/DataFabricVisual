@@ -622,3 +622,18 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 
 /* 고정 세로길이 */
 .h1000 {height:1000px !important;}
+
+/* interval label */
+.interval_label {
+    background-color: #e2e2e2;
+    border-radius: .25em;
+    display: inline;
+    color: #51504f;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    padding: .2em .6em .3em;
+    text-align: center;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
