@@ -334,9 +334,9 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
     if (!currentCollector.value.schema || currentCollector.value.schema == "") currentCollector.value.schema = "dbo"
   }
 
-  // Hive의 경우 database 값 제거
+  // Hive의 경우 schema 값 제거
   if (newVal.toUpperCase().includes('HIVE')) {
-    if (currentCollector.value.schema != "") currentCollector.value.database = ""
+    if (currentCollector.value.schema != "") currentCollector.value.schema = ""
   }
 
   // Mysql의 경우 schema 값 제거
