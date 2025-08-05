@@ -637,3 +637,17 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
     vertical-align: baseline;
     white-space: nowrap;
 }
+
+/* 데이터 융합 스타일 */
+.fusion-wrap .mu-heading {}
+.fusion-wrap .mu-heading .mu-item-group .mu-btn {}
+.fusion-wrap .mu-row {gap:0px; margin-right:0 !important; margin-left:0 !important;}
+.fusion-wrap .mu-row + .mu-row {margin-top:6px;}
+.fusion-wrap .mu-col {flex:1; padding:30px 10px 0px !important; border-radius:26px; background-color:#fff;}
+.fusion-wrap .nodata {height:300px;}
+
+.fusion-nodata {display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 0; font-size:20px; color:#95969c; text-align:center;}
+.fusion-nodata:before {content:""; display:block; margin:0 auto 10px; width:72px; height:72px; background-image:url("../images/common/img-notice.png"); background-size:contain;}
+.fusion-execute-result {display: flex; justify-content: flex-end; margin: 0; padding: 0;}
+.fusion-execute-result dt {margin-left: 24px; margin-bottom: 5px;}
+.fusion-execute-result dd {margin-bottom: 5px;}

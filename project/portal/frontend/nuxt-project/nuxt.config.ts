@@ -1,6 +1,6 @@
-import {consola, type ConsolaInstance} from "consola";
-import {fileURLToPath} from "url";
 import ckeditor5 from "@ckeditor/vite-plugin-ckeditor5";
+import { consola, type ConsolaInstance } from "consola";
+import { fileURLToPath } from "url";
 import svgLoader from "vite-svg-loader";
 
 const larkTheme = require.resolve("@ckeditor/ckeditor5-theme-lark");
@@ -131,7 +131,10 @@ export default defineNuxtConfig({
     { src: '~/plugins/highcharts-vue.ts'}
   ],
 
-  modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt"],
+  modules: [
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+    "nuxt-monaco-editor"],
 
   piniaPersistedstate: {
     cookieOptions: {

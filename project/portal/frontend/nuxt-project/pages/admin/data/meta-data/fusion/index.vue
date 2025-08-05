@@ -1,0 +1,1443 @@
+<template>
+  <div>
+    <main id="main" class="main-sub">
+      <!-- sub page : main-sub class 추가 -->
+      <div class="main-contents">
+        <h2 class="blind">System Monitoring</h2>
+        <!-- contents -->
+        <div class="contents">
+          <div class="fusion-wrap">
+            <div class="mu-row gap-10">
+              <div class="mu-col mu-col-4">
+                <div class="board-list-wrap">
+                  <div class="mu-heading">
+                    <h4>융합 데이터 정보</h4>
+                    <div class="mu-item-group">
+                      <button type="button"
+                        class="mu-btn mu-btn-sm mu-btn-primary" @click="addFusion()">
+                        <span>추가</span>
+                      </button>
+                      <div class="mu-btn mu-btn-sm" @click="deleteFusion()">
+                        <span>삭제</span>
+                      </div>
+                      <button class="mu-btn mu-btn-sm" @click="refreshFusion()" type="button">
+                        <span>초기화</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-scroll max-h300">
+                    <table class="mu-grid mu-grid-data mu-grid-narrow">
+                      <colgroup>
+                        <col style="width:10%">
+                        <col style="width:35%">
+                        <col style="width:25%">
+                        <col style="width:10%">
+                        <col style="width:20%">
+                      </colgroup>
+                      <thead>
+                        <tr>
+                          <th scope="col">
+                            <div class="mu-checkbox">
+                              <input
+                                :id="'ckb-all'"
+                                type="checkbox"
+                                :checked="isAllSelected"
+                                @change="toggleAll"
+                              />
+                              <label :for="'ckb-all'">
+                                <span class="blind">전체선택</span>
+                              </label>
+                            </div>
+                          </th>
+                          <th scope="col">데이터 설명</th>
+                          <th scope="col">데이터 명</th>
+                          <th scope="col">상세</th>
+                          <th scope="col">선택</th>
+                        </tr>
+                      </thead>
+                      <tbody v-if="currentFusionList && currentFusionList.length > 0">
+                        <tr v-for="(fusion, index) in currentFusionList" :key="index">
+                          <td>
+                            <div class="mu-checkbox">
+                              <input
+                                :id="'ckb-' + fusion.meta_id"
+                                type="checkbox"
+                                :checked="isSelected(fusion)"
+                                @change="toggleItem(fusion)"
+                              />
+                              <label :for="'ckb-' + fusion.meta_id">
+                                <span class="blind">전체선택</span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>{{ fusion.meta_description ? fusion.meta_description : '-' }}</td>
+                          <td>{{ fusion.meta_name ? fusion.meta_name : '-' }}</td>
+                          <td>
+                            <div class="mu-tooltip-icon">
+                              <i :id="'img' + index" class="mu-icon-svg view" @mouseover="showTooltip(index)"
+                                @mouseleave="hideTooltip()"></i>
+                              <div class="mu-tooltip arrow-ct w400" v-if="show && hoveredIndex == index" :style="{
+                                position: 'fixed',
+                                left: mouseX - 325 + 'px',
+                                top: mouseY + 'px',
+                                'z-index': 9999,
+                              }">
+                                <div class="mu-tooltip-inner">
+                                  <div class="data-info2">
+                                    <dl>
+                                      <dt>ID</dt>
+                                      <dd>{{ fusion.meta_id }}</dd>
+                                    </dl>
+                                    <dl>
+                                      <dt>데이터 명</dt>
+                                      <dd>{{ fusion.meta_name }}</dd>
+                                    </dl>
+                                    <dl>
+                                      <dt>데이터 설명</dt>
+                                      <dd>{{ fusion.description ? fusion.description : '-' }}</dd>
+                                    </dl>
+                                    <dl>
+                                      <dt>시스템 ID</dt>
+                                      <dd>{{ fusion.system_id ? fusion.system_id : '-' }}</dd>
+                                    </dl>
+                                    <dl>
+                                      <dt>시스템 명</dt>
+                                      <dd>{{ fusion.system_name ? fusion.system_name : '-' }}</dd>
+                                    </dl>
+                                    <dl>
+                                      <dt>시스템 종류</dt>
+                                      <dd>{{ fusion.system_type ? fusion.system_type : '-' }}</dd>
+                                    </dl>
+                                    <dl>
+                                      <dt>DB 명</dt>
+                                      <dd>{{ fusion.database ? fusion.database : '-' }}</dd>
+                                    </dl>
+                                    <dl>
+                                      <dt>스키마 명</dt>
+                                      <dd>{{ fusion.schema ? fusion.schema : '-' }}</dd>
+                                    </dl>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              class="mu-btn mu-btn-sm"
+                              @click="selectFusion(fusion)"
+                            >
+                              <span>선택</span>
+                            </button>
+                            <div v-if="selectedIndex === fusion.meta_id" class="tooltip-wrapper">
+                              <div class="tooltip-text">데이터명이 복사되었습니다.</div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody v-else>
+                        <tr>
+                          <td colspan="5">
+                            <p class="fusion-nodata">데이터를 선택해 주세요</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="mu-col mu-col">
+                <div class="mu-heading" style="display: flex; justify-content: space-between;">
+                  <h4>쿼리 입력</h4>
+                  <div class="mu-item-group">
+                    <button type="button"
+                      class="mu-btn mu-btn-sm mu-btn-primary" @click="executeQuery()">
+                      <span>실행</span>
+                    </button>
+                    <button class="mu-btn mu-btn-sm" @click="resetQuery()" type="button">
+                      <span>초기화</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="code-box" style="height: 300px;">
+                  <MonacoEditor
+                    v-model="query"
+                    lang="sql"
+                    :options="editorOptions"
+                    style="height: 100%"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="mu-row gap">
+              <div class="mu-col mu-col-4">
+                <div class="mu-heading" style="display: flex; justify-content: space-between;">
+                  <h4>컬럼 정보</h4>
+                </div>
+                <div>
+                  <b style="font-size: 17px;">{{ currentMetaDataInfo.meta_name ? currentMetaDataInfo.meta_name : '-' }}</b>
+                </div>
+                <div class="table-scroll max-h300">
+                  <table class="mu-grid mu-grid-data mu-grid-narrow">
+                    <colgroup>
+                      <col style="width:10%">
+                      <col style="width:30%">
+                      <col style="width:35%">
+                      <col style="width:25%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">컬럼명</th>
+                        <th scope="col">컬럼 설명</th>
+                        <th scope="col">타입</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="currentMetaColumns && currentMetaColumns.length > 0">
+                      <tr v-for="(col, idx) in currentMetaColumns">
+                        <td>{{ idx + 1 }}</td>
+                        <td :title="col.meta_name">{{ col.meta_name }}</td>
+                        <td :title="col.description">{{ col.description ? col.description : "-" }}</td>
+                        <td :title="col.column_type">{{ col.column_type }}</td>
+                      </tr>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="4">
+                          <p class="fusion-nodata">데이터를 선택해 주세요.</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="mu-col mu-col">
+                <div class="mu-heading" style="display: flex; justify-content: space-between;">
+                  <h4>실행 결과</h4>
+                </div>
+                <div class="detail-section" style="margin-top: 0px;">
+                  <div class="detail-box">
+                    <div class="data-info">
+                      <dl class="fusion-execute-result">
+                        <dt>
+                          <div :class="'interval_label'">
+                            <b>실행시간</b>
+                          </div>
+                        </dt>
+                        <dd>{{ execute_duration + ' 초' }}</dd>
+                        <dt>
+                          <div :class="'interval_label'">
+                            <b>실행시각</b>
+                          </div>
+                        </dt>
+                        <dd>{{ execute_start_time }}</dd>
+                        <dt>
+                          <div :class="'interval_label'">
+                            <b>레코드 수</b>
+                          </div>
+                        </dt>
+                        <dd>{{ fusionSampleTotal }}</dd>
+                      </dl>
+                    </div>
+                    <div class="table-scroll max-h300 h300">
+                      <div v-if="selectedColumnIndex != null" class="tooltip-wrapper-column">
+                        <div class="tooltip-text-column">컬럼명이 복사되었습니다.</div>
+                      </div>
+                      <table class="mu-grid mu-grid-data" >
+                        <colgroup>
+                          <col v-if="fusionSampleList && fusionSampleList.length > 0" style="width: 200px" :span="Object.keys(fusionSampleList[0]).length" />
+                          <col v-else style="width: 200px" />
+                        </colgroup>
+                        <thead v-if="fusionSampleList && fusionSampleList.length > 0">
+                          <tr>
+                            <th scope="col" v-for="(item, index) in fusionSampleList[0]" :key="index" @contextmenu="onRightButton(index, $event)">
+                              <span>{{ index }}</span><br>
+                            </th>
+                          </tr>
+                        </thead>
+                        <thead v-else>
+                          <tr>
+                            <th>
+                              <span>-</span><br>
+                              <span style="
+                                    color: #9b9b9b;
+                                    margin-top: 2px;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 2;
+                                    -webkit-box-orient: vertical;
+                                  " title="test">
+                              </span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody v-if="fusionSampleList && fusionSampleList.length > 0">
+                          <tr v-for="(item, index) in fusionSampleList" :key="index">
+                            <td v-for="(ii, idx) in item">
+                              <span class="mu-ellipsis" :title="ii">
+                                {{ nullToNa(ii) }}
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody v-else>
+                          <tr>
+                            <td>
+                              <p class="fusion-nodata">데이터가 존재하지 않습니다.</p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mu-dialog-foot">
+              <button type="button" class="mu-btn mu-btn-primary" @click="saveFusion()"><span>저장</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- //contents -->
+      </div>
+      <!-- Modal -->
+      <div class="mu-modal" v-if="visibleSystemModal">
+        <div class="mu-dialog-background"></div>
+
+        <div :class="['mu-dialog', 'w1200']">
+          <div class="mu-dialog-head">
+            <p class="title">데이터 정보</p>
+          </div>
+          <div class="mu-dialog-body">
+            <div class="mu-section">
+
+              <!-- 카테고리 목록 -->
+              <left-menu-list @onClickMenuItem="onClickMenuItem" />
+
+              <div class="main-system" style="width: 890px;min-height:709px;">
+                <div class="inner-column">
+                  <div class="board-list-search">
+                    <form action="">
+                      <fieldset>
+                        <legend>데이터 검색</legend>
+                        <div class="inner-search">
+                          <div class="mu-selectbox w160">
+                            <select v-model="searchType">
+                              <option value="all">전체</option>
+                              <option value="description">데이터 설명</option>
+                              <option value="meta_name">데이터 명</option>
+                              <option value="system_name">시스템 명</option>
+                            </select>
+                          </div>
+                          <div class="mu-input-icon">
+                            <input type="text" class="mu-input" placeholder="Search" title="검색어입력" v-model="searchWord"
+                              @keypress.enter.prevent='onSearchMetaList(0)' />
+                            <button type="button" class="mu-btn mu-btn-sch" @click="onSearchMetaList(0)">
+                              <i class="mu-icon-svg search"></i>
+                              <span>검색</span>
+                            </button>
+                          </div>
+
+                          <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchMetaList" v-show="true" />
+                        </div>
+                      </fieldset>
+                    </form>
+                  </div>
+
+                  <div class="board-list">
+                    <table class="mu-grid mu-grid-data">
+                      <colgroup>
+                        <col style="width: 40px" />
+                        <col style="width: 150px" />
+                        <col style="width: 150px" />
+                        <col style="width: 130px" />
+                        <col style="width: 120px" />
+                        <col style="width: 250px" />
+                      </colgroup>
+                      <thead>
+                        <tr>
+                          <th scope="col">
+                            <div class="mu-checkbox">
+                              <input type="checkbox" id="ckb1" title="전체선택"
+                                :checked="metaList && checkedList && metaList.length > 0 && checkedList.length === metaList.length"
+                                @click.stop="e => onToggleCheckbox(e, true, null)">
+                              <label for="ckb1"><span class="blind">전체선택</span></label>
+                            </div>
+                          </th>
+                          <th scope="col">데이터 설명</th>
+                          <th scope="col">데이터 명</th>
+                          <th scope="col">시스템 명</th>
+                          <th scope="col">유형</th>
+                          <th scope="col">카테고리</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(item, index) in metaList" :key="index">
+                          <td>
+                            <div class="mu-checkbox">
+                              <input type="checkbox" :id="'check_' + item.meta_id" title="행선택" :value="item.meta_id"
+                                @click.stop="e => onToggleCheckbox(e, false, item)" :checked="isChecked(item)" />
+                              <label :for="'check_' + item.meta_id"><span class="blind">행선택</span></label>
+                            </div>
+                          </td>
+                          <td> {{ item.description }} </td>
+                          <td> {{ item.meta_name }} </td>
+                          <td> {{ item.system_name }} </td>
+                          <td> {{ item.meta_type }} </td>
+                          <td>
+                            <!-- 카테고리 -->
+                            <div class="category-group">
+                              <div v-for="category in item.classifications" :key="category.id" class="category">
+                                <em class="category-label" :title="getKrName(category)">{{ getKrName(category) }}</em>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr v-if="metaList.length === 0">
+                          <td colspan="6">
+                            <p class="nodata">데이타가 존재하지 않습니다.</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mu-dialog-foot">
+            <button type="button" class="mu-btn" @click="onCancel"><span>취소</span></button>
+            <button type="button" class="mu-btn mu-btn-primary" @click="onConfirm"><span>확인</span></button>
+          </div>
+
+          <div class="mu-dialog-close-btn">
+            <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose">
+              <i class="mu-icon-svg close"></i><span>팝업닫기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mu-modal" v-if="visibleFusionSaveModal">
+        <div class="mu-dialog-background"></div>
+        <div :class="['mu-dialog', 'w1200']">
+          <div class="mu-dialog-head">
+            <p class="title">융합 데이터 생성</p>
+          </div>
+          <div class="mu-dialog-body">
+            <div class="mu-heading">
+              <h4>기본 정보</h4>
+              <div class="mu-item-group">
+                <p class="txt-info">(필수<strong class="required">필수</strong>)</p>
+              </div>
+            </div>
+            <div class="board-body">
+              <!-- mu-formbox -->
+              <table class="mu-formbox">
+                <caption>
+                  융합 데이터 등록
+                </caption>
+                <colgroup>
+                  <col style="width: 200px" />
+                  <col />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th scope="row">메타데이터 ID<strong class="required">필수</strong></th>
+                    <td style="display: flex; align-items: center;">
+                      <input type="text" maxlength="36" placeholder="ID를 생성하세요." class="mu-input w460" :title="meta_id" v-model="meta_id">
+                      &nbsp;&nbsp;&nbsp;
+                      <button v-if="meta_id" type="button" class="mu-btn mu-btn-sm" @click="metaIdDupCheck(meta_id)">
+                        <span>중복확인</span>
+                      </button>
+                      <button v-else type="button" class="mu-btn mu-btn-sm" @click="createNewMetaId">
+                        <span>ID 생성</span>
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th scope="row">데이터 명<strong class="required">필수</strong></th>
+                    <td>
+                      <input type="text" id="file-name" class="mu-input w460" placeholder="파일을 선택하세요." style="width: 300px;"
+                        :title="meta_name" v-model="meta_name" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">데이터 설명</th>
+                    <td>
+                      <input type="text" placeholder="데이터 설명을 작성해주세요." class="mu-input w660"
+                        :title="description" v-model="description" maxlength="100"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">사용자 데이터 설명</th>
+                    <td>
+                      <input type="text" class="mu-input w660" placeholder="사용자 데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대50자)"
+                        maxlength="50" :title="user_description" v-model="user_description" @keydown="preventNewline"/>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- //mu-formbox -->
+            </div>
+            <div class="mu-heading">
+              <h4>시스템 정보</h4>
+              <div class="mu-item-group">
+                <p class="txt-info">(필수<strong class="required">필수</strong>)</p>
+              </div>
+            </div>
+            <div class="board-body">
+              <!-- mu-formbox -->
+              <table class="mu-formbox">
+                <caption>
+                  시스템 정보
+                </caption>
+                <colgroup>
+                  <col style="width: 200px" />
+                  <col />
+                  <col style="width: 200px" />
+                  <col />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th scope="row">시스템 타입<strong class="required">필수</strong></th>
+                    <td>
+                      <input type="text" placeholder="" class="mu-input w300"
+                        :title="system_type" v-model="system_type" maxlength="100" readonly/>
+                    </td>
+                    <th scope="row">시스템 명<strong class="required">필수</strong></th>
+                    <td>
+                      <input type="text" placeholder="" class="mu-input w300"
+                        :title="system_name" v-model="system_name" maxlength="100" readonly/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">데이터 타입<strong class="required">필수</strong></th>
+                    <td>
+                      <input type="text" placeholder="" class="mu-input w300"
+                        :title="meta_type" v-model="meta_type" maxlength="100" readonly/>
+                    </td>
+                    <th scope="row">데이터베이스 명<strong class="required">필수</strong></th>
+                    <td>
+                      <input type="text" placeholder="" class="mu-input w300"
+                        :title="database" v-model="database" maxlength="100" readonly/>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- //mu-formbox -->
+            </div>
+            <div class="mu-heading">
+              <h4>카테고리 설정</h4>
+              <div class="mu-item-group">
+                <p class="txt-info">(필수<strong class="required">필수</strong>)</p>
+              </div>
+            </div>
+            <div class="board-body">
+              <!-- mu-formbox -->
+              <table class="mu-formbox">
+                <caption>
+                  카테고리 설정
+                </caption>
+                <colgroup>
+                  <col style="width: 200px" />
+                  <col />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th scope="row">카테고리</th>
+                    <td>
+                      <!-- category-group : 해당된 모든 카테고리 출력 -->
+                      <div style="display: flex;">
+                        <div v-if="classifications.length > 0" class="category-group">
+                          <div v-if="classifications.length > 0" v-for="(item, index) in classifications" :key="index"
+                            class="category">
+                            <em class="category-label">{{ item.description }}</em>
+                            <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteMapping(item)">
+                              <i class="mu-icon-svg item-delete"></i><span>삭제</span>
+                            </button>
+                          </div>
+                        </div>
+                        <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only"
+                          title="카테고리 추가" style="margin-left: 5px;" @click="popupCategoryMappingModal">
+                          <i class="mu-icon-svg add"></i><span>카테고리 추가</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- //mu-formbox -->
+            </div>
+            <div class="mu-heading">
+              <h4>비지니스 속성</h4>
+            </div>
+            <div class="board-body">
+              <!-- mu-formbox -->
+              <!-- detail-box : 데이터 정보 > 비지니스 속성 -->
+              <business-attributes-area :isAdmin="true" :attributes="business_attributes" @onClickAddRow="onClickAddBusinessAttributes"
+                @onClickDelRow="onClickDelBusinessAttributes" />
+              <!-- //mu-formbox -->
+            </div>
+            <div class="mu-heading">
+              <h4>태그/키워드</h4>
+            </div>
+            <div class="board-body">
+              <!-- tag-box : 태그/키워드 관리 -->
+              <tag-register-area ref="tag-keyword-area" :allTagList="allTagList" :entity="{}"
+                  @onClickAddTag="onClickAddTag" />
+            </div>
+          </div>
+          <div class="mu-dialog-foot">
+            <button type="button" class="mu-btn" @click="onCancelSaveFusion"><span>취소</span></button>
+            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveButton"><span>확인</span></button>
+          </div>
+
+          <div class="mu-dialog-close-btn">
+            <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onCloseSaveFusion">
+              <i class="mu-icon-svg close"></i><span>팝업닫기</span>
+            </button>
+          </div>
+        </div>
+        <select-category-add-modal v-if="toggleSelectCategoryModal" :upperCategory="upperCategory"
+        :toggle-select-category-modal="toggleSelectCategoryModal" @onSelect="onSelectCategory"
+        @onCloseModal="onClickCategoryInfoSearchCloseButton" />
+      </div>
+    </main>
+  </div>
+</template>
+<script setup lang="ts">
+import { defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
+import PageSize from "@/pages/admin/manager/user/page-size";
+import { useCategoryTreeStore } from "@/store/categoryTree";
+import { isEmpties } from "@composables/ramda";
+import SelectCategoryAddModal from "@functional/classificationModal/select-classification-add-modal";
+import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
+import Pagination from "@functional/pagination/pagination";
+import VueContextMenu from '@imengyu/vue3-context-menu';
+import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css';
+
+import BusinessAttributesArea from "@molecules/searchDetail/business-attributes-area";
+import TagRegisterArea from "@molecules/searchDetail/tag-register-area";
+import { useCategoryStore } from "@store/category.ts";
+import ObjectUtils from "@utils/ObjectUtils";
+import cloneDeep from 'lodash/cloneDeep';
+import { v4 as uuidv4 } from 'uuid';
+
+definePageMeta({
+  name: "AdminMetaDataFusion",
+  layout: "admin",
+});
+
+const { $ofetch } = useNuxtApp();
+const categoryStore = useCategoryStore();
+
+const currentFusionList = ref([]) // 현재 융합모델 항목
+const selectedFusionList = ref([]) // 융합 데이터 목록 체크박스 선택 시 사용되는 배열
+const checkedList = ref([]) // 모달에서 체크박스 선택 시 사용되는 배열
+const pagingObj = ref({
+  total: 0,
+  limit: 10,
+  block: 10,
+  currentPage: 1,
+});
+const searchType = ref("all")
+const searchWord = ref("")
+const metaList = ref([])
+
+const visibleSystemModal = ref(false) // 융합 데이터 정보 > 추가 모달
+const visibleFusionSaveModal = ref(false) // 융합 데이터 저장 모달
+
+const isExecuteQuery = ref(false) // 쿼리 실행 여부
+const query = ref("")
+const editorOptions = { // Monaco Editor options 설정
+  theme: "vs",
+  language: "sql", // SQL 구문 강조
+  automaticLayout: true, // 창 크기 변경 시 자동 레이아웃
+  minimap: {
+    enabled: false, // 미니맵 비활성화
+  },
+  scrollBeyondLastLine: false,
+  readOnly: false, // 읽기 전용 여부
+  wordWrap: "on", // 자동 줄바꿈
+};
+
+const currentMetaDataInfo = ref({})
+const currentMetaColumns = ref([])
+
+const execute_duration = ref("-")
+const execute_start_time = ref("-")
+const fusionSampleList = ref([])
+const fusionSampleTotal = ref("-")
+const all_columns = ref([])
+
+const show = ref(false);
+const hoveredIndex = ref(null);
+const mouseX = ref(0);
+const mouseY = ref(0);
+
+const categoryTreeStore = useCategoryTreeStore();
+const router = useRouter();
+
+const categoryTreeList = await categoryTreeStore.fetchCategories()
+
+// 융합 데이터 등록
+const meta_id = ref(""); // 메타데이터 ID
+const isCheckMetaIdDup = ref(false) // 메타데이터 ID 중복확인
+const meta_name = ref(""); // 데이터 명
+const description = ref(""); // 데이터 설명
+const user_description = ref(""); // 사용자 데이터 설명
+
+// 시스템 정보
+const system_id = ref() // 시스템 ID
+const database = ref() // 데이터베이스명
+const system_type = ref("") // 시스템 타입
+const system_name = ref("") // 시스템 명
+const meta_type = ref("") // 데이터 타입
+
+// 카테고리 설정
+const classifications = ref([])
+const toggleSelectCategoryModal = ref(false) // 상위카테고리 선택 모달
+const upperCategory = ref({
+  description: "",
+  value: "",
+  level: "",
+  parent_id: "",
+  id: "",
+}); // 상위 카테고리
+
+// 메타 속성
+const attributes = ref({})
+
+// 비즈니스 속성
+const business_attributes = ref([]) // 비즈니스 Key/Value
+
+// 태그/키워드
+const allTagList = ref([]);
+const tags = ref([])
+
+// 융합 데이터 선택 시 말풍선
+const selectedIndex = ref(null)
+const selectedColumnIndex = ref(null)
+
+// 메타데이터 ID 값 변동에 따라 중복확인 다시 하도록 설정
+watch(() => meta_id.value, (newVal, oldVal) => {
+  isCheckMetaIdDup.value = false
+})
+
+onMounted(async () => {
+  await searchTagList();
+  await getFusionSysteInfo(); // 융합 데이터 등록 전용 시스템 정보 조회
+  window.addEventListener("mousemove", handleMousemove)
+  onSearchMetaList()
+});
+onUnmounted(() => {
+  window.removeEventListener("mousemove", handleMousemove)
+});
+
+await categoryStore.fetchCategories();
+
+watch(() => query.value, (newVal, oldVal) => {
+  isExecuteQuery.value = false
+})
+
+const getFusionSysteInfo = async () => {
+  await $ofetch(`/api/metadata/fusion/fusionSystemInfo`).then((res) => {
+    if (res && res.data && res.data.result) {
+      const fusionInfo = res.data.fusionInfo
+      system_id.value = fusionInfo.system_id
+      system_type.value = fusionInfo.system_type
+      system_name.value = fusionInfo.system_name
+      meta_type.value = fusionInfo.meta_type
+      database.value = fusionInfo.database
+    }
+  }).catch((err) => {
+    console.log('fail to load fusion system info')
+  })
+}
+
+const handleMousemove = (event) => {
+  mouseX.value = event.clientX;
+  mouseY.value = event.clientY + 10;
+};
+
+// 개별 항목이 선택됐는지 확인
+const isSelected = (item) => {
+  return selectedFusionList.value.some((i) => i.meta_id === item.meta_id)
+}
+
+// 전체 선택 여부
+const isAllSelected = computed(() => {
+  return (
+    currentFusionList.value.length > 0 &&
+    currentFusionList.value.every((item) =>
+      selectedFusionList.value.some((i) => i.meta_id === item.meta_id)
+    )
+  )
+})
+
+// 개별 항목 토글
+const toggleItem = (item) => {
+  const index = selectedFusionList.value.findIndex(
+    (i) => i.meta_id === item.meta_id
+  )
+  if (index >= 0) {
+    selectedFusionList.value.splice(index, 1)
+  } else {
+    selectedFusionList.value.push({ ...item }) // ← 복사
+  }
+}
+
+// 전체 토글
+const toggleAll = () => {
+  if (isAllSelected.value) {
+    selectedFusionList.value = []
+  } else {
+    selectedFusionList.value = currentFusionList.value.map(item => ({ ...item })) // ← 복사
+  }
+}
+
+const addFusion = () => {
+  visibleSystemModal.value = true
+  onSearchMetaList()
+}
+
+//
+const onConfirm = async () => {
+  visibleSystemModal.value = false
+  const currentCheckedList = cloneDeep(checkedList.value)
+
+  // 해당 id에 대한 객체 추가
+  currentFusionList.value = metaList.value.filter(item => currentCheckedList.includes(item.meta_id));
+}
+
+//
+const onCancel = () => {
+  visibleSystemModal.value = false
+
+  const currentSelectedList = cloneDeep(currentFusionList.value)
+
+  // 해당 id에 대한 객체 추가
+  checkedList.value = currentSelectedList.map(item => item.meta_id);
+};
+
+//
+const onClose = () => {
+  visibleSystemModal.value = false
+};
+
+const onToggleCheckbox = (e, isAll: boolean, item: any): void => {
+  const { target: { checked } } = e;
+
+  if (isAll) {
+    checkedList.value = checked ? metaList.value.map(item => item.meta_id) : [];
+  } else {
+    const metaId = item.meta_id;
+    if (checked) {
+      checkedList.value.push(metaId);
+    } else {
+      const index = checkedList.value.findIndex((id) => id === metaId);
+      if (index !== -1) {
+        checkedList.value.splice(index, 1);
+      }
+    }
+  }
+};
+
+const onSearchMetaList = async (offset = 0, item: any = null) => {
+  try {
+    const params = {
+      offset: offset ? offset * pagingObj.value.limit : 0,
+      limit: pagingObj.value.limit,
+      searchClassification: "",
+      searchType1: "all",
+      searchType2: `${searchType.value}`,
+      word: `${searchWord.value}`
+    };
+
+    //
+    if (item && item.id) {
+      params.searchClassification = item.id;
+    }
+
+    //
+    const res = await $ofetch(`/api/metadata/fusion/list`, { method: "POST", body: params });
+    if (res && !res.errorMessage) {
+      let result = res.data;
+
+      const list: any = ObjectUtils.getPropertyValue(result, "list", []);
+      metaList.value = list.map((el: { [key: string]: any }, index: number) => {
+        return {
+          ...el,
+          guid: index + 1,
+          attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
+        };
+      });
+
+      if (result.totalCount > 0) {
+        pagingObj.value = {
+          ...pagingObj.value,
+          total: ObjectUtils.getPropertyValue(result, "totalCount", 0),
+          currentPage: offset + 1
+        };
+      } else {
+        pagingObj.value = {
+          ...pagingObj.value,
+          total: 0,
+          currentPage: 1
+        };
+      }
+    } else {
+      metaList.value = []
+      pagingObj.value = {
+        ...pagingObj.value,
+        total: 0,
+        currentPage: 1
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//
+const onClickMenuItem = async (item: any = null) => {
+  onSearchMetaList(0, item);
+};
+
+const onClickPage = (page: number) => {
+  onSearchMetaList(page - 1);
+}
+
+const isChecked = (item: any): boolean => {
+  if (!item || !item.meta_id) return false;
+
+  return checkedList.value.includes(item.meta_id);
+};
+
+//
+const getKrName = (key: any) => {
+  return key ? categoryStore.getClassificationNameKr(key) : '';
+}
+
+const deleteFusion = () => {
+  // 현재 항목
+  currentFusionList.value = currentFusionList.value.filter(curFusion => !selectedFusionList.value.some(selectedFusion => selectedFusion.meta_id === curFusion.meta_id));
+  // 모달 항목
+  checkedList.value = currentFusionList.value.map(item => item.meta_id)
+  // 컬럼 정보
+  if(!currentFusionList.value.some(el => el.meta_id === currentMetaDataInfo.value.meta_id))
+    currentMetaDataInfo.value = {}
+}
+
+const refreshFusion = () => {
+  isAllSelected.value = false
+  currentFusionList.value = []
+  selectedFusionList.value = []
+  checkedList.value = []
+  currentMetaDataInfo.value = {}
+  selectedIndex.value = null
+}
+
+const selectFusion = (item) => {
+  // 컬럼정보 설정
+  currentMetaDataInfo.value = item
+  if (item && item.attributes && item.attributes.columns) {
+    currentMetaColumns.value = item.attributes.columns
+  } else {
+    currentMetaColumns.value = []
+  }
+
+  // 조회할 데이터명 복사 (system_id.database.meta_name)
+  const system_id = item.system_id ? item.system_id : "-"
+  const system_type = item.system_type
+  const database = item.database ? item.database : "-"
+  const schema = item.schema ? item.schema : "-"
+  const meta_name = item.meta_name ? item.meta_name : "-"
+  const meta_type = item.meta_type
+
+  // Trino
+  // - DB: {system_id}.{database or schema}.{table_name}
+  // MySQL, MariaDB, Hive는 database
+  // Postgresql은 schema로 입력
+
+  // - Storage: {system_id}.{bucket_name}.{data_name}
+
+  let codeContent = ""
+  if (meta_type.toUpperCase() == 'FILE') {
+    codeContent = `"${system_id}"."${database}"."${meta_name}"`
+  } else if (system_type.toUpperCase() == 'ALTIBASE'
+  || system_type.toUpperCase() == 'ORACLE'
+  || system_type.toUpperCase() == 'POSTGRES'
+  || system_type.toUpperCase() == 'POSTGRESQL'
+  || system_type.toUpperCase() == 'MSSQL') {
+    codeContent = `"${system_id}"."${schema}"."${meta_name}"`;
+  } else {
+    codeContent = `"${system_id}"."${database}"."${meta_name}"`;
+  }
+
+  navigator.clipboard.writeText(codeContent).then(() => {
+    selectedIndex.value = item.meta_id
+    setTimeout(() => {
+      selectedIndex.value = null
+    }, 1000)
+  }).catch(err => {
+    errorAlert("코드 복사에 실패하였습니다.");
+  });
+}
+
+const showTooltip = (index) => {
+  show.value = true;
+  hoveredIndex.value = index;
+};
+
+const hideTooltip = () => {
+  show.value = false;
+};
+
+const executeQuery = async () => {
+  const sql = query.value.replace(/;/g, '');
+
+  // 1. SELECT 확인
+  // const reg_select = /^select\s/i
+  // if (!reg_select.test(sql)) {
+  //   defaultAlert("SELECT 구문으로 시작해야합니다.")
+  //   return
+  // }
+
+  // 2. SELECT 절 외 쿼리
+  const reg_exclude_select = /\b(insert|update|delete|drop|alter|union)\b|/i
+
+  if (!reg_exclude_select.test(sql)) {
+    defaultAlert("허용되지 않는 구문이 있습니다.")
+    return
+  }
+
+  // 3. 쿼리 실행 결과 응답
+  const params = {
+    query: sql
+  }
+
+  await $ofetch(`/api/metadata/fusion/executeQuery`, { method: 'POST', body: params}).then((res) => {
+    if (res && res.data) {
+      fusionSampleList.value = res.data.sampleData ? res.data.sampleData : []
+      fusionSampleTotal.value = res.data.sampleDataTotal ? res.data.sampleDataTotal : '-'
+      execute_duration.value = res.data.execute_duration ? res.data.execute_duration : '-'
+      execute_start_time.value = res.data.execute_start_time ? res.data.execute_start_time : '-'
+
+      // 컬럼명 전체
+      fusionSampleList.value = [{
+          "id": "11117",
+          "user_id": "admin",
+          "menu_id": "",
+          "create_date": "2025-01-20 09:51:05.113896",
+          "user_name": null,
+          "dept_id": null,
+          "dept_name": "관리부서"
+      }]
+      fusionSampleTotal.value = 1
+      if (fusionSampleList.value.length > 0) all_columns.value = Object.keys(fusionSampleList.value[0])
+
+      isExecuteQuery.value = true
+    } else {
+      errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    }
+  }).catch((err) => {
+    console.log(err)
+    errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+  })
+}
+
+const resetQuery = async () => {
+  query.value = ""
+  selectedColumnIndex.value = null
+}
+
+const onRightButton = (column_name: string, e : MouseEvent) => {
+  e.preventDefault();
+  VueContextMenu.showContextMenu({
+    x: e.x,
+    y: e.y,
+    items: [
+      {
+        label: "복사 (컬럼 이름)",
+        onClick: () => {
+          navigator.clipboard.writeText(column_name).then(() => {
+            selectedColumnIndex.value = column_name
+            setTimeout(() => selectedColumnIndex.value = null, 1000)
+          }).catch(err => {
+            errorAlert("코드 복사에 실패하였습니다.");
+          });
+        }
+      },
+      {
+        label: "복사 (모든 컬럼 이름)",
+        onClick: () => {
+          const all_columns_text = all_columns.value.join()
+          navigator.clipboard.writeText(all_columns_text).then(() => {
+            selectedColumnIndex.value = column_name
+            setTimeout(() => selectedColumnIndex.value = null, 1000)
+          }).catch(err => {
+            errorAlert("코드 복사에 실패하였습니다.");
+          });
+        }
+      },
+    ]
+  });
+}
+
+const saveFusion = async () => {
+  // 쿼리 실행여부
+  if (!isExecuteQuery.value) {
+    await defaultAlert("쿼리를 실행해주세요.")
+    return
+  }
+
+  visibleFusionSaveModal.value = true
+}
+
+// 융합 데이터 생성 > 확인
+// 등록 버튼 클릭
+const onClickSaveButton = async () => {
+  // 유효성 검사
+  const isValid = isValidInput()
+
+  if (isValid) {
+    const body = {
+      meta_id: meta_id.value,
+      qualified_name: system_id.value + "." + database.value + "." + meta_name.value,
+      system_type: system_type.value,
+      system_id: system_id.value,
+      meta_type: meta_type.value,
+      meta_name: meta_name.value,
+      description: description.value ? description.value : null,
+      user_description: user_description.value ? user_description.value : null,
+      classifications: getClassifications(classifications.value),
+      attributes: attributes.value,
+      business_attributes: getBusinessAttributes(business_attributes.value),
+      tags: tags.value,
+      status: "ACTIVE",
+      release: 0
+    }
+
+    // 1. event log, 초기 metadata 저장
+    await $ofetch(`/api/metadata/fusion/saveFusionMetaData`, { method: 'POST', body: body}).then(async (saveRes) => {
+      // event, metadata 저장 성공
+      if (saveRes && saveRes.data && saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
+        await successAlert("융합 데이터가 저장되었습니다.")
+        goToMetaDataManage()
+      } else {
+        errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+      }
+    }).catch((err) => {
+      errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+      console.log(err)
+    })
+  }
+}
+
+const goToMetaDataManage = () => {
+  router.push("/admin/data/meta-data/manage")
+}
+
+const getClassifications = (c) => {
+  const stringArray = c.map((el) => el.id.toString())
+  return stringArray
+}
+
+// business_attribute 가공 {key1: value1, key2: value2}
+const getBusinessAttributes = (ba) => {
+  const tempAttributes = Object.assign(ba, [])
+  const obj = tempAttributes.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {});
+
+  return obj
+}
+
+const onCancelSaveFusion = () => {
+  visibleFusionSaveModal.value = false
+}
+
+const onCloseSaveFusion = () => {
+  visibleFusionSaveModal.value = false
+}
+
+// 카테고리 검색 모달
+const onSelectCategory = (info) => {
+  if (info) {
+    // classifications에 중복이 없으면 추가
+    if (info.id && info.id != '') {
+      addClassification(classifications.value, info)
+    }
+  }
+}
+
+// 카테고리 항목에 추가
+const addClassification = (array, item) => {
+  if (item && item.id && item.id != '') {
+    addAncestorsRecursive(item, categoryTreeList, classifications.value)
+  }
+}
+
+// 상위 카테고리도 추가하는 재귀함수
+const addAncestorsRecursive = (item, allItems, selectedItems) => {
+  // 선택한 카테고리의 parent_id가 있는 경우 전체 항목에서 id = parent_id인 값 찾아서 추가
+  // 그 상위카테고리도 parent_id가 있는 경우 반복
+  // 중복이면 추가하지 않음
+  const exists = selectedItems.some(el => el.id === item.id);
+  if (!exists) {
+    selectedItems.push(item);
+  }
+
+  // 부모가 있으면 재귀 호출
+  if (item.parent_id && item.parent_id !== '') {
+    const parentItem = allItems.find(el => el.id === item.parent_id);
+    if (parentItem) {
+      addAncestorsRecursive(parentItem, allItems, selectedItems);
+    }
+  }
+}
+
+// 삭제할 카테고리 id가 가지고있는 하위 카테고리 항목 id값 모두 조회
+const findAllDescendantIds = (items, parentId) => {
+  const descendants = [];
+
+  function recurse(currentId) {
+    descendants.push(currentId);
+    items
+      .filter(item => item.parent_id === currentId)
+      .forEach(child => recurse(child.id));
+  }
+
+  recurse(parentId);
+  return descendants;
+}
+
+// 삭제한 카테고리 id를 부모로 가지는 하위항목들 제거
+const removeItemAndDescendants = (items, targetId) => {
+  const idsToRemove = findAllDescendantIds(items, targetId);
+  return items.filter(item => !idsToRemove.includes(item.id));
+}
+
+// 카테고리 닫기 버튼 클릭
+const onClickCategoryInfoSearchCloseButton = () => {
+  try {
+    toggleSelectCategoryModal.value = !toggleSelectCategoryModal.value;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//전체 tag 조회
+const searchTagList = async (offset = 1) => {
+  try {
+    // 관리 페이지이기 때문에 페이징 없이 전체 보여지도록 임시로 1000개
+    let limit = 1000;
+    await $ofetch(`/api/admin/system/tagManager/list?pageSize=${limit}&pnum=${offset}`)
+      .then((res) => {
+        if (res && !res.errorMessage) {
+          if (res.data.list && res.data.list.length > 0) {
+            allTagList.value = res.data.list;
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// 유효성 검사
+const isValidInput = () => {
+  // 1. input 입력 여부
+  if (!meta_id.value || meta_id.value == '') { // 메타데이터 ID
+    errorAlert("메타데이터 ID 값을 입력해 주세요.")
+    return false
+  } else if (meta_id.value.includes(" ")) { // 공백 여부
+    errorAlert("메타데이터 ID 값은 공백이 포함될 수 없습니다.")
+    return false;
+  }
+
+  // 2. 시스템 ID 중복체크
+  if (!isCheckMetaIdDup.value) {
+    errorAlert("메타데이터 ID 중복확인이 필요합니다.")
+    return false
+  }
+
+  // 3. 파일선택 여부
+  if (!meta_name.value || meta_name.value == '') { // 데이터 명(파일명)
+    errorAlert("데이터명을 입력해 주세요.")
+    return false
+  }
+
+  return true
+}
+
+const descriptionEllipsis = (item) => {
+  return item
+};
+
+const typeEllipsis = (item) => {
+  return item
+};
+
+const nullToNa = (val) => {
+  if (val === null) return "-";
+  else {
+    return val;
+  }
+};
+
+// 메타데이터 ID 중복확인
+const metaIdDupCheck = async (meta_id) => {
+  if (meta_id.includes(" ")) { // 공백 여부
+    errorAlert("메타데이터 ID 값은 공백이 포함될 수 없습니다.")
+    return false;
+  }
+
+  await $ofetch(`/api/metadata/manage/metaIdDupCheck?meta_id=${meta_id}`).then((res) => {
+    if (res && res.data) {
+      isCheckMetaIdDup.value = true
+      successAlert("사용 가능한 메타데이터 ID 입니다.")
+    } else {
+      isCheckMetaIdDup.value = false
+      errorAlert("이미 존재하는 메타데이터 ID 입니다.")
+    }
+  }).catch((err) => {
+    errorAlert("중복확인에 실패하였습니다.")
+  })
+}
+
+// 시스템 ID 신규생성
+const createNewMetaId = () => {
+  meta_id.value = uuidv4()
+}
+
+const preventNewline = (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault(); // Enter 키 입력 차단
+  }
+};
+
+// 카테고리 선택 취소
+const onClickDeleteMapping = (item) => {
+  // 상위 카테고리를 클릭한 경우 해당 하위 카테고리도 제거 처리
+  const updatedItems = removeItemAndDescendants(classifications.value, item.id)
+  classifications.value = updatedItems
+}
+
+// 카테고리 선택 버튼 클릭
+const popupCategoryMappingModal = () => {
+  toggleSelectCategoryModal.value = !toggleSelectCategoryModal.value
+}
+
+// 비지니스 속성 추가 버튼 클릭 이벤트 핸들러
+const onClickAddBusinessAttributes = () => {
+  business_attributes.value.push({ key: "", value: "" });
+};
+
+// 비지니스 속성 삭제 버튼 클릭 이벤트 핸들러
+const onClickDelBusinessAttributes = (index) => {
+  const tempAttributes = JSON.parse(JSON.stringify(business_attributes.value));
+  tempAttributes.splice(index, 1);
+
+  business_attributes.value = tempAttributes;
+};
+
+// 태그 추가 버튼
+const onClickAddTag = async (list) => {
+  tags.value = list
+}
+
+
+</script>
+<style scoped>
+.scroll-box {
+  max-height: 400px;        /* 스크롤 높이 제한 */
+  overflow-y: auto;         /* 세로 스크롤 활성화 */
+  border: 1px solid #eee;
+  padding: 0px 10px;
+}
+
+.response-item {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  padding: 0 4px;
+}
+
+.service-name {
+  flex: 0 0 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.divider-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 0 8px;
+  min-width: 20px; /* 줄어들 수 있는 최소 길이 */
+}
+
+.response-time {
+  flex: 0 0 auto;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  text-align: right;
+  color: #666;
+}
+
+.empty-message {
+  color: #999;
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.tooltip-wrapper {
+  position: absolute;
+  display: inline-block;
+}
+
+.tooltip-text {
+  position: absolute;
+  top: -35px;
+  left: 100%;
+  transform: translateX(-50%);
+  background-color: grey;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.tooltip-wrapper-column {
+  position: absolute;
+  display: inline-block;
+}
+
+.tooltip-text-column {
+  position: absolute;
+  top: -35px;
+  left: 100%;
+  transform: translateX(10%);
+  background-color: grey;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+</style>
