@@ -213,12 +213,22 @@
               </div>
               <div class="mu-col mu-col">
                 <div class="mu-heading" style="display: flex; justify-content: space-between;">
-                  <h4>실행 결과</h4>
+                  <h4>
+                    실행 결과
+                  </h4>
                 </div>
                 <div class="detail-section" style="margin-top: 0px;">
                   <div class="detail-box">
                     <div class="data-info">
                       <dl class="fusion-execute-result">
+                        <dt style="position: absolute; left: -1%">
+                          <div :class="'interval_label'">
+                            <b>성공여부</b>
+                          </div>
+                          <span v-if="executeQueryStatus == 0" class="fusion-step-default">-</span>
+                          <span v-if="executeQueryStatus == 1" class="fusion-step-success">success</span>
+                          <span v-if="executeQueryStatus == 2" class="fusion-step-failed">failed</span>
+                        </dt>
                         <dt>
                           <div :class="'interval_label'">
                             <b>실행시간</b>
@@ -667,6 +677,7 @@ const editorOptions = { // Monaco Editor options 설정
 const currentMetaDataInfo = ref({})
 const currentMetaColumns = ref([])
 
+const executeQueryStatus = ref(0) // 실행 결과 1: 성공, 2: 실패
 const execute_duration = ref("-")
 const execute_start_time = ref("-")
 const fusionSampleList = ref([])
@@ -1041,12 +1052,15 @@ const executeQuery = async () => {
       if (fusionSampleList.value.length > 0) all_columns.value = Object.keys(fusionSampleList.value[0])
 
       isExecuteQuery.value = true
+      executeQueryStatus.value = 1
     } else {
       errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+      executeQueryStatus.value = 0
     }
   }).catch((err) => {
     console.log(err)
     errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    executeQueryStatus.value = 0
   })
 }
 

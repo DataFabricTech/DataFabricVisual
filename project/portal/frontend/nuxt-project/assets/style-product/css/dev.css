@@ -632,7 +632,7 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
     font-size: 75%;
     font-weight: 700;
     line-height: 1;
-    padding: .2em .6em .3em;
+    padding: 5px 5px 3px 5px;
     text-align: center;
     vertical-align: baseline;
     white-space: nowrap;
@@ -649,5 +649,9 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 .fusion-nodata {display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 0; font-size:20px; color:#95969c; text-align:center;}
 .fusion-nodata:before {content:""; display:block; margin:0 auto 10px; width:72px; height:72px; background-image:url("../images/common/img-notice.png"); background-size:contain;}
 .fusion-execute-result {display: flex; justify-content: flex-end; margin: 0; padding: 0;}
-.fusion-execute-result dt {margin-left: 24px; margin-bottom: 5px;}
+.fusion-execute-result dt {margin-left: 24px; margin-bottom: 5px; }
 .fusion-execute-result dd {margin-bottom: 5px;}
+
+.fusion-step-default {background-color:#ffffff; color: #000000; font-size: 16px; font-weight: 500; border-radius: 3px; padding: 0 10px; margin-left: 5px;} /* 성공 */
+.fusion-step-success {background-color:#064; color: #ffffff; font-size: 16px; font-weight: 500; border-radius: 3px; padding: 0 10px; margin-left: 5px;} /* 성공 */
+.fusion-step-failed {background-color:#fa0000; color: #ffffff; font-size: 16px; font-weight: 500; border-radius: 3px; padding: 0 10px; margin-left: 5px;} /* 실패 */
