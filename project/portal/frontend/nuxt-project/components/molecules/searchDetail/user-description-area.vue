@@ -16,8 +16,8 @@
           <div class="comment-write">
             <div class="comment-write-box">
               <div class="comment-form">
-                <textarea class="mu-area" placeholder="데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대50자)" title="데이터 설명 입력"
-                  maxlength="50" v-model="userDescription" @keydown="preventNewline" />
+                <textarea class="mu-area" placeholder="데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대100자)" title="데이터 설명 입력"
+                  maxlength="100" v-model="userDescription" @keydown="preventNewline" />
                 <button type="button" class="mu-btn mu-btn-primary" @click="saveUserDescription">
                   <span>등록</span>
                 </button>
@@ -74,8 +74,8 @@
                   <form action="">
                     <fieldset>
                       <legend>데이터 설명 입력</legend>
-                      <textarea class="mu-area" placeholder="데이터 설명을 작성하실 수 있습니다. (500자 까지)" title="데이터 설명 수정"
-                        maxlength="500" v-model="editingUserDescription" />
+                      <textarea class="mu-area" placeholder="데이터 설명을 작성하실 수 있습니다. (100자 까지)" title="데이터 설명 수정"
+                        maxlength="100" v-model="editingUserDescription" />
                       <div class="comment-write-bottom">
                         <div class="letter-count">
                           <strong>{{ editingUserDescriptionTextCounts() }}</strong> / 50
