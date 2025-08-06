@@ -16,15 +16,15 @@
           <div class="comment-write">
             <div class="comment-write-box">
               <div class="comment-form">
-                <textarea class="mu-area" placeholder="데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대100자)" title="데이터 설명 입력"
-                  maxlength="100" v-model="userDescription" @keydown="preventNewline" />
+                <textarea class="mu-area" :placeholder="`데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대${userDescriptionTextMaxCount}자)`" title="데이터 설명 입력"
+                  :maxlength="userDescriptionTextMaxCount" v-model="userDescription" @keydown="preventNewline" />
                 <button type="button" class="mu-btn mu-btn-primary" @click="saveUserDescription">
                   <span>등록</span>
                 </button>
               </div>
               <div class="comment-write-bottom">
                 <div class="letter-count">
-                  <strong>{{ userDescriptionTextCounts }}</strong> / 50자
+                  <strong>{{ userDescriptionTextCounts }}</strong> / {{ userDescriptionTextMaxCount }}자
                 </div>
               </div>
             </div>
@@ -74,11 +74,11 @@
                   <form action="">
                     <fieldset>
                       <legend>데이터 설명 입력</legend>
-                      <textarea class="mu-area" placeholder="데이터 설명을 작성하실 수 있습니다. (100자 까지)" title="데이터 설명 수정"
-                        maxlength="100" v-model="editingUserDescription" />
+                      <textarea class="mu-area" :placeholder="`데이터 설명을 작성하실 수 있습니다. (${userDescriptionTextMaxCount}자 까지)`" title="데이터 설명 수정"
+                        :maxlength="userDescriptionTextMaxCount" v-model="editingUserDescription" />
                       <div class="comment-write-bottom">
                         <div class="letter-count">
-                          <strong>{{ editingUserDescriptionTextCounts() }}</strong> / 50
+                          <strong>{{ editingUserDescriptionTextCounts() }}</strong> / {{ userDescriptionTextMaxCount }}
                         </div>
                         <button type="button" class="mu-btn" @click="onCancelEditUserDescription">
                           <span>취소</span>
@@ -137,6 +137,8 @@ const editingUserDescriptionObj = ref({
 }); // 사용자 추천 설명 수정 제어
 const editingUserDescription = ref("favorite"); // 수정 중인 사용자 추천 설명 텍스트
 
+// 사용자 추천 설명 최대 글자수
+const userDescriptionTextMaxCount = ref(100)
 // 사용자 추천 설명 글자수 계산
 const userDescriptionTextCounts = computed(() => userDescription.value.length);
 
