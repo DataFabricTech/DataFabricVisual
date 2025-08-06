@@ -483,7 +483,7 @@ const getUsageCpuSeries = (rawData) => {
   rawData.forEach(row => {
     const key = `${row.system_name}`;
     if (!systemsMap[key]) systemsMap[key] = {};
-    systemsMap[key][row.month] = row.total_cpu_usage;
+    systemsMap[key][row.month] = row.usage_cpu;
   });
 
   const series = Object.entries(systemsMap).map(([name, usageMap]) => ({
@@ -503,17 +503,14 @@ const getUsageMemorySeries = (rawData) => {
   rawData.forEach(row => {
     const key = `${row.system_name}`;
     if (!systemsMap[key]) systemsMap[key] = {};
-    systemsMap[key][row.month] = row.total_memory_usage;
+    systemsMap[key][row.month] = row.usage_memory;
   });
-
-  console.log(systemsMap)
 
   const series = Object.entries(systemsMap).map(([name, usageMap]) => ({
     name,
     type: 'line',
     data: months.map(month => usageMap[month] ?? 0)
   }));
-  console.log(series)
 
   return series
 };
@@ -577,14 +574,13 @@ const setSystemUsageCpuChartData = (data) => {
   lineChartOptions.value.yAxis.title.text = 'CPU 사용량 (sec)' // y축 설정
   lineChartOptions.value.yAxis.tickInterval = 1000 // y축 간격
   lineChartOptions.value.xAxis.categories = getUsageCpuCategories(systemUsageCpuChartData.value)
-  console.log(lineChartOptions.value.xAxis)
   lineChartOptions.value.series = getUsageCpuSeries(systemUsageCpuChartData.value)
 }
 
 // 시스템별 Memory 사용량 차트 데이터 설정
 const setSystemUsageMemoryChartData = (data) => {
   systemUsageMemoryChartData.value = data
-  lineChart2Options.value.yAxis.title.text = 'Memory 사용량 (sec)' // y축 설정
+  lineChart2Options.value.yAxis.title.text = 'Memory 사용량 (MB)' // y축 설정
   lineChart2Options.value.yAxis.tickInterval = 1000 // y축 간격
   lineChart2Options.value.xAxis.categories = getUsageMemoryCategories(systemUsageMemoryChartData.value)
   lineChart2Options.value.series = getUsageMemorySeries(systemUsageMemoryChartData.value)
