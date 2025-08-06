@@ -24,9 +24,13 @@
 import { ref } from 'vue';
 
 const emit = defineEmits(['scrollToSection'])
-const props = defineProps(['isAdmin', 'tabs', 'isSticky', 'sectionRefs'])
+const props = defineProps(['isAdmin', 'tabs', 'isSticky', 'sectionRefs', 'resetTab', 'scrollTab'])
 
 const activeTab = ref(0)
+
+watch(() => props.resetTab, () => {
+  activeTab.value = 0
+})
 
 // 특정 섹션으로 스크롤
 const scrollToSection = (key, index) => {

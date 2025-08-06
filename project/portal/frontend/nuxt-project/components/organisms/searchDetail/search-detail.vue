@@ -5,7 +5,7 @@
       :data="recommendStatus" :params="userDataParam" @reloadRecommendStatus="getRecommendStatus" />
     <div class="inner">
       <scroll-to-tab :tabs="tabs" :isAdmin="props.isAdmin" :isSticky="isSticky" :sectionRefs="sectionRefs"
-        @scrollToSection="scrollToSection" />
+        @scrollToSection="scrollToSection" :resetTab="resetTab"/>
       <!-- data-detail-wrap : 통합검색리스트 > 상세 -->
       <div class="data-detail-wrap">
         <!-- detail-section : 데이터 정보 -->
@@ -122,6 +122,7 @@ const userStore = useUserStore();
 const categoryStore = useCategoryStore();
 const categoryTreeStore = useCategoryTreeStore();
 
+const resetTab = ref(false)
 const tabs = ref(['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area'])
 const sectionRefs = ref({}); // 탭 클릭 시 이동할 DOM
 const isSticky = ref(false) // 탭이 보이지 않는 곳으로 스크롤이 되었는지 여부
@@ -267,7 +268,7 @@ onUnmounted(() => {
 
 // 특정 섹션으로 스크롤
 const scrollToSection = (params) => {
-  const { key } = params
+  let { key } = params
   const target = sectionRefs.value[key];
   if (target) {
     window.scrollTo({
@@ -379,6 +380,7 @@ watch(
 
 // 상세 화면 구성에 필요한 모든 API 호출
 const getAllDataByGuid = async (newGuid, favoriteEvent) => {
+  resetTab.value = !resetTab.value
   // GUID 기준 데이터 상세 조회 API 호출 이벤트 종료 후 나머지 API 호출하도록 동기화 처리
   const guid = newGuid ? newGuid : route.query.guid;
 
@@ -709,7 +711,7 @@ const getRelatedData = () => {
     }).then((res) => {
       if (res && !res.errorMessage) {
         if (res.data && res.data.results) {
-          classifications_data.value = res.data.results
+          classifications_data.value = res.data.results.splice(-5)
         } else {
           classifications_data.value = []
         }

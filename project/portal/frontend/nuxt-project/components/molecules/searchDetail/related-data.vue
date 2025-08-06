@@ -39,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "~/store/user";
 
@@ -51,57 +52,23 @@ const props = defineProps(["classifications", "entity", "isAdmin"]);
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
 
+const networkChart = ref(null)
+
+// 연관데이터 링크 클릭 후 메타데이터 재조회 시 차트를 다시 그리기 위해 추가, 초기에는 차트 DOM이 생성되기 전 호출됨
 watch(() => props.classifications, (newVal) => {
-  const nodes = [];
-  const links = [];
+  drawChart(newVal)
+})
 
-  const rootId = props.entity?.meta_id || "root_id";
-  const rootName = props.entity?.meta_name || "root_name";
-  const rootDesc = props.entity?.description || "Root";
-
-  // 루트 노드
-  nodes[rootId] = {
-    id: rootId,
-    name: rootDesc,
-    meta_name: rootName,
-    color: '#f9eae5',
-    marker: { radius: 40 },
-  }
-
-  const raw = newVal || []
-
-  raw.forEach(row => {
-    const toId = row.meta_id
-    const toName = row.meta_name
-    const toDesc = row.description
-
-    // 노드가 없으면 생성
-    if (!nodes[toId]) {
-      nodes[toId] = {
-        id: toId,
-        name: toDesc,
-        meta_name: toName,
-        color: '#e8f1f1',
-        marker: { radius: 24 }
-      }
-    }
-
-    // 부모-자식 링크 만들기
-    links.push({ from: rootId, to: toId })
-
-  });
-
-  // 노드 배열화
-  const nodeArray = Object.values(nodes);
-  networkChartOptions.value.series[0].data = links;
-  networkChartOptions.value.series[0].nodes = nodeArray;
+// 차트 DOM이 초기에 생성되었을 때 차트에 데이터를 설정하기 위해 호출
+watch(() => networkChart.value, () => {
+  drawChart(props.classifications)
 })
 
 // 네트워크 차트 설정
 const networkChartOptions = ref({
   chart: {
     type: 'networkgraph',
-    height: '300px',
+    height: '250px',
     width: "500",
     backgroundColor: '#fafafa',
     borderWidth: 1,
@@ -112,7 +79,7 @@ const networkChartOptions = ref({
       keys: ['from', 'to'],          // 4. data는 [[from,to], ...]
       layoutAlgorithm: {
         enableSimulation: true,
-        linkLength: 50,
+        linkLength: 25,
         friction: -0.9
       },
       dataLabels: {
@@ -141,8 +108,8 @@ const networkChartOptions = ref({
       // 노드일 때: this.point
       const p = this.point
       return `
-        <b>${p.options.name}</b><br/>
-        <span>${p.options.meta_name}</span>
+        <b>${p.options.name ? p.options.name : '-'}</b><br/>
+        <span>${p.options.meta_name ? p.options.meta_name : '-'}</span>
       `
     },
     style: {
@@ -157,7 +124,7 @@ const networkChartOptions = ref({
       enabled: false
     },
     dataLabels: {
-      enabled: true,
+      enabled: false,
       linkFormat: '',
       style: {
         fontSize: '14px',
@@ -186,6 +153,72 @@ const onClickDataName = (item) => {
     emit("onClickData", item.meta_id);
     window.scrollTo(0, 0);
   });
+}
+
+const drawChart = (raw) => {
+  const chart = networkChart.value?.chart
+  if (!chart) return
+
+  // 1. 기존 시리즈 제거 (완전 초기화)
+  deleteSeries(chart)
+
+  const { nodeArray, links } = createSeries(raw)
+
+  // 2. 시리즈 새로 추가 (노드를 update할 경우 루트노드의 위치는 바뀌나 색상, 크기 등 설정값들이 바뀌지 않아서 추가)
+  chart.addSeries({
+    type: 'networkgraph',
+    data: links,
+    nodes: nodeArray,
+    dataLabels: {
+      enabled: false // 노드 위 표시되는 글자 제거
+    }
+  }, true); // redraw = true
+};
+
+const createSeries = (raw) => {
+  const nodes = {};
+  const links = [];
+
+  const rootId = props.entity?.meta_id || "root_id";
+  const rootName = props.entity?.meta_name || "root_name";
+  const rootDesc = props.entity?.description || "Root";
+
+  // 루트 노드
+  nodes[rootId] = {
+    id: rootId,
+    name: rootDesc,
+    meta_name: rootName,
+    color: '#DC143C',
+    marker: { radius: 24 },
+  };
+
+  raw.forEach(row => {
+    const toId = row.meta_id;
+    const toName = row.meta_name;
+    const toDesc = row.description;
+
+    if (!nodes[toId]) {
+      nodes[toId] = {
+        id: toId,
+        name: toDesc,
+        meta_name: toName,
+        color: '#4169E1',
+        marker: { radius: 16 },
+      };
+    }
+
+    links.push({ from: rootId, to: toId });
+  });
+
+  const nodeArray = Object.values(nodes);
+
+  return { nodeArray, links }
+}
+
+const deleteSeries = (chart) => {
+  while (chart.series.length > 0) {
+    chart.series[0].remove(false)  // false = redraw 안 함 (성능 최적화)
+  }
 }
 
 </script>
