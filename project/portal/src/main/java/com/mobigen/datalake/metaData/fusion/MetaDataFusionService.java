@@ -62,9 +62,10 @@ public class MetaDataFusionService {
             String query = params.get("query").toString();
 
             // 융합 데이터 쿼리 조회 API 요청
-
+            
         } catch (Exception e) {
             log.error("Fail to execute query - exception");
+            result.put("errorMessage", e.getMessage());
             e.printStackTrace();
         }
 

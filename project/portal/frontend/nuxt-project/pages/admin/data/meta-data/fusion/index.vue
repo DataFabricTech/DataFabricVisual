@@ -1010,21 +1010,7 @@ const hideTooltip = () => {
 
 const executeQuery = async () => {
   const sql = query.value.replace(/;/g, '');
-
-  // 1. SELECT 확인
-  // const reg_select = /^select\s/i
-  // if (!reg_select.test(sql)) {
-  //   defaultAlert("SELECT 구문으로 시작해야합니다.")
-  //   return
-  // }
-
-  // 2. SELECT 절 외 쿼리
   const reg_exclude_select = /\b(insert|update|delete|drop|alter|union)\b|/i
-
-  if (!reg_exclude_select.test(sql)) {
-    defaultAlert("허용되지 않는 구문이 있습니다.")
-    return
-  }
 
   // 3. 쿼리 실행 결과 응답
   const params = {
@@ -1033,6 +1019,12 @@ const executeQuery = async () => {
 
   await $ofetch(`/api/metadata/fusion/executeQuery`, { method: 'POST', body: params}).then((res) => {
     if (res && res.data) {
+      if (res.data.errorMessage && res.data.errorMessage) {
+        errorAlert(res.data.errorMessage);
+        executeQueryStatus.value = 0
+        return
+      }
+
       fusionSampleList.value = res.data.sampleData ? res.data.sampleData : []
       fusionSampleTotal.value = res.data.sampleDataTotal ? res.data.sampleDataTotal : '-'
       execute_duration.value = res.data.execute_duration ? res.data.execute_duration : '-'
@@ -1067,6 +1059,12 @@ const executeQuery = async () => {
 const resetQuery = async () => {
   query.value = ""
   selectedColumnIndex.value = null
+  isExecuteQuery.value = false
+  executeQueryStatus.value = 0
+  fusionSampleList.value = []
+  fusionSampleTotal.value = '-'
+  execute_duration.value = '-'
+  execute_start_time.value = '-'
 }
 
 const onRightButton = (column_name: string, e : MouseEvent) => {
