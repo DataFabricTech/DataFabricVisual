@@ -952,12 +952,12 @@ const onClickButton = (type) => {
     switch (type) {
       case "category": // 카테고리 맵핑 버튼 클릭 시
         // 테이블 유형에 대해서만 카테고리 맵핑 가능
-        targets = selectedData.value.filter((el) => el.meta_type.includes("table"));
+        targets = selectedData.value;
         if (targets.length > 0) {
           onToggleManageModal("map", targets);
         } else {
           errorAlert(
-            "선택된 데이터 중 카테고리 맵핑 가능한 데이터가<br/>없습니다.<br/>※ 카테고리는 테이블 유형에만 맵핑됩니다."
+            "선택된 데이터 중 카테고리 맵핑 가능한 데이터가<br/>없습니다."
           );
         }
         break;
@@ -968,7 +968,7 @@ const onClickButton = (type) => {
           onToggleAuthModal("roles", targets);
         } else {
           errorAlert(
-            "선택된 데이터 중 공개설정이 가능한 데이터가<br/>없습니다.<br/>※ 공개설정은 테이블 유형에 설정됩니다."
+            "선택된 데이터 중 공개설정이 가능한 데이터가<br/>없습니다."
           );
         }
         break;

@@ -1,88 +1,90 @@
 <template>
-  <div class="detail-section" :class="showData ? 'open' : 'close'">
-    <div class="mu-heading">
-      <h4>사용자 리뷰</h4>
-      <div class="mu-item-group">
-        <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
-          style="margin-left: 10px">
-          <span>{{ toggleShowDataText }}</span>
-        </button>
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''">
+    <div class="detail-section" :class="showData ? 'open' : 'close'">
+      <div class="mu-heading">
+        <h4>사용자 리뷰</h4>
+        <div class="mu-item-group">
+          <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
+            style="margin-left: 10px">
+            <span>{{ toggleShowDataText }}</span>
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="detail-box" v-show="showData">
-      <div class="comment-wrap">
-        <div class="comment-write">
-          <div class="comment-write-box">
-            <div class="comment-form">
-              <textarea class="mu-area" placeholder="리뷰를 작성해주세요. (최대200자)" title="리뷰 입력" maxlength="200"
-                v-model="userReview" />
-              <button type="button" class="mu-btn mu-btn-primary" @click="saveUserReview">
-                <span>등록</span>
-              </button>
-            </div>
-            <div class="comment-write-bottom">
-              <div class="letter-count">
-                <strong>{{ userReviewTextCounts }}</strong> / 200
+      <div class="detail-box" v-show="showData">
+        <div class="comment-wrap">
+          <div class="comment-write">
+            <div class="comment-write-box">
+              <div class="comment-form">
+                <textarea class="mu-area" placeholder="리뷰를 작성해주세요. (최대200자)" title="리뷰 입력" maxlength="200"
+                  v-model="userReview" />
+                <button type="button" class="mu-btn mu-btn-primary" @click="saveUserReview">
+                  <span>등록</span>
+                </button>
+              </div>
+              <div class="comment-write-bottom">
+                <div class="letter-count">
+                  <strong>{{ userReviewTextCounts }}</strong> / 200
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- 리뷰 뷰 폼-->
-        <div v-for="(item, index) in props.list" :key="index" class="comment-view">
-          <div class="user-image"><i class="mu-icon-svg user"></i></div>
-          <div class="comment-cont">
-            <div class="comment-info">
-              <span class="name">{{ item.user_name ? item.user_name : "이름없음" }}</span>
-              <span class="team">({{ item.dept_name ? item.dept_name : "부서없음" }})</span>
-              <span class="date">{{ item.review_date }}</span>
-            </div>
-            <div class="comment-message">
-              {{ item.review }}
-            </div>
-            <!-- 댓글 수정 버튼 : 내 댓글에서만 수정 -->
-            <div class="modify-btn" v-if="userStore.getUser.user_id === item.user_id">
-              <button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non" title="해당답변 수정"
-                @click="onClickEditUserReview(item)">
-                <span>수정</span><i class="mu-icon-svg edit"></i>
-              </button>
-              <button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non" title="해당답변 삭제"
-                @click="onClickDeleteUserReview(item.review_id)">
-                <span>삭제</span><i class="mu-icon-svg del"></i>
-              </button>
-            </div>
-            <!-- 리뷰 수정 폼-->
-            <div v-if="
-              editingReviewObj.display &&
-              editingReviewObj.review.review_id === item.review_id
-            " class="comment-write">
-              <div class="comment-write-box">
-                <form action="">
-                  <fieldset>
-                    <legend>내 답변 수정</legend>
-                    <textarea class="mu-area" placeholder="답변을 작성하실 수 있습니다. (200자 까지)" title="내 답변 수정" maxlength="200"
-                      v-model="editingUserReview" />
-                    <div class="comment-write-bottom">
-                      <div class="letter-count">
-                        <strong>{{ editingUserReviewTextCounts }}</strong> / 200
+          <!-- 리뷰 뷰 폼-->
+          <div v-for="(item, index) in props.list" :key="index" class="comment-view">
+            <div class="user-image"><i class="mu-icon-svg user"></i></div>
+            <div class="comment-cont">
+              <div class="comment-info">
+                <span class="name">{{ item.user_name ? item.user_name : "이름없음" }}</span>
+                <span class="team">({{ item.dept_name ? item.dept_name : "부서없음" }})</span>
+                <span class="date">{{ item.review_date }}</span>
+              </div>
+              <div class="comment-message">
+                {{ item.review }}
+              </div>
+              <!-- 댓글 수정 버튼 : 내 댓글에서만 수정 -->
+              <div class="modify-btn" v-if="userStore.getUser.user_id === item.user_id">
+                <button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non" title="해당답변 수정"
+                  @click="onClickEditUserReview(item)">
+                  <span>수정</span><i class="mu-icon-svg edit"></i>
+                </button>
+                <button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non" title="해당답변 삭제"
+                  @click="onClickDeleteUserReview(item.review_id)">
+                  <span>삭제</span><i class="mu-icon-svg del"></i>
+                </button>
+              </div>
+              <!-- 리뷰 수정 폼-->
+              <div v-if="
+                editingReviewObj.display &&
+                editingReviewObj.review.review_id === item.review_id
+              " class="comment-write">
+                <div class="comment-write-box">
+                  <form action="">
+                    <fieldset>
+                      <legend>내 답변 수정</legend>
+                      <textarea class="mu-area" placeholder="답변을 작성하실 수 있습니다. (200자 까지)" title="내 답변 수정" maxlength="200"
+                        v-model="editingUserReview" />
+                      <div class="comment-write-bottom">
+                        <div class="letter-count">
+                          <strong>{{ editingUserReviewTextCounts }}</strong> / 200
+                        </div>
+                        <button type="button" class="mu-btn" @click="onCancelEditUserReview">
+                          <span>취소</span>
+                        </button>
+                        <button type="button" class="mu-btn mu-btn-primary" @click="onSaveEditUserReview"
+                          :disabled="isUserReviewEdited">
+                          <span>등록</span>
+                        </button>
                       </div>
-                      <button type="button" class="mu-btn" @click="onCancelEditUserReview">
-                        <span>취소</span>
-                      </button>
-                      <button type="button" class="mu-btn mu-btn-primary" @click="onSaveEditUserReview"
-                        :disabled="isUserReviewEdited">
-                        <span>등록</span>
-                      </button>
-                    </div>
-                  </fieldset>
-                </form>
+                    </fieldset>
+                  </form>
+                </div>
               </div>
+              <!-- // 리뷰 수정 폼-->
             </div>
-            <!-- // 리뷰 수정 폼-->
           </div>
-        </div>
-        <!-- // 리뷰 뷰 폼-->
+          <!-- // 리뷰 뷰 폼-->
 
+        </div>
       </div>
     </div>
   </div>
@@ -96,7 +98,7 @@ import { confirmAlert } from "@functional/alert/alert-default";
 const userStore = useUserStore();
 const { $ofetch } = useNuxtApp();
 const emit = defineEmits(["reload"]);
-const props = defineProps(["list", "params", "initUserReview"]);
+const props = defineProps(["list", "params", "initUserReview", "isAdmin"]);
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");

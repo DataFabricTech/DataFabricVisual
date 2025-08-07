@@ -43,10 +43,10 @@
           </em>
         </div>
       </div>
-      <div class="inner-data buttons" v-show="typeName.includes('table')">
-        <data-recommend-status-top v-if="!props.isAdmin" :data="props.data" :params="props.params"
+      <div class="inner-data buttons">
+        <data-recommend-status-top :data="props.data" :params="props.params"
           @reloadFavorite="onToggleFavorite" @reloadRecommend="onToggleRecommend" />
-        <button v-if="typeName.includes('table')" type="button" class="mu-btn mu-btn-lg mu-btn-primary"
+        <button v-if="(typeName.includes('table') || typeName.includes('file'))" type="button" class="mu-btn mu-btn-lg mu-btn-primary"
           @click="onClickEliminate">
           <i class="mu-icon-svg apply"></i>
           <span>데이터 추출</span>

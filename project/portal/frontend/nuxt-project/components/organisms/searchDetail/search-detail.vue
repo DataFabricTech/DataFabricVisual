@@ -49,11 +49,11 @@
         </div>
         <!-- detail-section : 사용자 리뷰 -->
         <div :ref="el => sectionRefs['user-review-area'] = el" class="content-block">
-          <user-review-area v-if="!props.isAdmin" :list="reviewDatalist" :params="userDataParam"
+          <user-review-area :list="reviewDatalist" :params="userDataParam"
             :initUserReview="initUserReview" @reload="getReviewDataList" />
         </div>
         <!-- recommend-section  -->
-        <data-recommend-status v-if="!props.isAdmin" :data="recommendStatus" :params="userDataParam"
+        <data-recommend-status :isAdmin=props.isAdmin :data="recommendStatus" :params="userDataParam"
           @reload="getRecommendStatus" />
         <!-- //recommend-section  -->
         <!-- mu-button-wrap -->
@@ -433,10 +433,6 @@ const settingTabOption = (entity) => {
   // 샘플데이터 탭 유무
   if (entity && entity.meta_type && entity.meta_type.toUpperCase() != 'TABLE')
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
-
-  // 사용자 리뷰 탭 유무
-  if (props.isAdmin)
-    tabs.value = tabs.value.filter((el) => el != 'user-review-area')
 }
 
 // 객체 키 유무 확인
