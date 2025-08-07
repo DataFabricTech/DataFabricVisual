@@ -60,10 +60,10 @@
                 </td>
                 <td :title="item.status_value ? item.status_value : '-'">{{ item.status_value ? item.status_value : "-" }}</td>
                 <td>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="popupCollectorUpdateModal(item)"><i
+                  <button :disabled="!item.isActiveIngestion" type="button" class="mu-btn mu-btn-sm" @click="popupCollectorUpdateModal(item)"><i
                       class="mu-icon-svg edit"></i><span>수정</span></button>
                   <br>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="deleteCollector(item.system_id)"><i
+                  <button :disabled="!item.isActiveIngestion" type="button" class="mu-btn mu-btn-sm" @click="deleteCollector(item.system_id)"><i
                       class="mu-icon-svg del"></i><span>삭제</span></button>
                 </td>
                 <td>
