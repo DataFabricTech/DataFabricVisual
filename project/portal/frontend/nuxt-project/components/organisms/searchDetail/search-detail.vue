@@ -538,71 +538,72 @@ const getDetailDataProfile = () => {
   const params = {};
   const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
 
-  if (
-    typeName.endsWith("table") ||
-    typeName.endsWith("db") ||
-    typeName.endsWith("column")
-  ) {
-    params.guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
-    params.typeName = typeName;
+  params.guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+  params.typeName = typeName;
 
-    const columnData = ObjectUtils.getPropertyValue(
-      entity.value,
-      "attributes/columns",
-      ""
-    );
-    const partitionKeysDataList = ObjectUtils.getPropertyValue(
-      entity.value,
-      "attributes/table_partition",
-      ""
-    );
-    if (partitionKeysDataList.length > 0) {
-      for (const partitionKeysData of partitionKeysDataList) {
-        columnData.push(partitionKeysData);
-      }
+  const columnData = ObjectUtils.getPropertyValue(
+    entity.value,
+    "attributes/columns",
+    ""
+  );
+  const partitionKeysDataList = ObjectUtils.getPropertyValue(
+    entity.value,
+    "attributes/table_partition",
+    ""
+  );
+  if (partitionKeysDataList.length > 0) {
+    for (const partitionKeysData of partitionKeysDataList) {
+      columnData.push(partitionKeysData);
     }
+  }
 
-    if (columnData) {
+  if (columnData) {
+    if (typeName.includes('file')) {
+      let table_qualified_name = entity.value.qualified_name
+      params.columnData = columnData.map((item) => {
+        return table_qualified_name + "." + item.meta_name
+      })
+    } else {
       params.columnData = columnData.map((item) => {
         return item.qualified_name
       });
     }
-
-    $ofetch("/api/search/detail/dataprofile", {
-      method: "POST",
-      body: params,
-    }).then((res) => {
-      const resDataProfile = {
-        table: {},
-        db: {},
-        column: [],
-      };
-
-      if (res && res.data.hasOwnProperty("tableData")) {
-        resDataProfile.table = res.data.tableData;
-      }
-
-      if (res.data.hasOwnProperty("columnData")) {
-        // 프로파일링 정보에 description, posotion 값 추가
-        let tmpList = res.data.columnData ? res.data.columnData : []
-        tmpList.forEach((colData) => {
-          columnData.forEach((col) => {
-            if (colData.qualified_name == col.qualified_name) {
-              colData.position = col.position
-              colData.column_type = col.column_type
-              colData.description = col.description
-              colData.user_description = col.user_description
-            }
-          })
-        })
-
-        resDataProfile.column = res.data.columnData;
-        resDataProfile.column.sort((a, b) => a.position - b.position);
-      }
-
-      dataProfile.value = resDataProfile;
-    });
   }
+
+  $ofetch("/api/search/detail/dataprofile", {
+    method: "POST",
+    body: params,
+  }).then((res) => {
+    const resDataProfile = {
+      table: {},
+      db: {},
+      column: [],
+    };
+
+    if (res && res.data.hasOwnProperty("tableData")) {
+      resDataProfile.table = res.data.tableData;
+    }
+
+    if (res.data.hasOwnProperty("columnData")) {
+      // 프로파일링 정보에 description, posotion 값 추가
+      let tmpList = res.data.columnData ? res.data.columnData : []
+      tmpList.forEach((colData) => {
+        columnData.forEach((col) => {
+          if (colData.qualified_name == col.qualified_name) {
+            colData.position = col.position
+            colData.column_type = col.column_type
+            colData.description = col.description
+            colData.user_description = col.user_description
+          }
+        })
+      })
+
+      resDataProfile.column = res.data.columnData;
+      resDataProfile.column.sort((a, b) => a.position - b.position);
+    }
+
+    dataProfile.value = resDataProfile;
+  });
 };
 
 // 샘플 데이터 목록 조회
