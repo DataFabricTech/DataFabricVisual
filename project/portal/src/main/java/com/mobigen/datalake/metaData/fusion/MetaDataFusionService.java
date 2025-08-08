@@ -1,12 +1,19 @@
 package com.mobigen.datalake.metaData.fusion;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -51,7 +58,9 @@ public class MetaDataFusionService {
     // 쿼리 실행
     public Map<String, Object> executeQuery(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> resultData = new LinkedHashMap<>();
         List<Map> list = new ArrayList<Map>();
+        Integer totalCount = 0;
 
         // 시작 시각 초단위까지
         LocalDateTime startDateTime = LocalDateTime.now();
@@ -61,6 +70,88 @@ public class MetaDataFusionService {
         try {
             // 샘플 데이터 조회 쿼리 제작
             String query = params.get("query").toString();
+            String countQuery = "SELECT COUNT(*) FROM (" + query + ") T";
+            String sampleQuery = query + " LIMIT 100";
+            if (!query.equals("")) {
+                Connection connection = null;
+                Statement statement = null;
+                ResultSet rs = null;
+                try {
+
+                    Properties properties = new Properties();
+                    properties.setProperty("SSL", "false");
+                    properties.setProperty("user", params.get("user_id").toString());
+                    // properties.setProperty("password", "secret");
+
+                    // 샘플데이터 조회를 위한 정보 조회
+                    connection = DriverManager.getConnection(trinoJdbcUrl, properties);
+
+                    statement = connection.createStatement();
+                    // 샘플데이터 카운트
+                    rs = statement.executeQuery(countQuery);
+
+                    String col;
+                    while(rs.next()) {
+                      ResultSetMetaData md = rs.getMetaData();
+                      int soc = md.getColumnCount();
+                      for (int indexOfColumn = 0; indexOfColumn < soc; indexOfColumn++) {
+                          col = md.getColumnName(indexOfColumn + 1);
+                          totalCount = Integer.parseInt(rs.getString(col));
+                      }
+                    }
+                    
+                    rs = statement.executeQuery(sampleQuery);
+
+                    ResultSetMetaData metaData = rs.getMetaData();
+                    int sizeOfColumn = metaData.getColumnCount(); // 컬럼 수
+
+                    String column;
+                    while (rs.next()) {
+                        Map<String, Object> columnMap = new LinkedHashMap<>();
+                        for (int indexOfColumn = 0; indexOfColumn < sizeOfColumn; indexOfColumn++) {
+                            column = metaData.getColumnName(indexOfColumn + 1);
+
+                            columnMap.put(column, rs.getString(column));
+                        }
+                        list.add(columnMap);
+                    }
+
+                    rs.close();
+                    statement.close();
+                    connection.close();
+                } catch (Exception e) {
+                    // 권한 문제
+                    if (e.getMessage().indexOf("Access Denied") != -1) {
+                        result.put("errorMessage", "데이터 조회 권한이 없습니다.");
+                    }
+                    // 쿼리 문제
+                    else if (e.getMessage().indexOf("Query failed") != -1) {
+                        result.put("errorMessage", "쿼리가 잘못되었습니다.");
+                    } else {
+                        result.put("errorMessage", "데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
+                    }
+                    e.printStackTrace();
+                } finally {
+                    if (rs != null)
+                        try {
+                            rs.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    if (statement != null)
+                        try {
+                            statement.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    if (connection != null)
+                        try {
+                            connection.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                }
+            }
 
             // 융합 데이터 쿼리 조회 API 요청
             
@@ -68,16 +159,16 @@ public class MetaDataFusionService {
             log.error("Fail to execute query - exception");
             result.put("errorMessage", e.getMessage());
             e.printStackTrace();
+        } finally {
+          long endTime = System.currentTimeMillis(); // 종료 시간(ms)
+          long execute_duration_ms = endTime - startTime;
+          double execute_duration_sec = execute_duration_ms / 1000.0;
+          result.put("execute_duration", execute_duration_sec); // 실행 시간(초)
+          result.put("execute_start_time", execute_start_time); // 실행 시각
         }
 
-        long endTime = System.currentTimeMillis(); // 종료 시간(ms)
-        long execute_duration_ms = endTime - startTime;
-        double execute_duration_sec = execute_duration_ms / 1000.0;
-
-        result.put("sampleData", new ArrayList<>()); // 샘플 데이터
-        result.put("sampleDataTotal", 0); // 데이터 전체 카운트
-        result.put("execute_duration", execute_duration_sec); // 실행 시간(초)
-        result.put("execute_start_time", execute_start_time); // 실행 시각
+        result.put("sampleData", list); // 샘플 데이터
+        result.put("sampleDataTotal", totalCount); // 데이터 전체 카운트
 
         return result;
     }

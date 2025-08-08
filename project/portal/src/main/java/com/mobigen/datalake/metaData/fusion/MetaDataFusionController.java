@@ -43,7 +43,9 @@ public class MetaDataFusionController {
      */
     @ResponseJsonResult
     @PostMapping("/executeQuery")
-    public Object executeQuery(@RequestBody Map<String, Object> param) throws Exception {
+    public Object executeQuery(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);     
+        param.put("user_id", user.get("user_id"));
         return metaDataFusionService.executeQuery(param);
     }
 

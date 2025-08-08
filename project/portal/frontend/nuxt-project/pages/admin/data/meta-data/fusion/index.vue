@@ -28,10 +28,11 @@
                   <div class="table-scroll max-h300">
                     <table class="mu-grid mu-grid-data mu-grid-narrow">
                       <colgroup>
-                        <col style="width: 85px" />
-                        <col style="width: 200px" />
-                        <col style="width: 85px" />
-                        <col style="width: 200px" />
+                        <col style="width: 10%" />
+                        <col style="width: 35%" />
+                        <col style="width: 25%" />
+                        <col style="width: 10%" />
+                        <col style="width: 15%" />
                       </colgroup>
                       <thead>
                         <tr>
@@ -128,9 +129,6 @@
                             >
                               <span>선택</span>
                             </button>
-                            <div v-if="selectedIndex === fusion.meta_id" class="tooltip-wrapper">
-                              <div class="tooltip-text">데이터명이 복사되었습니다.</div>
-                            </div>
                           </td>
                         </tr>
                       </tbody>
@@ -245,13 +243,10 @@
                             <b>레코드 수</b>
                           </div>
                         </dt>
-                        <dd>{{ fusionSampleTotal }}</dd>
+                        <dd>{{ comman(fusionSampleTotal) }} 건</dd>
                       </dl>
                     </div>
                     <div class="table-scroll max-h300 h300">
-                      <div v-if="selectedColumnIndex != null" class="tooltip-wrapper-column">
-                        <div class="tooltip-text-column">컬럼명이 복사되었습니다.</div>
-                      </div>
                       <table class="mu-grid mu-grid-data" >
                         <colgroup>
                           <col v-if="fusionSampleList && fusionSampleList.length > 0" style="width: 200px" :span="Object.keys(fusionSampleList[0]).length" />
@@ -428,7 +423,7 @@
           </div>
         </div>
       </div>
-      <div class="mu-modal" v-if="!visibleFusionSaveModal">
+      <div class="mu-modal" v-if="visibleFusionSaveModal">
         <div class="mu-dialog-background"></div>
         <div :class="['mu-dialog', 'w1200']">
           <div class="mu-dialog-head">
@@ -1016,9 +1011,7 @@ const selectFusion = (item) => {
 
   navigator.clipboard.writeText(codeContent).then(() => {
     selectedIndex.value = item.meta_id
-    setTimeout(() => {
-      selectedIndex.value = null
-    }, 1000)
+    query.value += codeContent
   }).catch(err => {
     errorAlert("코드 복사에 실패하였습니다.");
   });
@@ -1035,50 +1028,44 @@ const hideTooltip = () => {
 
 const executeQuery = async () => {
   const sql = query.value.replace(/;/g, '');
-  const reg_exclude_select = /\b(insert|update|delete|drop|alter|union)\b|/i
 
   // 3. 쿼리 실행 결과 응답
-  const params = {
-    query: sql
-  }
-
-  await $ofetch(`/api/metadata/fusion/executeQuery`, { method: 'POST', body: params}).then((res) => {
-    if (res && res.data) {
-      if (res.data.errorMessage && res.data.errorMessage) {
-        errorAlert(res.data.errorMessage);
-        executeQueryStatus.value = 0
-        return
-      }
-
-      fusionSampleList.value = res.data.sampleData ? res.data.sampleData : []
-      fusionSampleTotal.value = res.data.sampleDataTotal ? res.data.sampleDataTotal : '-'
-      execute_duration.value = res.data.execute_duration ? res.data.execute_duration : '-'
-      execute_start_time.value = res.data.execute_start_time ? res.data.execute_start_time : '-'
-
-      // 컬럼명 전체
-      fusionSampleList.value = [{
-          "id": "11117",
-          "user_id": "admin",
-          "menu_id": "",
-          "create_date": "2025-01-20 09:51:05.113896",
-          "user_name": null,
-          "dept_id": null,
-          "dept_name": "관리부서"
-      }]
-      fusionSampleTotal.value = 1
-      if (fusionSampleList.value.length > 0) all_columns.value = Object.keys(fusionSampleList.value[0])
-
-      isExecuteQuery.value = true
-      executeQueryStatus.value = 1
-    } else {
-      errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-      executeQueryStatus.value = 0
+  if (query.value && query.value.length > 0) {
+    const params = {
+      query: sql
     }
-  }).catch((err) => {
-    console.log(err)
-    errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-    executeQueryStatus.value = 0
-  })
+
+    await $ofetch(`/api/metadata/fusion/executeQuery`, { method: 'POST', body: params}).then((res) => {
+      if (res && res.data) {
+        if (res.data.errorMessage && res.data.errorMessage != "") {
+          errorAlert(res.data.errorMessage);
+          executeQueryStatus.value = 2
+          fusionSampleList.value = []
+          fusionSampleTotal.value = 0
+        } else {
+          executeQueryStatus.value = 1
+          isExecuteQuery.value = true
+        }
+
+        fusionSampleList.value = res.data.sampleData ? res.data.sampleData : []
+        fusionSampleTotal.value = res.data.sampleDataTotal ? res.data.sampleDataTotal : '-'
+        execute_duration.value = res.data.execute_duration ? res.data.execute_duration : '-'
+        execute_start_time.value = res.data.execute_start_time ? res.data.execute_start_time : '-'
+
+        // 컬럼명 전체
+        if (fusionSampleList.value.length > 0) all_columns.value = Object.keys(fusionSampleList.value[0])
+      } else {
+        errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+        executeQueryStatus.value = 2
+      }
+    }).catch((err) => {
+      console.log(err)
+      errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+      executeQueryStatus.value = 2
+    })
+  } else {
+    defaultAlert("쿼리를 입력해 주세요.");
+  }
 }
 
 const resetQuery = async () => {
@@ -1411,6 +1398,14 @@ const getCurrentTime = () => {
   }
   return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
 }
+
+const comman = (val) => {
+  if (val !== undefined) {
+    return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } else {
+    return "";
+  }
+};
 
 </script>
 <style scoped>
