@@ -1,10 +1,11 @@
 <template>
   <div class="detail-box" v-if="props.isAdmin ? true : props.attributes.length > 0 ? true : false">
     <div class="mu-heading">
-      <h5>비지니스 속성</h5>
+      <h4 v-if="isRegister">비지니스 속성</h4>
+      <h5 v-else>비지니스 속성</h5>
       <!--        <div class="mu-item-group">-->
       <div v-show="props.isAdmin" class="mu-item-group">
-        <button type="button" class="mu-btn mu-btn-primary" title="비지니스 속성 추가" @click="onClickAdd">
+        <button :style="isRegister ? 'padding: 0 20px' : ''" type="button" class="mu-btn mu-btn-primary" title="비지니스 속성 추가" @click="onClickAdd">
           <i class="mu-icon-svg add"></i>
           <span>비지니스 속성 추가</span>
         </button>
@@ -55,7 +56,7 @@
 
 <script setup lang="ts">
 const emit = defineEmits(["onClickAddRow", "onClickDelRow"]);
-const props = defineProps(["isAdmin", "attributes"]);
+const props = defineProps(["isAdmin", "attributes", "isRegister"]);
 
 // 비지니스 속성 추가 버튼 클릭 이벤트 핸들러
 const onClickAdd = () => {

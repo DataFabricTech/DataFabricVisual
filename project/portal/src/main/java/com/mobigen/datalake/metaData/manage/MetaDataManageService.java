@@ -1,5 +1,8 @@
 package com.mobigen.datalake.metaData.manage;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -185,6 +188,14 @@ public class MetaDataManageService {
             }
             
             metadata.put("create_by", user.get("user_id").toString());
+
+            String dateString = metadata.get("create_time") != null ? metadata.get("create_time").toString() : "";
+            // LocalDateTime 변환
+            LocalDateTime ldt = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            // Timestamp 변환
+            Timestamp ts = Timestamp.valueOf(ldt);
+            metadata.put("create_time", ts);
+            
             // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
             List<String> classificationList = (List<String>) metadata.get("classifications");
             String[] classifications = null;
