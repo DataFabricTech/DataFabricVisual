@@ -186,8 +186,6 @@ public class MetaDataManageService {
             } else {
                 log.error("event log not saved !!");
             }
-            
-            metadata.put("create_by", user.get("user_id").toString());
 
             String dateString = metadata.get("create_time") != null ? metadata.get("create_time").toString() : "";
             // LocalDateTime 변환
@@ -195,7 +193,7 @@ public class MetaDataManageService {
             // Timestamp 변환
             Timestamp ts = Timestamp.valueOf(ldt);
             metadata.put("create_time", ts);
-            
+
             // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
             List<String> classificationList = (List<String>) metadata.get("classifications");
             String[] classifications = null;
@@ -214,6 +212,7 @@ public class MetaDataManageService {
             metadata.put("tags", tags);
             
             // jsonb 타입은 Map -> JSON형태의 String값으로 변환 필요 넣어줘야함.
+            metadata.put("attributes", objectMapper.writeValueAsString(metadata.get("attributes")));
             metadata.put("business_attributes", objectMapper.writeValueAsString(metadata.get("business_attributes")));
             
             // 2. 메타데이터 테이블에 저장

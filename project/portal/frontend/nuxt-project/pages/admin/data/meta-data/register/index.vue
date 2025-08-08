@@ -167,7 +167,7 @@
                     <th scope="row">등록자<strong class="required">필수</strong></th>
                     <td>
                       <input type="text" placeholder="" class="mu-input"
-                        :title="create_by" v-model="create_by" maxlength="50" readonly/>
+                        :title="create_by_desc" v-model="create_by_desc" maxlength="50" readonly/>
                     </td>
                   </tr>
                   <tr>
@@ -258,7 +258,8 @@ const user_description = ref(""); // 사용자 데이터 설명
 const system_id = ref() // 시스템 ID
 const system_type = ref("") // 시스템 타입
 const system_name = ref("") // 시스템 명
-const create_by = computed(() => userStore.getUser.username) // 등록자
+const create_by = computed(() => userStore.getUser.user_id) // 등록자
+const create_by_desc = computed(() => userStore.getUser.username) // 등록자
 const meta_type = ref("") // 데이터 타입
 const prefix = ref("") // 파일 위치
 const create_time = ref("") // 등록일
@@ -275,7 +276,9 @@ const upperCategory = ref({
 }); // 상위 카테고리
 
 // 메타 속성
-const attributes = ref({})
+const attributes = ref({
+  data_from: ""
+})
 
 // 비즈니스 속성
 const business_attributes = ref([]) // 비즈니스 Key/Value
@@ -330,7 +333,6 @@ const onChange = (e: any) => {
     );
 
     meta_name.value = fileName // 파일명 설정
-    attributes.value.data_from = data_from.value // 데이터 출처 설정
   } else { // 파일 선택하지 않은 경우
     return
   }
@@ -528,6 +530,7 @@ const onClickSaveButton = async () => {
       system_id: system_id.value,
       meta_type: meta_type.value,
       meta_name: meta_name.value,
+      create_by: create_by.value,
       create_time: create_time.value,
       description: description.value ? description.value : null,
       user_description: user_description.value ? user_description.value : null,

@@ -28,11 +28,10 @@
                   <div class="table-scroll max-h300">
                     <table class="mu-grid mu-grid-data mu-grid-narrow">
                       <colgroup>
-                        <col style="width:10%">
-                        <col style="width:35%">
-                        <col style="width:25%">
-                        <col style="width:10%">
-                        <col style="width:20%">
+                        <col style="width: 85px" />
+                        <col style="width: 200px" />
+                        <col style="width: 85px" />
+                        <col style="width: 200px" />
                       </colgroup>
                       <thead>
                         <tr>
@@ -429,7 +428,7 @@
           </div>
         </div>
       </div>
-      <div class="mu-modal" v-if="visibleFusionSaveModal">
+      <div class="mu-modal" v-if="!visibleFusionSaveModal">
         <div class="mu-dialog-background"></div>
         <div :class="['mu-dialog', 'w1200']">
           <div class="mu-dialog-head">
@@ -449,14 +448,16 @@
                   융합 데이터 등록
                 </caption>
                 <colgroup>
-                  <col style="width: 200px" />
+                  <col style="width: 160px" />
+                  <col />
+                  <col style="width: 130px" />
                   <col />
                 </colgroup>
                 <tbody>
                   <tr>
                     <th scope="row">메타데이터 ID<strong class="required">필수</strong></th>
                     <td style="display: flex; align-items: center;">
-                      <input type="text" maxlength="36" placeholder="ID를 생성하세요." class="mu-input w460" :title="meta_id" v-model="meta_id">
+                      <input type="text" maxlength="36" placeholder="ID를 생성하세요." class="mu-input" :title="meta_id" v-model="meta_id">
                       &nbsp;&nbsp;&nbsp;
                       <button v-if="meta_id" type="button" class="mu-btn mu-btn-sm" @click="metaIdDupCheck(meta_id)">
                         <span>중복확인</span>
@@ -465,32 +466,90 @@
                         <span>ID 생성</span>
                       </button>
                     </td>
+                    <th scope="row">데이터 출처</th>
+                    <td>
+                      <input type="text" placeholder="데이터 출처를 작성해주세요." class="mu-input"
+                        :title="data_from" v-model="data_from" maxlength="100"/>
+                    </td>
                   </tr>
-
                   <tr>
                     <th scope="row">데이터 명<strong class="required">필수</strong></th>
                     <td>
-                      <input type="text" id="file-name" class="mu-input w460" placeholder="파일을 선택하세요." style="width: 300px;"
+                      <input type="text" id="file-name" class="mu-input" placeholder="파일을 선택하세요." style="width: 300px;"
                         :title="meta_name" v-model="meta_name" />
+                    </td>
+                    <th scope="row" rowspan="3">사용자 데이터 설명</th>
+                    <td rowspan="2">
+                      <textarea class="mu-area h100" :placeholder="`사용자 데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대512자)`" title="데이터 설명 입력"
+                        maxlength="512" v-model="user_description" @keydown="preventNewline" />
                     </td>
                   </tr>
                   <tr>
                     <th scope="row">데이터 설명</th>
                     <td>
-                      <input type="text" placeholder="데이터 설명을 작성해주세요." class="mu-input w660"
+                      <input type="text" placeholder="데이터 설명을 작성해주세요." class="mu-input"
                         :title="description" v-model="description" maxlength="100"/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">사용자 데이터 설명</th>
-                    <td>
-                      <input type="text" class="mu-input w660" placeholder="사용자 데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대50자)"
-                        maxlength="50" :title="user_description" v-model="user_description" @keydown="preventNewline"/>
                     </td>
                   </tr>
                 </tbody>
               </table>
               <!-- //mu-formbox -->
+            </div>
+            <div class="mu-row gap-20">
+              <div class="mu-col mu-col-6">
+                <div class="mu-heading">
+                  <h4>카테고리</h4>
+                  <div class="mu-item-group">
+                    <p class="txt-info">(필수<strong class="required">필수</strong>)</p>
+                  </div>
+                </div>
+                <div class="board-body">
+                  <!-- mu-formbox -->
+                  <table class="mu-formbox">
+                    <caption>
+                      카테고리 설정
+                    </caption>
+                    <colgroup>
+                      <col style="width: 160px" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th scope="row">카테고리</th>
+                        <td>
+                          <!-- category-group : 해당된 모든 카테고리 출력 -->
+                          <div style="display: flex;">
+                            <div v-if="classifications.length > 0" class="category-group">
+                              <div v-if="classifications.length > 0" v-for="(item, index) in classifications" :key="index"
+                                class="category">
+                                <em class="category-label">{{ item.description }}</em>
+                                <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteMapping(item)">
+                                  <i class="mu-icon-svg item-delete"></i><span>삭제</span>
+                                </button>
+                              </div>
+                            </div>
+                            <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only"
+                              title="카테고리 추가" style="margin-left: 5px;" @click="popupCategoryMappingModal">
+                              <i class="mu-icon-svg add"></i><span>카테고리 추가</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- //mu-formbox -->
+                </div>
+              </div>
+              <div class="mu-col mu-col-6">
+                <div class="mu-heading">
+                  <h4>태그/키워드</h4>
+                </div>
+                <div class="board-body">
+                  <!-- tag-box : 태그/키워드 관리 -->
+                  <tag-register-area ref="tag-keyword-area" :allTagList="allTagList" :entity="{}"
+                      @onClickAddTag="onClickAddTag" />
+                </div>
+              </div>
             </div>
             <div class="mu-heading">
               <h4>시스템 정보</h4>
@@ -505,99 +564,58 @@
                   시스템 정보
                 </caption>
                 <colgroup>
-                  <col style="width: 200px" />
+                  <col style="width: 160px" />
                   <col />
-                  <col style="width: 200px" />
+                  <col style="width: 160px" />
+                  <col />
+                  <col style="width: 160px" />
                   <col />
                 </colgroup>
                 <tbody>
                   <tr>
                     <th scope="row">시스템 타입<strong class="required">필수</strong></th>
                     <td>
-                      <input type="text" placeholder="" class="mu-input w300"
+                      <input type="text" placeholder="" class="mu-input"
                         :title="system_type" v-model="system_type" maxlength="100" readonly/>
                     </td>
                     <th scope="row">시스템 명<strong class="required">필수</strong></th>
                     <td>
-                      <input type="text" placeholder="" class="mu-input w300"
+                      <input type="text" placeholder="" class="mu-input"
                         :title="system_name" v-model="system_name" maxlength="100" readonly/>
+                    </td>
+                    <th scope="row">등록자<strong class="required">필수</strong></th>
+                    <td>
+                      <input type="text" placeholder="" class="mu-input"
+                        :title="create_by_desc" v-model="create_by_desc" maxlength="50" readonly/>
                     </td>
                   </tr>
                   <tr>
                     <th scope="row">데이터 타입<strong class="required">필수</strong></th>
                     <td>
-                      <input type="text" placeholder="" class="mu-input w300"
+                      <input type="text" placeholder="" class="mu-input"
                         :title="meta_type" v-model="meta_type" maxlength="100" readonly/>
                     </td>
                     <th scope="row">데이터베이스 명<strong class="required">필수</strong></th>
                     <td>
-                      <input type="text" placeholder="" class="mu-input w300"
+                      <input type="text" placeholder="" class="mu-input"
                         :title="database" v-model="database" maxlength="100" readonly/>
                     </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- //mu-formbox -->
-            </div>
-            <div class="mu-heading">
-              <h4>카테고리 설정</h4>
-              <div class="mu-item-group">
-                <p class="txt-info">(필수<strong class="required">필수</strong>)</p>
-              </div>
-            </div>
-            <div class="board-body">
-              <!-- mu-formbox -->
-              <table class="mu-formbox">
-                <caption>
-                  카테고리 설정
-                </caption>
-                <colgroup>
-                  <col style="width: 200px" />
-                  <col />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th scope="row">카테고리</th>
+                    <th scope="row">등록일<strong class="required">필수</strong></th>
                     <td>
-                      <!-- category-group : 해당된 모든 카테고리 출력 -->
-                      <div style="display: flex;">
-                        <div v-if="classifications.length > 0" class="category-group">
-                          <div v-if="classifications.length > 0" v-for="(item, index) in classifications" :key="index"
-                            class="category">
-                            <em class="category-label">{{ item.description }}</em>
-                            <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteMapping(item)">
-                              <i class="mu-icon-svg item-delete"></i><span>삭제</span>
-                            </button>
-                          </div>
-                        </div>
-                        <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only"
-                          title="카테고리 추가" style="margin-left: 5px;" @click="popupCategoryMappingModal">
-                          <i class="mu-icon-svg add"></i><span>카테고리 추가</span>
-                        </button>
-                      </div>
+                      <input type="text" placeholder="" class="mu-input"
+                        :title="create_time" v-model="create_time" maxlength="50" readonly/>
                     </td>
                   </tr>
                 </tbody>
               </table>
               <!-- //mu-formbox -->
             </div>
-            <div class="mu-heading">
-              <h4>비지니스 속성</h4>
-            </div>
-            <div class="board-body">
+            <div class="board-body" style="margin-top: 10px;">
               <!-- mu-formbox -->
               <!-- detail-box : 데이터 정보 > 비지니스 속성 -->
-              <business-attributes-area :isAdmin="true" :attributes="business_attributes" @onClickAddRow="onClickAddBusinessAttributes"
+              <business-attributes-area :isRegister="true" :isAdmin="true" :attributes="business_attributes" @onClickAddRow="onClickAddBusinessAttributes"
                 @onClickDelRow="onClickDelBusinessAttributes" />
               <!-- //mu-formbox -->
-            </div>
-            <div class="mu-heading">
-              <h4>태그/키워드</h4>
-            </div>
-            <div class="board-body">
-              <!-- tag-box : 태그/키워드 관리 -->
-              <tag-register-area ref="tag-keyword-area" :allTagList="allTagList" :entity="{}"
-                  @onClickAddTag="onClickAddTag" />
             </div>
           </div>
           <div class="mu-dialog-foot">
@@ -619,9 +637,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
+import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
 import PageSize from "@/pages/admin/manager/user/page-size";
 import { useCategoryTreeStore } from "@/store/categoryTree";
+import { useUserStore } from "@/store/user";
 import { isEmpties } from "@composables/ramda";
 import SelectCategoryAddModal from "@functional/classificationModal/select-classification-add-modal";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
@@ -642,6 +661,7 @@ definePageMeta({
 });
 
 const { $ofetch } = useNuxtApp();
+const userStore = useUserStore();
 const categoryStore = useCategoryStore();
 
 const currentFusionList = ref([]) // 현재 융합모델 항목
@@ -696,6 +716,7 @@ const categoryTreeList = await categoryTreeStore.fetchCategories()
 
 // 융합 데이터 등록
 const meta_id = ref(""); // 메타데이터 ID
+const data_from = ref(""); // 데이터 출처
 const isCheckMetaIdDup = ref(false) // 메타데이터 ID 중복확인
 const meta_name = ref(""); // 데이터 명
 const description = ref(""); // 데이터 설명
@@ -706,7 +727,10 @@ const system_id = ref() // 시스템 ID
 const database = ref() // 데이터베이스명
 const system_type = ref("") // 시스템 타입
 const system_name = ref("") // 시스템 명
+const create_by = computed(() => userStore.getUser.user_id) // 등록자
+const create_by_desc = computed(() => userStore.getUser.username) // 등록자
 const meta_type = ref("") // 데이터 타입
+const create_time = ref("") // 등록일
 
 // 카테고리 설정
 const classifications = ref([])
@@ -763,6 +787,7 @@ const getFusionSysteInfo = async () => {
       system_name.value = fusionInfo.system_name
       meta_type.value = fusionInfo.meta_type
       database.value = fusionInfo.database
+      create_time.value = getCurrentTime()
     }
   }).catch((err) => {
     console.log('fail to load fusion system info')
@@ -1117,6 +1142,9 @@ const onClickSaveButton = async () => {
   const isValid = isValidInput()
 
   if (isValid) {
+    if (!await confirmAlert("등록하시겠습니까?")) return
+    attributes.value.data_from = data_from.value // 출처 설정
+
     const body = {
       meta_id: meta_id.value,
       qualified_name: system_id.value + "." + database.value + "." + meta_name.value,
@@ -1124,6 +1152,8 @@ const onClickSaveButton = async () => {
       system_id: system_id.value,
       meta_type: meta_type.value,
       meta_name: meta_name.value,
+      create_by: create_by.value,
+      create_time: create_time.value,
       description: description.value ? description.value : null,
       user_description: user_description.value ? user_description.value : null,
       classifications: getClassifications(classifications.value),
@@ -1368,6 +1398,19 @@ const onClickAddTag = async (list) => {
   tags.value = list
 }
 
+const getCurrentTime = () => {
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+  let day = String(date.getDate()).padStart(2, "0");
+  let hours = String(date.getHours()).padStart(2, "0");
+  let min = String(date.getMinutes()).padStart(2, "0");
+  let sec = String(date.getSeconds()).padStart(2, "0");
+  if (year == 'NaN' || month == 'NaN' || day == 'NaN' || hours == 'NaN' || min == 'NaN' || sec == 'NaN') {
+    return "-";
+  }
+  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
+}
 
 </script>
 <style scoped>
