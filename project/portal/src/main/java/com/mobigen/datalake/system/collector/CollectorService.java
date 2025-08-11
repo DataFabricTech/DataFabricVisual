@@ -205,9 +205,14 @@ public class CollectorService {
   public boolean ingestionExecute(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
 
-    String executeUrl = catalogApiBaseUrl + catalogApiUrlExecute + "?system_id=" + system_id;
+    String executeUrl = catalogApiBaseUrl + catalogApiUrlExecute;
 
     Map<String, Object> requestBody = new HashMap<>();
+    List<String> include = new ArrayList<>();
+    List<String> exclude = new ArrayList<>();
+    requestBody.put("system_id", system_id);
+    requestBody.put("include", include);
+    requestBody.put("exclude", exclude);
     ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
     if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
       return true;
