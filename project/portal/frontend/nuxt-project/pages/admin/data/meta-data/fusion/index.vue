@@ -364,7 +364,8 @@
                           <th scope="col">
                             <div class="mu-checkbox">
                               <input type="checkbox" id="ckb1" title="전체선택"
-                                :checked="metaList && checkedList && metaList.length > 0 && checkedList.length === metaList.length"
+                                :checked="isPageAllChecked"
+                                :indeterminate.prop="isPageIndeterminate"
                                 @click.stop="e => onToggleCheckbox(e, true, null)">
                               <label for="ckb1"><span class="blind">전체선택</span></label>
                             </div>
@@ -381,7 +382,7 @@
                           <td>
                             <div class="mu-checkbox">
                               <input type="checkbox" :id="'check_' + item.meta_id" title="행선택" :value="item.meta_id"
-                                @click.stop="e => onToggleCheckbox(e, false, item)" :checked="isChecked(item)" />
+                                @click.stop="e => onToggleCheckbox(e, false, item)" :checked="staged.has(item.meta_id)" />
                               <label :for="'check_' + item.meta_id"><span class="blind">행선택</span></label>
                             </div>
                           </td>
@@ -647,7 +648,6 @@ import BusinessAttributesArea from "@molecules/searchDetail/business-attributes-
 import TagRegisterArea from "@molecules/searchDetail/tag-register-area";
 import { useCategoryStore } from "@store/category.ts";
 import ObjectUtils from "@utils/ObjectUtils";
-import cloneDeep from 'lodash/cloneDeep';
 import { v4 as uuidv4 } from 'uuid';
 
 definePageMeta({
@@ -670,7 +670,11 @@ const pagingObj = ref({
 });
 const searchType = ref("all")
 const searchWord = ref("")
-const metaList = ref([])
+const searchClassification = ref("");
+const metaList = ref([]) // 모달에서 조회해온 현재 페이지의 데이터 목록
+const staged = ref(new Set()) // 모달에서 선택된 모든 데이터의 meta_id 목록
+const session = ref(null) // 선택 세션 스냅샷 저장용
+const pageIds = computed(() => metaList.value.map(i => i.meta_id)) // 현재 페이지의 meta_id들
 
 const visibleSystemModal = ref(false) // 융합 데이터 정보 > 추가 모달
 const visibleFusionSaveModal = ref(false) // 융합 데이터 저장 모달
@@ -832,66 +836,112 @@ const toggleAll = () => {
 
 const addFusion = () => {
   visibleSystemModal.value = true
+  // 현재 융합 데이터 항목들을 기준으로 임시선택 초기화
+  const appliedIds = new Set(currentFusionList.value.map(i => i.meta_id))
+  staged.value = new Set(appliedIds)
+
+  // 현재 스냅샷 저장(취소 시 되돌릴 기준)
+  session.value = {
+    baseline: new Set(staged.value)
+  }
   onSearchMetaList()
 }
 
-//
+// 융합 데이터 모달에서 선택 후 확인
 const onConfirm = async () => {
   visibleSystemModal.value = false
-  const currentCheckedList = cloneDeep(checkedList.value)
+  // 현재 적용되어 있는 융합 데이터 정보들
+  const appliedIds = new Set(currentFusionList.value.map(i => i.meta_id))
 
-  // 해당 id에 대한 객체 추가
-  currentFusionList.value = metaList.value.filter(item => currentCheckedList.includes(item.meta_id));
-}
+  // 신규로 추가할 융합 데이터 정보들 meta_id 목록
+  const newIds = Array.from(staged.value).filter(meta_id => !appliedIds.has(meta_id))
 
-//
+  // 현재 페이지의 메타정보 key: meta_id, value: meta 형태로 생성
+  const pageMap = new Map(metaList.value.map(item => [item.meta_id, item]))
+
+  // 최종 적용 목록 = staged와 동일하게 맞춤
+  const keptFromExisting = currentFusionList.value.filter(x => staged.value.has(x.meta_id))
+  const addedFromPage = newIds.filter(id => pageMap.has(id)).map(id => pageMap.get(id))
+  currentFusionList.value = [...keptFromExisting, ...addedFromPage]
+
+
+  // 현재 검색어 및 검색타입 초기화
+  searchWord.value = ""
+  searchType.value = "all"
+
+  // 현재 카테고리 초기화
+  let currentCategoryId = categoryStore.getSelectedItemId.value
+  if (currentCategoryId != "") {
+    searchClassification.value = ""
+    categoryStore.setSelectedItemId("");
+    await categoryStore.setToggleTargetOnClickAllFalse()
+  }
+  metaList.value = []
+
+  // 세션 종료
+  session.value = null
+  }
+
+// 모달 취소버튼
 const onCancel = () => {
   visibleSystemModal.value = false
+  if (session.value?.baseline) {
+    staged.value = new Set(session.value.baseline)  // 새로 한 선택/해제 모두 무시
+  } else {
+    // 세션 없이 취소가 눌린 경우(예외)엔 그냥 손대지 않음
+  }
 
-  const currentSelectedList = cloneDeep(currentFusionList.value)
-
-  // 해당 id에 대한 객체 추가
-  checkedList.value = currentSelectedList.map(item => item.meta_id);
+  session.value = null
 };
 
 //
 const onClose = () => {
-  visibleSystemModal.value = false
+  onCancel()
 };
 
+// 모달 내 체크박스 이벤트
 const onToggleCheckbox = (e, isAll: boolean, item: any): void => {
   const { target: { checked } } = e;
 
   if (isAll) {
-    checkedList.value = checked ? metaList.value.map(item => item.meta_id) : [];
+    pageIds.value.forEach(meta_id => {
+      if (checked) staged.value.add(meta_id)
+      else staged.value.delete(meta_id)
+    })
   } else {
-    const metaId = item.meta_id;
-    if (checked) {
-      checkedList.value.push(metaId);
-    } else {
-      const index = checkedList.value.findIndex((id) => id === metaId);
-      if (index !== -1) {
-        checkedList.value.splice(index, 1);
-      }
-    }
+    if (checked) staged.value.add(item.meta_id)
+    else staged.value.delete(item.meta_id)
   }
 };
 
+// 마스터 체크 상태(현재 페이지 기준)
+const pageCheckedCount = computed(() =>
+  pageIds.value.filter(meta_id => staged.value.has(meta_id)).length
+)
+const isPageAllChecked = computed(() =>
+  pageIds.value.length > 0 && pageCheckedCount.value === pageIds.value.length
+)
+const isPageIndeterminate = computed(() =>
+  pageCheckedCount.value > 0 && pageCheckedCount.value < pageIds.value.length
+)
+
 const onSearchMetaList = async (offset = 0, item: any = null) => {
   try {
+    //
+    if (item && item.id) {
+      searchClassification.value = item.id;
+    }
+
+    const currentFusionIdList = currentFusionList.value && currentFusionList.value.length > 0 ? currentFusionList.value.map(el => el.meta_id) : []
     const params = {
+      currentFusionIdList: currentFusionIdList,
       offset: offset ? offset * pagingObj.value.limit : 0,
       limit: pagingObj.value.limit,
-      searchClassification: "",
+      searchClassification: searchClassification.value,
       searchType1: "all",
       searchType2: `${searchType.value}`,
       word: `${searchWord.value}`
     };
-
-    //
-    if (item && item.id) {
-      params.searchClassification = item.id;
-    }
 
     //
     const res = await $ofetch(`/api/metadata/fusion/list`, { method: "POST", body: params });
@@ -941,12 +991,6 @@ const onClickMenuItem = async (item: any = null) => {
 const onClickPage = (page: number) => {
   onSearchMetaList(page - 1);
 }
-
-const isChecked = (item: any): boolean => {
-  if (!item || !item.meta_id) return false;
-
-  return checkedList.value.includes(item.meta_id);
-};
 
 //
 const getKrName = (key: any) => {

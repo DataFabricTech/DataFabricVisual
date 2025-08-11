@@ -1,6 +1,6 @@
-import { defineStore } from "pinia";
-import ObjectUtils from "@/utils/ObjectUtils";
 import { $R, isEmpties } from "@/composables/ramda";
+import ObjectUtils from "@/utils/ObjectUtils";
+import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useCategoryStore = defineStore("categoryStore", () => {
@@ -82,6 +82,14 @@ export const useCategoryStore = defineStore("categoryStore", () => {
     const targetValue = _toggleTargets.value[payload];
     return (_toggleTargets.value[payload] = !targetValue);
   };
+
+  // 카테고리 전체를 제외한 모든 하위메뉴 닫기
+  const setToggleTargetOnClickAllFalse = (payload) => {
+    for (const key in _toggleTargets.value) {
+      if (key !== 'all') _toggleTargets.value[key] = false
+    }
+  };
+
   // 트리맵 클릭 시 하위 메뉴 표시 처리
   const setToggleTargetOnClickTreemap = (payload) => {
     return (_toggleTargets.value[payload] = true);
@@ -253,6 +261,7 @@ const sortDataByOrdNo = (data) => {
     setTableCountList,
     setToggleTargets,
     setToggleTargetOnClick,
+    setToggleTargetOnClickAllFalse,
     setToggleTargetOnClickTreemap,
     setSelectedItemId,
     setDbData,
