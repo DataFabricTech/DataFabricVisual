@@ -49,7 +49,7 @@
         </div>
         <!-- detail-section : 사용자 리뷰 -->
         <div :ref="el => sectionRefs['user-review-area'] = el" class="content-block">
-          <user-review-area :list="reviewDatalist" :params="userDataParam"
+          <user-review-area :isAdmin="props.isAdmin" :list="reviewDatalist" :params="userDataParam"
             :initUserReview="initUserReview" @reload="getReviewDataList" />
         </div>
         <!-- recommend-section  -->

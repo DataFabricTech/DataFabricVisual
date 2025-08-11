@@ -1,5 +1,6 @@
 <template>
-  <div :class="props.isAdmin ? 'data-box-wrap' : ''">
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''"
+    :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
         <h4>사용자 리뷰</h4>

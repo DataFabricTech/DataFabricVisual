@@ -421,8 +421,8 @@ pre code {
 .mu-tab-box-2.fixed-mu-tab-box-3 {
   position: fixed;
   top: 0;
-  width: 1280px;
-  z-index: 10;
+  width: 1400px;
+  z-index: 100;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
