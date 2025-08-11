@@ -70,8 +70,8 @@
                               </label>
                             </div>
                           </td>
-                          <td>{{ fusion.description ? fusion.description : '-' }}</td>
-                          <td>{{ fusion.meta_name ? fusion.meta_name : '-' }}</td>
+                          <td :title="fusion.description ? fusion.description : '-'">{{ fusion.description ? fusion.description : '-' }}</td>
+                          <td :title="fusion.meta_name ? fusion.meta_name : '-'">{{ fusion.meta_name ? fusion.meta_name : '-' }}</td>
                           <td>
                             <div class="mu-tooltip-icon">
                               <i :id="'img' + index" class="mu-icon-svg view" @mouseover="showTooltip(index)"
