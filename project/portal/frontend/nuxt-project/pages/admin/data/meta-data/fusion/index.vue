@@ -848,7 +848,7 @@ const addFusion = () => {
 }
 
 // 융합 데이터 모달에서 선택 후 확인
-const onConfirm = async () => {
+const onConfirm = () => {
   visibleSystemModal.value = false
   // 현재 적용되어 있는 융합 데이터 정보들
   const appliedIds = new Set(currentFusionList.value.map(i => i.meta_id))
@@ -874,7 +874,7 @@ const onConfirm = async () => {
   if (currentCategoryId != "") {
     searchClassification.value = ""
     categoryStore.setSelectedItemId("");
-    await categoryStore.setToggleTargetOnClickAllFalse()
+    categoryStore.setToggleTargetOnClickAllFalse()
   }
   metaList.value = []
 
@@ -890,6 +890,19 @@ const onCancel = () => {
   } else {
     // 세션 없이 취소가 눌린 경우(예외)엔 그냥 손대지 않음
   }
+
+  // 현재 검색어 및 검색타입 초기화
+  searchWord.value = ""
+  searchType.value = "all"
+
+  // 현재 카테고리 초기화
+  let currentCategoryId = categoryStore.getSelectedItemId.value
+  if (currentCategoryId != "") {
+    searchClassification.value = ""
+    categoryStore.setSelectedItemId("");
+    categoryStore.setToggleTargetOnClickAllFalse()
+  }
+  metaList.value = []
 
   session.value = null
 };

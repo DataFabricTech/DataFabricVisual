@@ -43,10 +43,18 @@ public class MetaDataFusionService {
 
         try {
             totCnt = metaDataFusionMapper.getMetaDataFusionListTotCnt(params);
+
+            List<String> currentFusionIdList = (List<String>) params.get("currentFusionIdList");
+            if (currentFusionIdList != null && currentFusionIdList.size() > 0) {
+                params.put("currentFusionIdList", currentFusionIdList.toArray(new String[0]));
+            } else {
+                params.put("currentFusionIdList", new String[0]);
+            }
             resultList = metaDataFusionMapper.getMetaDataFusionList(params);
 
         } catch (Exception e) {
             log.error("Fail to search system");
+            e.printStackTrace();
         }
 
         result.put("totalCount", totCnt);
