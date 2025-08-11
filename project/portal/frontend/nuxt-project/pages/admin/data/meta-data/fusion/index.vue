@@ -70,7 +70,7 @@
                               </label>
                             </div>
                           </td>
-                          <td>{{ fusion.meta_description ? fusion.meta_description : '-' }}</td>
+                          <td>{{ fusion.description ? fusion.description : '-' }}</td>
                           <td>{{ fusion.meta_name ? fusion.meta_name : '-' }}</td>
                           <td>
                             <div class="mu-tooltip-icon">
