@@ -162,6 +162,7 @@ const metaDataInfo = computed(() => {
 
     // attributes 속성에 없는 데이터 추가
     sortedMetaData.meta_id = entity.meta_id
+    sortedMetaData.meta_name = entity.meta_name
     sortedMetaData.description = entity.description
     sortedMetaData.create_time = entity.create_time
     sortedMetaData.update_time = entity.update_time

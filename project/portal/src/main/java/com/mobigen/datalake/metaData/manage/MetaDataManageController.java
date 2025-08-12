@@ -108,12 +108,27 @@ public class MetaDataManageController {
      * 수동 수집 실행
      * 
      * @param system_id 시스템 ID
+     * @param qualified_name 메타 고유명
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
-    @GetMapping("/executeCollect")
-    public Object executeCollect() throws Exception {
-        return metaDataManageService.executeCollect();
+    @PostMapping("/executeCollect")
+    public Object executeCollect(@RequestBody Map<String, Object> executeBody) throws Exception {
+        return metaDataManageService.executeCollect(executeBody);
+    }
+
+    /**
+     * 수동 프로파일링 실행
+     * 
+     * @param system_id 시스템 ID
+     * @param qualified_name 메타 고유명
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/executeProfile")
+    public Object executeProfile(@RequestBody Map<String, Object> executeBody) throws Exception {
+        return metaDataManageService.executeProfile(executeBody);
     }
 }

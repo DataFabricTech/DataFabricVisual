@@ -179,7 +179,7 @@
                     <th scope="row">파일 위치<strong class="required">필수</strong></th>
                     <td>
                       <input type="text" placeholder="" class="mu-input"
-                        :title="prefix" v-model="prefix" maxlength="100" readonly/>
+                        :title="file_location" v-model="file_location" maxlength="100" readonly/>
                     </td>
                     <th scope="row">등록일<strong class="required">필수</strong></th>
                     <td>
@@ -261,7 +261,7 @@ const system_name = ref("") // 시스템 명
 const create_by = computed(() => userStore.getUser.user_id) // 등록자
 const create_by_desc = computed(() => userStore.getUser.username) // 등록자
 const meta_type = ref("") // 데이터 타입
-const prefix = ref("") // 파일 위치
+const file_location = ref("") // 파일 위치 (버켓명)
 const create_time = ref("") // 등록일
 
 // 카테고리 설정
@@ -368,7 +368,7 @@ const getMinioSysteInfo = async () => {
       system_type.value = minioInfo.system_type
       system_name.value = minioInfo.system_name
       meta_type.value = minioInfo.meta_type
-      prefix.value = minioInfo.bucket_name
+      file_location.value = minioInfo.bucket_name
       create_time.value = getCurrentTime()
     }
   }).catch((err) => {
@@ -525,7 +525,7 @@ const onClickSaveButton = async () => {
 
     const body = {
       meta_id: meta_id.value,
-      qualified_name: system_id.value + "." + prefix.value + "." + meta_name.value,
+      qualified_name: system_id.value + "." + file_location.value + "." + meta_name.value,
       system_type: system_type.value,
       system_id: system_id.value,
       meta_type: meta_type.value,
@@ -547,17 +547,27 @@ const onClickSaveButton = async () => {
       // event, metadata 저장 성공 시 파일 minio upload
       if (saveRes && saveRes.data && saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
         const formData = new FormData()
-        formData.append("bucketName", prefix.value)
+        formData.append("bucketName", file_location.value)
         formData.append("file", selected_file.value)
 
         // 2. 비정형 파일 minio 업로드
         await $ofetch(`/api/metadata/manage/uploadFileToMinio`, { method: 'POST', body: formData}).then(async (uploadRes) => {
           if (uploadRes && uploadRes.data && uploadRes.data.uploadResult) {
             // 3. MinIO FabricStorage 시스템 수동수집 실행 요청
-            await $ofetch(`/api/metadata/manage/executeCollect`).then(async (res) => {
+            const executeBody = {
+              system_id: system_id.value,
+              qualified_name: system_id.value + "." + file_location.value + "." + meta_name.value,
+            }
+            await $ofetch(`/api/metadata/manage/executeCollect`, { method: 'POST', body: executeBody}).then(async (res) => {
               if (res && res.data && res.data.executeResult) {
-                await successAlert("비정형 데이터가 등록되었습니다.");
-                goToMetaDataManage()
+                await $ofetch(`/api/metadata/manage/executeProfile`, { method: 'POST', body: executeBody}).then(async (res) => {
+                  if (res && res.data && res.data.executeResult) {
+                    await successAlert("비정형 데이터가 등록되었습니다.");
+                    goToMetaDataManage()
+                  } else {
+                    await errorAlert("프로파일링 요청에 실패하였습니다.")
+                  }
+                })
               } else {
                 await errorAlert("Fabric Storage 수동 수집에 실패하였습니다.")
               }

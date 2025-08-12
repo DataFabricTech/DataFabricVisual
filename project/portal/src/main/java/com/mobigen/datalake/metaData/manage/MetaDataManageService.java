@@ -48,6 +48,15 @@ public class MetaDataManageService {
     @Value("${properties.MinioService.url.upload_multipart}")
     private String minioServiceUrlUploadMultipart;
 
+    @Value("${properties.catalog-api.base_url}")
+    private String catalogApiBaseUrl;
+    
+    @Value("${properties.catalog-api.url.executeSync}")
+    private String catalogApiUrlExecuteSync;
+
+    @Value("${properties.catalog-api.url.profile}")
+    private String catalogApiUrlProfile;
+
     // 메타 데이터 통합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -312,38 +321,112 @@ public class MetaDataManageService {
     }
 
     // MinIO 수동수집 실행
-    public Object executeCollect() throws Exception {
+    public Object executeCollect(Map<String, Object> executeBody) throws Exception {
         Map<String, Object> result = new HashMap<>();
         boolean executeResult = false;
 
         try {
-            // // 1. 코드테이블에서 fabric_storage > system_name 조회
-            // List<Map<String, Object>> codeList = metaDataManageMapper.getCodeForFabricStorage();
-            // if (codeList != null) {
-            //     for (int i=0; i<codeList.size(); i++) {
-            //         if (codeList.get(i).get("system_name") != null && codeList.get(i).get("system_name").toString().toUpperCase().equals("FABRIC_STORAGE")) {
-            //             String system_name = codeList.get(i).get("system_name").toString();
-            //             // 2. MinIO FabricStorage system_id 조회
-            //             Map<String, Object> fabricStorageInfo = metaDataManageMapper.getFabricStorageInfoFromSystemName(system_name);
+            String system_id = "";
+            String qualified_name = "";
+            if (executeBody.get("system_id") != null) {
+                system_id = executeBody.get("system_id").toString();
+            }
+            if (executeBody.get("qualified_name") != null) {
+                qualified_name = executeBody.get("qualified_name").toString();
+            }
 
-            //             if (fabricStorageInfo != null) {
-            //                 String system_id = fabricStorageInfo.get("system_id").toString();
-            //                 executeResult = collectorService.ingestionExecute(system_id);
-            //             }
-            //         }
-            //     }
-            // }
-            // result.put("executeResult", executeResult);
-
-            result.put("executeResult", true);
-            return result;
+            log.info("start to execute ingestion execute");
+            executeResult = ingestionExecuteSync(system_id, qualified_name);
+            log.info("start to execute ingestion execute");
 
         } catch (Exception e) {
-            result.put("executeResult", false);
+            executeResult = false;
             log.error("fail to execute direct Collect");
+            e.printStackTrace();
         }
         
+        result.put("executeResult", executeResult);
+        return result;
+    }
+
+    // MinIO 프로파일링 실행
+    public Object executeProfile(Map<String, Object> executeBody) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boolean executeResult = false;
+
+        try {
+            String system_id = "";
+            String qualified_name = "";
+            if (executeBody.get("system_id") != null) {
+                system_id = executeBody.get("system_id").toString();
+            }
+            if (executeBody.get("qualified_name") != null) {
+                qualified_name = executeBody.get("qualified_name").toString();
+            }
+
+            log.info("start to execute profile execute");
+            executeResult = profileExecute(system_id, qualified_name);
+            log.info("end to execute profile execute");
+
+        } catch (Exception e) {
+            executeResult = false;
+            log.error("fail to execute direct Collect");
+            e.printStackTrace();
+        }
+        
+        result.put("executeResult", executeResult);
         return result;
     }
   
+    // 수동 수집 실행 POST - SYNC
+    public boolean ingestionExecuteSync(String system_id, String qualified_name) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String executeUrl = catalogApiBaseUrl + catalogApiUrlExecuteSync;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        List<String> include = new ArrayList<>();
+        List<String> exclude = new ArrayList<>();
+        
+        if (!qualified_name.equals("")) {
+            // object=6b68d2f1-3705-4f1b-8e9e-6653b9203828.fabricdata.virtual_system_data_1year.csv
+            include.add("object=" + qualified_name);
+        }
+
+        requestBody.put("system_id", system_id);
+        requestBody.put("include", include); 
+        requestBody.put("exclude", exclude);
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // 수동 프로파일링 실행 POST
+    public boolean profileExecute(String system_id, String qualified_name) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String executeUrl = catalogApiBaseUrl + catalogApiUrlProfile;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        List<String> include = new ArrayList<>();
+        List<String> exclude = new ArrayList<>();
+
+        if (!qualified_name.equals("")) {
+            // object=6b68d2f1-3705-4f1b-8e9e-6653b9203828.fabricdata.virtual_system_data_1year.csv
+            include.add("object=" + qualified_name);
+        }
+        
+        requestBody.put("system_id", system_id);
+        requestBody.put("include", include); 
+        requestBody.put("exclude", exclude);
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+            return true;
+        }
+
+        return false;
+    }
 }

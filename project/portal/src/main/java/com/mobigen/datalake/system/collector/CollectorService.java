@@ -201,7 +201,7 @@ public class CollectorService {
     return null;
   }
 
-  // 수동 수집 실행 POST, system_id는 queryString
+  // 수동 수집 실행 POST
   public boolean ingestionExecute(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
 
