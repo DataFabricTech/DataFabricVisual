@@ -392,9 +392,14 @@
                           <td> {{ item.meta_type }} </td>
                           <td>
                             <!-- 카테고리 -->
-                            <div class="category-group">
+                            <div v-if="item && item.classifications && item.classifications.length > 0" class="category-group">
                               <div v-for="category in item.classifications" :key="category.id" class="category">
                                 <em class="category-label" :title="getKrName(category)">{{ getKrName(category) }}</em>
+                              </div>
+                            </div>
+                            <div v-else class="category-group">
+                              <div class="category">
+                                <em class="category-label" title="카테고리 미지정">카테고리 미지정</em>
                               </div>
                             </div>
                           </td>
@@ -870,12 +875,10 @@ const onConfirm = () => {
   searchType.value = "all"
 
   // 현재 카테고리 초기화
-  let currentCategoryId = categoryStore.getSelectedItemId.value
-  if (currentCategoryId != "") {
-    searchClassification.value = ""
-    categoryStore.setSelectedItemId("");
-    categoryStore.setToggleTargetOnClickAllFalse()
-  }
+  searchClassification.value = ""
+  categoryStore.setSelectedItemId("");
+  categoryStore.setToggleTargetOnClickAllFalse()
+
   metaList.value = []
 
   // 세션 종료
@@ -896,12 +899,9 @@ const onCancel = () => {
   searchType.value = "all"
 
   // 현재 카테고리 초기화
-  let currentCategoryId = categoryStore.getSelectedItemId.value
-  if (currentCategoryId != "") {
-    searchClassification.value = ""
-    categoryStore.setSelectedItemId("");
-    categoryStore.setToggleTargetOnClickAllFalse()
-  }
+  searchClassification.value = ""
+  categoryStore.setSelectedItemId("");
+  categoryStore.setToggleTargetOnClickAllFalse()
   metaList.value = []
 
   session.value = null
@@ -943,6 +943,8 @@ const onSearchMetaList = async (offset = 0, item: any = null) => {
     //
     if (item && item.id) {
       searchClassification.value = item.id;
+    } else {
+      searchClassification.value = ""
     }
 
     const currentFusionIdList = currentFusionList.value && currentFusionList.value.length > 0 ? currentFusionList.value.map(el => el.meta_id) : []
