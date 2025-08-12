@@ -1072,6 +1072,7 @@ const selectFusion = (item) => {
   } else {
     codeContent = `"${system_id}"."${database}"."${meta_name}"`;
   }
+  query.value = codeContent
 }
 
 const showTooltip = (index) => {
