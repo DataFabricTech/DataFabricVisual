@@ -1072,13 +1072,6 @@ const selectFusion = (item) => {
   } else {
     codeContent = `"${system_id}"."${database}"."${meta_name}"`;
   }
-
-  navigator.clipboard.writeText(codeContent).then(() => {
-    selectedIndex.value = item.meta_id
-    query.value += codeContent
-  }).catch(err => {
-    errorAlert("코드 복사에 실패하였습니다.");
-  });
 }
 
 const showTooltip = (index) => {
