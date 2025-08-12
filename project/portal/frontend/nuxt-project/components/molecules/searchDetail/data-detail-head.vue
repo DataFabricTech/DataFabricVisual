@@ -51,11 +51,11 @@
           <i class="mu-icon-svg apply"></i>
           <span>데이터 추출</span>
         </button>
-        <button v-else type="button" class="mu-btn mu-btn-lg mu-btn-primary" style="background-color: lightgrey;"
+        <!-- <button v-else type="button" class="mu-btn mu-btn-lg mu-btn-primary" style="background-color: lightgrey;"
           @click="onClickAuthRequest()">
           <i class="mu-icon-svg apply"></i>
           <span>권한 요청</span>
-        </button>
+        </button> -->
       </div>
     </div>
     <!-- //data-box -->

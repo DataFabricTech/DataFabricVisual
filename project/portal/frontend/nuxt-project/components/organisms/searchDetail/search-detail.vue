@@ -31,9 +31,9 @@
             :columnCommentMap="columnCommentMap" />
         </div>
         <!-- detail-section : 샘플 데이터 -->
-        <div v-if="typeName && typeName.toUpperCase() == 'TABLE'" :ref="el => sectionRefs['sample-data-area'] = el"
+        <div v-if="typeName && (typeName.toUpperCase() == 'TABLE' || typeName.toUpperCase() == 'FILE')" :ref="el => sectionRefs['sample-data-area'] = el"
           class="content-block">
-          <sample-data-area v-if="typeName && typeName.toUpperCase() == 'TABLE'" :isAdmin="props.isAdmin"
+          <sample-data-area v-if="typeName && (typeName.toUpperCase() == 'TABLE' || typeName.toUpperCase() == 'FILE')" :isAdmin="props.isAdmin"
             :list="sampleData" :entity="entity" :userDataAuth="userDataAuth"
             :referredEntitiesAttributes="referredEntitiesAttributes" />
         </div>
@@ -431,7 +431,7 @@ const settingTabOption = (entity) => {
   tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area']
 
   // 샘플데이터 탭 유무
-  if (entity && entity.meta_type && entity.meta_type.toUpperCase() != 'TABLE')
+  if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE')
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
 }
 
