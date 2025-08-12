@@ -31,7 +31,9 @@ public class MetaDataFusionController {
      */
     @ResponseJsonResult
     @PostMapping("/list")
-    public Object getMetaDataFusionList(@RequestBody Map<String, Object> param) throws Exception {
+    public Object getMetaDataFusionList(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        param.put("userId", user.get("user_id"));
         return metaDataFusionService.getMetaDataFusionList(param);
     }
 
