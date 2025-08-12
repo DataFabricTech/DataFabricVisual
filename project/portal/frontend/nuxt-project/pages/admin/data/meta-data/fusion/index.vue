@@ -1057,13 +1057,18 @@ const selectFusion = (item) => {
 
   let codeContent = ""
   if (meta_type.toUpperCase() == 'FILE') {
-    codeContent = `"${system_id}"."${database}"."${meta_name}"`
+    let file_system_id = item.qualified_name.split(".")[0]
+    let file_bucket_name = item.qualified_name.split(".")[1]
+    codeContent = `"${file_system_id}"."${file_bucket_name}"."${meta_name}"`
   } else if (system_type.toUpperCase() == 'ALTIBASE'
   || system_type.toUpperCase() == 'ORACLE'
   || system_type.toUpperCase() == 'POSTGRES'
   || system_type.toUpperCase() == 'POSTGRESQL'
   || system_type.toUpperCase() == 'MSSQL') {
     codeContent = `"${system_id}"."${schema}"."${meta_name}"`;
+  } else if (system_type.toUpperCase() == 'TIBERO') {
+    let tibero_database = item.qualified_name.split(".")[2]
+    codeContent = `"${system_id}"."${tibero_database}"."${meta_name}"`;
   } else {
     codeContent = `"${system_id}"."${database}"."${meta_name}"`;
   }
@@ -1097,7 +1102,7 @@ const executeQuery = async () => {
     await $ofetch(`/api/metadata/fusion/executeQuery`, { method: 'POST', body: params}).then((res) => {
       if (res && res.data) {
         if (res.data.errorMessage && res.data.errorMessage != "") {
-          errorAlert(res.data.errorMessage);
+          defaultAlert(res.data.errorMessage);
           executeQueryStatus.value = 2
           fusionSampleList.value = []
           fusionSampleTotal.value = 0
