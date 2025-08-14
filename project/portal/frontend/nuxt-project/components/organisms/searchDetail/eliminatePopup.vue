@@ -12,7 +12,9 @@
           :userDataAuth="props.eliminateModal.userDataAuth"
           :isAdmin="false"
           :isModal="true"
-          :list="props.eliminateModal.sampleData"
+          :sampleData="props.eliminateModal.sampleData"
+          :typeName="props.eliminateModal.typeName"
+          :fileFormat="props.eliminateModal.fileFormat"
           :entity="props.eliminateModal.entity"
           :referredEntitiesAttributes="props.eliminateModal.referredEntitiesAttributes"
         />

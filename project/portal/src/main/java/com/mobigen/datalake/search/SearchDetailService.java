@@ -25,7 +25,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -503,17 +502,20 @@ public class SearchDetailService {
             S3Url p = S3Url.parse(sample_share_url);
 
             Object sampleData = null;
+            Integer num_rows = null;
             if (file_format.toUpperCase().equals("CSV")
             || file_format.toUpperCase().equals("XLS")
             || file_format.toUpperCase().equals("XLSX")
             || file_format.toUpperCase().equals("XLSM")
             || file_format.toUpperCase().equals("XLSB")) {
                 sampleData = this.readCsv(mf, p);
+                num_rows = searchDetailMapper.getFileSampleCount(meta_id);
             } else {
                 sampleData = this.readText(mf, p);
             }
 
             result.put("sampleData", sampleData);
+            result.put("sampleTotal", num_rows);
         } catch (Exception e) {
             log.error("fail to load sampleDataFile !!");
             e.printStackTrace();
@@ -542,7 +544,11 @@ public class SearchDetailService {
             );
 
             reader = new InputStreamReader(in, StandardCharsets.UTF_8);
-            parser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
+            parser = CSVFormat.Builder.create(CSVFormat.DEFAULT)
+                    .setHeader()               // 헤더 자동 인식
+                    .setSkipHeaderRecord(true) // 첫 줄은 데이터에서 제외
+                    .build()
+                    .parse(reader);
 
             for (CSVRecord record : parser) {
                 Map<String, String> row = new LinkedHashMap<>();
@@ -628,13 +634,16 @@ public class SearchDetailService {
         }
     }
 
-    // 셀의 헤더용 문자열 추출(헤더 행은 주로 String/Formula 정도라 간단 변환)
-    private static String getCellAsString(Cell cell) {
+    private String getCellAsString(Cell cell) {
         if (cell == null) return "";
-        cell.setCellType(CellType.STRING); // 헤더는 보통 텍스트 취급
-        String s = cell.getStringCellValue();
+
+        DataFormatter formatter = new DataFormatter();
+        // DataFormatter는 셀 타입에 맞춰서 문자열 변환, 날짜/숫자도 포맷 유지
+        String s = formatter.formatCellValue(cell);
+
         return s != null ? s.trim() : "";
     }
+
 
     // 이외 파일 txt로 읽기
     public String readText(MinioClient minio, S3Url p) throws Exception {

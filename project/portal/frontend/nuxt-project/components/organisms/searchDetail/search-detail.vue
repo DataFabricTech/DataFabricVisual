@@ -146,6 +146,7 @@ const dataProfile = ref({
   column: [],
 });
 const sampleData = ref([]);
+const sampleTotal = ref(null);
 
 const startNode = ref(""); // 데이터 흐름도 렌더 시 시작 노드 guid
 const classifications_data = ref([]); // 연관 데이터 목록
@@ -164,6 +165,8 @@ const eliminateModalObj = ref({
   toggle: false,
   sampleData: [],
   entity: {},
+  typeName: "",
+  fileFormat: "",
   num_rows: 0,
   referredEntitiesAttributes: [],
   userDataAuth: 0,
@@ -656,7 +659,7 @@ const getSampleData = () => {
           let guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "")
 
           $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
-            eliminateModalObj.value.num_rows = rs.data
+            sampleTotal.value = rs.data
           })
         }
 
@@ -700,6 +703,7 @@ const getSampleData = () => {
       }).then((res) => {
         if (res && res.data && res.data.sampleData) {
           sampleData.value = res.data.sampleData
+          sampleTotal.value = res.data.sampleTotal
         }
       });
     } catch (e) {
@@ -963,11 +967,17 @@ const onToggleEliminateModal = async () => {
       eliminateModalObj.value.entity = null;
       eliminateModalObj.value.toggle = !status;
       eliminateModalObj.value.userDataAuth = userDataAuth.value;
+      eliminateModalObj.value.typeName = "";
+      eliminateModalObj.value.fileFormat = "";
+      eliminateModalObj.value.num_rows = null
     } else {
       eliminateModalObj.value.sampleData = sampleData.value;
       eliminateModalObj.value.entity = entity.value;
       eliminateModalObj.value.toggle = !status;
       eliminateModalObj.value.userDataAuth = userDataAuth.value;
+      eliminateModalObj.value.typeName = typeName.value;
+      eliminateModalObj.value.fileFormat = fileFormat.value;
+      eliminateModalObj.value.num_rows = sampleTotal.value
     }
   } else {
     await defaultAlert("데이터 추출 권한이 없습니다.");

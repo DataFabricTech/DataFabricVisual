@@ -195,7 +195,6 @@ const toggleShowField = () => {
   showEmptyField.value = !showEmptyField.value
 }
 
-
 // 객체 키값에 값이 없는 데이터 제거
 const removeEmptyFields = (obj) => {
   for (let key in obj) {

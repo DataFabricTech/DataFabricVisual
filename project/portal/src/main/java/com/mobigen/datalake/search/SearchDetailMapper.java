@@ -87,4 +87,6 @@ public interface SearchDetailMapper {
     Integer getUserDescriptionAdminAuthCnt(Map<String, Object> params);
 
     String getSampleDataUrl(String meta_id);
+
+    Integer getFileSampleCount(String meta_id);
 }
