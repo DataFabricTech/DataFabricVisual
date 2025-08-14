@@ -175,7 +175,13 @@
         <dependency>
             <groupId>io.trino</groupId>
             <artifactId>trino-jdbc</artifactId>
-            <version>389</version>
+            <version>446</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.5.17</version> <!-- 최신 버전 확인 권장 -->
         </dependency>
 
         <dependency>

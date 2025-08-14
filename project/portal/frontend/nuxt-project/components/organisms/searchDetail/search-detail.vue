@@ -33,9 +33,10 @@
         <!-- detail-section : 샘플 데이터 -->
         <div v-if="typeName && (typeName.toUpperCase() == 'TABLE' || typeName.toUpperCase() == 'FILE')" :ref="el => sectionRefs['sample-data-area'] = el"
           class="content-block">
-          <sample-data-area v-if="typeName && (typeName.toUpperCase() == 'TABLE' || typeName.toUpperCase() == 'FILE')" :isAdmin="props.isAdmin"
-            :list="sampleData" :entity="entity" :userDataAuth="userDataAuth"
-            :referredEntitiesAttributes="referredEntitiesAttributes" />
+          <sample-data-area :isAdmin="props.isAdmin"
+            :sampleData="sampleData" :entity="entity" :userDataAuth="userDataAuth" :typeName="typeName"
+            :referredEntitiesAttributes="referredEntitiesAttributes"
+            :fileFormat="fileFormat" />
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
         <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
@@ -223,6 +224,11 @@ onMounted(async () => {
 // 엔티티 유형
 const typeName = computed(() =>
   ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+);
+
+// 샘플데이터 파일 형식
+const fileFormat = computed(() =>
+  ObjectUtils.getPropertyValue(entity.value, "attributes/file_format", "")
 );
 
 // entity 값이 변동되면 파라미터도 동기화
@@ -672,6 +678,28 @@ const getSampleData = () => {
           })
 
           sampleData.value = tmpSampleData
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  } else if (meta_type && meta_type.toUpperCase() == 'FILE') {
+    const meta_id = ObjectUtils.getPropertyValue(entity.value, "meta_id", "")
+    const full_path = ObjectUtils.getPropertyValue(entity.value, "attributes/full_path", "")
+
+    const params = {
+      meta_id: meta_id,
+      file_format: fileFormat.value,
+      full_path: full_path
+    };
+
+    try {
+      $ofetch("/api/search/detail/sampledataFile", {
+        method: "POST",
+        body: params,
+      }).then((res) => {
+        if (res && res.data && res.data.sampleData) {
+          sampleData.value = res.data.sampleData
         }
       });
     } catch (e) {

@@ -1,5 +1,10 @@
 package com.mobigen.datalake.search;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,12 +14,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -23,7 +39,11 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.framework.result.JsonResult;
+import com.mobigen.framework.utility.MinioFactory;
+import com.mobigen.framework.utility.S3Url;
 
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +62,15 @@ public class SearchDetailService {
 
     @Value("${properties.ESSync.url.update}")
     private String esSyncUrlUpdate;
+
+    @Value("${properties.minio.endpoint}")
+    private String endpoint;
+
+    @Value("${properties.minio.accessKey}")
+    private String accessKey;
+
+    @Value("${properties.minio.secretKey}")
+    private String secretKey;
 
     // 데이터 상세 조회
     public Object getDetailData(Map<String, Object> params) throws Exception {
@@ -458,6 +487,188 @@ public class SearchDetailService {
         result.setData(resultData);
 
         return result;
+    }
+
+    public Map<String, Object> getSampleDataFile(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        InputStream inputStream = null;
+
+        try {
+            MinioClient mf = MinioFactory.create(endpoint, accessKey, secretKey);
+            // sample_data_url 조회
+            String meta_id = params.get("meta_id").toString();
+            String sample_share_url = searchDetailMapper.getSampleDataUrl(meta_id);
+
+            String file_format = params.get("file_format").toString();
+            S3Url p = S3Url.parse(sample_share_url);
+
+            Object sampleData = null;
+            if (file_format.toUpperCase().equals("CSV")
+            || file_format.toUpperCase().equals("XLS")
+            || file_format.toUpperCase().equals("XLSX")
+            || file_format.toUpperCase().equals("XLSM")
+            || file_format.toUpperCase().equals("XLSB")) {
+                sampleData = this.readCsv(mf, p);
+            } else {
+                sampleData = this.readText(mf, p);
+            }
+
+            result.put("sampleData", sampleData);
+        } catch (Exception e) {
+            log.error("fail to load sampleDataFile !!");
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+        return result;
+    }
+
+    // CSV 파일 읽기
+    public List<Map<String, String>> readCsv(MinioClient minio, S3Url s3url) throws Exception {
+        List<Map<String, String>> rows = new ArrayList<>();
+
+        InputStream in = null;
+        InputStreamReader reader = null;
+        CSVParser parser = null;
+
+        try {
+            in = minio.getObject(
+                GetObjectArgs.builder()
+                    .bucket(s3url.getBucket())
+                    .object(s3url.getObject())
+                    .build()
+            );
+
+            reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+            parser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
+
+            for (CSVRecord record : parser) {
+                Map<String, String> row = new LinkedHashMap<>();
+                for (String header : parser.getHeaderNames()) {
+                    row.put(header, record.get(header));
+                }
+                rows.add(row);
+            }
+
+        } finally {
+            if (parser != null) {
+                try { parser.close(); } catch (IOException e) { e.printStackTrace(); }
+            }
+            if (reader != null) {
+                try { reader.close(); } catch (IOException e) { e.printStackTrace(); }
+            }
+            if (in != null) {
+                try { in.close(); } catch (IOException e) { e.printStackTrace(); }
+            }
+        }
+
+        return rows;
+    }
+
+    // xlsx 파일 읽기
+    public List<Map<String, String>> readXlsx(MinioClient minio, S3Url s3url) throws Exception {
+        List<Map<String, String>> rows = new ArrayList<>();
+
+        InputStream in = null;
+        Workbook workbook = null;
+
+        try {
+            // 1) MinIO에서 InputStream 가져오기
+            in = minio.getObject(GetObjectArgs.builder()
+                    .bucket(s3url.getBucket())
+                    .object(s3url.getObject())
+                    .build());
+
+            // 2) Workbook 생성 (POI)
+            workbook = WorkbookFactory.create(in);
+
+            // 3) 첫 번째 시트 기준
+            Sheet sheet = workbook.getSheetAt(0);
+            if (sheet == null) {
+                return rows;
+            }
+
+            // 4) 헤더 행 파싱
+            Iterator<Row> it = sheet.iterator();
+            if (!it.hasNext()) {
+                return rows; // 빈 시트
+            }
+            Row headerRow = it.next();
+
+            List<String> headers = new ArrayList<>();
+            for (Cell cell : headerRow) {
+                headers.add(this.getCellAsString(cell));
+            }
+
+            // 5) 데이터 행 파싱
+            DataFormatter formatter = new DataFormatter(); // 사용자 표시값과 유사하게 문자열화
+            while (it.hasNext()) {
+                Row r = it.next();
+                Map<String, String> rowMap = new LinkedHashMap<>();
+                for (int c = 0; c < headers.size(); c++) {
+                    Cell cell = r.getCell(c, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    // DataFormatter로 사용자가 보는 값처럼 얻기
+                    String val = formatter.formatCellValue(cell);
+                    rowMap.put(headers.get(c), val);
+                }
+                rows.add(rowMap);
+            }
+            return rows;
+
+        } finally {
+            // 생성 역순으로 닫기
+            if (workbook != null) {
+                try { workbook.close(); } catch (Exception ignore) {}
+            }
+            if (in != null) {
+                try { in.close(); } catch (Exception ignore) {}
+            }
+        }
+    }
+
+    // 셀의 헤더용 문자열 추출(헤더 행은 주로 String/Formula 정도라 간단 변환)
+    private static String getCellAsString(Cell cell) {
+        if (cell == null) return "";
+        cell.setCellType(CellType.STRING); // 헤더는 보통 텍스트 취급
+        String s = cell.getStringCellValue();
+        return s != null ? s.trim() : "";
+    }
+
+    // 이외 파일 txt로 읽기
+    public String readText(MinioClient minio, S3Url p) throws Exception {
+        InputStream in = null;
+        Reader reader = null;
+        StringBuilder sb = new StringBuilder(8 * 1024);
+        
+        try {
+            in = minio.getObject(
+                GetObjectArgs.builder()
+                    .bucket(p.getBucket())
+                    .object(p.getObject())
+                    .build()
+            );
+            
+            reader = new InputStreamReader(in,StandardCharsets.UTF_8);
+
+            char[] buf = new char[4096];
+            int n;
+            while ((n = reader.read(buf)) != -1) {
+                sb.append(buf, 0, n);
+            }
+
+            return sb.toString();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    // 필요 시 로그 출력
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     // 사용자 데이터 설명 목록 조회

@@ -80,7 +80,7 @@ public class DetailController {
     }
 
     /**
-     * 샘플 데이터 조회
+     * 샘플 데이터 조회 (TABLE)
      *
      * @param params 조회용 파라미터
      * @return Object 샘플 데이터 10건
@@ -97,6 +97,21 @@ public class DetailController {
         // RegexUtils.sanitizeInput(qualified_name);
 
         return searchDetailService.getSampleData(params);
+    }
+
+    /**
+     * 샘플 데이터 조회 (FILE)
+     *
+     * @param params 조회용 파라미터
+     * @return Object 샘플 데이터
+     */
+    @ResponseJsonResult
+    @PostMapping("/sampledataFile")
+    @ResponseBody
+    public Object postSampleDataFile(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("user_id", user.get("user_id"));
+        return searchDetailService.getSampleDataFile(params);
     }
 
     /**

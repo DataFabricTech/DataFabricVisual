@@ -85,4 +85,6 @@ public interface SearchDetailMapper {
     Integer getMetaDataAdminAuthCnt(Map<String, Object> params);
 
     Integer getUserDescriptionAdminAuthCnt(Map<String, Object> params);
+
+    String getSampleDataUrl(String meta_id);
 }
