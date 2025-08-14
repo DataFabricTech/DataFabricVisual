@@ -182,6 +182,7 @@ const metaDataInfo = computed(() => {
 
     // 값이 없는 데이터 필드 보여주기 여부
     if (!showEmptyField.value) removeEmptyFields(sortedMetaData)
+    console.log(sortedMetaData)
 
     return sortedMetaData;
   }
@@ -198,10 +199,16 @@ const toggleShowField = () => {
 // 객체 키값에 값이 없는 데이터 제거
 const removeEmptyFields = (obj) => {
   for (let key in obj) {
-    if (obj[key] === undefined || obj[key] === null || obj[key] === '') {
-        delete obj[key];
+    const val = obj[key]
+
+    const isEmptyObject = val && val.constructor === Object && Object.keys(val).length === 0
+    const isEmptyArray = Array.isArray(val) && val.length === 0
+
+    if (val === undefined || val === null || val === '' || isEmptyObject || isEmptyArray) {
+      delete obj[key]
     }
   }
+
 }
 
 // 한글명으로 수정
@@ -239,6 +246,11 @@ const getKrKey = (key) => {
     if (key == "view_definition") return "데이터 추출 SQL 원본"
     if (key == "file_format") return "파일 형식";
     if (key == "source_hash") return "Source hash of the entity";
+    if (key == "rdfs") return "JSON타입의 값";
+    if (key == "prefix") return "파일 경로 (bucket)"
+    if (key == "size") return "파일 크기";
+    if (key == "full_path") return "파일 전체 경로 (local path)";
+    if (key == "source_URL") return "파일 소스 URL";
     return key;
   }
   return key;
