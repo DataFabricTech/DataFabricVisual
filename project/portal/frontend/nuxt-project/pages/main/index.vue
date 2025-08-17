@@ -71,11 +71,11 @@
           <div class="data-set">
             <dl>
               <dt>등록된 데이터</dt>
-              <dd>{{ numberComma(totalDataCount) }}</dd>
+              <dd>{{ $numberComma(totalDataCount) }}</dd>
             </dl>
             <dl>
               <dt style="width: 110px;">데이터 활용 횟수</dt>
-              <dd>{{ numberComma(useDataCount) }}</dd>
+              <dd>{{ $numberComma(useDataCount) }}</dd>
             </dl>
           </div>
           <!-- main-category-group -->
@@ -986,32 +986,6 @@ const goToRequestDataList = () => {
 const goToSynonymList = () => {
   router.push(`/search/synonym`)
 }
-
-// 숫자 콤마처리
-const numberComma = (val) => {
-  if (!!Number(val)) {
-    if (Number(val) > 1) {
-      let textArr = String(val).split(".");
-      if (Number(textArr[0]) > 1) {
-        if (textArr.length > 1) {
-          return (
-            String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + textArr[1]
-          );
-        } else {
-          return String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-      } else {
-        return val;
-      }
-    } else {
-      return val;
-    }
-  } else {
-    if (Number(val) === 0) {
-      return val;
-    }
-  }
-};
 
 // 날짜 변환
 const yyyyMMdddot = (value) => {

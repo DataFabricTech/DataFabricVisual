@@ -47,7 +47,7 @@
                   <th scope="row">전체 건수</th>
                   <td>
                     <div class="mu-item-group">
-                      {{ numberComma(props.eliminateModal.num_rows) }} 건
+                      {{ $numberComma(props.eliminateModal.num_rows) }} 건
                     </div>
                   </td>
                 </tr>
@@ -1033,29 +1033,4 @@ const getKrName = (key) => {
   if (key == 'custom') return '직접입력'
 }
 
-// 숫자 콤마
-const numberComma = (val) => {
-  if (!!Number(val)) {
-    if (Number(val) > 1) {
-      let textArr = String(val).split(".");
-      if (Number(textArr[0]) > 1) {
-        if (textArr.length > 1) {
-          return (
-            String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + textArr[1]
-          );
-        } else {
-          return String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-      } else {
-        return val;
-      }
-    } else {
-      return val;
-    }
-  } else {
-    if (Number(val) === 0) {
-      return val;
-    }
-  }
-};
 </script>

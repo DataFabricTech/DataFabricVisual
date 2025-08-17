@@ -27,13 +27,13 @@
       <tbody>
         <tr v-for="(item, index) in column" :key="index">
           <td>{{ item.name }}</td>
-          <td>{{ numberComma(item.null_count) }}</td>
-          <td>{{ numberComma(item.distinct_count) }}</td>
-          <td>{{ numberComma(item.min_value) }}</td>
-          <td>{{ numberComma(item.max_value) }}</td>
-          <td>{{ numberComma(item.avg_value) }}</td>
-          <td>{{ numberComma(item.var_value) }}</td>
-          <td>{{ numberComma(item.std_value) }}</td>
+          <td>{{ $numberComma(item.null_count) }}</td>
+          <td>{{ $numberComma(item.distinct_count) }}</td>
+          <td>{{ $numberComma(item.min_value) }}</td>
+          <td>{{ $numberComma(item.max_value) }}</td>
+          <td>{{ $numberComma(item.avg_value) }}</td>
+          <td>{{ $numberComma(item.var_value) }}</td>
+          <td>{{ $numberComma(item.std_value) }}</td>
           <td>{{ $yyyyMMddHHmmSS(item.update_date) }}</td>
         </tr>
       </tbody>
@@ -62,28 +62,4 @@ const toggleShowData = () => {
   }
 };
 
-const numberComma = (val) => {
-  if (!!Number(val)) {
-    if (Number(val) > 1) {
-      let textArr = String(val).split(".");
-      if (Number(textArr[0]) > 1) {
-        if (textArr.length > 1) {
-          return (
-            String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + textArr[1]
-          );
-        } else {
-          return String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-      } else {
-        return val;
-      }
-    } else {
-      return val;
-    }
-  } else {
-    if (Number(val) === 0) {
-      return val;
-    }
-  }
-};
 </script>

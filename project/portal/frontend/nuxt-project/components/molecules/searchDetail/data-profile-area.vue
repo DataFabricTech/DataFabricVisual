@@ -28,10 +28,8 @@
             <tbody>
               <tr>
                 <th scope="col">행수</th>
-                <!-- <th scope="col">테이블 크기(Byte)</th> -->
                 <td>{{ comman(table.num_rows) ? comman(table.num_rows) : "-" }}</td>
                 <th scope="col">테이블프로파일링 일시</th>
-                <!-- <td>{{ table.total_size | numberComma }}</td> -->
                 <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
               </tr>
             </tbody>
@@ -68,40 +66,40 @@
                       item.column_type ? item.column_type : "-" }})</span>
                   </td>
                   <td>
-                    <span class="mu-ellipsis" :title="numberComma(item.null_count)">
-                      {{ numberComma(item.null_count) }}
+                    <span class="mu-ellipsis" :title="$numberComma(item.null_count)">
+                      {{ $numberComma(item.null_count) }}
                     </span>
                   </td>
                   <td>
-                    <span class="mu-ellipsis" :title="numberComma(item.distinct_count)">
-                      {{ numberComma(item.distinct_count) }}
+                    <span class="mu-ellipsis" :title="$numberComma(item.distinct_count)">
+                      {{ $numberComma(item.distinct_count) }}
                     </span>
                   </td>
 
                   <template v-if="checkInvaildNumberColumn(item)">
                     <td>
-                      <span class="mu-ellipsis" :title="numberComma(item.min_value)">
-                        {{ numberComma(item.min_value) }}
+                      <span class="mu-ellipsis" :title="$numberComma(item.min_value)">
+                        {{ $numberComma(item.min_value) }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="numberComma(item.max_value)">
-                        {{ numberComma(item.max_value) }}
+                      <span class="mu-ellipsis" :title="$numberComma(item.max_value)">
+                        {{ $numberComma(item.max_value) }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="numberComma(item.avg_value)">
-                        {{ numberComma(item.avg_value) }}
+                      <span class="mu-ellipsis" :title="$numberComma(item.avg_value)">
+                        {{ $numberComma(item.avg_value) }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="numberComma(item.var_value)">
-                        {{ numberComma(item.var_value) }}
+                      <span class="mu-ellipsis" :title="$numberComma(item.var_value)">
+                        {{ $numberComma(item.var_value) }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="numberComma(item.std_value)">
-                        {{ numberComma(item.std_value) }}
+                      <span class="mu-ellipsis" :title="$numberComma(item.std_value)">
+                        {{ $numberComma(item.std_value) }}
                       </span>
                     </td>
                   </template>
@@ -161,24 +159,6 @@ const comman = (val) => {
   } else {
     return "";
   }
-};
-
-const numberComma = (val) => {
-  const num = Number(val);
-
-  // 숫자가 유효하지 않으면 경고 메시지 반환
-  if (isNaN(num)) {
-    return "해당 컬럼에는 숫자가 아닌 값들이 포함되어 있습니다.";
-  }
-
-  // 정수와 소수 부분을 분리
-  let [integerPart, decimalPart] = String(num).split(".");
-
-  // 정수 부분에 쉼표 추가
-  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  // 소수점이 있을 경우 처리
-  return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
 };
 
 const checkInvaildNumberColumn = (column) => {
