@@ -49,7 +49,7 @@
             <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper">
               <swiper-slide class="swiper-slide" v-for="(nt, idx) in noticeList">
                 <a href="javascript:void(0)" @click="goToNotice(nt.id)">{{ nt.title }}</a>
-                <p class="date">{{ yyyyMMdddot(nt.upload_date) }}</p>
+                <p class="date">{{ $yyyyMMdd_dot(nt.upload_date) }}</p>
               </swiper-slide>
             </swiper>
           </div>
@@ -61,7 +61,7 @@
             <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper">
               <swiper-slide class="swiper-slide" v-for="(faq, idx) in faqList">
                 <a href="javascript:void(0)" @click="goToFaq(faq.id)">{{ getPostContent(faq.post_content) }}</a>
-                <p class="date">{{ yyyyMMdddot(faq.upload_date) }}</p>
+                <p class="date">{{ $yyyyMMdd_dot(faq.upload_date) }}</p>
               </swiper-slide>
             </swiper>
           </div>
@@ -987,17 +987,6 @@ const goToSynonymList = () => {
   router.push(`/search/synonym`)
 }
 
-// 날짜 변환
-const yyyyMMdddot = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "." + month + "." + day;
-};
 </script>
 <style scoped>
 .right-channel {

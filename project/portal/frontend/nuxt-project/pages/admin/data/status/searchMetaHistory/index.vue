@@ -46,7 +46,7 @@
                 <td>{{ item.meta_name ? item.meta_name : "-" }}</td>
                 <td>{{ item.description ? item.description : "-" }}</td>
                 <td>
-                  <div v-html="yyyyMMddHHmmSSsep(item.search_date)"></div>
+                  <div v-html="$yyyyMMddHHmmSS_Sep(item.search_date, '<br>')"></div>
                 </td>
               </tr>
               <tr v-if="historyList.length === 0">
@@ -66,11 +66,11 @@
 
 <script setup lang="ts">
 import PageSize from "@/pages/admin/manager/user/page-size";
-import Pagination from "@functional/pagination/pagination";
-import moment from "moment";
 import { errorAlert } from "@functional/alert/alert-default";
-import { onMounted, watch, reactive, ref } from "vue";
+import Pagination from "@functional/pagination/pagination";
 import HistoryBoardListSearch from "@organisms/history/history-board-list-search.vue";
+import moment from "moment";
+import { onMounted, ref } from "vue";
 
 definePageMeta({
   name: "AdminSearchMetaHistory",
@@ -143,20 +143,6 @@ const getHistoryList = async (offset: number = 1): Promise<void> => {
 // 페이지 번호 클릭
 const onClickPage = (page: number): void => {
   getHistoryList(page);
-};
-
-const yyyyMMddHHmmSSsep = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + "<br>" + hours + ":" + min + ":" + sec;
 };
 
 // 달력 입력값 초기화 버튼

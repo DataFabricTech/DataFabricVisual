@@ -48,7 +48,7 @@
                 <td>{{ item.id ? item.id : "-" }}</td>
                 <td>{{ item.title ? item.title : "-" }}</td>
                 <td>
-                  <div v-html="yyyyMMddHHmmSSsep(item.create_date)"></div>
+                  <div v-html="$yyyyMMddHHmmSS_Sep(item.create_date, '<br>')"></div>
                 </td>
                 <td>
                   <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>
@@ -71,11 +71,11 @@
 
 <script setup lang="ts">
 import PageSize from "@/pages/admin/manager/user/page-size";
-import Pagination from "@functional/pagination/pagination";
-import moment from "moment";
 import { errorAlert } from "@functional/alert/alert-default";
-import { onMounted, ref } from "vue";
+import Pagination from "@functional/pagination/pagination";
 import HistoryBoardListSearch from "@organisms/history/history-board-list-search.vue";
+import moment from "moment";
+import { onMounted, ref } from "vue";
 
 definePageMeta({
   name: "AdminDataRequestHistory",
@@ -148,34 +148,6 @@ const getHistoryList = async (offset: number = 1): Promise<void> => {
 // 페이지 번호 클릭
 const onClickPage = (page: number): void => {
   getHistoryList(page);
-};
-
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-};
-
-const yyyyMMddHHmmSSsep = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + "<br>" + hours + ":" + min + ":" + sec;
 };
 
 // 달력 입력값 초기화 버튼

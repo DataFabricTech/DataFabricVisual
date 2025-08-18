@@ -43,7 +43,7 @@
                 <td>{{ item.dept_id ? item.dept_id : "-" }}</td>
                 <td>{{ item.dept_name ? item.dept_name : "-" }}</td>
                 <td>{{ item.user_ip_addr }}</td>
-                <td>{{ yyyyMMddHHmmSS(item.login_date) }}</td>
+                <td>{{ $yyyyMMddHHmmSS(item.login_date) }}</td>
               </tr>
               <tr v-if="historyList.length === 0">
                 <td colspan="7">
@@ -62,11 +62,11 @@
 
 <script setup lang="ts">
 import PageSize from "@/pages/admin/manager/user/page-size";
-import Pagination from "@functional/pagination/pagination";
-import moment from "moment";
 import { errorAlert } from "@functional/alert/alert-default";
-import { onMounted, watch, reactive, ref } from "vue";
+import Pagination from "@functional/pagination/pagination";
 import HistoryBoardListSearch from "@organisms/history/history-board-list-search.vue";
+import moment from "moment";
+import { onMounted, ref } from "vue";
 
 definePageMeta({
   name: "AdminLoginHistory",
@@ -139,20 +139,6 @@ const getHistoryList = async (offset: number = 1): Promise<void> => {
 // 페이지 번호 클릭
 const onClickPage = (page: number): void => {
   getHistoryList(page);
-};
-
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
 };
 
 // 달력 입력값 초기화 버튼

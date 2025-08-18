@@ -56,4 +56,15 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     return hours + ":" + min + ":" + sec;
   });
+
+  nuxtApp.provide('yyyyMMdd_dot', (value) => {
+    let date = new Date(value);
+    let year = date.getFullYear();
+    let month = String(date.getMonth() + 1).padStart(2, "0");
+    let day = String(date.getDate()).padStart(2, "0");
+    if (value == null || value == undefined) {
+      return "";
+    }
+    return year + "." + month + "." + day;
+  });
 });
