@@ -25,4 +25,6 @@ public interface CategoryMapper {
     List getMetaListForFilter();
     
     List getMetaTypes();
+
+    List<Map<String, Object>> getMetaList() throws Exception;
 }
