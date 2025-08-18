@@ -47,11 +47,12 @@
                 <td :title="item.system_name ? item.system_name : '-'"><a @click="popupCollectorDetailModal(item)">{{ item.system_name ? item.system_name : "-" }}</a></td>
                 <td :title="item.host ? item.host : '-'">{{ item.host ? item.host : "-" }}</td>
                 <td :title="item.database ? item.database : '-'">{{ item.database ? item.database : "-" }}</td>
-                <td @click="airflow(item)" :title="item.interval ? item.interval : '-'">
-                  <a :class="item.interval ? 'interval_label' : ''">
-                    {{ item.interval ? item.interval : "-" }}
+                <td v-if="item.interval" @click="airflow(item)" :title="item.interval">
+                  <a class="interval_label">
+                    {{ item.interval }}
                   </a>
                 </td>
+                <td v-else>-</td>
                 <td :title='item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-"'>{{ item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-" }}</td>
                 <td :title="getKrCollectFlag(item.collect_flag)">{{ getKrCollectFlag(item.collect_flag) }}</td>
                 <td>
