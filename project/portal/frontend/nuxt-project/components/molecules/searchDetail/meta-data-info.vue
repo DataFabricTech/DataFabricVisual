@@ -70,11 +70,19 @@
                 v-if="
                   getTypeByValue(key, value) === '' &&
                   key.toLowerCase().indexOf('time') === -1 &&
-                  key !== 'parameters'
+                  key !== 'parameters' &&
+                  !checkObject(value)
                 "
               >
                 {{ value ? value : '-' }}
               </span>
+              <span v-else-if="
+                  getTypeByValue(key, value) === '' &&
+                  key.toLowerCase().indexOf('time') === -1 &&
+                  key !== 'parameters' &&
+                  checkObject(value)">
+                <pre style="display: inline-block; text-align: left; white-space: pre-wrap;">{{ value }}</pre>
+                </span>
               <span
                 v-else-if="
                   key === 'parameters' && key.toLowerCase().indexOf('time') === -1
@@ -117,16 +125,16 @@ const desiredOrder = ref([
   "columns",
   "qualified_name",
   "create_time",
+  "create_by",
   "update_time",
+  "update_by",
   "last_access_time",
+  "version",
   "meta_sync_time",
   "system_id",
   "system_name",
   "system_type",
   "meta_type",
-  "table_type",
-  "database",
-  "schema"
 ])
 // 메타속성 제외 목록
 const noEntries = ref([])
@@ -136,7 +144,8 @@ const showEmptyField = ref(false) // 메타속성 데이터 없는 필드 보여
 const metaDataInfo = computed(() => {
   const entity = props.entity
   if (entity != null && entity != undefined) {
-    const obj = ObjectUtils.getPropertyValue(props.entity, 'attributes', {})
+    const obj = ObjectUtils.getPropertyValue(entity, 'attributes', {})
+    const typeName = ObjectUtils.getPropertyValue(entity, 'meta_type', "")
 
     // 화면 렌더에 필요한 형태로 데이터 가공
     const metaDataInfoResult = obj
@@ -164,25 +173,30 @@ const metaDataInfo = computed(() => {
     sortedMetaData.meta_id = entity.meta_id
     sortedMetaData.meta_name = entity.meta_name
     sortedMetaData.description = entity.description
+    sortedMetaData.status = entity.status
+    sortedMetaData.life_cycle = entity.life_cycle
     sortedMetaData.create_time = entity.create_time
+    sortedMetaData.create_by = entity.create_by
     sortedMetaData.update_time = entity.update_time
+    sortedMetaData.update_by = entity.update_by
     sortedMetaData.last_access_time = entity.last_access_time
+    sortedMetaData.version = entity.version
+    sortedMetaData.release = entity.release
     sortedMetaData.meta_sync_time = entity.meta_sync_time
     sortedMetaData.qualified_name = entity.qualified_name
     sortedMetaData.system_id = entity.system_id
     sortedMetaData.system_name = entity.system_name
     sortedMetaData.system_type = entity.system_type
     sortedMetaData.meta_type = entity.meta_type
-    if (entity.system_type && entity.system_type.toUpperCase() != 'MYSQL') {
+    if (typeName && typeName.toUpperCase() != 'FILE' && entity.system_type && entity.system_type.toUpperCase() != 'MYSQL') {
       sortedMetaData.database = getDbName(entity.qualified_name)
     }
-    if (entity.system_type && entity.system_type.toUpperCase() != 'HIVE') {
+    if (typeName && typeName.toUpperCase() != 'FILE' && entity.system_type && entity.system_type.toUpperCase() != 'HIVE') {
       sortedMetaData.schema = getSchemaName(entity.qualified_name)
     }
 
     // 값이 없는 데이터 필드 보여주기 여부
     if (!showEmptyField.value) removeEmptyFields(sortedMetaData)
-    console.log(sortedMetaData)
 
     return sortedMetaData;
   }
@@ -250,6 +264,7 @@ const getKrKey = (key) => {
     if (key == "size") return "파일 크기";
     if (key == "full_path") return "파일 전체 경로 (local path)";
     if (key == "source_URL") return "파일 소스 URL";
+    if (key == "db") return "db 정보";
     return key;
   }
   return key;
@@ -311,6 +326,10 @@ const getSchemaName = (qualified_name) => {
     return qualified_name.split(".")[2]
   }
   return "-"
+}
+
+const checkObject = (value) => {
+  return typeof value === "object" && value !== null
 }
 
 </script>
