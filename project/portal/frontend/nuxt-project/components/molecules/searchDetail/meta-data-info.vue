@@ -52,20 +52,12 @@
                   </table>
                 </div>
               </div>
-              <!-- 데이터 타입이 object이고 key가 columns가 아닐 경우 -->
-              <textarea
-                v-if="getTypeByValue(key, value) === 'TEXT_AREA'"
-                class="mu-area h100 tl"
-                readonly="readonly"
-                v-html="arrayToTextArea(value)"
-                style="white-space: pre-line" />
-
               <!-- 데이터 타입이 object가 아니고 key가 table일 경우 -->
               <span v-if="getTypeByValue(key, value) === 'SPAN_LINK'">
                 <a v-on:click="onClickDataName(key, value)">{{ value }}</a>
               </span>
 
-              <!-- 데이터 타입이 object가 아니고 key가 table이 아닐 경우 -->
+              <!-- 데이터 타입이 object가 아니고 key가 table이 아니고 값이 객체가 아닌 경우 -->
               <span
                 v-if="
                   getTypeByValue(key, value) === '' &&
@@ -76,19 +68,13 @@
               >
                 {{ value == 0 || value ? value : '-' }}
               </span>
+              <!-- 데이터 타입이 object가 아니고 key가 table이 아니고 값이 객체인 경우 -->
               <span v-else-if="
-                  getTypeByValue(key, value) === '' &&
-                  key.toLowerCase().indexOf('time') === -1 &&
-                  key !== 'parameters' &&
-                  checkObject(value)">
+                getTypeByValue(key, value) === '' &&
+                key.toLowerCase().indexOf('time') === -1 &&
+                key !== 'parameters' &&
+                checkObject(value)">
                 <pre style="display: inline-block; text-align: left; white-space: pre-wrap;">{{ value }}</pre>
-                </span>
-              <span
-                v-else-if="
-                  key === 'parameters' && key.toLowerCase().indexOf('time') === -1
-                "
-              >
-                {{ value.last_modified_time }}
               </span>
               <span
                 v-if="
@@ -109,6 +95,8 @@
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
 import { useUserStore } from "~/store/user";
+
+const { $numberComma } = useNuxtApp();
 
 const router = useRouter();
 
@@ -135,6 +123,7 @@ const desiredOrder = ref([
   "system_name",
   "system_type",
   "meta_type",
+  "version",
   "status",
   "release",
 ])
@@ -196,6 +185,12 @@ const metaDataInfo = computed(() => {
     }
     if (typeName && typeName.toUpperCase() != 'FILE' && entity.system_type && entity.system_type.toUpperCase() != 'HIVE') {
       sortedMetaData.schema = getSchemaName(entity.qualified_name)
+    }
+
+    // File에서 사이즈 단위 표기 조정
+    if (typeName && typeName.toUpperCase() == 'FILE') {
+      const byteSize = Math.floor(sortedMetaData.size)
+      sortedMetaData.size = $numberComma(byteSize)
     }
 
     // 값이 없는 데이터 필드 보여주기 여부
@@ -266,11 +261,12 @@ const getKrKey = (key) => {
     if (key == "source_hash") return "Source hash of the entity";
     if (key == "rdfs") return "JSON타입의 값";
     if (key == "prefix") return "파일 경로 (bucket)"
-    if (key == "size") return "파일 크기";
+    if (key == "size") return "파일 크기(byte)";
     if (key == "full_path") return "파일 전체 경로 (local path)";
     if (key == "source_URL") return "파일 소스 URL";
     if (key == "db") return "db";
     if (key == "version") return "미사용";
+    if (key == "status") return "상태값";
     if (key == "release") return "메타 공개 여부";
     return key;
   }
