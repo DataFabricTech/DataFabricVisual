@@ -74,7 +74,7 @@
                   !checkObject(value)
                 "
               >
-                {{ value ? value : '-' }}
+                {{ value == 0 || value ? value : '-' }}
               </span>
               <span v-else-if="
                   getTypeByValue(key, value) === '' &&
@@ -121,6 +121,7 @@ const props = defineProps(["entity", "referredEntitiesAttributes"]);
 const desiredOrder = ref([
   "meta_id",
   "meta_name",
+  "display_name",
   "description",
   "columns",
   "qualified_name",
@@ -129,12 +130,13 @@ const desiredOrder = ref([
   "update_time",
   "update_by",
   "last_access_time",
-  "version",
   "meta_sync_time",
   "system_id",
   "system_name",
   "system_type",
   "meta_type",
+  "status",
+  "release",
 ])
 // 메타속성 제외 목록
 const noEntries = ref([])
@@ -172,6 +174,7 @@ const metaDataInfo = computed(() => {
     // attributes 속성에 없는 데이터 추가
     sortedMetaData.meta_id = entity.meta_id
     sortedMetaData.meta_name = entity.meta_name
+    sortedMetaData.display_name = entity.display_name
     sortedMetaData.description = entity.description
     sortedMetaData.status = entity.status
     sortedMetaData.life_cycle = entity.life_cycle
@@ -239,7 +242,9 @@ const getKrKey = (key) => {
     if (key == "column_type") return "컬럼 데이터 타입";
     if (key == "display_name") return "화면 표출 메타명";
     if (key == "qualified_name") return "객체 고유명"
+    if (key == "create_by") return "메타 데이터 생성자";
     if (key == "create_time") return "메타 데이터 생성일자";
+    if (key == "update_by") return "메타 수정자";
     if (key == "update_time") return "메타 수정일";
     if (key == "last_access_time") return "최종 접근 시간";
     if (key == "meta_sync_time") return "최종 수집일";
@@ -264,7 +269,9 @@ const getKrKey = (key) => {
     if (key == "size") return "파일 크기";
     if (key == "full_path") return "파일 전체 경로 (local path)";
     if (key == "source_URL") return "파일 소스 URL";
-    if (key == "db") return "db 정보";
+    if (key == "db") return "db";
+    if (key == "version") return "미사용";
+    if (key == "release") return "메타 공개 여부";
     return key;
   }
   return key;

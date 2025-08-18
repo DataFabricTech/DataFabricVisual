@@ -660,6 +660,8 @@ const getSampleData = () => {
 
           $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
             sampleTotal.value = rs.data
+          }).catch((err) => {
+            sampleTotal.value = 0
           })
         }
 
@@ -684,6 +686,8 @@ const getSampleData = () => {
         }
       });
     } catch (e) {
+      sampleData.value = []
+      sampleTotal.value = 0
       console.log(e);
     }
   } else if (meta_type && meta_type.toUpperCase() == 'FILE') {
@@ -704,9 +708,14 @@ const getSampleData = () => {
         if (res && res.data && res.data.sampleData) {
           sampleData.value = res.data.sampleData
           sampleTotal.value = res.data.sampleTotal
+        } else {
+          sampleData.value = []
+          sampleTotal.value = 0
         }
       });
     } catch (e) {
+      sampleData.value = []
+      sampleTotal.value = 0
       console.log(e);
     }
   }

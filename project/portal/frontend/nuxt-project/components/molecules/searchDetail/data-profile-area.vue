@@ -66,40 +66,40 @@
                       item.column_type ? item.column_type : "-" }})</span>
                   </td>
                   <td>
-                    <span class="mu-ellipsis" :title="$numberComma(item.null_count)">
-                      {{ $numberComma(item.null_count) }}
+                    <span class="mu-ellipsis" :title="item.null_count == 0 || item.null_count ? $numberComma(item.null_count) : '-'">
+                      {{ item.null_count == 0 || item.null_count ? $numberComma(item.null_count) : '-'}}
                     </span>
                   </td>
                   <td>
-                    <span class="mu-ellipsis" :title="$numberComma(item.distinct_count)">
-                      {{ $numberComma(item.distinct_count) }}
+                    <span class="mu-ellipsis" :title="item.distinct_count == 0 || item.distinct_count ? $numberComma(item.distinct_count) : '-'">
+                      {{ item.distinct_count == 0 || item.distinct_count ? $numberComma(item.distinct_count) : '-' }}
                     </span>
                   </td>
 
                   <template v-if="checkInvaildNumberColumn(item)">
                     <td>
-                      <span class="mu-ellipsis" :title="$numberComma(item.min_value)">
-                        {{ $numberComma(item.min_value) }}
+                      <span class="mu-ellipsis" :title="item.min_value == 0 || item.min_value ? $numberComma(item.min_value) : '-'">
+                        {{ item.min_value == 0 || item.min_value ? $numberComma(item.min_value) : '-' }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="$numberComma(item.max_value)">
-                        {{ $numberComma(item.max_value) }}
+                      <span class="mu-ellipsis" :title="item.max_value == 0 || item.max_value ? $numberComma(item.max_value) : '-'">
+                        {{ item.max_value == 0 || item.max_value ? $numberComma(item.max_value) : '-' }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="$numberComma(item.avg_value)">
-                        {{ $numberComma(item.avg_value) }}
+                      <span class="mu-ellipsis" :title="item.avg_value == 0 || item.avg_value ? $numberComma(item.avg_value) : '-'">
+                        {{ item.avg_value == 0 || item.avg_value ? $numberComma(item.avg_value) : '-' }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="$numberComma(item.var_value)">
-                        {{ $numberComma(item.var_value) }}
+                      <span class="mu-ellipsis" :title="item.var_value == 0 || item.var_value ? $numberComma(item.var_value) : '-'">
+                        {{ item.var_value == 0 || item.var_value ? $numberComma(item.var_value) : '-' }}
                       </span>
                     </td>
                     <td>
-                      <span class="mu-ellipsis" :title="$numberComma(item.std_value)">
-                        {{ $numberComma(item.std_value) }}
+                      <span class="mu-ellipsis" :title="item.std_value == 0 || item.std_value ? $numberComma(item.std_value) : '-'">
+                        {{ item.std_value == 0 || item.std_value ? $numberComma(item.std_value) : '-' }}
                       </span>
                     </td>
                   </template>
@@ -110,7 +110,7 @@
                       </span>
                     </td>
                   </template>
-                  <td v-html="$yyyyMMddHHmmSS_Sep(item.update_date, '<br>')"></td>
+                  <td v-html="$yyyyMMddHHmmSS_Sep(item.update_date, '<br>')" :title="$yyyyMMddHHmmSS_Sep(item.update_date, '<br>').replace('<br>', ' ')"></td>
                 </tr>
               </tbody>
             </table>
