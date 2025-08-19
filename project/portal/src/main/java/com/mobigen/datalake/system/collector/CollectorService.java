@@ -124,7 +124,9 @@ public class CollectorService {
     try {
       // 비밀번호 암호화
       AESGCMUtil encoder = new AESGCMUtil(cryptKey);
-      params.put("password", encoder.encrypt(params.get("password").toString()));
+      if (params.get("password") != null && !params.get("password").toString().equals("")) {
+        params.put("password", encoder.encrypt(params.get("password").toString()));
+      }
 
       addCount = collectorMapper.addCollector(params);
       if (addCount > 0) {

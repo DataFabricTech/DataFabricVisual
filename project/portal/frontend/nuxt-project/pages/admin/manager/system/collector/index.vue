@@ -351,6 +351,7 @@ const updateCollector = async (newCollector) => {
         await successAlert("등록되었습니다.")
       } else {
         await errorAlert("등록에 실패하였습니다.")
+
       }
     }
 

@@ -58,7 +58,8 @@
               <td colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database"
                   class="mu-input"
                   :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('S3')
-                  || currentCollector.system_type.toUpperCase().includes('MINIO')">
+                  || currentCollector.system_type.toUpperCase().includes('MINIO')
+                  || currentCollector.system_type.toUpperCase().includes('DRUID')">
               </td>
             </tr>
             <tr>
@@ -72,7 +73,8 @@
                   || currentCollector.system_type.toUpperCase().includes('MARIADB')
                   || currentCollector.system_type.toUpperCase().includes('TIBERO')
                   || currentCollector.system_type.toUpperCase().includes('S3')
-                  || currentCollector.system_type.toUpperCase().includes('MINIO')"></td>
+                  || currentCollector.system_type.toUpperCase().includes('MINIO')
+                  || currentCollector.system_type.toUpperCase().includes('DRUID')"></td>
             </tr>
             <tr>
               <th>수집 주기</th>
@@ -80,7 +82,7 @@
                   placeholder="ex) * * * * *" class="mu-input" :readonly="isDetail"></td>
               <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Access Key' : 'Login' }}</th>
               <td colspan="3"><input type="text" v-model="currentCollector.login" :title="currentCollector.login"
-                  class="mu-input" :readonly="isDetail"></td>
+                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')"></td>
             </tr>
             <tr>
               <th>수집 여부</th>
@@ -94,7 +96,7 @@
               </td>
               <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Secret Key' : 'Password' }}</th>
               <td colspan="3"><input type="text" v-model="currentCollector.password" :title="currentCollector.password"
-                  class="mu-input" :readonly="isDetail"></td>
+                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')"></td>
             </tr>
             <tr v-if="currentCollector.system_type.toUpperCase().includes('HIVE')">
               <th></th>
@@ -456,6 +458,7 @@ const isValidInput = () => {
   && !currentCollector.value.system_type.toUpperCase().includes('MSSQL')
   && !currentCollector.value.system_type.toUpperCase().includes('S3')
   && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
+  && !currentCollector.value.system_type.toUpperCase().includes('DRUID')
   && (!currentCollector.value.database || currentCollector.value.database == '')) { // Database
     errorAlert("Database 값을 입력해 주세요.")
     return false
@@ -463,6 +466,7 @@ const isValidInput = () => {
   if (!currentCollector.value.system_type.toUpperCase().includes('HIVE')
   && !currentCollector.value.system_type.toUpperCase().includes('MYSQL')
   && !currentCollector.value.system_type.toUpperCase().includes('MARIADB')
+  && !currentCollector.value.system_type.toUpperCase().includes('DRUID')
   && (!currentCollector.value.schema || currentCollector.value.schema == '')) { // Schema
     if (currentCollector.value.system_type.toUpperCase().includes('TIBERO')) { // Tibero는 기본 default 입력
       currentCollector.value.schema = 'default'
@@ -478,7 +482,8 @@ const isValidInput = () => {
     errorAlert("시스템 명을 입력해 주세요.")
     return false
   }
-  if (!currentCollector.value.login || currentCollector.value.login == '') { // Login
+  if (!currentCollector.value.system_type.toUpperCase().includes('DRUID')
+    && (!currentCollector.value.login || currentCollector.value.login == '')) { // Login
     errorAlert("Login 값을 입력해 주세요.")
     return false
   }
@@ -487,7 +492,8 @@ const isValidInput = () => {
     return false
   }
 
-  if (!currentCollector.value.password || currentCollector.value.password == '') { // Password
+  if (!currentCollector.value.system_type.toUpperCase().includes('DRUID')
+    && (!currentCollector.value.password || currentCollector.value.password == '')) { // Password
     if (!props.isUpdate) {
       if (!currentCollector.value.system_type.toUpperCase().includes('S3')
       && !currentCollector.value.system_type.toUpperCase().includes('MINIO')) {
