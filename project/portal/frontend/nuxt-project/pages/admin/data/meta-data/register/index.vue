@@ -126,7 +126,7 @@
             <div class="board-body">
               <!-- tag-box : 태그/키워드 관리 -->
               <tag-register-area ref="tag-keyword-area" :allTagList="allTagList" :entity="{}"
-                  @onClickAddTag="onClickAddTag" />
+                  @onClickAddTag="onClickAddTag" :isOkNewTag="true"/>
             </div>
           </div>
         </div>

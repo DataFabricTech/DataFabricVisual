@@ -25,7 +25,7 @@ import { errorAlert } from "@functional/alert/alert-default";
 import TagAutoSelect from "@functional/autoSelect/tag-auto-select";
 
 const emit = defineEmits(["reload", "onClickAddTag", "onClickDeleteTag"]);
-const props = defineProps(["params", "allTagList", "entity", "isRegister"]);
+const props = defineProps(["params", "allTagList", "entity", "isRegister", "isOkNewTag"]);
 
 const showData = ref(true);
 
@@ -52,10 +52,13 @@ const validateTag = (): boolean => {
     return false;
   }
 
-  const matched = props.allTagList.find((el) => el.tag_name === selectedTagName.value);
-  if (!matched) {
-    errorAlert("잘못된 태그를 입력했습니다.");
-    return false;
+  // 태그 직접입력 가능
+  if (!props.isOkNewTag) {
+    const matched = props.allTagList.find((el) => el.tag_name === selectedTagName.value);
+    if (!matched) {
+      errorAlert("잘못된 태그를 입력했습니다.");
+      return false;
+    }
   }
 
   // 태그 중복
