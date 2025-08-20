@@ -52,7 +52,7 @@
             {{ props.sampleData }}
           </div>
         </div>
-        <div v-else-if="props.typeName.toUpperCase() == 'TABLE'">
+        <div v-else-if="props.typeName && props.typeName.toUpperCase() == 'TABLE'">
           <!-- 샘플 데이터 최대 10개 출력 전체, 데이터 수 10개 미만인 경우 모든 데이터 출력/샘플 데이터 스크롤바, 컬럼 내용이 긴 경우 가로 스크롤을 이용하여 노출되지 않은 값까지 확인 가능 -->
           <div class="table-scroll max-h630 h400" v-if="props.userDataAuth == 1 || props.userDataAuth == 2">
             <table class="mu-grid mu-grid-data">
