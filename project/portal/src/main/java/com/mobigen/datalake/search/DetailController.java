@@ -18,6 +18,7 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -382,4 +383,18 @@ public class DetailController {
         return searchDetailService.getUserDataAuth(params);
     }
 
+    /**
+     * File 데이터 추출
+     * 
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/getFileData")
+    @ResponseBody
+    public void getFileData(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("user", user);
+        searchDetailService.getFileData(params, response);
+    }
 }

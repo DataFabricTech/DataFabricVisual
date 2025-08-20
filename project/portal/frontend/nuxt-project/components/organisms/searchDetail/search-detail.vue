@@ -969,24 +969,58 @@ const onClickConfirm = async () => {
 const onToggleEliminateModal = async () => {
   // 데이터 권한이 없는 경우 추출 불가
   if (userDataAuth.value == 2) {
-    // 데이터추출
-    const status = eliminateModalObj.value.toggle;
-    if (status) {
-      eliminateModalObj.value.sampleData = null;
-      eliminateModalObj.value.entity = null;
-      eliminateModalObj.value.toggle = !status;
-      eliminateModalObj.value.userDataAuth = userDataAuth.value;
-      eliminateModalObj.value.typeName = "";
-      eliminateModalObj.value.fileFormat = "";
-      eliminateModalObj.value.num_rows = null
+    const metaName = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+    const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
+    const fullPath = ObjectUtils.getPropertyValue(entity.value, "attributes/full_path", "");
+
+    // File의 경우 Minio 등록된 파일 다운로드
+    if (typeName != "" && typeName.toUpperCase() === 'FILE') {
+      if (await confirmAlert("파일을 다운로드하시겠습니까?")) {
+        const params = {
+          full_path: fullPath
+        }
+
+        $ofetch(`/api/search/detail/getFileData`, {
+          method: 'POST',
+          body: params,
+        }).then((res) => {
+          if (res && res.size > 0) {
+            const blob = new Blob([res])
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', metaName) // 저장할 파일명
+            document.body.appendChild(link);
+            link.click()
+            document.body.removeChild(link);
+          } else {
+            errorAlert("파일 다운로드에 실패하였습니다.")
+          }
+        }).catch((err) => {
+          console.log(err)
+          errorAlert("파일 다운로드에 실패하였습니다.")
+        })
+      }
     } else {
-      eliminateModalObj.value.sampleData = sampleData.value;
-      eliminateModalObj.value.entity = entity.value;
-      eliminateModalObj.value.toggle = !status;
-      eliminateModalObj.value.userDataAuth = userDataAuth.value;
-      eliminateModalObj.value.typeName = typeName.value;
-      eliminateModalObj.value.fileFormat = fileFormat.value;
-      eliminateModalObj.value.num_rows = sampleTotal.value
+      // 데이터추출
+      const status = eliminateModalObj.value.toggle;
+      if (status) {
+        eliminateModalObj.value.sampleData = null;
+        eliminateModalObj.value.entity = null;
+        eliminateModalObj.value.toggle = !status;
+        eliminateModalObj.value.userDataAuth = userDataAuth.value;
+        eliminateModalObj.value.typeName = "";
+        eliminateModalObj.value.fileFormat = "";
+        eliminateModalObj.value.num_rows = null
+      } else {
+        eliminateModalObj.value.sampleData = sampleData.value;
+        eliminateModalObj.value.entity = entity.value;
+        eliminateModalObj.value.toggle = !status;
+        eliminateModalObj.value.userDataAuth = userDataAuth.value;
+        eliminateModalObj.value.typeName = typeName.value;
+        eliminateModalObj.value.fileFormat = fileFormat.value;
+        eliminateModalObj.value.num_rows = sampleTotal.value
+      }
     }
   } else {
     await defaultAlert("데이터 추출 권한이 없습니다.");

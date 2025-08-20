@@ -46,7 +46,7 @@
       <div class="inner-data buttons">
         <data-recommend-status-top :data="props.data" :params="props.params"
           @reloadFavorite="onToggleFavorite" @reloadRecommend="onToggleRecommend" />
-        <button v-if="(typeName.includes('table') || typeName.includes('file'))" type="button" class="mu-btn mu-btn-lg mu-btn-primary"
+        <button v-if="(typeName.toUpperCase() === ('TABLE') || typeName.toUpperCase() === ('FILE'))" type="button" class="mu-btn mu-btn-lg mu-btn-primary"
           @click="onClickEliminate">
           <i class="mu-icon-svg apply"></i>
           <span>데이터 추출</span>

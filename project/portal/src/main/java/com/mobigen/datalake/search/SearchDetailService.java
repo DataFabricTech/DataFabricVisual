@@ -3,6 +3,7 @@ package com.mobigen.datalake.search;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -31,6 +32,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
@@ -43,6 +45,7 @@ import com.mobigen.framework.utility.S3Url;
 
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -1287,6 +1290,45 @@ public class SearchDetailService {
         }
 
         return result;
+    }
+
+    public void getFileData(Map<String, Object> params, HttpServletResponse response) throws Exception {
+        String fullPath = params.get("full_path").toString();
+
+        // sample_data_url 조회
+        S3Url p = S3Url.parse(fullPath);
+        String bucket = p.getBucket();
+        String object = p.getObject();
+
+        MinioClient mf = MinioFactory.create(endpoint, accessKey, secretKey);
+
+        try (InputStream inputStream = mf.getObject(GetObjectArgs.builder()
+                                        .bucket(bucket)
+                                        .object(object)
+                                        .build());
+            OutputStream outputStream = response.getOutputStream();) {
+
+            // 응답 헤더 세팅
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+
+            // 스트리밍 복사
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            try {
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+            } catch(Exception e) {
+                StringBuilder errMsg = new StringBuilder();
+                errMsg.append(System.lineSeparator())
+                      .append(System.lineSeparator())
+                      .append("Fail to file download !!");
+                outputStream.write(errMsg.toString().getBytes());
+            }
+        } catch (Exception e) {
+            log.error("Fail to download file !!");
+            e.printStackTrace();
+        }
     }
 
     public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
