@@ -566,13 +566,13 @@ const getDetailDataProfile = () => {
     }
   }
 
-  if (columnData) {
-    if (typeName.includes('file')) {
+  if (columnData && Array.isArray(columnData)) {
+    if (typeName.toUpperCase() === 'FILE') {
       let table_qualified_name = entity.value.qualified_name
       params.columnData = columnData.map((item) => {
         return table_qualified_name + "." + item.meta_name
       })
-    } else {
+    } else if (typeName.toUpperCase() === 'TABLE') {
       params.columnData = columnData.map((item) => {
         return item.qualified_name
       });

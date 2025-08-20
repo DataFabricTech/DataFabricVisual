@@ -44,9 +44,9 @@
                     <tbody>
                       <tr v-for="(item2, idx) in value">
                         <td>{{ idx + 1 }}</td>
-                        <td :title="value[idx].meta_name">{{ value[idx].meta_name }}</td>
-                        <td :title="value[idx].description">{{ value[idx].description ? value[idx].description : "-" }}</td>
-                        <td :title="value[idx].column_type">{{ value[idx].column_type }}</td>
+                        <td :title="value[idx] && value[idx].meta_name ? value[idx].meta_name : '-'">{{ value[idx] && value[idx].meta_name ? value[idx].meta_name : '-'}}</td>
+                        <td :title="value[idx] && value[idx].description ? value[idx].description : '-'">{{ value[idx] && value[idx].description ? value[idx].description : '-' }}</td>
+                        <td :title="value[idx] && value[idx].column_type ? value[idx].column_type : '-'">{{ value[idx] && value[idx].column_type ? value[idx].column_type : '-' }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -143,11 +143,17 @@ const metaDataInfo = computed(() => {
 
     const columns = obj.columns;
     if (columns) {
-      const uniqueColumns = columns.filter((el, idx) => {
-        return columns.indexOf(el) === idx;
-      });
+      if (Array.isArray(columns)) {
+        const uniqueColumns = columns.filter((el, idx) => {
+          return columns.indexOf(el) === idx;
+        });
 
-      metaDataInfoResult.columns = uniqueColumns;
+        metaDataInfoResult.columns = uniqueColumns;
+      } else {
+        metaDataInfoResult.columns = []
+      }
+    } else {
+      metaDataInfoResult.columns = []
     }
 
     const sortedEntries = desiredOrder.value
