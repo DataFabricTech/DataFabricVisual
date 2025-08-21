@@ -560,14 +560,8 @@ const onClickSaveButton = async () => {
             }
             await $ofetch(`/api/metadata/manage/executeCollect`, { method: 'POST', body: executeBody}).then(async (res) => {
               if (res && res.data && res.data.executeResult) {
-                await $ofetch(`/api/metadata/manage/executeProfile`, { method: 'POST', body: executeBody}).then(async (res) => {
-                  if (res && res.data && res.data.executeResult) {
-                    await successAlert("비정형 데이터가 등록되었습니다.");
-                    goToMetaDataManage()
-                  } else {
-                    await errorAlert("프로파일링 요청에 실패하였습니다.")
-                  }
-                })
+                await successAlert("비정형 데이터가 등록되었습니다.");
+                goToMetaDataManage()
               } else {
                 await errorAlert("Fabric Storage 수동 수집에 실패하였습니다.")
               }
