@@ -3,7 +3,7 @@
     :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
-        <h4>데이터 정보</h4>
+        <h4>메타 데이터 정보</h4>
         <div class="mu-item-group">
           <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" title="접기" @click="toggleShowData()"
             style="margin-left: 10px">
@@ -12,7 +12,7 @@
         </div>
       </div>
       <!-- detail-box : 데이터 정보 > 메타속성 -->
-      <meta-data-info :entity="props.entity" :referredEntitiesAttributes="props.referredEntitiesAttributes"
+      <meta-data-info :isAdmin="props.isAdmin" :entity="props.entity" :typeName="typeName" :referredEntitiesAttributes="props.referredEntitiesAttributes"
         @onClickData="onClickDataName" />
       <!-- detail-box : 데이터 정보 > 비지니스 속성 -->
       <business-attributes-area :isAdmin="props.isAdmin" :attributes="props.attributes" @onClickAddRow="onClickAdd"
@@ -22,14 +22,19 @@
 </template>
 
 <script setup lang="ts">
-import MetaDataInfo from "@molecules/searchDetail/meta-data-info";
 import BusinessAttributesArea from "@molecules/searchDetail/business-attributes-area";
+import MetaDataInfo from "@molecules/searchDetail/meta-data-info";
 
 const props = defineProps(['entity', 'referredEntitiesAttributes', 'isAdmin', 'attributes'])
 const emit = defineEmits(['getAllDataByGuid', 'onClickAddRow', 'onClickDelRow'])
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
+
+// 메타 타입
+const typeName = computed(() => {
+  return props.entity && props.entity.meta_type ? props.entity.meta_type : ''
+})
 
 const toggleShowData = () => {
   showData.value = !showData.value;

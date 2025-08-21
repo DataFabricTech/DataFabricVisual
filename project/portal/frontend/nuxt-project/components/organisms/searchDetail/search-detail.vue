@@ -20,7 +20,7 @@
             @onClickAddTag="onClickAddTag" :isAdmin="props.isAdmin" @reload="getDetailDataByGuid" />
         </div>
         <!-- detail-section : 사용자 데이터 설명 -->
-        <div :ref="el => sectionRefs['user-description-area'] = el" class="content-block">
+        <div v-if="typeName && typeName.toUpperCase() != 'FILE'" :ref="el => sectionRefs['user-description-area'] = el" class="content-block">
           <user-description-area :isAdmin="props.isAdmin" :isUserDescriptionMenuAuth="isUserDescriptionMenuAuth"
             :list="userDescriptionList" :params="userDataParam" :initUserDescription="initUserDescription"
             @reloadUserDescriptionList="getUserDescriptionList" @reload="getAllDataByGuid" />
@@ -439,9 +439,13 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
 const settingTabOption = (entity) => {
   tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area']
 
-  // 샘플데이터 탭 유무
+  // Table, File만 샘플데이터 존재
   if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE')
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
+
+  // File의 경우 사용자 데이터 설명 탭 제거
+  if (entity.meta_type.toUpperCase() == 'FILE')
+    tabs.value = tabs.value.filter((el) => el != 'user-description-area')
 }
 
 // 객체 키 유무 확인

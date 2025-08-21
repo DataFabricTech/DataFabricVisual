@@ -1,13 +1,138 @@
 <template>
   <div class="detail-box">
     <div class="mu-heading">
-      <h5 style="display:">메타속성</h5>
-      <div class="btn-switch" style="display: flex; justify-content: flex-end; width: 95%;">
-        <input type="checkbox" id ="toggle-slider" @click="toggleShowField" :title="showEmptyField ? 'Show Empty Field' : 'Hide Empty Field'">
+      <h5>데이터 정보</h5>
+      <div v-if="!props.isAdmin && props.typeName && props.typeName.toUpperCase() !== 'FILE'" class="btn-switch" style="display: flex; justify-content: flex-end; width: 94%;">
+        <input type="checkbox" id ="toggle-slider" @click="toggleShowField(props.typeName)" :title="showEmptyField ? 'Show Empty Field' : 'Hide Empty Field'">
         <label class="show-label" for="toggle-slider" :title="showEmptyField ? 'Show Empty Field' : 'Hide Empty Field'">표기/미표기</label>
       </div>
     </div>
-    <div class="max-h600">
+    <div v-if="!props.isAdmin && props.typeName && props.typeName.toUpperCase() === 'FILE'" class="max-h600">
+      <table class="mu-formbox">
+        <caption>
+          데이터 정보
+        </caption>
+        <colgroup>
+          <col style="width: 10%"/>
+          <col style="width: 30%"/>
+          <col style="width: 10%"/>
+          <col style="width: 15%"/>
+          <col style="width: 10%"/>
+          <col style="width: 15%"/>
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row">데이터 ID</th>
+            <td>{{ entity.meta_id ? entity.meta_id : '-' }}</td>
+            <th scope="row">데이터 출처</th>
+            <td colspan="3">{{ entity.attributes.data_from ? entity.attributes.data_from : '-' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">파일 명</th>
+            <td>
+              {{ entity.meta_name ? entity.meta_name : '-' }}
+            </td>
+            <th scope="row" rowspan="2">데이터 설명</th>
+            <td colspan="3" rowspan="2">{{ entity.user_description ? entity.user_description : '-' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">데이터 명</th>
+            <td>{{ entity.description ? entity.description : '-' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">데이터 고유명</th>
+            <td>{{ entity.qualified_name ? entity.qualified_name : '-' }}</td>
+            <th scope="row">파일 형식</th>
+            <td>{{ entity.attributes.file_format ? entity.attributes.file_format : '-' }}</td>
+            <th scope="row">파일 크기(Byte)</th>
+            <td>{{ $numberComma(Math.floor(entity.attributes.size)) || $numberComma(Math.floor(entity.attributes.size)) == 0 ? $numberComma(Math.floor(entity.attributes.size)) : '-' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">데이터 위치</th>
+            <td>{{ entity.attributes.full_path ? entity.attributes.full_path : '-' }}</td>
+            <th scope="row">최종 수집일</th>
+            <td colspan="3">{{ $yyyyMMddHHmmSS(entity.meta_sync_time) ? $yyyyMMddHHmmSS(entity.meta_sync_time) : '-' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">시스템 타입</th>
+            <td>{{ entity.system_type ? entity.system_type : '-' }}</td>
+            <th scope="row">시스템 명</th>
+            <td>{{ entity.system_name ? entity.system_name : '-' }}</td>
+            <th scope="row">등록자</th>
+            <td>{{ entity.create_user ? entity.create_user : entity.create_by ? entity.create_by : '-' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">데이터 타입</th>
+            <td>{{ entity.meta_type ? entity.meta_type : '-' }}</td>
+            <th scope="row">파일 위치</th>
+            <td>{{ entity.qualified_name ? entity.qualified_name.split(".")[1] : '-' }}</td>
+            <th scope="row">등록일</th>
+            <td>{{ $yyyyMMddHHmmSS(entity.create_time) ? $yyyyMMddHHmmSS(entity.create_time) : '-' }}</td>
+          </tr>
+          <tr v-if="checkShowFileColumns()">
+            <th scope="row">컬럼 목록</th>
+            <td colspan="5">
+              <div>
+                <div class="table-scroll max-h550">
+                  <table class="mu-grid mu-grid-data mu-grid-narrow">
+                    <colgroup>
+                      <col style="width:10%">
+                      <col style="width:25%">
+                      <col>
+                      <col style="width:15%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">순번</th>
+                        <th scope="col">컬럼명</th>
+                        <th scope="col">컬럼 설명</th>
+                        <th scope="col">타입</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item2, idx) in entity.attributes.columns">
+                        <td>{{ idx + 1 }}</td>
+                        <td :title="entity.attributes.columns[idx] && entity.attributes.columns[idx].meta_name ? entity.attributes.columns[idx].meta_name : '-'">{{ entity.attributes.columns[idx] && entity.attributes.columns[idx].meta_name ? entity.attributes.columns[idx].meta_name : '-'}}</td>
+                        <td :title="entity.attributes.columns[idx] && entity.attributes.columns[idx].description ? entity.attributes.columns[idx].description : '-'">{{ entity.attributes.columns[idx] && entity.attributes.columns[idx].description ? entity.attributes.columns[idx].description : '-' }}</td>
+                        <td :title="entity.attributes.columns[idx] && entity.attributes.columns[idx].column_type ? entity.attributes.columns[idx].column_type : '-'">{{ entity.attributes.columns[idx] && entity.attributes.columns[idx].column_type ? entity.attributes.columns[idx].column_type : '-' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr v-if="checkShowFileRdfs()">
+            <th scope="row">상세 속성</th>
+            <td colspan="5">
+              <div>
+                <div class="table-scroll max-h550">
+                  <table class="mu-grid mu-grid-data mu-grid-narrow">
+                    <colgroup>
+                      <col style="width:20%">
+                      <col style="width:80%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">메타 명</th>
+                        <th scope="col">메타 값</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item2, idx) in entity.attributes.rdfs">
+                        <td :title="idx">{{ idx }}</td>
+                        <td :title="entity.attributes.rdfs[idx]">{{ checkNumber(entity.attributes.rdfs[idx]) ? $numberComma(entity.attributes.rdfs[idx]) : entity.attributes.rdfs[idx] }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div v-else class="max-h600">
       <table class="mu-grid mu-grid-data">
         <colgroup>
           <col style="width: 20%" />
@@ -103,7 +228,7 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const emit = defineEmits(["onClickDataName"]);
-const props = defineProps(["entity", "referredEntitiesAttributes"]);
+const props = defineProps(["entity", "referredEntitiesAttributes", "isAdmin", "typeName"]);
 
 // 메타속성 항목 순서 목록
 const desiredOrder = ref([
@@ -130,7 +255,8 @@ const desiredOrder = ref([
 // 메타속성 제외 목록
 const noEntries = ref([])
 
-const showEmptyField = ref(false) // 메타속성 데이터 없는 필드 보여주기 여부
+const showEmptyField = ref(false) // 데이터 정보 데이터 없는 필드 보여주기 여부
+const showFileEmptyField = ref(false) // 데이터 정보 컬럼 목록/ 상세 속성 보여주기 여부
 
 const metaDataInfo = computed(() => {
   const entity = props.entity
@@ -209,8 +335,9 @@ const metaDataInfo = computed(() => {
 });
 
 // 객체 키값이 없는 데이터 표기/미표기
-const toggleShowField = () => {
+const toggleShowField = (typeName) => {
   showEmptyField.value = !showEmptyField.value
+  showFileEmptyField.value = !showFileEmptyField.value
 }
 
 // 객체 키값에 값이 없는 데이터 제거
@@ -339,6 +466,48 @@ const getSchemaName = (qualified_name) => {
 
 const checkObject = (value) => {
   return typeof value === "object" && value !== null
+}
+
+const checkNumber = (str) => {
+  return str.trim() !== "" && !isNaN(str);
+}
+
+const checkShowFileColumns = () => {
+  const entity = props.entity
+
+  // 1. columns 필드 존재
+  const isColumns = entity
+        && entity.attributes
+        && entity.attributes.columns
+        && entity.attributes.columns.length > 0
+
+  // 2. file_format 조건 ( csv, xls, xlsx, json, xml )
+  const isFormat = entity
+        && entity.attributes
+        && entity.attributes.file_format
+        && (entity.attributes.file_format.toUpperCase() === 'CSV'
+          || entity.attributes.file_format.toUpperCase() === 'XLS'
+          || entity.attributes.file_format.toUpperCase() === 'XLSX'
+          || entity.attributes.file_format.toUpperCase() === 'JSON'
+          || entity.attributes.file_format.toUpperCase() === 'XML')
+
+  // 3. 없는 값 표시 여부 +
+  return isColumns && isFormat
+}
+
+const checkShowFileRdfs = () => {
+  const entity = props.entity
+
+  // 1. rdfs 필드 및 값이 존재
+  const isRdfs = entity
+        && entity.attributes
+        && entity.attributes.rdfs
+        && Object.keys(entity.attributes.rdfs)
+        && Object.keys(entity.attributes.rdfs).length > 0
+
+  // 2. 없는 값 표시 여부 +
+  return isRdfs
+
 }
 
 </script>

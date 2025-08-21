@@ -28,7 +28,7 @@
             <tbody>
               <tr>
                 <th scope="col">행수</th>
-                <td>{{ comman(table.num_rows) ? comman(table.num_rows) : "-" }}</td>
+                <td>{{ $numberComma(table.num_rows) == 0 || $numberComma(table.num_rows) ? $numberComma(table.num_rows) : "-" }}</td>
                 <th scope="col">테이블프로파일링 일시</th>
                 <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
               </tr>
@@ -152,14 +152,6 @@ const column = computed(() =>
 
 const showTableArea = computed(() => Object.keys(table.value).length > 0);
 const showColumnArea = computed(() => Object.keys(column.value).length > 0);
-
-const comman = (val) => {
-  if (val !== undefined) {
-    return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  } else {
-    return "";
-  }
-};
 
 const checkInvaildNumberColumn = (column) => {
   if (column.hasOwnProperty('min_value') &&
