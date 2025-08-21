@@ -1,5 +1,6 @@
 package com.mobigen.datalake.metaData.manage;
 
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,22 +10,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.datalake.metaData.manage.DTO.UploadMinioFileForm;
 import com.mobigen.datalake.system.collector.CollectorService;
+import com.mobigen.framework.utility.MinioFactory;
 
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.errors.MinioException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,6 +56,18 @@ public class MetaDataManageService {
 
     @Value("${properties.catalog-api.url.profile}")
     private String catalogApiUrlProfile;
+
+    @Value("${properties.minio.endpoint}")
+    private String endpoint;
+
+    @Value("${properties.minio.accessKey}")
+    private String accessKey;
+
+    @Value("${properties.minio.secretKey}")
+    private String secretKey;
+
+    @Value("${properties.minio.unstructured_bucket}")
+    private String unstructuredBucket;
 
     // 메타 데이터 통합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
@@ -249,9 +261,16 @@ public class MetaDataManageService {
         Map<String, Object> result = new HashMap<>();
         boolean uploadResult = false; // 파일 minio 저장 성공 여부
         
-        try {
-            // 3. 파일 fabricdata(minio)에 저장
-            boolean res = uploadMultipart(file.getFile());
+        MultipartFile uploadFile = file.getFile();
+        try (InputStream is = uploadFile.getInputStream()){
+            
+            boolean res = this.uploadMultipart(
+                    uploadFile.getOriginalFilename(),
+                    is,
+                    uploadFile.getContentType(),
+                    uploadFile.getSize()
+            );
+            
             if (res) {
                 uploadResult = true;        
             }
@@ -268,52 +287,43 @@ public class MetaDataManageService {
     }
 
     // Minio Upload Multipart API 호출
-    public boolean uploadMultipart(MultipartFile multipartFile) throws Exception {
+    public boolean uploadMultipart(String fileName, InputStream inputStream, String contentType, long size) throws Exception {
         boolean result = false;
 
         try {
-            RestTemplate restTemplate = new RestTemplate();
+            MinioClient minioClient = MinioFactory.create(endpoint, accessKey, secretKey);
 
-            // 1. 파일 데이터를 ByteArrayResource로 변환
-            ByteArrayResource fileAsResource = new ByteArrayResource(multipartFile.getBytes()) {
-                @Override
-                public String getFilename() {
-                    return multipartFile.getOriginalFilename(); // 파일 이름 지정
-                }
-            };
 
-            // 2. MultiValueMap에 파일 추가
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("file", fileAsResource);
-
-            // 3. HttpHeaders 설정
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-            // 4. HttpEntity 생성
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
-            // 5. 요청 전송
-            String url = minioServiceBaseUrl + minioServiceUrlUploadMultipart;
-
-            ResponseEntity<Map> response = restTemplate.exchange(
-                url,
-                HttpMethod.PUT,
-                requestEntity,
-                Map.class
+            // 버킷 확인 및 생성
+            boolean isExist = minioClient.bucketExists(
+                    BucketExistsArgs.builder().bucket(unstructuredBucket).build()
             );
-            
-            if (response != null) {
-                Map<String, Object> responseBody = response.getBody();
-                log.info("응답 결과: " + response.getBody());
-                if (responseBody != null && responseBody.get("result") != null && responseBody.get("result").toString().equals("success")) {
-                    result = true;
-                }
+            if (!isExist) {
+                log.info("create new bucket !!");
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(unstructuredBucket).build());
+            } else {
+                log.info("bucket is exists !!");
             }
 
-        } catch (Exception e) {
-            log.error("uploadMultipart API 호출 오류");
+            // 파일 업로드
+            minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(unstructuredBucket)
+                        .object(fileName)
+                        .stream(inputStream, size, -1)  // (stream, size, partSize)
+                        .contentType(contentType)
+                        .build()
+            );
+
+            System.out.println(fileName + " success to upload file to minio !!");
+            result = true;
+        } catch (MinioException e) {
             e.printStackTrace();
+            log.error("fail to upload file: " + e.getMessage());
+            result = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("fail to upload file: " + e.getMessage());
             result = false;
         }
 
