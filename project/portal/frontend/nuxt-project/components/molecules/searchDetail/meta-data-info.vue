@@ -53,6 +53,19 @@
             <th scope="row">최종 수집일</th>
             <td colspan="3">{{ $yyyyMMddHHmmSS(entity.meta_sync_time) ? $yyyyMMddHHmmSS(entity.meta_sync_time) : '-' }}</td>
           </tr>
+        </tbody>
+      </table>
+      <div class="mu-heading">
+        <h5></h5>
+      </div>
+      <table class="mu-formbox">
+        <caption>
+          시스템 정보
+        </caption>
+        <colgroup>
+          <col />
+        </colgroup>
+        <tbody>
           <tr>
             <th scope="row">시스템 타입</th>
             <td>{{ entity.system_type ? entity.system_type : '-' }}</td>
@@ -69,7 +82,25 @@
             <th scope="row">등록일</th>
             <td>{{ $yyyyMMddHHmmSS(entity.create_time) ? $yyyyMMddHHmmSS(entity.create_time) : '-' }}</td>
           </tr>
-          <tr v-if="checkShowFileColumns()">
+        </tbody>
+      </table>
+      <div class="mu-heading" v-if="checkShowFileColumns()">
+        <h5></h5>
+      </div>
+      <table class="mu-formbox" v-if="checkShowFileColumns()">
+        <caption>
+          스키마 정보
+        </caption>
+        <colgroup>
+          <col style="width: 10%"/>
+          <col style="width: 30%"/>
+          <col style="width: 10%"/>
+          <col style="width: 15%"/>
+          <col style="width: 10%"/>
+          <col style="width: 15%"/>
+        </colgroup>
+        <tbody>
+          <tr style="border-top: 100px;">
             <th scope="row">컬럼 목록</th>
             <td colspan="5">
               <div>
@@ -102,7 +133,25 @@
               </div>
             </td>
           </tr>
-          <tr v-if="checkShowFileRdfs()">
+        </tbody>
+      </table>
+      <div class="mu-heading" v-if="checkShowFileRdfs()">
+        <h5></h5>
+      </div>
+      <table class="mu-formbox" v-if="checkShowFileRdfs()">
+        <caption>
+          상세 속성
+        </caption>
+        <colgroup>
+          <col style="width: 10%"/>
+          <col style="width: 30%"/>
+          <col style="width: 10%"/>
+          <col style="width: 15%"/>
+          <col style="width: 10%"/>
+          <col style="width: 15%"/>
+        </colgroup>
+        <tbody>
+          <tr>
             <th scope="row">상세 속성</th>
             <td colspan="5">
               <div>
