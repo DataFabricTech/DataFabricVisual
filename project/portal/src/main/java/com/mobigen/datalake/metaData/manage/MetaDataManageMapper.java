@@ -39,15 +39,23 @@ public interface MetaDataManageMapper {
     // 메타데이터 ID 중복확인
     int metaIdDupCheck(String system_id) throws Exception;
 
+    // 메타데이터 qualified_name 중복확인
+    Integer metaQualifiedNameDupCheck(String qualified_name) throws Exception;
+
     // 메타데이터 이벤트 저장
     Integer saveEvent(Map<String, Object> eventParams) throws Exception;
 
     // 메타데이터 저장
     Integer saveMetadata(Map<String, Object> metadata) throws Exception;
 
+    // 메타데이터 업데이트
+    Integer updateMetadata(Map<String, Object> metadata) throws Exception;
+
     // MinIO FabricStorage 코드 조회
     List<Map<String, Object>> getCodeForFabricStorage() throws Exception;
 
     // MinIO FabricStorage 정보 조회
     Map<String, Object> getFabricStorageInfoFromSystemName(String system_name) throws Exception;
+
+    String getMetaIdFromQualifiedName(String qualified_name) throws Exception;
 }

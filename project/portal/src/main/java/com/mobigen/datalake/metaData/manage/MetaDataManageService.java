@@ -186,16 +186,37 @@ public class MetaDataManageService {
         }
     }
 
+    // 수집 파일 중복확인
+    public Object metaQualifiedNameDupCheck(String qualified_name) throws Exception {
+        Integer cnt = metaDataManageMapper.metaQualifiedNameDupCheck(qualified_name);
+        if (cnt == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Map<String, Object> saveFileMetaData(Map<String, Object> metadata, Map<String, Object> user) throws Exception {
         Map<String, Object> result = new HashMap<>();
         Integer saveEventResult = 0; // event log 저장 성공 여부
         Integer saveMetadataResult = 0; // 메타데이터 테이블 저장 성공 여부
+        boolean isUpdate = false; // 비정형 데이터 파일 중복 등록 여부
         
         try {
             // 1. event_log 저장
             Map<String, Object> eventParam = new HashMap<>();
             eventParam.put("event_type", 0); // 메타데이터 이벤트: 0 | 시스템 이벤트: 1
-            eventParam.put("event_status", 1); // 0 해지 | 1:발생(생성) | 2: 변경 | 3: 삭제
+
+            // qualified_name이 같은 meta_id 조회
+            String meta_id = metaDataManageMapper.getMetaIdFromQualifiedName(metadata.get("qualified_name").toString());
+            if (meta_id != null) isUpdate = true;
+            
+            // 이벤트 상태값 설정
+            int event_status = 1;
+            if (isUpdate) {
+                event_status = 2;
+            }
+            eventParam.put("event_status", event_status); // 0 해지 | 1:발생(생성) | 2: 변경 | 3: 삭제
             eventParam.put("event_name", "비정형 메타 데이터 등록[발생]");
             eventParam.put("event_user_id", user.get("user_id"));
             eventParam.put("meta_id", metadata.get("meta_id"));
@@ -213,7 +234,6 @@ public class MetaDataManageService {
             LocalDateTime ldt = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             // Timestamp 변환
             Timestamp ts = Timestamp.valueOf(ldt);
-            metadata.put("create_time", ts);
 
             // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
             List<String> classificationList = (List<String>) metadata.get("classifications");
@@ -237,7 +257,19 @@ public class MetaDataManageService {
             metadata.put("business_attributes", objectMapper.writeValueAsString(metadata.get("business_attributes")));
             
             // 2. 메타데이터 테이블에 저장
-            saveMetadataResult = metaDataManageMapper.saveMetadata(metadata);
+            if (isUpdate) {
+                metadata.put("meta_id", meta_id);
+                metadata.put("update_by", user.get("user_id").toString());
+                metadata.put("update_time", ts);
+
+                saveMetadataResult = metaDataManageMapper.updateMetadata(metadata);
+            } else {
+                metadata.put("create_by", user.get("user_id").toString());
+                metadata.put("create_time", ts);
+
+                saveMetadataResult = metaDataManageMapper.saveMetadata(metadata);
+            }
+                
             if (saveMetadataResult != null && saveMetadataResult > 0) {
                 log.info("metadata saved !! !!");
             } else {
@@ -346,8 +378,15 @@ public class MetaDataManageService {
             }
 
             log.info("start to execute ingestion execute");
+            
+            // 시작 시각 초단위까지
+            long startTime = System.currentTimeMillis(); // 시작 시간(ms)
             executeResult = ingestionExecuteSync(system_id, qualified_name);
-            log.info("start to execute ingestion execute");
+            // 종료 시각 초단위까지
+            long endTime = System.currentTimeMillis(); // 종료 시간(ms)
+            long execute_duration_ms = endTime - startTime;
+            double execute_duration_sec = execute_duration_ms / 1000.0;
+            log.info("end to execute ingestion execute - " + execute_duration_sec);
 
         } catch (Exception e) {
             executeResult = false;

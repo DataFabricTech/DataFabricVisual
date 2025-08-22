@@ -80,6 +80,20 @@ public class MetaDataManageController {
     }
 
     /**
+     * 메타데이터 qualified_name 중복확인
+     * 이미 메타로 등록된 파일 중복확인
+     * 
+     * @param meta_id 메타데이터 qualified_name
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/metaQualifiedNameDupCheck")
+    public Object metaQualifiedNameDupCheck(@RequestParam String qualified_name) throws Exception {
+        return metaDataManageService.metaQualifiedNameDupCheck(qualified_name);
+    }
+
+    /**
      * 메타 데이터 통합 관리 > 비정형 데이터 메타 등록
      *
      * @params Object 비정형 데이터 정보

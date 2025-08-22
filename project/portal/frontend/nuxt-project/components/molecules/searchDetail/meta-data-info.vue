@@ -51,7 +51,9 @@
             <th scope="row">데이터 위치</th>
             <td>{{ entity.attributes.full_path ? entity.attributes.full_path : '-' }}</td>
             <th scope="row">최종 수집일</th>
-            <td colspan="3">{{ $yyyyMMddHHmmSS(entity.meta_sync_time) ? $yyyyMMddHHmmSS(entity.meta_sync_time) : '-' }}</td>
+            <td>{{ $yyyyMMddHHmmSS(entity.meta_sync_time) ? $yyyyMMddHHmmSS(entity.meta_sync_time) : '-' }}</td>
+            <th scope="row">공개 여부</th>
+            <td>{{ entity.release ? getKrRelease(entity.release) : '-' }}</td>
           </tr>
         </tbody>
       </table>
@@ -557,6 +559,13 @@ const checkShowFileRdfs = () => {
   // 2. 없는 값 표시 여부 +
   return isRdfs
 
+}
+
+const getKrRelease = (release) => {
+  if (release == 0) return 'secret'
+  if (release == 1) return 'public'
+  if (release == 2) return 'private'
+  return release
 }
 
 </script>

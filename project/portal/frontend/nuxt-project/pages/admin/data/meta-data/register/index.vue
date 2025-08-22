@@ -55,9 +55,9 @@
                         </div>
                       </div>
                     </td>
-                    <th scope="row" rowspan="2">데이터 설명</th>
-                    <td rowspan="2">
-                      <textarea class="mu-area h100" :placeholder="`데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대512자)`" title="데이터 설명 입력"
+                    <th scope="row" rowspan="3">데이터 설명</th>
+                    <td rowspan="3">
+                      <textarea class="mu-area h150" :placeholder="`데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대512자)`" title="데이터 설명 입력"
                         maxlength="512" v-model="user_description" @keydown="preventNewline" />
                     </td>
                   </tr>
@@ -66,6 +66,16 @@
                     <td>
                       <input type="text" placeholder="데이터 명을 작성해주세요." class="mu-input"
                         :title="description" v-model="description" maxlength="100"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">공개설정</th>
+                    <td>
+                      <div class="mu-radio" v-for="(authType, idx) in authTypeList">
+                        <input type="radio" :id="'rd_' + idx" name="authTypeSelect" :value="authType.id"
+                          v-model="currentAuthType" />
+                        <label :for="'rd_' + idx"><span>{{ authType.description }}</span></label>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -224,7 +234,7 @@
 </template>
 
 <script setup lang="ts">
-import { confirmAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
+import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
 import { useCategoryTreeStore } from "@/store/categoryTree";
 import { useUserStore } from "@/store/user";
 import SelectCategoryAddModal from "@functional/classificationModal/select-classification-add-modal";
@@ -247,12 +257,27 @@ const categoryTreeList = await categoryTreeStore.fetchCategories()
 
 // 비정형 데이터 등록
 const meta_id = ref(""); // 메타데이터 ID
+const qualified_name = ref("") // 메타데이터 qualified_name
 const data_from = ref(""); // 데이터 출처
 const isCheckMetaIdDup = ref(false) // 메타데이터 ID 중복확인
+const isCheckMetaQualifiedNameDup = ref(false) // 메타데이터 qualified_name 중복확인 (이미 등록된 파일)
 const meta_name = ref(""); // 데이터 명
 const selected_file = ref(null); // 선택한 파일
 const description = ref(""); // 데이터 설명
 const user_description = ref(""); // 사용자 데이터 설명
+const currentAuthType = ref(0) // 공개 설정 (0: secret, 1: public, 2: private)
+const authTypeList = ref([
+  {
+    id: 0,
+    description: "secret"
+  }, {
+    id: 1,
+    description: "public"
+  }, {
+    id: 2,
+    description: "private"
+  },
+])
 
 // 시스템 정보
 const system_id = ref() // 시스템 ID
@@ -300,7 +325,7 @@ onMounted(async () => {
 // 메타데이터 ID 중복확인
 const metaIdDupCheck = async (meta_id) => {
   if (meta_id.includes(" ")) { // 공백 여부
-    errorAlert("메타데이터 ID 값은 공백이 포함될 수 없습니다.")
+    defaultAlert("메타데이터 ID 값은 공백이 포함될 수 없습니다.")
     return false;
   }
 
@@ -310,7 +335,7 @@ const metaIdDupCheck = async (meta_id) => {
       successAlert("사용 가능한 메타데이터 ID 입니다.")
     } else {
       isCheckMetaIdDup.value = false
-      errorAlert("이미 존재하는 메타데이터 ID 입니다.")
+      defaultAlert("이미 존재하는 메타데이터 ID 입니다.")
     }
   }).catch((err) => {
     errorAlert("중복확인에 실패하였습니다.")
@@ -489,98 +514,130 @@ const onClickCancelButton = async () => {
 }
 
 // 유효성 검사
-const isValidInput = () => {
+const isValidInput = async () => {
   // 1. input 입력 여부
   if (!meta_id.value || meta_id.value == '') { // 메타데이터 ID
-    errorAlert("메타데이터 ID 값을 입력해 주세요.")
+    defaultAlert("메타데이터 ID 값을 입력해 주세요.")
     return false
   } else if (meta_id.value.includes(" ")) { // 공백 여부
-    errorAlert("메타데이터 ID 값은 공백이 포함될 수 없습니다.")
+    defaultAlert("메타데이터 ID 값은 공백이 포함될 수 없습니다.")
     return false;
   }
 
   // 2. 시스템 ID 중복체크
   if (!isCheckMetaIdDup.value) {
-    errorAlert("메타데이터 ID 중복확인이 필요합니다.")
+    defaultAlert("메타데이터 ID 중복확인이 필요합니다.")
     return false
   }
 
   // 3. 파일선택 여부
   if (!meta_name.value || meta_name.value == '') { // 데이터 명(파일명)
-    errorAlert("파일을 선택해 주세요.")
+    defaultAlert("파일을 선택해 주세요.")
     return false
   }
 
   return true
 }
 
+// 파일 중복확인
+const isValidQualifiedName = async () => {
+  let result = true;
+  // 중복 파일인지 확인
+  await $ofetch(`/api/metadata/manage/metaQualifiedNameDupCheck?qualified_name=${qualified_name.value}`).then(async (res) => {
+    if (res && res.data && res.data == true) { // 중복없음
+      isCheckMetaQualifiedNameDup.value = true
+      result = true
+    } else {
+      isCheckMetaQualifiedNameDup.value = false
+      if (await confirmAlert("이미 등록된 파일입니다. 업데이트하시겠습니까?")) {
+        result = true
+      } else {
+        result = false
+      }
+    }
+  }).catch((err) => {
+    errorAlert("파일 중복확인에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    isCheckMetaQualifiedNameDup.value = false
+    result = false
+  })
+
+  return result
+}
+
 // 등록 버튼 클릭
 const onClickSaveButton = async () => {
-  // 유효성 검사
-  const isValid = isValidInput()
+  attributes.value.data_from = data_from.value // 출처 설정
+  qualified_name.value = system_id.value + "." + file_location.value + "." + meta_name.value
 
-  if (isValid) {
-    if (!await confirmAlert("등록하시겠습니까?")) return
-    attributes.value.data_from = data_from.value // 출처 설정
-
-    const body = {
-      meta_id: meta_id.value,
-      qualified_name: system_id.value + "." + file_location.value + "." + meta_name.value,
-      system_type: system_type.value,
-      system_id: system_id.value,
-      meta_type: meta_type.value,
-      meta_name: meta_name.value,
-      create_by: create_by.value,
-      create_time: create_time.value,
-      description: description.value ? description.value : null,
-      user_description: user_description.value ? user_description.value : null,
-      classifications: getClassifications(classifications.value),
-      attributes: attributes.value,
-      business_attributes: getBusinessAttributes(business_attributes.value),
-      tags: tags.value,
-      status: "ACTIVE",
-      release: 0
-    }
-
-    // 1. event log, 초기 metadata 저장
-    await $ofetch(`/api/metadata/manage/saveFileMetaData`, { method: 'POST', body: body}).then(async (saveRes) => {
-      // event, metadata 저장 성공 시 파일 minio upload
-      if (saveRes && saveRes.data && saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
-        const formData = new FormData()
-        formData.append("bucketName", file_location.value)
-        formData.append("file", selected_file.value)
-
-        // 2. 비정형 파일 minio 업로드
-        await $ofetch(`/api/metadata/manage/uploadFileToMinio`, { method: 'POST', body: formData}).then(async (uploadRes) => {
-          if (uploadRes && uploadRes.data && uploadRes.data.uploadResult) {
-            // 3. MinIO FabricStorage 시스템 수동수집 실행 요청
-            const executeBody = {
-              system_id: system_id.value,
-              qualified_name: system_id.value + "." + file_location.value + "." + meta_name.value,
-            }
-            await $ofetch(`/api/metadata/manage/executeCollect`, { method: 'POST', body: executeBody}).then(async (res) => {
-              if (res && res.data && res.data.executeResult) {
-                await successAlert("비정형 데이터가 등록되었습니다.");
-                goToMetaDataManage()
-              } else {
-                await errorAlert("Fabric Storage 수동 수집에 실패하였습니다.")
-              }
-            })
-          } else {
-            errorAlert("파일 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-          }
-        }).catch((err) => {
-          errorAlert("파일 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-          console.log(err)
-        })
-      } else {
-        errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-      }
-    }).catch((err) => {
-      errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-      console.log(err)
-    })
+  const body = {
+    meta_id: meta_id.value,
+    qualified_name: qualified_name.value,
+    system_type: system_type.value,
+    system_id: system_id.value,
+    meta_type: meta_type.value,
+    meta_name: meta_name.value,
+    create_by: create_by.value,
+    create_time: create_time.value,
+    description: description.value ? description.value : null,
+    user_description: user_description.value ? user_description.value : null,
+    classifications: getClassifications(classifications.value),
+    attributes: attributes.value,
+    business_attributes: getBusinessAttributes(business_attributes.value),
+    tags: tags.value,
+    status: "ACTIVE",
+    release: currentAuthType.value ? currentAuthType.value : 0
   }
+  // 유효성 검사
+  const isValid = await isValidInput()
+  if (!isValid || isValid != true) return;
+
+  // 파일 중복 검사
+  const isFileValid = await isValidQualifiedName()
+  if (!isFileValid || isFileValid != true) return
+
+  // 이미 등록된 데이터 업데이트가 아닌 신규 등록일 경우 표기
+  if (isCheckMetaQualifiedNameDup.value) {
+    if (!await confirmAlert("등록하시겠습니까?")) return
+  }
+
+  // 1. event log, 초기 metadata 저장
+  await $ofetch(`/api/metadata/manage/saveFileMetaData`, { method: 'POST', body: body}).then(async (saveRes) => {
+    // event, metadata 저장 성공 시 파일 minio upload
+    if (saveRes && saveRes.data && saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
+      const formData = new FormData()
+      formData.append("bucketName", file_location.value)
+      formData.append("file", selected_file.value)
+
+      // 2. 비정형 파일 minio 업로드
+      await $ofetch(`/api/metadata/manage/uploadFileToMinio`, { method: 'POST', body: formData}).then(async (uploadRes) => {
+        if (uploadRes && uploadRes.data && uploadRes.data.uploadResult) {
+          // 3. MinIO FabricStorage 시스템 수동수집 실행 요청
+          const executeBody = {
+            system_id: system_id.value,
+            qualified_name: system_id.value + "." + file_location.value + "." + meta_name.value,
+          }
+          await $ofetch(`/api/metadata/manage/executeCollect`, { method: 'POST', body: executeBody}).then(async (res) => {
+            if (res && res.data && res.data.executeResult) {
+              await successAlert("비정형 데이터가 등록되었습니다.");
+              goToMetaDataManage()
+            } else {
+              await errorAlert("Fabric Storage 수동 수집에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+            }
+          })
+        } else {
+          errorAlert("파일 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+        }
+      }).catch((err) => {
+        errorAlert("파일 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+        console.log(err)
+      })
+    } else {
+      errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    }
+  }).catch((err) => {
+    errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    console.log(err)
+  })
 }
 
 const goToMetaDataManage = () => {
