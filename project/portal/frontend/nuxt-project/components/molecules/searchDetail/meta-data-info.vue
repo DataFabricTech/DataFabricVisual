@@ -2,7 +2,7 @@
   <div class="detail-box">
     <div class="mu-heading">
       <h5>데이터 정보</h5>
-      <div v-if="!props.isAdmin && props.typeName && props.typeName.toUpperCase() !== 'FILE'" class="btn-switch" style="display: flex; justify-content: flex-end; width: 94%;">
+      <div v-if="(props.typeName && props.typeName.toUpperCase() !== 'FILE') || props.isAdmin" class="btn-switch" style="display: flex; justify-content: flex-end; width: 94%;">
         <input type="checkbox" id ="toggle-slider" @click="toggleShowField(props.typeName)" :title="showEmptyField ? 'Show Empty Field' : 'Hide Empty Field'">
         <label class="show-label" for="toggle-slider" :title="showEmptyField ? 'Show Empty Field' : 'Hide Empty Field'">표기/미표기</label>
       </div>
