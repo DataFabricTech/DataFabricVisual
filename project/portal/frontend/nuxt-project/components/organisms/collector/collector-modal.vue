@@ -367,7 +367,7 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
 const getSystemTypes = async () => {
   await $ofetch(`/api/admin/system/collector/getSystemTypes`).then((res) => {
     if (res && res.data) {
-      system_types.value = res.data.list
+      system_types.value = res.data.list.sort()
     } else {
       system_types.value = []
     }
