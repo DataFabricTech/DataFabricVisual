@@ -40,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.framework.result.JsonResult;
+import com.mobigen.framework.utility.AESGCMUtil;
 import com.mobigen.framework.utility.MinioFactory;
 import com.mobigen.framework.utility.S3Url;
 
@@ -66,13 +67,16 @@ public class SearchDetailService {
     private String esSyncUrlUpdate;
 
     @Value("${properties.minio.endpoint}")
-    private String endpoint;
+    private String fabricEndpoint;
 
     @Value("${properties.minio.accessKey}")
-    private String accessKey;
+    private String fabricAccessKey;
 
     @Value("${properties.minio.secretKey}")
-    private String secretKey;
+    private String fabricSecretKey;
+
+    @Value("${properties.cryptKey}")
+    private String cryptKey;
 
     // 데이터 상세 조회
     public Object getDetailData(Map<String, Object> params) throws Exception {
@@ -496,7 +500,7 @@ public class SearchDetailService {
         InputStream inputStream = null;
 
         try {
-            MinioClient mf = MinioFactory.create(endpoint, accessKey, secretKey);
+            MinioClient mf = MinioFactory.create(fabricEndpoint, fabricAccessKey, fabricSecretKey);
             // sample_data_url 조회
             String meta_id = params.get("meta_id").toString();
             String sample_share_url = searchDetailMapper.getSampleDataUrl(meta_id);
@@ -1295,12 +1299,27 @@ public class SearchDetailService {
     public void getFileData(Map<String, Object> params, HttpServletResponse response) throws Exception {
         String fullPath = params.get("full_path").toString();
 
+        // 시스템 조회
+        String system_id = params.get("system_id").toString();
+        Map<String, Object> minioInfo = searchDetailMapper.getSystemInfo(system_id);
+
+        // Minio endpoint
+        String minioEndpoint = "http://" + minioInfo.get("host").toString() + ":" + minioInfo.get("port").toString();
+        
+        // Minio Access Key
+        String minioAccessKey = minioInfo.get("login").toString();
+
+        // Minio Secret Key
+        AESGCMUtil encoder = new AESGCMUtil(cryptKey);
+        String password = minioInfo.get("password").toString();
+        String minioSecretKey = encoder.decrypt(password);
+
         // sample_data_url 조회
         S3Url p = S3Url.parse(fullPath);
         String bucket = p.getBucket();
         String object = p.getObject();
 
-        MinioClient mf = MinioFactory.create(endpoint, accessKey, secretKey);
+        MinioClient mf = MinioFactory.create(minioEndpoint, minioAccessKey, minioSecretKey);
 
         try (InputStream inputStream = mf.getObject(GetObjectArgs.builder()
                                         .bucket(bucket)

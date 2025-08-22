@@ -89,4 +89,6 @@ public interface SearchDetailMapper {
     String getSampleDataUrl(String meta_id);
 
     Integer getFileSampleCount(String meta_id);
+
+    Map<String, Object> getSystemInfo(String system_id);
 }
