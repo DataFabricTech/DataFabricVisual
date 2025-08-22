@@ -26,7 +26,7 @@
             @reloadUserDescriptionList="getUserDescriptionList" @reload="getAllDataByGuid" />
         </div>
         <!-- detail-section : 데이터 프로파일링 -->
-        <div :ref="el => sectionRefs['data-profile-area'] = el" class="content-block">
+        <div v-if="isProfileArea" :ref="el => sectionRefs['data-profile-area'] = el" class="content-block">
           <data-profile-area :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :data-profile="dataProfile"
             :columnCommentMap="columnCommentMap" />
         </div>
@@ -234,6 +234,17 @@ const fileFormat = computed(() =>
   ObjectUtils.getPropertyValue(entity.value, "attributes/file_format", "")
 );
 
+// 데이터 프로파일링 보여줄지 여부
+const isProfileArea = computed(() => {
+  const currentTypeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+  const currentFileFormat = ObjectUtils.getPropertyValue(entity.value, "attributes/file_format", "")
+  if (currentTypeName.toUpperCase() === 'FILE' && currentFileFormat.toUpperCase() != 'CSV') {
+    return false
+  }
+
+  return true
+})
+
 // entity 값이 변동되면 파라미터도 동기화
 watch(
   () => entity.value,
@@ -440,12 +451,23 @@ const settingTabOption = (entity) => {
   tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area']
 
   // Table, File만 샘플데이터 존재
-  if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE')
+  if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE') {
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
+  } else {
+    // File의 경우 사용자 데이터 설명, 데이터 흐름 탭 제거
+    // 확장자가 CSV인 경우 프로파일링 제거
+    if (entity.meta_type.toUpperCase() == 'FILE') {
+      if (entity.attributes.file_format.toUpperCase() != 'CSV') {
+        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area' && el != 'data-profile-area')
+      } else {
+        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area')
+      }
+    }
+  }
 
-  // File의 경우 사용자 데이터 설명, 데이터 흐름 탭 제거
-  if (entity.meta_type.toUpperCase() == 'FILE')
-    tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area')
+
+
+
 }
 
 // 객체 키 유무 확인
