@@ -40,7 +40,7 @@
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
         <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
-          <data-lineage-area :isAdmin="props.isAdmin" :startNode="startNode" :entity="entity"
+          <data-lineage-area v-if="typeName && typeName.toUpperCase() != 'FILE'" :isAdmin="props.isAdmin" :startNode="startNode" :entity="entity"
             :userDataParam="userDataParam" />
         </div>
         <!-- detail-section : 연관 데이터 -->
@@ -443,9 +443,9 @@ const settingTabOption = (entity) => {
   if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE')
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
 
-  // File의 경우 사용자 데이터 설명 탭 제거
+  // File의 경우 사용자 데이터 설명, 데이터 흐름 탭 제거
   if (entity.meta_type.toUpperCase() == 'FILE')
-    tabs.value = tabs.value.filter((el) => el != 'user-description-area')
+    tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area')
 }
 
 // 객체 키 유무 확인
@@ -974,6 +974,7 @@ const onToggleEliminateModal = async () => {
   // 데이터 권한이 없는 경우 추출 불가
   if (userDataAuth.value == 2) {
     const metaName = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+    const system_id = ObjectUtils.getPropertyValue(entity.value, "system_id", "");
     const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
     const fullPath = ObjectUtils.getPropertyValue(entity.value, "attributes/full_path", "");
 
@@ -981,6 +982,7 @@ const onToggleEliminateModal = async () => {
     if (typeName != "" && typeName.toUpperCase() === 'FILE') {
       if (await confirmAlert("파일을 다운로드하시겠습니까?")) {
         const params = {
+          system_id: system_id,
           full_path: fullPath
         }
 
