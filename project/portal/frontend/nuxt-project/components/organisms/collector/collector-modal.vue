@@ -54,8 +54,12 @@
                   </select>
                 </div>
               </td>
-              <th>Database</th>
-              <td colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database"
+              <th v-if="currentCollector.system_type.toUpperCase().includes('TRINO')">Catalog</th>
+              <th v-else>Database</th>
+              <td v-if="currentCollector.system_type.toUpperCase().includes('TRINO')" colspan="3"><input type="text" v-model="currentCollector.catalog" :title="currentCollector.catalog"
+                  class="mu-input">
+              </td>
+              <td v-else colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database"
                   class="mu-input"
                   :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('S3')
                   || currentCollector.system_type.toUpperCase().includes('MINIO')
@@ -74,7 +78,8 @@
                   || currentCollector.system_type.toUpperCase().includes('TIBERO')
                   || currentCollector.system_type.toUpperCase().includes('S3')
                   || currentCollector.system_type.toUpperCase().includes('MINIO')
-                  || currentCollector.system_type.toUpperCase().includes('DRUID')"></td>
+                  || currentCollector.system_type.toUpperCase().includes('DRUID')
+                  || currentCollector.system_type.toUpperCase().includes('TRINO')"></td>
             </tr>
             <tr>
               <th>수집 주기</th>
@@ -276,6 +281,7 @@ const currentCollector = ref({
   host: "",
   port: "",
   system_type: "",
+  catalog: "",
   database: "",
   schema: "",
   hive_thrift_port: "",
@@ -356,8 +362,10 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
     currentCollector.value.schema = ""
   }
 
-  // S3, MinIO의 경우 database, schema 값 제거
-  if (newVal.toUpperCase().includes('S3') || newVal.toUpperCase().includes('MINIO')) {
+  // S3, MinIO, Trino의 경우 database, schema 값 제거
+  if (newVal.toUpperCase().includes('S3')
+   || newVal.toUpperCase().includes('MINIO')
+   || newVal.toUpperCase().includes('TRINO')) {
     currentCollector.value.database = ""
     currentCollector.value.schema = ""
   }
@@ -459,20 +467,28 @@ const isValidInput = () => {
   && !currentCollector.value.system_type.toUpperCase().includes('S3')
   && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
   && !currentCollector.value.system_type.toUpperCase().includes('DRUID')
+  && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
   && (!currentCollector.value.database || currentCollector.value.database == '')) { // Database
     errorAlert("Database 값을 입력해 주세요.")
+    return false
+  }
+  if (currentCollector.value.system_type.toUpperCase().includes('TRINO')
+  && (!currentCollector.value.catalog || currentCollector.value.catalog == '')) { // Catalog
+    errorAlert("Catalog 값을 입력해 주세요.")
     return false
   }
   if (!currentCollector.value.system_type.toUpperCase().includes('HIVE')
   && !currentCollector.value.system_type.toUpperCase().includes('MYSQL')
   && !currentCollector.value.system_type.toUpperCase().includes('MARIADB')
   && !currentCollector.value.system_type.toUpperCase().includes('DRUID')
+  && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
   && (!currentCollector.value.schema || currentCollector.value.schema == '')) { // Schema
     if (currentCollector.value.system_type.toUpperCase().includes('TIBERO')) { // Tibero는 기본 default 입력
       currentCollector.value.schema = 'default'
     } else {
       if (!currentCollector.value.system_type.toUpperCase().includes('S3')
-      && !currentCollector.value.system_type.toUpperCase().includes('MINIO')) {
+      && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
+      && !currentCollector.value.system_type.toUpperCase().includes('TRINO')) {
         errorAlert("Schema 값을 입력해 주세요.")
         return false
       }
@@ -483,6 +499,7 @@ const isValidInput = () => {
     return false
   }
   if (!currentCollector.value.system_type.toUpperCase().includes('DRUID')
+    && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
     && (!currentCollector.value.login || currentCollector.value.login == '')) { // Login
     errorAlert("Login 값을 입력해 주세요.")
     return false
@@ -493,10 +510,12 @@ const isValidInput = () => {
   }
 
   if (!currentCollector.value.system_type.toUpperCase().includes('DRUID')
+    && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
     && (!currentCollector.value.password || currentCollector.value.password == '')) { // Password
     if (!props.isUpdate) {
       if (!currentCollector.value.system_type.toUpperCase().includes('S3')
-      && !currentCollector.value.system_type.toUpperCase().includes('MINIO')) {
+      && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
+      && !currentCollector.value.system_type.toUpperCase().includes('TRINO')) {
         errorAlert("Password를 입력해 주세요.")
         return false
       }
