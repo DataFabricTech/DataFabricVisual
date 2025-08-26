@@ -39,6 +39,9 @@ public class MetaDataManageService {
     @Value("${properties.ESSync.base_url}")
     private String esSyncBaseUrl;
 
+    @Value("${properties.ESSync.url.update}")
+    private String esSyncUrlUpdate;
+
     @Value("${properties.ESSync.url.updates}")
     private String esSyncUrlUpdates;
 
@@ -272,6 +275,12 @@ public class MetaDataManageService {
                 
             if (saveMetadataResult != null && saveMetadataResult > 0) {
                 log.info("metadata saved !! !!");
+                // ESSync release 갱신
+                Map<String, Object> essyncParams = new HashMap<>();
+                essyncParams.put("metaid", meta_id);
+                essyncParams.put("event_status", 2);
+                essyncParams.put("event_name", "데이터 권한설정 변경");
+                essyncUpdate(essyncParams);
             } else {
                 log.error("metadata not saved !!");
             }
@@ -477,5 +486,25 @@ public class MetaDataManageService {
         }
 
         return false;
+    }
+
+    public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
+        Map<String, Object> restResponse = new HashMap<>();
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("metaid", params.get("metaid"));
+            requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
+            requestBody.put("event_name", params.get("event_name"));
+
+            String url = esSyncBaseUrl + esSyncUrlUpdate;
+            restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
+        } catch (Exception e) {
+            log.error("essyncUpdate API 호출 오류");
+        }
+
+        return restResponse;
     }
 }
