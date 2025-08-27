@@ -57,7 +57,7 @@ public class MetaDataManageService {
     @Value("${properties.catalog-api.url.executeSync}")
     private String catalogApiUrlExecuteSync;
 
-    @Value("${properties.catalog-api.url.profile}")
+    @Value("${properties.catalog-api.url.profile.default}")
     private String catalogApiUrlProfile;
 
     @Value("${properties.minio.endpoint}")

@@ -51,7 +51,7 @@ public class MetaDataFusionService {
     @Value("${properties.catalog-api.url.executeSync}")
     private String catalogApiUrlExecuteSync;
 
-    @Value("${properties.catalog-api.url.profile}")
+    @Value("${properties.catalog-api.url.profile.default}")
     private String catalogApiUrlProfile;
 
     // 데이터 융합 관리 대상 목록 조회
@@ -367,7 +367,12 @@ public class MetaDataFusionService {
                         if (resMap != null && (boolean)(resMap.get("executeResult"))) {
                             log.info("success to run collect !!");    
                             executeResult = true;
-                            // 프로파일링 요청
+                            // 테이블 프로파일링 요청
+                            executeBody.put("profile_type", "table");
+                            executeProfile(executeBody);
+
+                            executeBody.put("profile_type", "column");
+                            // 컬럼 프로파일링 요청
                             executeProfile(executeBody);
                         } else {
                             log.error("fail to run collect !!");
@@ -545,17 +550,8 @@ public class MetaDataFusionService {
         boolean executeResult = false;
 
         try {
-            String system_id = "";
-            String meta_name = "";
-            if (executeBody.get("system_id") != null) {
-                system_id = executeBody.get("system_id").toString();
-            }
-            if (executeBody.get("meta_name") != null) {
-                meta_name = executeBody.get("meta_name").toString();
-            }
-
             log.info("start to execute profile execute");
-            executeResult = profileExecute(system_id, meta_name);
+            executeResult = profileExecute(executeBody);
             log.info("end to execute profile execute");
 
         } catch (Exception e) {
@@ -569,7 +565,7 @@ public class MetaDataFusionService {
     }
 
     // 수동 프로파일링 실행 POST
-    public boolean profileExecute(String system_id, String meta_name) throws Exception {
+    public boolean profileExecute(Map<String, Object> executeBody) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
 
         String executeUrl = catalogApiBaseUrl + catalogApiUrlProfile;
@@ -578,12 +574,11 @@ public class MetaDataFusionService {
         List<String> include = new ArrayList<>();
         List<String> exclude = new ArrayList<>();
 
-        if (!meta_name.equals("")) {
-            // table=my_view
-            include.add("table=" + meta_name);
-        }
+        // table=my_view
+        include.add("table=" + executeBody.get("meta_name").toString());
         
-        requestBody.put("system_id", system_id);
+        requestBody.put("system_id", executeBody.get("system_id").toString());
+        requestBody.put("profile_type", executeBody.get("profile_type").toString());
         requestBody.put("include", include); 
         requestBody.put("exclude", exclude);
         ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);

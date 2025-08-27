@@ -1250,7 +1250,7 @@ const onClickSaveButton = async () => {
         } else {
           if (saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
             await successAlert("융합 데이터가 저장되었습니다.")
-            // goToMetaDataManage()
+            goToMetaDataManage()
           } else {
             if (!saveRes.data.executeResult) {
               await errorAlert("융합 데이터 수집에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
