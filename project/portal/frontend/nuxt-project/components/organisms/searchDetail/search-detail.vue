@@ -1047,7 +1047,7 @@ const onToggleEliminateModal = async () => {
         eliminateModalObj.value.entity = entity.value;
         eliminateModalObj.value.toggle = !status;
         eliminateModalObj.value.userDataAuth = userDataAuth.value;
-        eliminateModalObj.value.typeName = typeName.value;
+        eliminateModalObj.value.typeName = typeName;
         eliminateModalObj.value.fileFormat = fileFormat.value;
         eliminateModalObj.value.num_rows = sampleTotal.value
       }
