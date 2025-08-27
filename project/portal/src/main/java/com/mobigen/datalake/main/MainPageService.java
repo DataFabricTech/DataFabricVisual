@@ -1,10 +1,8 @@
 package com.mobigen.datalake.main;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mobigen.datalake.search.SearchDetailService;
 import com.mobigen.datalake.search.SearchService;
 import com.mobigen.framework.security.SessionManager;
 
@@ -72,11 +68,17 @@ public class MainPageService {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> user = sessionManager.getUserByAccessToken(request);
 
+            // meta_type 항목 모두 조회
+            List<Map<String, Object>> metaTypeList = mainPageMapper.getMetaTypeList();
+
+            List<String> meta_type = metaTypeList.stream()
+                    .map(map -> String.valueOf(map.get("name"))).toList();
+
             // ES 검색쿼리 설정
             params.put("classification", "");
             params.put("entityFilters", new HashMap<>());
             params.put("limit", 4);
-            params.put("meta_type", "table");
+            params.put("meta_type", meta_type);
             params.put("offset", 0);
             params.put("query", "");
             params.put("sortBy", "create_time");

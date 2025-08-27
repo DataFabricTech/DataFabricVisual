@@ -43,4 +43,6 @@ public interface MainPageMapper {
     List<Map<String, Object>> getFooterList() throws Exception;
 
     Map<String, Object> getCodeInfo(Map<String, Object> params) throws Exception;
+
+    List<Map<String, Object>> getMetaTypeList() throws Exception;
 }
