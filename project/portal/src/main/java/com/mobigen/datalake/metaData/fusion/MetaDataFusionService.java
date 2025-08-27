@@ -51,6 +51,9 @@ public class MetaDataFusionService {
     @Value("${properties.catalog-api.url.executeSync}")
     private String catalogApiUrlExecuteSync;
 
+    @Value("${properties.catalog-api.url.profile}")
+    private String catalogApiUrlProfile;
+
     // 데이터 융합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataFusionList(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -362,10 +365,12 @@ public class MetaDataFusionService {
 
                         Map<String, Object> resMap = (Map<String, Object>) executeCollect(executeBody);
                         if (resMap != null && (boolean)(resMap.get("executeResult"))) {
-                            log.info("success to start collect !!");    
+                            log.info("success to run collect !!");    
                             executeResult = true;
+                            // 프로파일링 요청
+                            executeProfile(executeBody);
                         } else {
-                            log.error("fail to start collect !!");
+                            log.error("fail to run collect !!");
                             executeResult = false;
                         }
                     } else {
@@ -523,6 +528,61 @@ public class MetaDataFusionService {
             include.add("table=" + table_name);
         }
 
+        requestBody.put("system_id", system_id);
+        requestBody.put("include", include); 
+        requestBody.put("exclude", exclude);
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // trino 프로파일링 실행
+    public Object executeProfile(Map<String, Object> executeBody) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boolean executeResult = false;
+
+        try {
+            String system_id = "";
+            String meta_name = "";
+            if (executeBody.get("system_id") != null) {
+                system_id = executeBody.get("system_id").toString();
+            }
+            if (executeBody.get("meta_name") != null) {
+                meta_name = executeBody.get("meta_name").toString();
+            }
+
+            log.info("start to execute profile execute");
+            executeResult = profileExecute(system_id, meta_name);
+            log.info("end to execute profile execute");
+
+        } catch (Exception e) {
+            executeResult = false;
+            log.error("fail to execute direct Collect");
+            e.printStackTrace();
+        }
+        
+        result.put("executeResult", executeResult);
+        return result;
+    }
+
+    // 수동 프로파일링 실행 POST
+    public boolean profileExecute(String system_id, String meta_name) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String executeUrl = catalogApiBaseUrl + catalogApiUrlProfile;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        List<String> include = new ArrayList<>();
+        List<String> exclude = new ArrayList<>();
+
+        if (!meta_name.equals("")) {
+            // table=my_view
+            include.add("table=" + meta_name);
+        }
+        
         requestBody.put("system_id", system_id);
         requestBody.put("include", include); 
         requestBody.put("exclude", exclude);
