@@ -480,7 +480,7 @@
                         :title="meta_name" v-model="meta_name" />
                     </td>
                     <th scope="row" rowspan="3">사용자 데이터 설명</th>
-                    <td rowspan="2">
+                    <td rowspan="3">
                       <textarea class="mu-area h100" :placeholder="`사용자 데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대512자)`" title="데이터 설명 입력"
                         maxlength="512" v-model="user_description" @keydown="preventNewline" />
                     </td>
@@ -490,6 +490,16 @@
                     <td>
                       <input type="text" placeholder="데이터 설명을 작성해주세요." class="mu-input"
                         :title="description" v-model="description" maxlength="100"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">공개설정</th>
+                    <td>
+                      <div class="mu-radio" v-for="(authType, idx) in authTypeList">
+                        <input type="radio" :id="'rd_' + idx" name="authTypeSelect" :value="authType.id"
+                          v-model="currentAuthType" />
+                        <label :for="'rd_' + idx"><span>{{ authType.description }}</span></label>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -548,7 +558,7 @@
                 <div class="board-body">
                   <!-- tag-box : 태그/키워드 관리 -->
                   <tag-register-area ref="tag-keyword-area" :allTagList="allTagList" :entity="{}"
-                      @onClickAddTag="onClickAddTag" />
+                      @onClickAddTag="onClickAddTag" :isOkNewTag="true"/>
                 </div>
               </div>
             </div>
@@ -599,7 +609,7 @@
                     <th scope="row">데이터베이스 명<strong class="required">필수</strong></th>
                     <td>
                       <input type="text" placeholder="" class="mu-input"
-                        :title="database" v-model="database" maxlength="100" readonly/>
+                        :title="catalog" v-model="catalog" maxlength="100" readonly/>
                     </td>
                     <th scope="row">등록일<strong class="required">필수</strong></th>
                     <td>
@@ -704,6 +714,7 @@ const currentMetaColumns = ref([])
 const executeQueryStatus = ref(0) // 실행 결과 1: 성공, 2: 실패
 const execute_duration = ref("-")
 const execute_start_time = ref("-")
+const fusionSampleColumnNames = ref([])
 const fusionSampleList = ref([])
 const fusionSampleTotal = ref("-")
 const all_columns = ref([])
@@ -720,15 +731,29 @@ const categoryTreeList = await categoryTreeStore.fetchCategories()
 
 // 융합 데이터 등록
 const meta_id = ref(""); // 메타데이터 ID
+const qualified_name = ref("") // 메타데이터 qualified_name
 const data_from = ref(""); // 데이터 출처
 const isCheckMetaIdDup = ref(false) // 메타데이터 ID 중복확인
 const meta_name = ref(""); // 데이터 명
 const description = ref(""); // 데이터 설명
 const user_description = ref(""); // 사용자 데이터 설명
+const currentAuthType = ref(0) // 공개 설정 (0: secret, 1: public, 2: private)
+const authTypeList = ref([
+  {
+    id: 0,
+    description: "secret"
+  }, {
+    id: 1,
+    description: "public"
+  }, {
+    id: 2,
+    description: "private"
+  },
+])
 
 // 시스템 정보
 const system_id = ref() // 시스템 ID
-const database = ref() // 데이터베이스명
+const catalog = ref() // 카탈로그명
 const system_type = ref("") // 시스템 타입
 const system_name = ref("") // 시스템 명
 const create_by = computed(() => userStore.getUser.user_id) // 등록자
@@ -790,7 +815,7 @@ const getFusionSysteInfo = async () => {
       system_type.value = fusionInfo.system_type
       system_name.value = fusionInfo.system_name
       meta_type.value = fusionInfo.meta_type
-      database.value = fusionInfo.database
+      catalog.value = fusionInfo.catalog
       create_time.value = getCurrentTime()
     }
   }).catch((err) => {
@@ -1106,6 +1131,7 @@ const executeQuery = async () => {
           isExecuteQuery.value = true
         }
 
+        fusionSampleColumnNames.value = res.data.columnNames ? res.data.columnNames : []
         fusionSampleList.value = res.data.sampleData ? res.data.sampleData : []
         fusionSampleTotal.value = res.data.sampleDataTotal ? res.data.sampleDataTotal : '-'
         execute_duration.value = res.data.execute_duration ? res.data.execute_duration : '-'
@@ -1191,9 +1217,11 @@ const onClickSaveButton = async () => {
     if (!await confirmAlert("등록하시겠습니까?")) return
     attributes.value.data_from = data_from.value // 출처 설정
 
+    qualified_name.value = system_id.value + "." + catalog.value + "." + "default" + "." + meta_name.value
+
     const body = {
       meta_id: meta_id.value,
-      qualified_name: system_id.value + "." + database.value + "." + meta_name.value,
+      qualified_name: qualified_name.value,
       system_type: system_type.value,
       system_id: system_id.value,
       meta_type: meta_type.value,
@@ -1207,15 +1235,30 @@ const onClickSaveButton = async () => {
       business_attributes: getBusinessAttributes(business_attributes.value),
       tags: tags.value,
       status: "ACTIVE",
-      release: 0
+      release: currentAuthType.value ? currentAuthType.value : 0,
+      query: query.value,
+      columnNames: fusionSampleColumnNames.value.join(",")
     }
 
     // 1. event log, 초기 metadata 저장
     await $ofetch(`/api/metadata/fusion/saveFusionMetaData`, { method: 'POST', body: body}).then(async (saveRes) => {
+      console.log(saveRes)
       // event, metadata 저장 성공
-      if (saveRes && saveRes.data && saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
-        await successAlert("융합 데이터가 저장되었습니다.")
-        goToMetaDataManage()
+      if (saveRes && saveRes.data) {
+        if (!saveRes.data.createViewResult) {
+          await errorAlert("융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+        } else {
+          if (saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
+            await successAlert("융합 데이터가 저장되었습니다.")
+            // goToMetaDataManage()
+          } else {
+            if (!saveRes.data.executeResult) {
+              await errorAlert("융합 데이터 수집에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+            } else {
+              await errorAlert("융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+            }
+          }
+        }
       } else {
         errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
       }

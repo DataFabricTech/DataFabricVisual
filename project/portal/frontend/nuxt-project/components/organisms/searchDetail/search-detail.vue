@@ -646,6 +646,7 @@ const getSampleData = () => {
   const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
   const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "")
   const system_name = ObjectUtils.getPropertyValue(entity.value, "system_name", "")
+  const system_type = ObjectUtils.getPropertyValue(entity.value, "system_type", "")
 
   if (meta_type && meta_type.toUpperCase() == 'TABLE') {
     let trinoColumns = "";
@@ -665,6 +666,7 @@ const getSampleData = () => {
       columns: trinoColumns,
       typeName: meta_type,
       system_name: system_name,
+      system_type: system_type,
       qualified_name: qualified_name,
       limit: 10,
     };
