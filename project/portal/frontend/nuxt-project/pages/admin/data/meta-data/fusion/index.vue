@@ -1094,6 +1094,9 @@ const selectFusion = (item) => {
   } else if (system_type.toUpperCase() == 'TIBERO') {
     let tibero_database = item.qualified_name.split(".")[2]
     codeContent = `"${system_id}"."${tibero_database}"."${meta_name}"`;
+  } else if (system_type.toUpperCase() == 'TRINO') {
+    let trino_schema = item.qualified_name.split(".")[2]
+    codeContent = `"${system_id}"."${trino_schema}"."${meta_name}"`;
   } else {
     codeContent = `"${system_id}"."${database}"."${meta_name}"`;
   }
@@ -1111,7 +1114,7 @@ const hideTooltip = () => {
 };
 
 const executeQuery = async () => {
-  const sql = query.value.replace(/;/g, '');
+  const sql = query.value.replace(/;+$/, "");
 
   // 3. 쿼리 실행 결과 응답
   if (query.value && query.value.length > 0) {
@@ -1236,7 +1239,7 @@ const onClickSaveButton = async () => {
       tags: tags.value,
       status: "ACTIVE",
       release: currentAuthType.value ? currentAuthType.value : 0,
-      query: query.value,
+      query: query.value.replace(/;+$/, ""),
       columnNames: fusionSampleColumnNames.value.join(",")
     }
 
