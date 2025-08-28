@@ -19,54 +19,65 @@
             <classification-info :selected-category="selectedCategory" @onClickUpdate="onClickCategoryManageMenu" />
 
             <!-- 메타 테이블 헤더  -->
-            <div class="mu-heading">
+            <div class="mu-heading" style="display: block;">
               <!-- board-list-search -->
-              <div class="board-list-search">
-                <form action="" @submit.prevent="onFilterSearch">
-                  <fieldset>
-                    <legend>게시물검색</legend>
-                    <div class="inner-search">
-                      <div class="mu-selectbox w120">
-                        <select name="searchType" :value="filterSearchObj.searchType" @change="onChange">
-                          <option v-for="(option, index) in filterSearchObj.options" :key="index" :value="option.value">
-                            {{ option.desc }}
-                          </option>
-                        </select>
+              <div style="display: flex;">
+                <div class="board-list-search" style="flex: 1; margin-right: 5px;">
+                  <form action="" @submit.prevent="onFilterSearch">
+                    <fieldset>
+                      <legend>게시물검색</legend>
+                      <div class="inner-search">
+                        <div class="mu-selectbox w120">
+                          <select name="searchType" :value="filterSearchObj.searchType" @change="onChange">
+                            <option v-for="(option, index) in filterSearchObj.options" :key="index" :value="option.value">
+                              {{ option.desc }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mu-input-icon">
+                          <input type="text" class="mu-input" placeholder="Search" title="검색어입력" name="word"
+                            :value="filterSearchObj.word" @keyup="onChange" />
+                          <button type="button" class="mu-btn mu-btn-sch" @click.prevent="onFilterSearch">
+                            <i class="mu-icon-svg search"></i><span>검색</span>
+                          </button>
+                        </div>
                       </div>
-                      <div class="mu-input-icon">
-                        <input type="text" class="mu-input" placeholder="Search" title="검색어입력" name="word"
-                          :value="filterSearchObj.word" @keyup="onChange" />
-                        <button type="button" class="mu-btn mu-btn-sch" @click.prevent="onFilterSearch">
-                          <i class="mu-icon-svg search"></i><span>검색</span>
-                        </button>
-                      </div>
-                    </div>
-                  </fieldset>
-                </form>
+                    </fieldset>
+                  </form>
+                </div>
+                <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onFilterSearch"/>
               </div>
               <!-- //board-list-search -->
-              <div class="mu-item-group">
-                <div class="mu-selectbox w120">
-                  <select name="searchType2" :value="currentMetaType" @change="onChangeMetaType">
-                    <option v-for="(item, index) in filterMetaTypeList" :key="index" :value="item.value">
-                      {{ item.desc }}
-                    </option>
-                  </select>
+              <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="mu-item-group">
+                  <div class="mu-selectbox w160">
+                    <select name="searchType2" :value="currentMetaType" @change="onChangeMetaType">
+                      <option v-for="(item, index) in filterMetaTypeList" :key="index" :value="item.value">
+                        {{ item.desc }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="mu-selectbox w160">
+                    <select name="searchType4" :value="currentSystemType" @change="onChangeSystemType">
+                      <option v-for="(item, index) in filterSystemTypeList" :key="index" :value="item.value">
+                        {{ item.desc }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="mu-selectbox w160">
+                    <select name="searchType3" :value="currentRelease" @change="onChangeRelease">
+                      <option v-for="(item, index) in filterReleaseList" :key="index" :value="item.value">
+                        {{ item.desc }}
+                      </option>
+                    </select>
+                  </div>
+                  <button type="button" class="mu-btn" @click.stop="onClickButton('roles')">
+                    <span>공개설정</span>
+                  </button>
+                  <button type="button" class="mu-btn mu-btn-primary" @click.stop="onClickButton('category')">
+                    <span>분류맵핑</span>
+                  </button>
                 </div>
-                <div class="mu-selectbox w120">
-                  <select name="searchType3" :value="currentRelease" @change="onChangeRelease">
-                    <option v-for="(item, index) in filterReleaseList" :key="index" :value="item.value">
-                      {{ item.desc }}
-                    </option>
-                  </select>
-                </div>
-                <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onFilterSearch" />
-                <button type="button" class="mu-btn" @click.stop="onClickButton('roles')">
-                  <span>공개설정</span>
-                </button>
-                <button type="button" class="mu-btn mu-btn-primary" @click.stop="onClickButton('category')">
-                  <span>분류맵핑</span>
-                </button>
               </div>
             </div>
             <!-- //메타 테이블 헤더  -->
@@ -137,7 +148,7 @@
                       <category-group :classifications="item.classifications" :item="item" />
                     </td>
                     <td :title="item.release ? item.release : '-'">
-                      {{ getRelease(item.release) }}
+                      <span :class="getReleaseClass(item.release)">{{ getRelease(item.release) }}</span>
                     </td>
                   </tr>
                   <tr v-if="dataList.length === 0">
@@ -224,12 +235,17 @@ interface FilterSearchObj {
 }
 
 interface FilterRelease {
-  value: number | string; // 두번째 필터 조건 - 데이터명, 오너 등
+  value: number | string;
   desc: string; // 검색어
 }
 
 interface FilterMetaType {
-  value: number | string; // 두번째 필터 조건 - 데이터명, 오너 등
+  value: number | string;
+  desc: string; // 검색어
+}
+
+interface FilterSystemType {
+  value: number | string;
   desc: string; // 검색어
 }
 
@@ -350,7 +366,7 @@ const filterSearchObj = ref<FilterSearchObj>({
 const filterReleaseList = ref<Array<FilterRelease>>([
   {
     value: "",
-    desc: "전체"
+    desc: "공개설정(전체)"
   },
   {
     value: 0,
@@ -371,10 +387,19 @@ const currentRelease = ref<number | string>("");
 const filterMetaTypeList = ref<Array<FilterMetaType>>([
   {
     value: "",
-    desc: "전체"
+    desc: "유형(전체)"
+  }
+])
+
+// 메타 데이터 시스템 타입 필터 항목
+const filterSystemTypeList = ref<Array<FilterSystemType>>([
+  {
+    value: "",
+    desc: "시스템 타입(전체)"
   }
 ])
 const currentMetaType = ref<number | string>("");
+const currentSystemType = ref<number | string>("");
 
 // 선택된 카테고리 정보
 const selectedCategory = ref<SelectedCategory>({
@@ -487,10 +512,12 @@ onUnmounted(() => {
 //method
 const getFilterOptions = () => {
   $ofetch(`/api/metadata/manage/getFilterOptions`).then((res) => {
-    if (res && res.data && !res.errorMessage) {
-      if (res.data.length > 0) {
-        const merged = [...filterMetaTypeList.value, ...res.data]
-        filterMetaTypeList.value = merged;
+    if (res && res.data) {
+      if (res.data.metaTypeList && res.data.metaTypeList.length > 0) {
+        filterMetaTypeList.value = [...filterMetaTypeList.value, ...res.data.metaTypeList];
+      }
+      if (res.data.systemTypeList && res.data.systemTypeList.length > 0) {
+        filterSystemTypeList.value = [...filterSystemTypeList.value, ...res.data.systemTypeList];
       }
     }
   });
@@ -1010,6 +1037,11 @@ const onChangeMetaType = (e) => {
   onSearchDataList();
 }
 
+const onChangeSystemType = (e) => {
+  currentSystemType.value = e.target.value
+  onSearchDataList();
+}
+
 const onFilterSearch = () => {
   onSearchDataList();
 };
@@ -1034,6 +1066,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   const { word } = filterSearchObj.value;
   params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;
   params.metaType = currentMetaType.value
+  params.systemType = currentSystemType.value
   params.release = currentRelease.value
   params.word = word.trim();
 
@@ -1176,6 +1209,14 @@ const onClickDataName = (item) => {
   router.push("/admin/data/meta-data/detail?guid=" + item.meta_id);
 };
 
+const getReleaseClass = (release) => {
+  let className = "release-status"
+  if (release == 0) className += " secret";
+  else if (release == 1) className += " public";
+  else if (release == 2) className += " private";
+  return className;
+}
+
 const getRelease = (release) => {
   if (release == 0) return "secret";
   else if (release == 1) return "public";
@@ -1240,4 +1281,5 @@ const goToFileRegister = () => {
 </script>
 <style lang="scss">
 @import "index";
+
 </style>

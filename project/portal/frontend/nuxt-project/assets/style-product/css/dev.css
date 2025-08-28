@@ -655,3 +655,9 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 .fusion-step-default {background-color:#ffffff; color: #000000; font-size: 16px; font-weight: 500; border-radius: 3px; padding: 0 10px; margin-left: 5px;} /* 성공 */
 .fusion-step-success {background-color:#064; color: #ffffff; font-size: 16px; font-weight: 500; border-radius: 3px; padding: 0 10px; margin-left: 5px;} /* 성공 */
 .fusion-step-failed {background-color:#fa0000; color: #ffffff; font-size: 16px; font-weight: 500; border-radius: 3px; padding: 0 10px; margin-left: 5px;} /* 실패 */
+
+/* 공개설정 디자인 */
+/* .release-status {display:inline-flex; align-items:center; justify-content:center; width:60px; height:24px; border-radius:12px; font-size:13px;} */
+/* .release-status.public {background-color:#e0e1f6; color:#4e39f1;}
+.release-status.private {background-color:#f9e4e6; color:#e92c3b;}
+.release-status.secret {background-color:#eaeaee; color:#656d78;} */

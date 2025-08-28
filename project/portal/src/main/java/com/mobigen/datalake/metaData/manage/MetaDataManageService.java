@@ -116,8 +116,13 @@ public class MetaDataManageService {
         return metaDataManageMapper.deleteMetaDataClassification(params);
     }
 
-    public List<Map<String, Object>> getFilterOptions() throws Exception {
-        return metaDataManageMapper.getFilterOptions();
+    public Map<String, Object> getFilterOptions() throws Exception {
+        List<Map<String, Object>> systemTypeList = metaDataManageMapper.getFilterSystemType();
+        List<Map<String, Object>> metaTypeList = metaDataManageMapper.getFilterMetaType();
+        Map<String, Object> result = new HashMap<>();
+        result.put("systemTypeList", systemTypeList);
+        result.put("metaTypeList", metaTypeList);
+        return result;
     }
 
     // 공개설정 권한 처리
