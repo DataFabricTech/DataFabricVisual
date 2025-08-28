@@ -324,7 +324,7 @@ const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQ
 const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
 const default_meta_type_list = ref<Array<string>>([]); // 메타타입 기본값 목록
 const sortBy = ref<string>("create_time") // 정렬 필드
-const sortOrder = ref<string>("desc"); // 정렬
+const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
   id: "",
   name: "",
