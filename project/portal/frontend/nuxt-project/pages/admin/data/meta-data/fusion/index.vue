@@ -476,7 +476,7 @@
                   <tr>
                     <th scope="row">데이터 명<strong class="required">필수</strong></th>
                     <td>
-                      <input type="text" id="file-name" class="mu-input" placeholder="데이터명을 입력하세요." style="width: 300px;"
+                      <input type="text" id="file-name" class="mu-input" placeholder="데이터명을 입력하세요."
                         :title="meta_name" v-model="meta_name" />
                     </td>
                     <th scope="row" rowspan="3">사용자 데이터 설명</th>
