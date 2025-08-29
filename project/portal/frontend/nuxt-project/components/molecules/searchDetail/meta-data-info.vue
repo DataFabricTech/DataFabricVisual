@@ -241,6 +241,8 @@
                   key !== 'parameters' &&
                   !checkObject(value)
                 "
+                :title="value == 0 || value ? value : '-'"
+                style="white-space: normal;"
               >
                 {{ value == 0 || value ? value : '-' }}
               </span>
