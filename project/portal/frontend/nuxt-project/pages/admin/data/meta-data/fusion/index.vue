@@ -1091,6 +1091,9 @@ const selectFusion = (item) => {
   || system_type.toUpperCase() == 'POSTGRESQL'
   || system_type.toUpperCase() == 'MSSQL') {
     codeContent = `"${system_id}"."${schema}"."${meta_name}"`;
+  } else if (system_type.toUpperCase() == 'DRUID') {
+    let druid_schema = item.qualified_name.split(".")[2]
+    codeContent = `"${system_id}"."${druid_schema}"."${meta_name}"`;
   } else if (system_type.toUpperCase() == 'TIBERO') {
     let tibero_database = item.qualified_name.split(".")[2]
     codeContent = `"${system_id}"."${tibero_database}"."${meta_name}"`;
