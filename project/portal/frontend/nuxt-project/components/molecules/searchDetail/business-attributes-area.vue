@@ -50,13 +50,20 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="props.isAdmin && props.isDetail" class="mu-button-wrap" style="margin: 5px; text-align: right;">
+        <button class="mu-btn mu-btn-md mu-btn-primary" @click="onClickBusinessAttributesConfirm">
+          <span>적용</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(["onClickAddRow", "onClickDelRow"]);
-const props = defineProps(["isAdmin", "attributes", "isRegister"]);
+import { confirmAlert } from '@/components/functional/alert/alert-default';
+
+const emit = defineEmits(["onClickAddRow", "onClickDelRow", "onClickBusinessAttributesConfirm"]);
+const props = defineProps(["isAdmin", "attributes", "isRegister", "isEdited", "isDetail"]);
 
 // 비지니스 속성 추가 버튼 클릭 이벤트 핸들러
 const onClickAdd = () => {
@@ -78,4 +85,21 @@ const inputClass = (type, item) => {
 
   return classNames.join(" ");
 };
+
+// 적용 버튼 클릭 이벤트 핸들러
+const onClickBusinessAttributesConfirm = async () => {
+  const confirm = await confirmAlert(
+    "비지니스 속성을 적용 하시겠습니까?"
+  );
+  if (confirm) {
+    if (props.isEdited) {
+      // 수정된 내용이 있을 경우에만 저장 처리
+      emit("onClickBusinessAttributesConfirm", props.attributes);
+    } else {
+      // 수정된 내용이 없을 경우 알림
+      await confirmAlert("수정된 내용이 없습니다.");
+    }
+  }
+};
+
 </script>

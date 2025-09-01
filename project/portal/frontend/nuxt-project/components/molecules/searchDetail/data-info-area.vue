@@ -15,8 +15,14 @@
       <meta-data-info :isAdmin="props.isAdmin" :entity="props.entity" :typeName="typeName" :referredEntitiesAttributes="props.referredEntitiesAttributes"
         @onClickData="onClickDataName" />
       <!-- detail-box : 데이터 정보 > 비지니스 속성 -->
-      <business-attributes-area :isAdmin="props.isAdmin" :attributes="props.attributes" @onClickAddRow="onClickAdd"
-        @onClickDelRow="onClickDel" />
+      <business-attributes-area
+        :isAdmin="props.isAdmin"
+        :attributes="props.attributes"
+        :isEdited="props.isEdited"
+        :isDetail="props.isDetail"
+        @onClickAddRow="onClickAdd"
+        @onClickDelRow="onClickDel"
+        @onClickBusinessAttributesConfirm="onClickBusinessAttributesConfirm" />
     </div>
   </div>
 </template>
@@ -25,8 +31,8 @@
 import BusinessAttributesArea from "@molecules/searchDetail/business-attributes-area";
 import MetaDataInfo from "@molecules/searchDetail/meta-data-info";
 
-const props = defineProps(['entity', 'referredEntitiesAttributes', 'isAdmin', 'attributes'])
-const emit = defineEmits(['getAllDataByGuid', 'onClickAddRow', 'onClickDelRow'])
+const props = defineProps(['entity', 'referredEntitiesAttributes', 'isAdmin', 'attributes', 'isEdited', 'isDetail'])
+const emit = defineEmits(['getAllDataByGuid', 'onClickAddRow', 'onClickDelRow', 'onClickBusinessAttributesConfirm'])
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
@@ -60,5 +66,10 @@ const onClickAdd = () => {
 const onClickDel = (index) => {
   emit("onClickDelRow", index);
 };
+
+// 비지니스 속성 적용 버튼 클릭 이벤트 핸들러
+const onClickBusinessAttributesConfirm = (attributes) => {
+  emit('onClickBusinessAttributesConfirm', attributes)
+}
 
 </script>

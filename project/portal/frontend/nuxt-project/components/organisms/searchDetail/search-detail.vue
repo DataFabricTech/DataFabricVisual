@@ -11,8 +11,10 @@
         <!-- detail-section : 데이터 정보 -->
         <div :ref="el => sectionRefs['data-info-area'] = el" class="content-block">
           <data-info-area :entity="entity" :referredEntitiesAttributes="referredEntitiesAttributes"
+            :isEdited="isEdited" :isDetail="true"
             @onClickData="getAllDataByGuid" :isAdmin="props.isAdmin" :attributes="businessAttributes"
-            @onClickAddRow="onClickAddBusinessAttributes" @onClickDelRow="onClickDelBusinessAttributes" />
+            @onClickAddRow="onClickAddBusinessAttributes" @onClickDelRow="onClickDelBusinessAttributes"
+            @onClickBusinessAttributesConfirm="onClickBusinessAttributesConfirm" />
         </div>
         <!-- tag-box : 태그/키워드 관리 -->
         <div :ref="el => sectionRefs['tag-keyword-area'] = el" class="content-block">
@@ -930,6 +932,24 @@ const onClickDelBusinessAttributes = (index) => {
 
   businessAttributes.value = tempAttributes;
 };
+
+const onClickBusinessAttributesConfirm = (attributes) => {
+  businessAttributes.value = attributes
+  const params = createEditedParams();
+  $ofetch("/api/search/detail/attributes", {
+    method: "POST",
+    body: params,
+  }).then((res) => {
+    if (res.data && res.data > 0) {
+      defaultAlert("비즈니스 속성이 적용되었습니다.").then(() => {});
+      getDetailDataByGuid().then(() => setBusinessAttributes());
+    } else {
+      const msg =
+        "적용에 실패하였습니다. <br> 관리자에게 문의해 주시기 바랍니다.";
+      errorAlert(msg);
+    }
+  });
+}
 
 // 취소 이벤트 핸들러 (관리자 전용 기능)
 const onCancel = async () => {
