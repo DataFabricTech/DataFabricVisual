@@ -397,4 +397,19 @@ public class DetailController {
         params.put("user", user);
         searchDetailService.getFileData(params, response);
     }
+
+    /**
+     * 비정형 데이터 수정
+     *
+     * @param params 수정용 파라미터
+     * @return Object 비정형 데이터 수정 결과
+     */
+    @ResponseJsonResult
+    @PutMapping("/updateUnstructuredMetadata")
+    @ResponseBody
+    public Object updateUnstructuredMetadata(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("user", user);
+        return searchDetailService.updateUnstructuredMetadata(params);
+    }
 }

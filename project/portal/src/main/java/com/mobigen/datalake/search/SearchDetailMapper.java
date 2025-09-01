@@ -91,4 +91,6 @@ public interface SearchDetailMapper {
     Integer getFileSampleCount(String meta_id);
 
     Map<String, Object> getSystemInfo(String system_id);
+
+    int updateUnstructuredMetadata(Map<String, Object> params);
 }

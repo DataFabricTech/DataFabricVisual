@@ -1369,4 +1369,55 @@ public class SearchDetailService {
 
         return restResponse;
     }
+
+    public Map<String, Object> updateUnstructuredMetadata(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boolean isFailed = false;
+        boolean esUpdated = false;
+
+        // 수정자 계정 추가
+        if (params.get("user") != null) {
+            Map<String, String> user = (Map<String, String>) params.get("user");
+            String update_by = user.get("user_id");
+            params.put("update_by", update_by);
+        };
+
+        // jsonb 타입은 Map -> JSON형태의 String값으로 변환 필요 넣어줘야함.
+        params.put("attributes", objectMapper.writeValueAsString(params.get("attributes")));
+
+        // 1. 비정형 메타데이터 업데이트
+        int updateResult = searchDetailMapper.updateUnstructuredMetadata(params);
+        
+        // 2. ES 업데이트 API 수행 결과 - API 호출 필요
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("metaid", params.get("meta_id"));
+        requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
+        requestBody.put("event_name", "update unstructured_metadata");
+        Map<String, Object> restResponse = essyncUpdate(requestBody);
+
+        boolean esResult = false;
+        if (!restResponse.isEmpty()) {
+            Map<String, String> res = (Map<String, String>) restResponse.get("result");
+            if (res.get("result").equals("success")) {
+                isFailed = false;
+                esResult = true;
+            } else {
+                isFailed = true;
+                esResult = false;
+            }
+        }
+
+        if (esResult) { // ES 등록 성공
+            esUpdated = true;
+        } else { // ES 등록 실패
+            result.put("errorMessage", "ES 업데이트 실패");
+            isFailed = true;
+        }
+
+        result.put("updateResult", updateResult);
+        result.put("isFailed", isFailed);
+        result.put("esUpdated", esUpdated);
+        
+        return result;
+    }
 }

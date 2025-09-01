@@ -8,7 +8,14 @@
         @scrollToSection="scrollToSection" :resetTab="resetTab"/>
       <!-- data-detail-wrap : 통합검색리스트 > 상세 -->
       <div class="data-detail-wrap">
-        <!-- detail-section : 데이터 정보 -->
+        <div :ref="el => sectionRefs['unstructured-meta-update-area'] = el" class="content-block">
+          <unstructured-meta-update-area
+            :isAdmin="true"
+            :isDetail="true"
+            :entity="entity"
+            :typeName="typeName"
+            @updateUnstructuredMetaUpdate="updateUnstructuredMetaUpdate" />
+        </div>
         <div :ref="el => sectionRefs['data-info-area'] = el" class="content-block">
           <data-info-area :entity="entity" :referredEntitiesAttributes="referredEntitiesAttributes"
             :isEdited="isEdited" :isDetail="true"
@@ -91,6 +98,7 @@
 
 <script setup lang="ts">
 import { defaultAlert } from "@/components/functional/alert/alert-default";
+import unstructuredMetaUpdateArea from "@/components/molecules/searchDetail/unstructured-meta-update-area.vue";
 import ObjectUtils from "@/utils/ObjectUtils";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
@@ -1173,6 +1181,22 @@ const getUserDataAuth = async () => {
   } else {
     return true
   }
+}
+
+const updateUnstructuredMetaUpdate = async (updateMetaInfo) => {
+  await $ofetch(`/api/search/detail/updateUnstructuredMetadata`, {
+    method: "PUT",
+    body: updateMetaInfo
+  }).then(async (res) => {
+    if (res && res.data && res.data.updateResult) {
+      await defaultAlert("비정형 데이터가 수정되었습니다.")
+      getAllDataByGuid(updateMetaInfo.meta_id)
+    } else {
+      await errorAlert("비정형 데이터 수정에 실패하였습니다.")
+    }
+  }).catch(async (err) => {
+      await errorAlert("비정형 데이터 수정에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+  });
 }
 
 </script>
