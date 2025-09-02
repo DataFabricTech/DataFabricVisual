@@ -1,5 +1,5 @@
 <template>
-  <div v-if="props.isAdmin && props.isDetail && props.typeName && props.typeName.toUpperCase() == 'FILE'" :class="props.isAdmin ? 'data-box-wrap' : ''"
+  <div v-if="props.isAdmin && !props.isDetail && props.typeName && props.typeName.toUpperCase() == 'FILE'" :class="props.isAdmin ? 'data-box-wrap' : ''"
     :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
