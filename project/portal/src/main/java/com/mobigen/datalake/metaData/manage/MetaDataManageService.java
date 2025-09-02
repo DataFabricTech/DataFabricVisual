@@ -48,9 +48,6 @@ public class MetaDataManageService {
     @Value("${properties.MinioService.base_url}")
     private String minioServiceBaseUrl;
 
-    @Value("${properties.MinioService.url.upload_multipart}")
-    private String minioServiceUrlUploadMultipart;
-
     @Value("${properties.catalog-api.base_url}")
     private String catalogApiBaseUrl;
     
