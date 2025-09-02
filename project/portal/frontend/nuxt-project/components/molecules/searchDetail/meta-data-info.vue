@@ -451,7 +451,7 @@ const getKrKey = (key) => {
     if (key == "full_path") return "파일 전체 경로 (local path)";
     if (key == "source_URL") return "파일 소스 URL";
     if (key == "db") return "db";
-    if (key == "version") return "미사용";
+    if (key == "version") return "버전";
     if (key == "status") return "상태값";
     if (key == "release") return "메타 공개 여부";
     return key;
