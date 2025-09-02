@@ -10,7 +10,7 @@
       <div class="data-detail-wrap">
         <div :ref="el => sectionRefs['unstructured-meta-update-area'] = el" class="content-block">
           <unstructured-meta-update-area
-            :isAdmin="true"
+            :isAdmin="props.isAdmin"
             :isDetail="true"
             :entity="entity"
             :typeName="typeName"
