@@ -57,7 +57,7 @@
               <th v-if="currentCollector.system_type.toUpperCase().includes('TRINO')">Catalog</th>
               <th v-else>Database</th>
               <td v-if="currentCollector.system_type.toUpperCase().includes('TRINO')" colspan="3"><input type="text" v-model="currentCollector.catalog" :title="currentCollector.catalog"
-                  class="mu-input">
+                  class="mu-input" :readonly="isDetail">
               </td>
               <td v-else colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database"
                   class="mu-input"
