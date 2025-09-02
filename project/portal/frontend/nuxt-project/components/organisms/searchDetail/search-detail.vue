@@ -67,16 +67,7 @@
           @reload="getRecommendStatus" />
         <!-- //recommend-section  -->
         <!-- mu-button-wrap -->
-        <div v-if="props.isAdmin" class="mu-button-wrap">
-          <button type="button" class="mu-btn mu-btn-lg" @click="onCancel">
-            <span>취소</span>
-          </button>
-          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickConfirm"
-            :disabled="isConfirmDisabled">
-            <span>적용</span>
-          </button>
-        </div>
-        <div v-else class="mu-button-wrap">
+        <div class="mu-button-wrap">
           <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton">
             <span>목록</span>
           </button>
@@ -863,7 +854,11 @@ const getRecommendStatus = () => {
 
 // 목록 버튼 클릭
 const onClickListButton = () => {
-  router.push("/search/keyword");
+  if (props.isAdmin) {
+    router.push("/admin/data/meta-data/manage");
+  } else {
+    router.push("/search/keyword");
+  }
 };
 
 // 카테고리 맵핑 모달 toggle 이벤트 핸들러
