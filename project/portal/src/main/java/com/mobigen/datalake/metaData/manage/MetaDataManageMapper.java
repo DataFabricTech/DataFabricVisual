@@ -59,4 +59,6 @@ public interface MetaDataManageMapper {
     Map<String, Object> getFabricStorageInfoFromSystemName(String system_name) throws Exception;
 
     String getMetaIdFromQualifiedName(String qualified_name) throws Exception;
+
+    List<Map<String, Object>> getExtractMetaList(Map<String, Object> params) throws Exception;
 }

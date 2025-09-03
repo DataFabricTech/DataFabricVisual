@@ -18,6 +18,7 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -144,5 +145,19 @@ public class MetaDataManageController {
     @PostMapping("/executeProfile")
     public Object executeProfile(@RequestBody Map<String, Object> executeBody) throws Exception {
         return metaDataManageService.executeProfile(executeBody);
+    }
+
+    /**
+     * 메타 추출
+     * 
+     * @param meta_id 메타 ID
+     * @param qualified_name 메타 고유명
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/extractMetadata")
+    public void extractMetadata(@RequestBody Map<String, Object> extractBody, HttpServletResponse response) throws Exception {
+        metaDataManageService.extractMetadata(extractBody, response);
     }
 }

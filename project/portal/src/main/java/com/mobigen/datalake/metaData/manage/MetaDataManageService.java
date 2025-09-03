@@ -1,6 +1,8 @@
 package com.mobigen.datalake.metaData.manage;
 
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mobigen.datalake.metaData.manage.DTO.UploadMinioFileForm;
 import com.mobigen.datalake.system.collector.CollectorService;
 import com.mobigen.framework.utility.MinioFactory;
@@ -25,6 +31,7 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.MinioException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,9 +51,6 @@ public class MetaDataManageService {
 
     @Value("${properties.ESSync.url.updates}")
     private String esSyncUrlUpdates;
-
-    @Value("${properties.MinioService.base_url}")
-    private String minioServiceBaseUrl;
 
     @Value("${properties.catalog-api.base_url}")
     private String catalogApiBaseUrl;
@@ -508,5 +512,71 @@ public class MetaDataManageService {
         }
 
         return restResponse;
+    }
+
+    public void extractMetadata(Map<String, Object> params, HttpServletResponse response) throws Exception {
+        List<Map<String, Object>> extractMetaList = new ArrayList<>();
+        if (params.get("extract_type").toString().equalsIgnoreCase("XML")) {
+            
+            extractMetaList = metaDataManageMapper.getExtractMetaList(params);
+
+            // 공공데이터포털 > XML > 기상청 국가기상위성센터_홈페이지정보 양식 참고
+            XMLOutputFactory factory = XMLOutputFactory.newInstance();
+
+            try (OutputStream os = response.getOutputStream()) {
+                XMLStreamWriter writer = factory.createXMLStreamWriter(os, "UTF-8");
+
+                writer.writeStartDocument("UTF-8", "1.0");
+
+                writer.writeCharacters("\n");
+                writer.writeStartElement("RESULTS");
+                writer.writeCharacters("\n");
+
+                for (Map<String, Object> row : extractMetaList) {
+                    writer.writeCharacters("\t"); // 들여쓰기
+                    writer.writeStartElement("ROW");
+                    writer.writeCharacters("\n");
+
+                    for (Map.Entry<String, Object> entry : row.entrySet()) {
+                        writer.writeCharacters("\t\t"); // COLUMN 들여쓰기
+                        writer.writeStartElement("COLUMN");
+                        writer.writeAttribute("NAME", entry.getKey());
+
+                        Object value = entry.getValue();
+                        writer.writeCData(value != null ? value.toString() : "");
+                        writer.writeEndElement(); // </COLUMN>
+                        writer.writeCharacters("\n");
+                    }
+
+                    writer.writeCharacters("\t");
+                    writer.writeEndElement(); // </ROW>
+                    writer.writeCharacters("\n");
+                }
+
+                writer.writeEndElement(); // </RESULTS>
+                writer.writeCharacters("\n");
+                writer.writeEndDocument();
+
+                writer.flush();
+                writer.close();
+            }
+        }
+        if (params.get("extract_type").toString().equalsIgnoreCase("JSON")) {
+            ObjectMapper mapper = new ObjectMapper();
+            extractMetaList = metaDataManageMapper.getExtractMetaList(params);
+
+            ObjectNode root = mapper.createObjectNode();
+            root.putPOJO("data", extractMetaList);
+            
+            // 파일 다운로드
+            try (OutputStream os = response.getOutputStream()) {
+                String jsonString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+                os.write(jsonString.getBytes(StandardCharsets.UTF_8));
+            } catch (Exception e) {
+                log.error("extractMetadata Exception !!");
+                e.printStackTrace();
+            }
+        }
+        
     }
 }

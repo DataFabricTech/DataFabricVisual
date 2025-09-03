@@ -77,6 +77,9 @@
                   <button type="button" class="mu-btn mu-btn-primary" @click.stop="onClickButton('category')">
                     <span>분류맵핑</span>
                   </button>
+                  <button type="button" class="mu-btn mu-btn-primary" @click.stop="onClickButton('extract')">
+                    <span>메타추출</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -176,6 +179,10 @@
       <manage-classification-modal ref="refManageModal" :manage-modal="manageModalObj"
         @onCloseModal="onToggleManageModal" @onSubmit="onSubmitCategory" />
 
+      <!-- 메타추출 처리 모달 -->
+      <manage-extract-meta-modal ref="refManageModal" :extract-modal="extractModalObj"
+        @onCloseModal="onToggleExtractModal" @onSubmit="downloadMetadata" />
+
       <!-- 공개설정 처리 모달 -->
       <manage-role-mapping-modal ref="refManageRoleMappingModal" :auth-modal="authModalObj"
         @onCloseModal="onToggleAuthModal" @onSubmit="onSubmitAuth" />
@@ -190,6 +197,7 @@ import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
 import portalConfirm from "@functional/confirm/portal-confirm";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
+import ManageExtractMetaModal from "@functional/metaExtractModal/manage-extract-meta-modal.vue";
 import Pagination from "@functional/pagination/pagination";
 import ManageRoleMappingModal from "@functional/roleMappingModal/manage-role-mapping-modal";
 import CategoryGroup from "@molecules/metaDataManage/category-group";
@@ -208,7 +216,7 @@ definePageMeta({
   layout: "admin"
 });
 
-const { $ofetch } = useNuxtApp();
+const { $ofetch, $getNowWithSeconds } = useNuxtApp();
 
 // route
 const router = useRouter();
@@ -289,6 +297,12 @@ interface ManageModalObj {
 }
 
 interface AuthModalObj {
+  toggle: boolean;
+  type: string | number;
+  target: null;
+}
+
+interface ExtractModalObj {
   toggle: boolean;
   type: string | number;
   target: null;
@@ -439,6 +453,13 @@ const authModalObj = ref<AuthModalObj>({
   target: null
 });
 const refManageRoleMappingModal = ref<any>(null); // 공개설정 모달 ref
+
+// 공개설정 관리 모달 제어
+const extractModalObj = ref<ExtractModalObj>({
+  toggle: false,
+  type: null,
+  target: null
+});
 
 await categoryStore.fetchCategories();
 await categoryTreeStore.fetchCategories()
@@ -803,6 +824,23 @@ const onToggleAuthModal = (type: string | null, targets: any = null) => {
   };
 };
 
+// 메타추출 제어 모달
+const onToggleExtractModal = (type: string | null, targets: any = null) => {
+  let target = null;
+  const toggle = extractModalObj.value.toggle;
+
+  if (!toggle) {
+    // 모달 여는 시점에만 관련 데이터 세팅
+    target = targets;
+  }
+
+  extractModalObj.value = {
+    type: type ? type : null,
+    toggle: !toggle,
+    target
+  };
+};
+
 // 툴팁 토글 이벤트 핸들러
 const onToggleTooltip = (e: Event, item: any = null, type: string = "") => {
   if (item && !tooltipObj.value.display) {
@@ -978,32 +1016,23 @@ const onClickButton = (type) => {
     let targets: SelectedDataItem[] = [];
     switch (type) {
       case "category": // 카테고리 맵핑 버튼 클릭 시
-        // 테이블 유형에 대해서만 카테고리 맵핑 가능
         targets = selectedData.value;
-        if (targets.length > 0) {
-          onToggleManageModal("map", targets);
-        } else {
-          errorAlert(
-            "선택된 데이터 중 카테고리 맵핑 가능한 데이터가<br/>없습니다."
-          );
-        }
+        onToggleManageModal("map", targets);
         break;
-      case "roles":
-        // 테이블 유형에 대해서만 카테고리 맵핑 가능
+      case "roles": // 공개설정 버튼 클릭 시
         targets = selectedData.value;
-        if (targets.length > 0) {
-          onToggleAuthModal("roles", targets);
-        } else {
-          errorAlert(
-            "선택된 데이터 중 공개설정이 가능한 데이터가<br/>없습니다."
-          );
-        }
+        onToggleAuthModal("roles", targets);
+        break;
+      case "extract": // 메타 추출 버튼 클릭 시
+        targets = selectedData.value;
+        onToggleExtractModal("extract", targets);
         break;
     }
   } else {
     // 선택된 데이터가 없을 경우
     const MESSAGE_MAP = new Map<string, string>([
       ["category", "카테고리 맵핑"],
+      ["extract", "메타데이터 추출"],
       ["roles", "공개설정"],
       ["delete", "삭제"]
     ]);
@@ -1274,6 +1303,43 @@ const onSubmitAuth = async (params: any) => {
       });
   }
 };
+
+// 메타 데이터 다운로드
+const downloadMetadata = async (params) => {
+  const extractType = params.extractType == 0 ? "json" : "xml";
+
+  const body = {
+    meta_ids: selectedData.value.map((item: any) => item.meta_id),
+    extract_type: extractType
+  }
+
+  // 메타 추출
+  try {
+    const response = await $ofetch(`/api/metadata/manage/extractMetadata`, {
+      method: "POST",
+      body:  body,
+      responseType: "blob"
+    })
+
+    // 2) blob → URL 객체 생성
+    const downloadUrl = window.URL.createObjectURL(response)
+
+    // 3) a 태그로 다운로드 트리거
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.setAttribute('download', `${`metadata_extract_${$getNowWithSeconds(new Date())}`}.${extractType}`) // 다운로드 파일명 설정
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+
+    // 4) 메모리 해제
+    window.URL.revokeObjectURL(downloadUrl)
+
+  } catch (err) {
+    console.log(err);
+    errorAlert("메타 데이터를 추출 요청에 실패하였습니다.");
+  }
+}
 
 const goToFileRegister = () => {
   router.push("/admin/data/meta-data/register")
