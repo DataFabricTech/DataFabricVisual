@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1320,12 +1321,32 @@ public class SearchDetailService {
         String object = p.getObject();
 
         MinioClient mf = MinioFactory.create(minioEndpoint, minioAccessKey, minioSecretKey);
+        
+        try (OutputStream outputStream = response.getOutputStream()) {
 
-        try (InputStream inputStream = mf.getObject(GetObjectArgs.builder()
-                                        .bucket(bucket)
-                                        .object(object)
-                                        .build());
-            OutputStream outputStream = response.getOutputStream();) {
+            // objectName을 완성형(NFC) → 조합형(NFD) 순으로 조회
+            String nfcKey = Normalizer.normalize(object, Normalizer.Form.NFC);
+            String nfdKey = Normalizer.normalize(object, Normalizer.Form.NFD);
+
+            InputStream inputStream;
+            try {
+                // 1. NFC로 먼저 시도
+                inputStream = mf.getObject(
+                    GetObjectArgs.builder()
+                        .bucket(bucket)
+                        .object(nfcKey)
+                        .build()
+                );
+            } catch (Exception ex) {
+                log.warn("NFC key not found, trying NFD key: {}", nfdKey);
+                // 2. 실패하면 NFD로 재시도
+                inputStream = mf.getObject(
+                    GetObjectArgs.builder()
+                        .bucket(bucket)
+                        .object(nfdKey)
+                        .build()
+                );
+            }
 
             // 응답 헤더 세팅
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -1333,21 +1354,22 @@ public class SearchDetailService {
             // 스트리밍 복사
             byte[] buffer = new byte[8192];
             int bytesRead;
-            try {
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
+            try (InputStream is = inputStream) {
+                while ((bytesRead = is.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
-            } catch(Exception e) {
-                StringBuilder errMsg = new StringBuilder();
-                errMsg.append(System.lineSeparator())
-                      .append(System.lineSeparator())
-                      .append("Fail to file download !!");
+            } catch (Exception e) {
+                StringBuilder errMsg = new StringBuilder()
+                        .append(System.lineSeparator())
+                        .append(System.lineSeparator())
+                        .append("Fail to file download !!");
                 outputStream.write(errMsg.toString().getBytes());
             }
+
         } catch (Exception e) {
-            log.error("Fail to download file !!");
-            e.printStackTrace();
+            log.error("Fail to download file !!", e);
         }
+
     }
 
     public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
