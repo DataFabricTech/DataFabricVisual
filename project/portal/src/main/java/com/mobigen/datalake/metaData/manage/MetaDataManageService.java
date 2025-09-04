@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -515,7 +516,7 @@ public class MetaDataManageService {
     }
 
     public void extractMetadata(Map<String, Object> params, HttpServletResponse response) throws Exception {
-        List<Map<String, Object>> extractMetaList = new ArrayList<>();
+        List<LinkedHashMap<String, Object>> extractMetaList = new ArrayList<>();
         if (params.get("extract_type").toString().equalsIgnoreCase("XML")) {
             
             extractMetaList = metaDataManageMapper.getExtractMetaList(params);

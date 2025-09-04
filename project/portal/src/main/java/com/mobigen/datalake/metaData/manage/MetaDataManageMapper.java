@@ -1,5 +1,6 @@
 package com.mobigen.datalake.metaData.manage;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,5 +61,5 @@ public interface MetaDataManageMapper {
 
     String getMetaIdFromQualifiedName(String qualified_name) throws Exception;
 
-    List<Map<String, Object>> getExtractMetaList(Map<String, Object> params) throws Exception;
+    List<LinkedHashMap<String, Object>> getExtractMetaList(Map<String, Object> params) throws Exception;
 }
