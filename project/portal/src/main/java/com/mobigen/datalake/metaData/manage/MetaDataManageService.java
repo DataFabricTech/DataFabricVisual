@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mobigen.datalake.metaData.manage.DTO.UploadMinioFileForm;
@@ -518,39 +520,77 @@ public class MetaDataManageService {
     public void extractMetadata(Map<String, Object> params, HttpServletResponse response) throws Exception {
         List<LinkedHashMap<String, Object>> extractMetaList = new ArrayList<>();
         if (params.get("extract_type").toString().equalsIgnoreCase("XML")) {
-            
             extractMetaList = metaDataManageMapper.getExtractMetaList(params);
 
-            // 공공데이터포털 > XML > 기상청 국가기상위성센터_홈페이지정보 양식 참고
             XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
             try (OutputStream os = response.getOutputStream()) {
                 XMLStreamWriter writer = factory.createXMLStreamWriter(os, "UTF-8");
 
                 writer.writeStartDocument("UTF-8", "1.0");
-
                 writer.writeCharacters("\n");
                 writer.writeStartElement("RESULTS");
                 writer.writeCharacters("\n");
 
                 for (Map<String, Object> row : extractMetaList) {
-                    writer.writeCharacters("\t"); // 들여쓰기
-                    writer.writeStartElement("ROW");
+                    writer.writeCharacters("\t");
+                    writer.writeStartElement("META");
+                    writer.writeAttribute("ID", row.get("meta_id").toString());
                     writer.writeCharacters("\n");
 
                     for (Map.Entry<String, Object> entry : row.entrySet()) {
-                        writer.writeCharacters("\t\t"); // COLUMN 들여쓰기
-                        writer.writeStartElement("COLUMN");
-                        writer.writeAttribute("NAME", entry.getKey());
+                        writer.writeCharacters("\t\t");
+                        writer.writeStartElement(entry.getKey());
 
                         Object value = entry.getValue();
-                        writer.writeCData(value != null ? value.toString() : "");
+
+                        if (value != null) {
+                            try {
+                                // JDBC Array 타입 (_varchar 등)
+                                if (value instanceof java.sql.Array) {
+                                    Object arrayObj = ((java.sql.Array) value).getArray();
+                                    if (arrayObj instanceof Object[]) {
+                                        Object[] arr = (Object[]) arrayObj;
+                                        for (Object v : arr) {
+                                            writer.writeCharacters("\n\t\t\t");
+                                            writer.writeStartElement("item");
+                                            writer.writeCharacters(v != null ? v.toString() : "");
+                                            writer.writeEndElement();
+                                        }
+                                    }
+                                } else if (value instanceof Object[]) {
+                                    Object[] arr = (Object[]) value;
+                                    for (Object v : arr) {
+                                        writer.writeCharacters("\n\t\t\t");
+                                        writer.writeStartElement("item");
+                                        writer.writeCharacters(v != null ? v.toString() : "");
+                                        writer.writeEndElement();
+                                    }
+                                }
+                                // JSON / JSONB
+                                else {
+                                    String strValue = value.toString().trim();
+                                    if ((strValue.startsWith("{") && strValue.endsWith("}")) ||
+                                        (strValue.startsWith("[") && strValue.endsWith("]"))) {
+                                        JsonNode jsonNode = objectMapper.readTree(strValue);
+                                        int depth = 2;
+                                        writeJsonAsXml(writer, jsonNode, depth + 1);
+                                        // ❌ 중복 개행 제거
+                                    } else {
+                                        writer.writeCharacters(strValue);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                writer.writeCharacters(value.toString());
+                            }
+                        }
+
                         writer.writeEndElement(); // </COLUMN>
                         writer.writeCharacters("\n");
                     }
 
                     writer.writeCharacters("\t");
-                    writer.writeEndElement(); // </ROW>
+                    writer.writeEndElement(); // </META>
                     writer.writeCharacters("\n");
                 }
 
@@ -562,6 +602,7 @@ public class MetaDataManageService {
                 writer.close();
             }
         }
+
         if (params.get("extract_type").toString().equalsIgnoreCase("JSON")) {
             ObjectMapper mapper = new ObjectMapper();
             extractMetaList = metaDataManageMapper.getExtractMetaList(params);
@@ -580,4 +621,36 @@ public class MetaDataManageService {
         }
         
     }
+
+    private void writeJsonAsXml(XMLStreamWriter writer, JsonNode node, int depth) throws Exception {
+        String indent = "\t".repeat(depth);
+
+        if (node.isObject()) {
+            Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
+            while (fields.hasNext()) {
+                Map.Entry<String, JsonNode> field = fields.next();
+
+                writer.writeCharacters("\n" + indent);       // 열기 전에 줄바꿈
+                writer.writeStartElement(field.getKey());
+
+                writeJsonAsXml(writer, field.getValue(), depth + 1);
+
+                writer.writeEndElement();                    // 닫는 태그
+            }
+        } else if (node.isArray()) {
+            for (JsonNode child : node) {
+                writer.writeCharacters("\n" + indent);
+                writer.writeStartElement("item");
+
+                writeJsonAsXml(writer, child, depth + 1);
+
+                writer.writeEndElement();
+            }
+        } else {
+            // 단순 값이면 그냥 문자열만
+            writer.writeCharacters(node.asText());
+        }
+    }
+
+
 }

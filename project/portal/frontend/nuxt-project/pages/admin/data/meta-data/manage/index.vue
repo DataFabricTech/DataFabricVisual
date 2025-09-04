@@ -1335,6 +1335,9 @@ const downloadMetadata = async (params) => {
     // 4) 메모리 해제
     window.URL.revokeObjectURL(downloadUrl)
 
+    // 5) 모달 닫기
+    onToggleExtractModal();
+
   } catch (err) {
     console.log(err);
     errorAlert("메타 데이터를 추출 요청에 실패하였습니다.");
