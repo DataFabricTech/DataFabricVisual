@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -130,6 +132,22 @@ public class MetaDataFusionService {
                     rs = statement.executeQuery(sampleQuery);
 
                     ResultSetMetaData metaData = rs.getMetaData();
+
+                    Set<String> seen = new HashSet<>();
+                    List<String> duplicates = new ArrayList<>();
+                    
+                    for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                        String colName = metaData.getColumnLabel(i);
+                        if (!seen.add(colName)) {
+                            duplicates.add(colName);
+                        }
+                    }
+
+                    if (!duplicates.isEmpty()) {
+                        throw new Exception("Query Failed - Column Duplicated: " + String.join(", ", duplicates));
+                    }
+
+
                     int sizeOfColumn = metaData.getColumnCount(); // 컬럼 수
                     // 메타데이터에서 컬럼명 추출
                     Set<String> columnNames = new HashSet();
@@ -154,16 +172,26 @@ public class MetaDataFusionService {
                     statement.close();
                     connection.close();
                 } catch (Exception e) {
+                    String errorMessage = "데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
                     // 권한 문제
-                    if (e.getMessage().indexOf("Access Denied") != -1) {
-                        result.put("errorMessage", "데이터 조회 권한이 없습니다.");
+                    if (e.getMessage().toUpperCase().indexOf("ACCESS DENIED") != -1) {
+                        errorMessage = "데이터 조회 권한이 없습니다.";
                     }
                     // 쿼리 문제
-                    else if (e.getMessage().indexOf("Query failed") != -1) {
-                        result.put("errorMessage", "쿼리가 잘못되었습니다.");
+                    else if (e.getMessage().toUpperCase().indexOf("QUERY FAILED") != -1) {
+                        errorMessage = "쿼리가 잘못되었습니다.";
+                        if (e.getMessage().indexOf("COLUMN DUPLICATED") != -1) {
+                            // : 뒤에 오는 값만 추출
+                            String[] parts = e.getMessage().split(":", 2);  // 2개로만 split
+                            if (parts.length > 1) {
+                                String afterColon = parts[1].trim();
+                                errorMessage = "컬럼명이 중복되었습니다: " + afterColon;
+                            }
+                        }                        
                     } else {
-                        result.put("errorMessage", "데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
+                        errorMessage = "데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
                     }
+                    result.put("errorMessage", errorMessage);
                     e.printStackTrace();
                 } finally {
                     if (rs != null)
@@ -186,9 +214,6 @@ public class MetaDataFusionService {
                         }
                 }
             }
-
-            // 융합 데이터 쿼리 조회 API 요청
-            
         } catch (Exception e) {
             log.error("Fail to execute query - exception");
             result.put("errorMessage", e.getMessage());
@@ -312,18 +337,28 @@ public class MetaDataFusionService {
                     result.put("createViewResult", createViewResult);
 
                 } catch (Exception e) {
+                    String errorMessage = "";
                     // 권한 문제
                     if (e.getMessage().indexOf("Access Denied") != -1) {
-                        result.put("errorMessage", e.getMessage());
+                        errorMessage = "권한이 없습니다.";
                     }
                     // 쿼리 문제
                     else if (e.getMessage().indexOf("Query failed") != -1) {
-                        if (e.getMessage().indexOf(" UCP-0: Unable to start the Universal Connection Pool") != -1) { // ORACLE
-                            result.put("errorMessage", e.getMessage());
+                        if (e.getMessage().indexOf("Column name") != -1 && e.getMessage().indexOf("specified more than once") != -1) {
+                            Pattern p = Pattern.compile("'([^']+)'");
+                            Matcher m = p.matcher(e.getMessage());
+
+                            if (m.find()) {
+                                String columnName = m.group(1);
+                                errorMessage = "'" + columnName + "' 컬럼명이 중복되어 융합 데이터 생성에 실패하였습니다.";
+                            }
+                        } else {
+                            errorMessage = "쿼리에 실패하였습니다.";
                         }
                     } else {
-                        result.put("errorMessage", "융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
+                        errorMessage = "융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
                     }
+                    result.put("errorMessage", errorMessage);
                     e.printStackTrace();
                 } finally {
                     if (rs != null)

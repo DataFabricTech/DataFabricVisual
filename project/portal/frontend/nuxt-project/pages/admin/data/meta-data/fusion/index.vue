@@ -1252,7 +1252,12 @@ const onClickSaveButton = async () => {
       // event, metadata 저장 성공
       if (saveRes && saveRes.data) {
         if (!saveRes.data.createViewResult) {
-          await errorAlert("융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+          if (saveRes.data.errorMessage) {
+            await defaultAlert(saveRes.data.errorMessage)
+          } else {
+            await errorAlert("융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+          }
+
         } else {
           if (saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
             await successAlert("융합 데이터가 저장되었습니다.")
