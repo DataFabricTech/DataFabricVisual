@@ -14,9 +14,9 @@ public class S3Url {
 
     public static S3Url parse(String s3url) {
         if (s3url == null) {
-            throw new IllegalArgumentException("invalid s3 url");
+            throw new IllegalArgumentException("invalid s3 url: null");
         } else if (!s3url.startsWith("s3://")) {
-            throw new IllegalArgumentException("invalid s3 url");
+            throw new IllegalArgumentException("invalid s3 url: " + s3url);
         } else {
             String noScheme = s3url.substring(5);
             int i = noScheme.indexOf('/');

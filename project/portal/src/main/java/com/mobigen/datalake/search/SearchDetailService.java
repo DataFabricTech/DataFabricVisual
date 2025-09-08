@@ -521,10 +521,9 @@ public class SearchDetailService {
             if (sample_file_format.equalsIgnoreCase("CSV")) {
                 sampleData = this.readCsv(mf, p);
                 num_rows = searchDetailMapper.getFileSampleCount(meta_id);
-                
             } else if (sample_file_format.equalsIgnoreCase("JPEG")) {
                 sampleData = this.readImg(mf, p);
-            } else {
+            } else if (sample_file_format.equalsIgnoreCase("TXT")) {
                 sampleData = this.readText(mf, p);
             }
 
@@ -533,7 +532,8 @@ public class SearchDetailService {
             result.put("sampleTotal", num_rows);
         } catch (Exception e) {
             log.error("fail to load sampleDataFile !!");
-            e.printStackTrace();
+            log.error(e.getMessage());
+            
         }
         return result;
     }
@@ -1323,7 +1323,8 @@ public class SearchDetailService {
             }
 
         } catch (Exception e) {
-            log.error("Fail to download file !!", e);
+            log.error("Fail to download file !!");
+            log.error(e.getMessage());
         }
 
     }
