@@ -180,7 +180,7 @@
         @onCloseModal="onToggleManageModal" @onSubmit="onSubmitCategory" />
 
       <!-- 메타추출 처리 모달 -->
-      <manage-extract-meta-modal ref="refManageModal" :extract-modal="extractModalObj"
+      <manage-extract-meta-modal ref="refManageExtractModal" :extract-modal="extractModalObj"
         @onCloseModal="onToggleExtractModal" @onSubmit="downloadMetadata" />
 
       <!-- 공개설정 처리 모달 -->
