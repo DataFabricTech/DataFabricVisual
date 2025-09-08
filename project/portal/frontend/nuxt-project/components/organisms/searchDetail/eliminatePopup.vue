@@ -830,6 +830,16 @@ const onClickFileEliminateButton = async () => {
   let meta_id = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_id", "");
   let meta_name = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_name", "");
   let description = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "description", "");
+  let catalog = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "catalog", "")
+
+  console.log(catalog)
+
+  // trino의 경우 system_id값을 catalog로 변경
+  if (system_type.toUpperCase() == 'TRINO') {
+    catalog = qualified_name.split(".")[1]
+  } else {
+    catalog = system_id
+  }
 
   // download_query 제작
   const db_name = qualified_name.split(".")[1]
@@ -863,6 +873,7 @@ const onClickFileEliminateButton = async () => {
 
   const params = {
     typeName: typeName,
+    system_type: system_type,
     qualified_name: qualified_name,
     querySelect: querySelect.value,
     queryWhere: paramQueryWhere,
@@ -882,7 +893,7 @@ const onClickFileEliminateButton = async () => {
       meta_name: meta_name,
       meta_type: "table",
       qualified_name: qualified_name,
-      query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
       download_type: 0, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
       description: description,
     };
@@ -929,7 +940,7 @@ const onClickFileEliminateButton = async () => {
       meta_name: meta_name,
       meta_type: "table",
       qualified_name: qualified_name,
-      query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
       download_type: 2, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
       description: description,
     };
@@ -937,7 +948,7 @@ const onClickFileEliminateButton = async () => {
 
     let big_params = {
       meta_id,
-      query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
     }
 
     await $ofetch("/api/search/detail/eliminate/file/downloadRequest", {

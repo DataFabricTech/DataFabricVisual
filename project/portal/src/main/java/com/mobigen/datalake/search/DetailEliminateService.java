@@ -116,50 +116,25 @@ public class DetailEliminateService {
 
         try {
             String query = "";
-            // hive_column
-            if (parameter.get("typeName").toString().endsWith("column")) {
-                String queryStrSplit[] = parameter.get("qualified_name").toString().split("@");
-                String queryStr = queryStrSplit[0];
-                String queryStrname[] = queryStr.split("\\.");
-                StringBuilder tableName = new StringBuilder();
-                for (int i = 0; i < queryStrname.length - 1; i++) {
-                    if (!tableName.toString().equals("")) {
-                        tableName.append(".").append("\"" + queryStrname[i] + "\"");
-                    } else {
-                        tableName.append("\"" + queryStrname[i] + "\"");
-                    }
-                }
-                query = "select " + parameter.get("querySelect").toString() + " from " + tableName
-                        + parameter.get("queryWhere").toString();// + " limit 10";
-                if (parameter.get("limit") != null && !parameter.get("limit").toString().equals("")) {
-                    query += " LIMIT " + parameter.get("limit").toString();
-                }
-            }
-
-            // hive_table
             if (parameter.get("typeName").toString().endsWith("table")) {
                 String[] queryStrSplit = parameter.get("qualified_name").toString().split("\\.");
-                String catalog = queryStrSplit[0];
+                String system_id = queryStrSplit[0];
                 String dbName = queryStrSplit[1];
                 String tableSchema = queryStrSplit[2];
                 String tableNameStr = queryStrSplit[3];
-                String[] tableNameArr = tableNameStr.split("\\.");
                 StringBuilder tableName = new StringBuilder();
-                if (tableNameArr.length > 1) {
-                    for (int i = 0; i < tableNameArr.length; i++) {
-                        if (!tableName.toString().equals("")) {
-                            tableName.append(".").append("\"" + tableNameArr[i] + "\"");
-                        } else {
-                            tableName.append("\"" + tableNameArr[i] + "\"");
-                        }
-                    }
+                tableName.append("\"" + tableNameStr + "\"");
+                
+                if (parameter.get("system_type") != null && parameter.get("system_type").toString().equalsIgnoreCase("TRINO")) {
+                    String catalog = dbName;
+                    query = "select " + parameter.get("querySelect").toString() + " from \"" + catalog + "\".\""
+                            + tableSchema + "\"." + tableName
+                            + parameter.get("queryWhere").toString();// + " limit 10";
                 } else {
-                    tableName.append("\"" + tableNameStr + "\"");
+                    query = "select " + parameter.get("querySelect").toString() + " from \"" + system_id + "\".\""
+                            + tableSchema + "\"." + tableName
+                            + parameter.get("queryWhere").toString();// + " limit 10";
                 }
-
-                query = "select " + parameter.get("querySelect").toString() + " from \"" + catalog + "\".\""
-                        + tableSchema + "\"." + tableName
-                        + parameter.get("queryWhere").toString();// + " limit 10";
 
                 if (parameter.get("limit") != null && !parameter.get("limit").toString().equals("")) {
                     query += " LIMIT " + parameter.get("limit").toString();

@@ -379,28 +379,14 @@ public class SearchDetailService {
             String dbName = queryStrSplit[1];
             String tableSchema = queryStrSplit[2];
             String tableNameStr = queryStrSplit[3];
-            String[] tableNameArr = tableNameStr.split("\\.");
             StringBuilder tableName = new StringBuilder();
-            if (tableNameArr.length > 1) {
-                for (int i = 0; i < tableNameArr.length; i++) {
-                    if (!tableName.toString().equals("")) {
-                        tableName.append(".").append("\"" + tableNameArr[i] + "\"");
-                    } else {
-                        tableName.append("\"" + tableNameArr[i] + "\"");
-                    }
-                }
-            } else {
-                tableName.append("\"" + tableNameStr + "\"");
-            }
 
-            if (params.get("columns") != null && params.get("columns") != "") {
-                // query = "select " + params.get("columns") + " from \"" + dbName + "\".\"" +
-                // catalog + "\".\"" + tableSchema + "." + tableName + " limit 10";
-                query = "select " + params.get("columns") + " from \"" + system_id + "\".\"" + tableSchema + "."
-                        + tableName + " limit 10";
+            tableName.append("\"" + tableNameStr + "\"");
+
+            if (params.get("system_type") != null && params.get("system_type").toString().equalsIgnoreCase("TRINO")) {
+                String catalog = dbName;
+                query = "select * from \"" + catalog + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
             } else {
-                // query = "select * from \"" + dbName + "\".\"" + catalog + "\".\"" +
-                // tableSchema + "\"." + tableName + " limit 10";
                 query = "select * from \"" + system_id + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
             }
         }
