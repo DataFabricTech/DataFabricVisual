@@ -45,7 +45,8 @@
           <sample-data-area :isAdmin="props.isAdmin"
             :sampleData="sampleData" :entity="entity" :userDataAuth="userDataAuth" :typeName="typeName"
             :referredEntitiesAttributes="referredEntitiesAttributes"
-            :fileFormat="fileFormat" />
+            :fileFormat="fileFormat"
+            :sampleFileFormat="sampleFileFormat" />
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
         <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
@@ -148,6 +149,7 @@ const dataProfile = ref({
 });
 const sampleData = ref([]);
 const sampleTotal = ref(null);
+const sampleFileFormat = ref(null);
 
 const startNode = ref(""); // 데이터 흐름도 렌더 시 시작 노드 guid
 const classifications_data = ref([]); // 연관 데이터 목록
@@ -737,9 +739,11 @@ const getSampleData = () => {
         if (res && res.data && res.data.sampleData) {
           sampleData.value = res.data.sampleData
           sampleTotal.value = res.data.sampleTotal
+          sampleFileFormat.value = res.data.sampleFileFormat
         } else {
           sampleData.value = []
           sampleTotal.value = 0
+          sampleFileFormat.value = ""
         }
       });
     } catch (e) {

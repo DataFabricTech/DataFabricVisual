@@ -13,6 +13,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -498,39 +499,41 @@ public class SearchDetailService {
 
     public Map<String, Object> getSampleDataFile(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        InputStream inputStream = null;
 
         try {
             MinioClient mf = MinioFactory.create(fabricEndpoint, fabricAccessKey, fabricSecretKey);
             // sample_data_url 조회
             String meta_id = params.get("meta_id").toString();
             String sample_share_url = searchDetailMapper.getSampleDataUrl(meta_id);
-
-            String file_format = params.get("file_format").toString();
             S3Url p = S3Url.parse(sample_share_url);
 
+            // 샘플데이터의 확장자가 JPEG인 경우 이미지 처리
             Object sampleData = null;
             Integer num_rows = null;
-            if (file_format.toUpperCase().equals("CSV")
-            || file_format.toUpperCase().equals("XLS")
-            || file_format.toUpperCase().equals("XLSX")
-            || file_format.toUpperCase().equals("XLSM")
-            || file_format.toUpperCase().equals("XLSB")) {
+            String sample_file_format = "";
+            if (sample_share_url != null && !sample_share_url.equals("")) {
+                String[] arr = sample_share_url.split("\\.");
+                if (arr != null && arr.length > 0) {
+                    sample_file_format = arr[arr.length - 1];
+                }
+            }
+
+            if (sample_file_format.equalsIgnoreCase("CSV")) {
                 sampleData = this.readCsv(mf, p);
                 num_rows = searchDetailMapper.getFileSampleCount(meta_id);
+                
+            } else if (sample_file_format.equalsIgnoreCase("JPEG")) {
+                sampleData = this.readImg(mf, p);
             } else {
                 sampleData = this.readText(mf, p);
             }
 
             result.put("sampleData", sampleData);
+            result.put("sampleFileFormat", sample_file_format);
             result.put("sampleTotal", num_rows);
         } catch (Exception e) {
             log.error("fail to load sampleDataFile !!");
             e.printStackTrace();
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
         }
         return result;
     }
@@ -581,77 +584,30 @@ public class SearchDetailService {
         return rows;
     }
 
-    // xlsx 파일 읽기
-    public List<Map<String, String>> readXlsx(MinioClient minio, S3Url s3url) throws Exception {
-        List<Map<String, String>> rows = new ArrayList<>();
-
+    // 이미지 파일 읽기
+    public String readImg(MinioClient minio, S3Url s3url) throws Exception {
+        String base64 = "";
         InputStream in = null;
-        Workbook workbook = null;
 
         try {
-            // 1) MinIO에서 InputStream 가져오기
-            in = minio.getObject(GetObjectArgs.builder()
+            in = minio.getObject(
+                GetObjectArgs.builder()
                     .bucket(s3url.getBucket())
                     .object(s3url.getObject())
-                    .build());
+                    .build()
+            );
 
-            // 2) Workbook 생성 (POI)
-            workbook = WorkbookFactory.create(in);
-
-            // 3) 첫 번째 시트 기준
-            Sheet sheet = workbook.getSheetAt(0);
-            if (sheet == null) {
-                return rows;
-            }
-
-            // 4) 헤더 행 파싱
-            Iterator<Row> it = sheet.iterator();
-            if (!it.hasNext()) {
-                return rows; // 빈 시트
-            }
-            Row headerRow = it.next();
-
-            List<String> headers = new ArrayList<>();
-            for (Cell cell : headerRow) {
-                headers.add(this.getCellAsString(cell));
-            }
-
-            // 5) 데이터 행 파싱
-            DataFormatter formatter = new DataFormatter(); // 사용자 표시값과 유사하게 문자열화
-            while (it.hasNext()) {
-                Row r = it.next();
-                Map<String, String> rowMap = new LinkedHashMap<>();
-                for (int c = 0; c < headers.size(); c++) {
-                    Cell cell = r.getCell(c, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                    // DataFormatter로 사용자가 보는 값처럼 얻기
-                    String val = formatter.formatCellValue(cell);
-                    rowMap.put(headers.get(c), val);
-                }
-                rows.add(rowMap);
-            }
-            return rows;
+            byte[] bytes = in.readAllBytes();
+            base64 = Base64.getEncoder().encodeToString(bytes);
 
         } finally {
-            // 생성 역순으로 닫기
-            if (workbook != null) {
-                try { workbook.close(); } catch (Exception ignore) {}
-            }
             if (in != null) {
-                try { in.close(); } catch (Exception ignore) {}
+                try { in.close(); } catch (IOException e) { e.printStackTrace(); }
             }
         }
+
+        return base64;
     }
-
-    private String getCellAsString(Cell cell) {
-        if (cell == null) return "";
-
-        DataFormatter formatter = new DataFormatter();
-        // DataFormatter는 셀 타입에 맞춰서 문자열 변환, 날짜/숫자도 포맷 유지
-        String s = formatter.formatCellValue(cell);
-
-        return s != null ? s.trim() : "";
-    }
-
 
     // 이외 파일 txt로 읽기
     public String readText(MinioClient minio, S3Url p) throws Exception {

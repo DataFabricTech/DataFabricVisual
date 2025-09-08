@@ -48,6 +48,9 @@
               <p class="nodata">데이터 접근 권한이 없습니다.</p>
             </div>
           </div>
+          <div v-else-if="sampleFileFormat && sampleFileFormat.toUpperCase() == 'JPEG'" style="display: flex; justify-content: center;">
+            <img :src="'data:image/jpeg;base64,' + sampleData" style="width: 300px;"/>
+          </div>
           <div v-else>
             {{ props.sampleData }}
           </div>
@@ -103,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps(["sampleData", "entity", "typeName", "fileFormat", "isAdmin", "isModal", "userDataAuth"]);
+const props = defineProps(["sampleData", "entity", "typeName", "fileFormat", "sampleFileFormat", "isAdmin", "isModal", "userDataAuth"]);
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
