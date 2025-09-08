@@ -50,11 +50,11 @@
           </tr>
         </tbody>
       </table>
-      <div v-if="props.isAdmin && props.isDetail" class="mu-button-wrap" style="margin: 5px; text-align: right;">
-        <button class="mu-btn mu-btn-md mu-btn-primary" @click="onClickBusinessAttributesConfirm">
-          <span>적용</span>
-        </button>
-      </div>
+    </div>
+    <div v-if="props.isAdmin && props.isDetail" class="mu-button-wrap" style="margin: 5px; text-align: right;">
+      <button class="mu-btn mu-btn-md mu-btn-primary" @click="onClickBusinessAttributesConfirm">
+        <span>적용</span>
+      </button>
     </div>
   </div>
 </template>
