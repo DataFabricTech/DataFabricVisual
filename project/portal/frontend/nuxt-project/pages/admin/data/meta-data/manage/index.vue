@@ -509,6 +509,12 @@ onUnmounted(() => {
   // 검색창 오른쪽 공개설정 필터 정보 저장
   const release = currentRelease.value ? currentRelease.value : null;
 
+  // 시스템 타입(전체) 필터 정보 저장
+  const system_type = currentSystemType.value ? currentSystemType.value : null;
+
+  // 유형(전체) 필터 정보 저장
+  const meta_type = currentMetaType.value ? currentMetaType.value : null;
+
   // 검색에 사용된 파라미터 중 default 값과 상이한 값이 없으면 path를 empty string으로 저장하여 저장된 파라미터 초기화
   const path = paging || condition || category || release ? "/admin/data/meta-data/manage" : "";
 
@@ -517,7 +523,9 @@ onUnmounted(() => {
     paging,
     condition,
     category,
-    release
+    meta_type,
+    system_type,
+    release,
   };
 
   setParams(params);
@@ -625,6 +633,8 @@ const onFetchPageDataByPrevCondition = () => {
   const condition = ObjectUtils.getDeepCopiedPropertyValue(userParams, "condition", null);
   const category = ObjectUtils.getDeepCopiedPropertyValue(userParams, "category", null);
   const release = ObjectUtils.getDeepCopiedPropertyValue(userParams, "release", "");
+  const system_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "system_type", "");
+  const meta_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "meta_type", "");
 
   let offset = 0;
   const item: any = {};
@@ -646,6 +656,14 @@ const onFetchPageDataByPrevCondition = () => {
 
   if (release) {
     currentRelease.value = release
+  }
+
+  if (system_type) {
+    currentSystemType.value = system_type
+  }
+
+  if (meta_type) {
+    currentMetaType.value = meta_type
   }
 
   onSearchDataList(offset, item);
