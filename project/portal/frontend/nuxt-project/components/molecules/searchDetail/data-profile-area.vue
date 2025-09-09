@@ -165,7 +165,7 @@ const checkInvaildNumberColumn = (column) => {
 }
 
 </script>
-<style>
+<style scoped>
 .mu-grid tbody tr td {
   white-space: nowrap;
   overflow: hidden;
