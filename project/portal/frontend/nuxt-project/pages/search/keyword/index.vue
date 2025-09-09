@@ -151,18 +151,18 @@
                       </em>
                     </div>
                   </div>
-                  <div class="inner-data option">
+                  <div class="inner-data option" v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
                     <p>시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
-                    <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
-                      확장자 : <strong>{{ data.attributes && data.attributes.file_format ? data.attributes.file_format : "-" }}</strong></p>
-                    <p v-if="data.meta_type && data.meta_type.toUpperCase() == 'FILE'">
-                      size(byte) : <strong>{{ data.attributes && data.attributes.size ? $numberComma(Math.floor(data.attributes.size)) : "-" }}</strong>
+                    <p>확장자 : <strong>{{ data.attributes && data.attributes.file_format ? data.attributes.file_format : "-" }}</strong></p>
+                    <p>size(byte) : <strong>{{ data.attributes && data.attributes.size ? $numberComma(Math.floor(data.attributes.size)) : "-" }}</strong></p>
+                    <p>최종 수집일 : <strong>{{ $yyyyMMddHHmmSS(data.meta_sync_time ? data.meta_sync_time : null) }}</strong>
                     </p>
-                    <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.qualified_name && data.system_type && data.qualified_name.split('.')[1] && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">
-                      데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
-                    <p v-if="!(data.meta_type && data.meta_type.toUpperCase() == 'FILE') && data.system_type && data.qualified_name && data.qualified_name.split('.')[2]">스키마 :
-                      <strong>{{ getSchemaName(data.qualified_name) }}</strong>
-                    </p>
+                  </div>
+                  <div class="inner-data option" v-else>
+                    <p>시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
+                    <p v-if="isExistsCatalog(data.system_type)">카탈로그 :<strong>{{ getCatalogName(data.system_type, data.qualified_name) }}</strong></p>
+                    <p v-if="isExistsDatabase(data.system_type)">데이터베이스 : <strong>{{ getDbName(data.system_type, data.qualified_name) }}</strong></p>
+                    <p v-if="isExistsSchema(data.system_type)">스키마 :<strong>{{ getSchemaName(data.system_type, data.qualified_name) }}</strong></p>
                     <p>최종 수집일 : <strong>{{ $yyyyMMddHHmmSS(data.meta_sync_time ? data.meta_sync_time : null) }}</strong>
                     </p>
                   </div>
@@ -277,6 +277,23 @@ const detailFilters = ref({
         "id": 1,
         "name": "table",
         "description": "table",
+        "count": 0,
+        "checked": false,
+      },
+    ],
+    checkedCount: 0
+  },
+  FILE_FORMAT: {
+    all: true,
+    ord: 3,
+    name: '확장자',
+    content: [
+      {
+        "root": "FILE_FORMAT",
+        "rootDescription": "확장자",
+        "id": 1,
+        "name": "csv",
+        "description": "CSV",
         "count": 0,
         "checked": false,
       },
@@ -1359,16 +1376,77 @@ const onChangeCheckBox = async (key, event: any) => {
   getSearch(0)
 }
 
-// DB명
-const getDbName = (qualified_name) => {
+// 카탈로그 유무
+const isExistsCatalog = (system_type) => {
+  if (system_type && system_type.toUpperCase() == 'TRINO'
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// 데이터베이스 유무
+const isExistsDatabase = (system_type) => {
+  if (system_type && system_type.toUpperCase() == 'ALTIBASE'
+  ||  system_type && system_type.toUpperCase() == 'HIVE'
+  ||  system_type && system_type.toUpperCase() == 'MSSQL'
+  ||  system_type && system_type.toUpperCase() == 'MARIADB'
+  ||  system_type && system_type.toUpperCase() == 'MYSQL'
+  ||  system_type && system_type.toUpperCase() == 'ORACLE'
+  ||  system_type && system_type.toUpperCase() == 'POSTGRES'
+  ||  system_type && system_type.toUpperCase() == 'TIBERO'
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// 스키마 유무
+const isExistsSchema = (system_type) => {
+  if (system_type && system_type.toUpperCase() == 'MSSQL'
+  ||  system_type && system_type.toUpperCase() == 'POSTGRES'
+  ||  system_type && system_type.toUpperCase() == 'TRINO'
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// 카탈로그명
+const getCatalogName = (system_type, qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[1]
+  } else {
+    return "-"
   }
-  return "-"
+}
+
+// DB명
+const getDbName = (system_type, qualified_name) => {
+  if (qualified_name) {
+    if (system_type && system_type.toUpperCase() == 'ALTIBASE'
+    || system_type && system_type.toUpperCase() == 'HIVE'
+    || system_type && system_type.toUpperCase() == 'MYSQL'
+    || system_type && system_type.toUpperCase() == 'MARIADB'
+    || system_type && system_type.toUpperCase() == 'ORACLE'
+    || system_type && system_type.toUpperCase() == 'TIBERO'
+  ) {
+      return qualified_name.split(".")[2]
+    } else {
+      return qualified_name.split(".")[1]
+    }
+
+  } else {
+    return "-"
+  }
+
 }
 
 // 스키마명
-const getSchemaName = (qualified_name) => {
+const getSchemaName = (system_type, qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[2]
   }
