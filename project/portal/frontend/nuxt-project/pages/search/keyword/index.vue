@@ -1360,6 +1360,7 @@ const onChangeCheckBox = async (key, event: any) => {
   // 전체 클릭
   if (event.target.value == 'ALL') {
     clearFilter(key)
+    if (key == 'METATYPE') clearFilter("FILE_FORMAT") // 메타 타입 전체필터 선택 시 파일 확장자 필터 제거 필요
   } else {
     detailFilters.value[key].content.forEach((el) => {
       if (el.name == event.target.value) {
