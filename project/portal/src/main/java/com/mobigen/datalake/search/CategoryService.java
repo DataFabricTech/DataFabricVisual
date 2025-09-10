@@ -89,6 +89,7 @@ public class CategoryService {
         Map<String, Object> categoryInfo = new HashMap<>();
         Map<String, Object> systemInfo = new HashMap<>();
         Map<String, Object> metaInfo = new HashMap<>();
+        Map<String, Object> fileFormatInfo = new HashMap<>();
         Map<String, Object> orderInfo = new HashMap<>();
 
         // 카테고리 카운트 정보
@@ -129,6 +130,7 @@ public class CategoryService {
             ((List<Map<String, Object>>) categoryInfo.get("content")).add(content);
         }
         categoryInfo.put("checkedCount", 0);
+        categoryInfo.put("visible", true);
 
         // 시스템 타입 정보
         List<Map<String, Object>> systemList = categoryMapper.getSystemListForFilter();
@@ -188,6 +190,7 @@ public class CategoryService {
             }
         }
         systemInfo.put("checkedCount", 0);
+        systemInfo.put("visible", true);
 
         // 메타 타입 정보
         List<Map<String, Object>> metaList = categoryMapper.getMetaListForFilter();
@@ -248,6 +251,69 @@ public class CategoryService {
             }
         }
         metaInfo.put("checkedCount", 0);
+        metaInfo.put("visible", true);
+
+        // 파일 확장자 정보
+        List<Map<String, Object>> fileFormatList = categoryMapper.getFileFormatListForFilter();
+        fileFormatInfo.put("allChecked", true);
+        fileFormatInfo.put("ord", 4);
+        fileFormatInfo.put("name", "확장자");
+        fileFormatInfo.put("content", new ArrayList<Map<String, Object>>());
+
+        // 코드 테이블에 선언한 시스템 타입 항목이 없는 정보는 제거
+        List<Map<String, String>> fileFormats = categoryMapper.getFileFormats();
+
+        Set<String> validFileFormatTypes = fileFormats.stream()
+            .map(map -> (String) map.get("name"))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+
+        fileFormatList.removeIf(map -> {
+            String fileFormat = (String) map.get("file_format");
+            return fileFormat == null || !validFileFormatTypes.contains(fileFormat);
+        });
+
+        int k = 0;
+        for (Map<String, String> fileFormat : fileFormats) {
+            k = k + 1;
+            boolean added = false;
+            for (Map<String, Object> format : fileFormatList) {
+                // 코드 테이블에 있는 값만 추가
+                if (format.get("file_format").toString().equals(fileFormat.get("name"))) {
+
+                    Map<String, Object> content = new HashMap<>();
+
+                    content.put("root", "FILE_FORMAT");
+                    content.put("rootDescription", "확장자");
+
+                    content.put("id", j);
+                    content.put("name", fileFormat.get("name"));
+                    content.put("description", fileFormat.get("value"));
+                    content.put("count", format.get("count"));
+                    content.put("checked", false);
+                    ((List<Map<String, Object>>) fileFormatInfo.get("content")).add(content);
+                    added = true;
+                    break;
+                }
+            }
+
+            if (!added) {
+                Map<String, Object> content = new HashMap<>();
+
+                content.put("root", "FILE_FORMAT");
+                content.put("rootDescription", "확장자");
+
+                content.put("id", i);
+                content.put("name", fileFormat.get("name"));
+                content.put("description", fileFormat.get("value"));
+                content.put("count", 0);
+                content.put("checked", false);
+                ((List<Map<String, Object>>) fileFormatInfo.get("content")).add(content);
+            }
+        }
+        fileFormatInfo.put("checkedCount", 0);
+        fileFormatInfo.put("visible", false);
+
 
         // 정렬 오름차순, 내림차순
         orderInfo.put("allChecked", true);
@@ -275,10 +341,12 @@ public class CategoryService {
         ((List<Map<String, Object>>) orderInfo.get("content")).add(descContent);
 
         orderInfo.put("checkedCount", 0);
+        orderInfo.put("visible", true);
 
         detailFilters.put("CATEGORY", categoryInfo);
         detailFilters.put("SYSTEMTYPE", systemInfo);
         detailFilters.put("METATYPE", metaInfo);
+        detailFilters.put("FILE_FORMAT", fileFormatInfo);
         detailFilters.put("ORDER", orderInfo);
 
         return detailFilters;

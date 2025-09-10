@@ -54,8 +54,8 @@
             </div>
             <div class="detail-search-form">
               <div class="mu-form mu-form-vertical">
-                <div class="mu-form-item" v-for="(df, idx) in detailFilters">
-                  <div class="btn-category" v-if="df.content && df.content.length > 0">
+                <div class="mu-form-item" v-for="(df, idx) in filteredItems">
+                  <div class="btn-category" v-if="df.content && df.content.length > 0 && df.visible">
                     <div class="mu-checkbox all">
                       <input :type="df.allChecked ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_' + idx" value="ALL"
                         @change="onChangeCheckBox(idx, $event);" :checked="df.allChecked">
@@ -247,7 +247,8 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    checkedCount: 0
+    checkedCount: 0,
+    visible: true
   },
   SYSTEMTYPE: {
     all: true,
@@ -264,7 +265,8 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    checkedCount: 0
+    checkedCount: 0,
+    visible: true
   },
   METATYPE: {
     all: true,
@@ -281,7 +283,8 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    checkedCount: 0
+    checkedCount: 0,
+    visible: true
   },
   FILE_FORMAT: {
     all: true,
@@ -298,7 +301,8 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    checkedCount: 0
+    checkedCount: 0,
+    visible: false
   },
   ORDER: {
     all: true,
@@ -324,7 +328,8 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    checkedCount: 0
+    checkedCount: 0,
+    visible: true
   }
 })
 
@@ -339,6 +344,7 @@ const word = ref<string>(""); // 검색어
 
 const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
 const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
+const file_format = ref<string>(""); // 메타데이터 타입이 File일 때 파일 포맷
 const default_meta_type_list = ref<Array<string>>([]); // 메타타입 기본값 목록
 const sortBy = ref<string>("create_time") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
@@ -788,6 +794,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     query: word.value ? word.value : "",
     system_type: system_type.value ? system_type.value : "",
     meta_type: meta_type.value ? meta_type.value : default_meta_type_list.value,
+    file_format: file_format.value ? file_format.value : "",
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
@@ -1075,6 +1082,11 @@ const isTermStyle = (item: any): { fontWeight: number } | {} => {
   }
 };
 
+const filteredItems = computed(() => {
+  const filteredList = Object.entries(detailFilters.value).filter(([key, value]) => value.visible)
+  return Object.fromEntries(filteredList)
+})
+
 const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
   if (showFilterWrap2.value) { // 추가속성필터 사용중인 경우 처리
     return true;
@@ -1133,6 +1145,9 @@ const clearFilter = (key) => {
     system_type.value = ""
   } else if (key == 'METATYPE') {
     meta_type.value = ""
+    detailFilters.value['FILE_FORMAT'].visible = false
+  } else if (key == 'FILE_FORMAT') {
+    file_format.value = ""
   } else if (key == 'ORDER') {
     sortOrder.value = ""
   } else {
@@ -1320,6 +1335,7 @@ const getRootDescription = (key) => {
   if (key == 'CATEGORY') return "카테고리"
   else if (key == 'SYSTEMTYPE') return "시스템 타입"
   else if (key == 'METATYPE') return "메타 타입"
+  else if (key == 'FILE_FORMAT') return "확장자"
   else if (key == 'TAG') return "태그"
   else if (key == "ORDER") return "수집일"
   else return ""
@@ -1359,10 +1375,31 @@ const onChangeCheckBox = async (key, event: any) => {
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
         if (key == 'SYSTEMTYPE') system_type.value = el.name
-        if (key == 'METATYPE') meta_type.value = el.name
+        if (key == 'METATYPE') {
+          meta_type.value = el.name
+
+          // FILE 타입일 경우 확장자 필터 표시, 아닌 경우 확장자 필터 제거
+          if (meta_type.value.toUpperCase() == 'FILE') {
+            if(detailFilters.value['METATYPE'].content.filter(item => item.name.toUpperCase() == 'FILE')[0].checked == false) {
+              clearFilter("FILE_FORMAT")
+              detailFilters.value["FILE_FORMAT"].visible = false
+            } else {
+              detailFilters.value["FILE_FORMAT"].visible = true
+            }
+          }
+        }
+        if (key == 'FILE_FORMAT') {
+          file_format.value = el.name
+        }
         if (key == 'ORDER') sortOrder.value = el.name
       } else {
         el.checked = false // 단일로 체크되도록 설정
+
+        // 현재 meta_type이 FILE이 아닌 경우 확장자 필터 초기화
+        if (meta_type.value.toUpperCase() != 'FILE') {
+          clearFilter("FILE_FORMAT")
+          detailFilters.value["FILE_FORMAT"].visible = false
+        }
       }
     })
 
