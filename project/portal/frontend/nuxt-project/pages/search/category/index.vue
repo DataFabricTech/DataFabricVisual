@@ -182,7 +182,7 @@ const chartOptions = ref({
               let overflowStyle = `overflow: hidden; text-overflow: ellipsis;`;
 
               if (shapeArgs) {
-                // height가 작은 경우 테이블 개수 미표기
+                // height가 작은 경우 데이터 개수 미표기
                 if (shapeArgs.height < 60 && shapeArgs.height >= 25) {
                   tableTextStyle = `display: none;`;
                   overflowStyle = `overflow: hidden; text-overflow: ellipsis;`;
@@ -195,7 +195,7 @@ const chartOptions = ref({
 
               return `<div>
                     <p style="${keyTextStyle}; ${overflowStyle}; padding: 0 10px 0 10px;">${this.key}</p>
-                    <p style="${tableTextStyle}; ${overflowStyle}; padding: 0 10px 0 10px;;">테이블 ${ObjectUtils.numberFormatter(this.point.value)}개</p>
+                    <p style="${tableTextStyle}; ${overflowStyle}; padding: 0 10px 0 10px;;">데이터 ${ObjectUtils.numberFormatter(this.point.value)}개</p>
                   </div>`;
             }
           },
@@ -235,7 +235,7 @@ const chartOptions = ref({
                         <dd> ${this.key} </dd>
                       </dl>
                       <dl>
-                        <dt>테이블 개수</dt>
+                        <dt>데이터 개수</dt>
                         <dd> ${this.point.value} 개 </dd>
                       </dl>
                     </div>
@@ -372,11 +372,11 @@ const buildNetwork = (raw) => {
       links.push({ from: fromDesc, to: toDesc, color: nodes[toDesc].color })
     }
 
-    // 테이블 개수 합산
+    // 데이터 개수 합산
     tableTotal += tableCount
   })
 
-  // 루트 노드에 테이블 개수 추가
+  // 루트 노드에 데이터 개수 추가
   nodes[networkRoot.value.description].tableCount = tableTotal
 
   return {
@@ -683,7 +683,7 @@ const onClickMenuItem = (item) => {
     moveToSearchPage(obj);
   } else {
 
-    // 테이블 카운트가 0보다 큰 경우가 있는지 확인
+    // 데이터 카운트가 0보다 큰 경우가 있는지 확인
     let matched = obj.subTypes.find((el) => el.tableCount > 0)
     if (matched) {
       categoryStore.setToggleTargetOnClickTreemap(item.id)
@@ -703,7 +703,7 @@ const onClickMenuItem = (item) => {
 
 
       heatmap.value.series[0].drillToNode(item.id, true);
-    } else { // 하위 카테고리 매핑 테이블들이 모두 0건
+    } else { // 하위 카테고리 매핑 데이터들이 모두 0건
       moveToSearchPage(obj)
     }
   }
@@ -723,7 +723,7 @@ const onClickTreeMapNode = (e) => {
   if (!obj.subTypes || obj.subTypes.length < 1) {
     moveToSearchPage(obj);
   } else {
-    // 테이블 카운트가 0보다 큰 경우가 있는지 확인
+    // 데이터 카운트가 0보다 큰 경우가 있는지 확인
     let matched = obj.subTypes.find((el) => el.tableCount > 0)
     if (matched) {
       // 하위가 있는 경우 왼쪽 메뉴가 열려있으면 그대로, 닫혀있으면 열기
