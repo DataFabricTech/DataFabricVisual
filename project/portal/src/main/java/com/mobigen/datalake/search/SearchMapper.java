@@ -22,4 +22,6 @@ public interface SearchMapper {
     List<String> getRoleIdsFromUser(String user_id, String dept_id) throws Exception;
 
     List<Map<String, Object>> getDefaultMetaType() throws Exception;
+
+    Map<String, Object> getMetadataInfo(String meta_id) throws Exception;
 }

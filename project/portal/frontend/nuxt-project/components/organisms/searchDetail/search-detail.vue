@@ -55,7 +55,7 @@
         </div>
         <!-- detail-section : 연관 데이터 -->
         <div :ref="el => sectionRefs['related-data'] = el" class="content-block">
-          <related-data :isAdmin="props.isAdmin" :classifications="classifications_data" :entity="entity"
+          <related-data :isAdmin="props.isAdmin" :relatedDataList="relatedDataList" :entity="entity"
             @onClickData="getAllDataByGuid" />
         </div>
         <!-- detail-section : 사용자 리뷰 -->
@@ -152,7 +152,7 @@ const sampleTotal = ref(null);
 const sampleFileFormat = ref(null);
 
 const startNode = ref(""); // 데이터 흐름도 렌더 시 시작 노드 guid
-const classifications_data = ref([]); // 연관 데이터 목록
+const relatedDataList = ref([]); // 연관 데이터 목록
 const userDescriptionList = ref([]); // 사용자 데이터 설명 목록
 const reviewDatalist = ref({}); // 사용자 리뷰 목록
 const recommendStatus = ref({}); // 데이터 추천, 찜하기 관련 제어
@@ -770,21 +770,16 @@ const setDataLineageStartNode = () => {
 // 연관 데이터 조회
 const getRelatedData = () => {
   if (entity.value != null && entity.value != undefined) {
-    let params = {
-      guid: route.query.guid ? route.query.guid : "",
-      system_type: entity.value.system_type ? entity.value.system_type : '',
-      meta_type: entity.value.meta_type ? entity.value.meta_type : 'table'
-    }
+    const meta_id = route.query.guid ? route.query.guid : ""
+    const topN = 5
 
-    $ofetch(`/api/search/keywordRef`, {
-      method: 'POST',
-      body: params
-    }).then((res) => {
+    $ofetch(`/api/search/keywordRef?meta_id=${meta_id}&topN=${topN}`).then((res) => {
+      console.log(res)
       if (res && !res.errorMessage) {
         if (res.data && res.data.results) {
-          classifications_data.value = res.data.results.splice(-5)
+          relatedDataList.value = res.data.results
         } else {
-          classifications_data.value = []
+          relatedDataList.value = []
         }
 
       }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
@@ -125,10 +126,9 @@ public class SearchController {
 
     // 연관 데이터 검색
     @ResponseJsonResult
-    @PostMapping("/search/keywordRef")
-    public Object getRelatedData(@RequestBody Map<String, Object> param, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        return searchService.getRelatedData(param);
+    @GetMapping("/search/keywordRef")
+    public Object getRelatedData(@RequestParam String meta_id, @RequestParam Integer topN) throws Exception {
+        return searchService.getRelatedData(meta_id, topN);
     }
 
     // 메타타입 기본값 조회

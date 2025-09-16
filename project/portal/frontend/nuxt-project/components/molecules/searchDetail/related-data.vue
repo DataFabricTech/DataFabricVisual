@@ -11,13 +11,13 @@
           </button>
         </div>
       </div>
-      <div class="detail-box" v-if="classifications && classifications.length > 0">
+      <div class="detail-box" v-if="relatedDataList && relatedDataList.length > 0">
         <div class="mu-row">
           <div class="mu-col mu-col-7">
             <ul class="connection-list">
-              <li v-for="(item, index) in classifications" :key="index">
+              <li v-for="(item, index) in relatedDataList" :key="index">
                 <div class="datatype">
-                  <em class="datatype-label">{{ item.classifications[0] ? item.classifications[0].c_description : '-' }}</em>
+                  <em class="datatype-label">{{ item.classifications[0] && item.classifications[0].c_description ? item.classifications[0].c_description : '카테고리 미지정' }}</em>
                 </div>
                 <a v-on:click="onClickDataName(item)">
                   <span class="datatype-desc" v-if="item.description">{{ item.description }} &nbsp;&nbsp;&nbsp;</span>
@@ -47,7 +47,7 @@ const userStore = useUserStore();
 const router = useRouter();
 
 const emit = defineEmits(["onClickData"]);
-const props = defineProps(["classifications", "entity", "isAdmin"]);
+const props = defineProps(["relatedDataList", "entity", "isAdmin"]);
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
@@ -55,13 +55,13 @@ const toggleShowDataText = ref("접기");
 const networkChart = ref(null)
 
 // 연관데이터 링크 클릭 후 메타데이터 재조회 시 차트를 다시 그리기 위해 추가, 초기에는 차트 DOM이 생성되기 전 호출됨
-watch(() => props.classifications, (newVal) => {
+watch(() => props.relatedDataList, (newVal) => {
   drawChart(newVal)
 })
 
 // 차트 DOM이 초기에 생성되었을 때 차트에 데이터를 설정하기 위해 호출
 watch(() => networkChart.value, () => {
-  drawChart(props.classifications)
+  drawChart(props.relatedDataList)
 })
 
 // 네트워크 차트 설정
