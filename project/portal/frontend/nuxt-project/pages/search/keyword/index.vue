@@ -1387,6 +1387,9 @@ const onChangeCheckBox = async (key, event: any) => {
             } else {
               detailFilters.value["FILE_FORMAT"].visible = true
             }
+          } else {
+            clearFilter("FILE_FORMAT")
+            detailFilters.value["FILE_FORMAT"].visible = false
           }
         }
         if (key == 'FILE_FORMAT') {
