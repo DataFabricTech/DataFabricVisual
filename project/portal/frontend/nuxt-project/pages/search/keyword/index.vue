@@ -216,6 +216,7 @@ const searchParams = ref({
   pagingObj: {},
   system_type: "",
   meta_type: "",
+  file_format: "",
   tag: "",
   limit: 10,
   offset: 0,
@@ -578,6 +579,7 @@ onMounted(async () => {
 
       system_type.value = searchParams.value.system_type ? searchParams.value.system_type : "" // 시스템타입
       meta_type.value = searchParams.value.meta_type ? searchParams.value.meta_type : "" // 메타타입
+      file_format.value = searchParams.value.file_format ? searchParams.value.file_format : "" // 확장자
       sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
       pagingObj.value.currentPage = searchParams.value.pagingObj.currentPage // 현재 페이지
       pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
