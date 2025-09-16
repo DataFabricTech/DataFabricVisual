@@ -11,6 +11,7 @@ export const useSearchStore = defineStore('searchStore', () => {
     pagingObj: {},
     system_type: "",
     meta_type: "",
+    file_format: "",
     tag: "",
     limit: 10,
     offset: 0,
@@ -30,8 +31,9 @@ export const useSearchStore = defineStore('searchStore', () => {
   // getters
   const getSearchParams = computed(() => _searchParams.value)
   const getQuery = computed(() => _searchParams.value.query)
-  const getSystemType = computed(() => _searchParams.value.systemtype)
-  const getMetaType = computed(() => _searchParams.value.metatype)
+  const getSystemType = computed(() => _searchParams.value.system_type)
+  const getMetaType = computed(() => _searchParams.value.meta_type)
+  const getFileFormat = computed(() => _searchParams.value.file_format)
   const getLimit = computed(() => _searchParams.value.limit)
   const getOffset = computed(() => _searchParams.value.offset)
   const getClassification = computed(() => _searchParams.value.classification)
@@ -48,8 +50,9 @@ export const useSearchStore = defineStore('searchStore', () => {
   // 페이징 조건 저장
   const setSearchParamsPagingObj = (payload) => { return _searchParams.value.pagingObj = payload }
   const setQuery = (data: any) => { _searchParams.value.query = data }
-  const setSystemType = (data: any) => { _searchParams.value.systemtype = data }
-  const setMetaType = (data: any) => { _searchParams.value.metatype = data }
+  const setSystemType = (data: any) => { _searchParams.value.system_type = data }
+  const setMetaType = (data: any) => { _searchParams.value.meta_type = data }
+  const setFileFormat = (data: any) => { _searchParams.value.file_format = data }
   const setLimit = (data: any) => { _searchParams.value.limit = data }
   const setOffset = (data: any) => { _searchParams.value.offset = data }
   const setClassification = (data: any) => { _searchParams.value.classification = data }
