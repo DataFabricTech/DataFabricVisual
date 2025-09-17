@@ -774,12 +774,12 @@ const setDataLineageStartNode = () => {
 };
 
 // 연관 데이터 조회
-const getRelatedData = () => {
+const getRelatedData = async () => {
   if (entity.value != null && entity.value != undefined) {
     const meta_id = route.query.guid ? route.query.guid : ""
     const topN = 5
 
-    $ofetch(`/api/search/keywordRef?meta_id=${meta_id}&topN=${topN}`).then((res) => {
+    await $ofetch(`/api/search/keywordRef?meta_id=${meta_id}&topN=${topN}`).then((res) => {
       if (res && !res.errorMessage) {
         if (res.data && res.data.results) {
           relatedDataList.value = res.data.results
