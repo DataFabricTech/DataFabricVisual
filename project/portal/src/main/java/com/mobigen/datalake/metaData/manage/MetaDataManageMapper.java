@@ -31,6 +31,7 @@ public interface MetaDataManageMapper {
     // 메타 데이터 검색 필터옵션 조회
     List<Map<String, Object>> getFilterMetaType() throws Exception;
     List<Map<String, Object>> getFilterSystemType() throws Exception;
+    List<Map<String, Object>> getFilterFileFormat() throws Exception;
 
     // 메타 데이터 권한 수정
     int updateMetaDataRelease(Map<String, Object> params) throws Exception;

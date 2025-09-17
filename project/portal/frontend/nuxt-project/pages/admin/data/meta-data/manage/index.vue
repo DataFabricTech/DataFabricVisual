@@ -57,6 +57,13 @@
                       </option>
                     </select>
                   </div>
+                  <div class="mu-selectbox w160" v-show="currentMetaType && currentMetaType.toUpperCase() === 'FILE'">
+                    <select name="searchType2" :value="currentFileFormat" @change="onChangeFileFormat">
+                      <option v-for="(item, index) in filterFileFormatList" :key="index" :value="item.value">
+                        {{ item.desc }}
+                      </option>
+                    </select>
+                  </div>
                   <div class="mu-selectbox w160">
                     <select name="searchType4" :value="currentSystemType" @change="onChangeSystemType">
                       <option v-for="(item, index) in filterSystemTypeList" :key="index" :value="item.value">
@@ -405,6 +412,14 @@ const filterMetaTypeList = ref<Array<FilterMetaType>>([
   }
 ])
 
+// 메타 데이터 유형 file 일 때 확장자 필터 항목
+const filterFileFormatList = ref<Array<FilterMetaType>>([
+  {
+    value: "",
+    desc: "확장자(전체)"
+  }
+])
+
 // 메타 데이터 시스템 타입 필터 항목
 const filterSystemTypeList = ref<Array<FilterSystemType>>([
   {
@@ -412,8 +427,10 @@ const filterSystemTypeList = ref<Array<FilterSystemType>>([
     desc: "시스템 타입(전체)"
   }
 ])
-const currentMetaType = ref<number | string>("");
-const currentSystemType = ref<number | string>("");
+
+const currentMetaType = ref<string>("");
+const currentFileFormat = ref<string>("");
+const currentSystemType = ref<string>("");
 
 // 선택된 카테고리 정보
 const selectedCategory = ref<SelectedCategory>({
@@ -515,6 +532,9 @@ onUnmounted(() => {
   // 유형(전체) 필터 정보 저장
   const meta_type = currentMetaType.value ? currentMetaType.value : null;
 
+  // 확장자(전체) 필터 정보 저장
+  const file_format = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' && currentFileFormat.value ? currentFileFormat.value : null;
+
   // 검색에 사용된 파라미터 중 default 값과 상이한 값이 없으면 path를 empty string으로 저장하여 저장된 파라미터 초기화
   const path = paging || condition || category || release ? "/admin/data/meta-data/manage" : "";
 
@@ -524,6 +544,7 @@ onUnmounted(() => {
     condition,
     category,
     meta_type,
+    file_format,
     system_type,
     release,
   };
@@ -544,6 +565,9 @@ const getFilterOptions = () => {
     if (res && res.data) {
       if (res.data.metaTypeList && res.data.metaTypeList.length > 0) {
         filterMetaTypeList.value = [...filterMetaTypeList.value, ...res.data.metaTypeList];
+      }
+      if (res.data.fileFormatList && res.data.fileFormatList.length > 0) {
+        filterFileFormatList.value = [...filterFileFormatList.value, ...res.data.fileFormatList];
       }
       if (res.data.systemTypeList && res.data.systemTypeList.length > 0) {
         filterSystemTypeList.value = [...filterSystemTypeList.value, ...res.data.systemTypeList];
@@ -635,6 +659,7 @@ const onFetchPageDataByPrevCondition = () => {
   const release = ObjectUtils.getDeepCopiedPropertyValue(userParams, "release", "");
   const system_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "system_type", "");
   const meta_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "meta_type", "");
+  const file_format = ObjectUtils.getDeepCopiedPropertyValue(userParams, "file_format", "");
 
   let offset = 0;
   const item: any = {};
@@ -664,6 +689,10 @@ const onFetchPageDataByPrevCondition = () => {
 
   if (meta_type) {
     currentMetaType.value = meta_type
+  }
+
+  if (file_format) {
+    currentFileFormat.value = file_format
   }
 
   onSearchDataList(offset, item);
@@ -1084,6 +1113,11 @@ const onChangeMetaType = (e) => {
   onSearchDataList();
 }
 
+const onChangeFileFormat = (e) => {
+  currentFileFormat.value = e.target.value
+  onSearchDataList();
+}
+
 const onChangeSystemType = (e) => {
   currentSystemType.value = e.target.value
   onSearchDataList();
@@ -1113,6 +1147,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   const { word } = filterSearchObj.value;
   params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;
   params.metaType = currentMetaType.value
+  params.fileFormat = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' ? currentFileFormat.value : ""
   params.systemType = currentSystemType.value
   params.release = currentRelease.value
   params.word = word.trim();

@@ -123,9 +123,11 @@ public class MetaDataManageService {
     public Map<String, Object> getFilterOptions() throws Exception {
         List<Map<String, Object>> systemTypeList = metaDataManageMapper.getFilterSystemType();
         List<Map<String, Object>> metaTypeList = metaDataManageMapper.getFilterMetaType();
+        List<Map<String, Object>> fileFormatList = metaDataManageMapper.getFilterFileFormat();
         Map<String, Object> result = new HashMap<>();
         result.put("systemTypeList", systemTypeList);
         result.put("metaTypeList", metaTypeList);
+        result.put("fileFormatList", fileFormatList);
         return result;
     }
 
