@@ -19,50 +19,52 @@
       </div>
       <div class="detail-box" v-if="(props.sampleData && props.sampleData[0]) || props.sampleCaptureData">
         <div v-if="props.typeName && props.typeName.toUpperCase() == 'FILE'">
-          <div v-if="isStructureData">
-            <!-- 샘플 데이터 최대 10개 출력 전체, 데이터 수 10개 미만인 경우 모든 데이터 출력/샘플 데이터 스크롤바, 컬럼 내용이 긴 경우 가로 스크롤을 이용하여 노출되지 않은 값까지 확인 가능 -->
-            <div class="table-scroll max-h630 h400" v-if="props.userDataAuth == 1 || props.userDataAuth == 2">
-              <table class="mu-grid mu-grid-data">
-                <colgroup>
-                  <col style="width: 200px" :span="Object.keys(props.sampleData[0]).length" />
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th scope="col" v-for="(item, index) in props.sampleData[0]" :key="index">
-                      <span>{{ index }}</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in props.sampleData" :key="index">
-                    <td v-for="(ii, idx) in item">
-                      <span class="mu-ellipsis" :title="ii">
-                        {{ nullToNa(ii) }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div v-if="props.userDataAuth == 1 || props.userDataAuth == 2">
+            <div v-if="isStructureData">
+              <!-- 샘플 데이터 최대 10개 출력 전체, 데이터 수 10개 미만인 경우 모든 데이터 출력/샘플 데이터 스크롤바, 컬럼 내용이 긴 경우 가로 스크롤을 이용하여 노출되지 않은 값까지 확인 가능 -->
+              <div class="table-scroll max-h630 h400" v-if="props.userDataAuth == 1 || props.userDataAuth == 2">
+                <table class="mu-grid mu-grid-data">
+                  <colgroup>
+                    <col style="width: 200px" :span="Object.keys(props.sampleData[0]).length" />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th scope="col" v-for="(item, index) in props.sampleData[0]" :key="index">
+                        <span>{{ index }}</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in props.sampleData" :key="index">
+                      <td v-for="(ii, idx) in item">
+                        <span class="mu-ellipsis" :title="ii">
+                          {{ nullToNa(ii) }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="data-result h300" v-else>
-              <p class="nodata">데이터 접근 권한이 없습니다.</p>
+            <div v-else-if="isSampleTextAndCapture" style="display: flex; justify-content: center;">
+              <img v-if="sampleCaptureData" :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; margin: 5px; filter: brightness(0.99); object-fit:contain; align-self:flex-start;"/>
+              <p v-if="sampleData" style="margin: 5px;">{{ props.sampleData }}</p>
+            </div>
+            <div v-else-if="isSampleCapture" style="display: flex; justify-content: center;">
+              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);"/>
+            </div>
+            <div v-else-if="isSampleText" style="display: flex; justify-content: center; filter: brightness(0.99);">
+              {{ props.sampleData }}
+            </div>
+            <div v-else-if="isCaptureAndDetection" style="display: flex; justify-content: center;">
+              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);"/>
+            </div>
+            <div v-else>
+              {{ props.sampleData }}
             </div>
           </div>
-          <div v-else-if="isSampleTextAndCapture" style="display: flex; justify-content: center;">
-            <img v-if="sampleCaptureData" :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; margin: 5px; filter: brightness(0.99); object-fit:contain; align-self:flex-start;"/>
-            <p v-if="sampleData" style="margin: 5px;">{{ props.sampleData }}</p>
-          </div>
-          <div v-else-if="isSampleCapture" style="display: flex; justify-content: center;">
-            <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);"/>
-          </div>
-          <div v-else-if="isSampleText" style="display: flex; justify-content: center; filter: brightness(0.99);">
-            {{ props.sampleData }}
-          </div>
-          <div v-else-if="isCaptureAndDetection" style="display: flex; justify-content: center;">
-            <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);"/>
-          </div>
-          <div v-else>
-            {{ props.sampleData }}
+          <div class="data-result h300" v-else>
+            <p class="nodata">데이터 접근 권한이 없습니다.</p>
           </div>
         </div>
         <div v-else-if="props.typeName && props.typeName.toUpperCase() == 'TABLE'">
