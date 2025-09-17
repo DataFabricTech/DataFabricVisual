@@ -300,9 +300,10 @@ public class CollectorService {
         String status = collector.get("status") != null ? collector.get("status").toString() : null;
         if (status != null) {
           // 비활성화(1. 등록 직후, 2. 즉시수집 클릭 직후 및 INGESTION 상태)
-          // 활성화(REGISTER_COMPLETED, INGESTION_COMPLETED, INGESTION_FAILED)
+          // 활성화(REGISTER_COMPLETED, REGISTER_FAILED, INGESTION_COMPLETED, INGESTION_FAILED)
           if (!status.equals("INGESTION") &&
               (status.equals("REGISTER_COMPLETED")
+                  || status.equals("REGISTER_FAILED")
                   || status.equals("INGESTION_COMPLETED")
                   || status.equals("INGESTION_FAILED"))) {
             collector.put("isActiveIngestion", true);
