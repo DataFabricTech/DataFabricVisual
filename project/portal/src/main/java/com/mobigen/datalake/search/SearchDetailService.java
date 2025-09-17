@@ -485,41 +485,91 @@ public class SearchDetailService {
 
     public Map<String, Object> getSampleDataFile(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
+        Object sampleData = null;
+        Object sampleCaptureData = null;
+        Integer num_rows = null;
 
         try {
             MinioClient mf = MinioFactory.create(fabricEndpoint, fabricAccessKey, fabricSecretKey);
             // sample_data_url 조회
             String meta_id = params.get("meta_id").toString();
-            String sample_share_url = searchDetailMapper.getSampleDataUrl(meta_id);
-            S3Url p = S3Url.parse(sample_share_url);
+            String sample_share_url = ""; // 샘플 데이터 텍스트, 정형
+            String sample_share_capture_url = ""; // 이미지 캡쳐
+            String sample_share_url_prefix = searchDetailMapper.getSampleDataUrl(meta_id);
 
-            // 샘플데이터의 확장자가 JPEG인 경우 이미지 처리
-            Object sampleData = null;
-            Integer num_rows = null;
-            String sample_file_format = "";
-            if (sample_share_url != null && !sample_share_url.equals("")) {
-                String[] arr = sample_share_url.split("\\.");
-                if (arr != null && arr.length > 0) {
-                    sample_file_format = arr[arr.length - 1];
-                }
+            String file_format = "";
+            String[] arr = params.get("file_format").toString().split("\\.");
+            if (arr != null && arr.length > 0) {
+                file_format = arr[arr.length - 1];
             }
 
-            if (sample_file_format.equalsIgnoreCase("CSV")) {
-                sampleData = this.readCsv(mf, p);
+            // file_format의 확장자 구분
+            // hwp, hwpx
+            if (file_format.equalsIgnoreCase("HWP")
+            || file_format.equalsIgnoreCase("HWPX")) {
+                sample_share_url = sample_share_url_prefix + "/sample_data.txt";
+                S3Url sample_path = S3Url.parse(sample_share_url);
+                sampleData = this.readText(mf, sample_path);
+            } else if (file_format.equalsIgnoreCase("DOCX")
+            || file_format.equalsIgnoreCase("TXT")
+            || file_format.equalsIgnoreCase("XML")) {
+                try {
+                    sample_share_url = sample_share_url_prefix + "/sample_data.txt";
+                    S3Url sample_path = S3Url.parse(sample_share_url);
+                    sampleData = this.readText(mf, sample_path);
+                } catch (Exception e) {
+                    log.error("No sample data !!");
+                }
+                
+                try {
+                    sample_share_capture_url = sample_share_url_prefix + "/image_capture.jpeg";
+                    S3Url sample_capture_path = S3Url.parse(sample_share_capture_url);
+                    sampleCaptureData = this.readImg(mf, sample_capture_path);
+                } catch (Exception e) {
+                    log.error("No sample capture file !!");
+                }
+            } else if (file_format.equalsIgnoreCase("DOC")) {
+                sample_share_capture_url = sample_share_url_prefix + "/image_capture.jpeg";
+                S3Url sample_capture_path = S3Url.parse(sample_share_capture_url);
+                sampleCaptureData = this.readImg(mf, sample_capture_path);
+            } else if (file_format.equalsIgnoreCase("CSV")
+            || file_format.equalsIgnoreCase("XLSX")
+            || file_format.equalsIgnoreCase("XLS")
+            || file_format.equalsIgnoreCase("JSON")) {
+                sample_share_url = sample_share_url_prefix + "/sample_data_structured.csv";
+                S3Url sample_path = S3Url.parse(sample_share_url);
+                sampleData = this.readCsv(mf, sample_path);
                 num_rows = searchDetailMapper.getFileSampleCount(meta_id);
-            } else if (sample_file_format.equalsIgnoreCase("JPEG")) {
-                sampleData = this.readImg(mf, p);
-            } else if (sample_file_format.equalsIgnoreCase("TXT")) {
-                sampleData = this.readText(mf, p);
+            } else if (file_format.equalsIgnoreCase("PDF")
+            || file_format.equalsIgnoreCase("JPEG")
+            || file_format.equalsIgnoreCase("JPG")
+            || file_format.equalsIgnoreCase("PNG")
+            || file_format.equalsIgnoreCase("BMP")
+            || file_format.equalsIgnoreCase("GIF")
+            || file_format.equalsIgnoreCase("WEBP")
+            || file_format.equalsIgnoreCase("CR2")
+            || file_format.equalsIgnoreCase("NEF")
+            || file_format.equalsIgnoreCase("TIF")
+            || file_format.equalsIgnoreCase("ARW")
+            || file_format.equalsIgnoreCase("ORF")
+            || file_format.equalsIgnoreCase("PSD")
+            || file_format.equalsIgnoreCase("HEIF")
+            || file_format.equalsIgnoreCase("HEIC")
+            || file_format.equalsIgnoreCase("HDR")) {
+                sample_share_url = sample_share_url_prefix + "/image_capture.jpeg";
+                S3Url sample_path = S3Url.parse(sample_share_url);
+                sampleCaptureData = this.readImg(mf, sample_path);
             }
 
             result.put("sampleData", sampleData);
-            result.put("sampleFileFormat", sample_file_format);
+            result.put("sampleCaptureData", sampleCaptureData);
             result.put("sampleTotal", num_rows);
         } catch (Exception e) {
             log.error("fail to load sampleDataFile !!");
             log.error(e.getMessage());
-            
+            result.put("sampleData", sampleData);
+            result.put("sampleCaptureData", sampleCaptureData);
+            result.put("sampleTotal", num_rows);
         }
         return result;
     }

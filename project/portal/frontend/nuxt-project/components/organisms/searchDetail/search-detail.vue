@@ -43,10 +43,11 @@
         <div v-if="typeName && (typeName.toUpperCase() == 'TABLE' || typeName.toUpperCase() == 'FILE')" :ref="el => sectionRefs['sample-data-area'] = el"
           class="content-block">
           <sample-data-area :isAdmin="props.isAdmin"
-            :sampleData="sampleData" :entity="entity" :userDataAuth="userDataAuth" :typeName="typeName"
+            :sampleData="sampleData"
+            :sampleCaptureData="sampleCaptureData"
+            :entity="entity" :userDataAuth="userDataAuth" :typeName="typeName"
             :referredEntitiesAttributes="referredEntitiesAttributes"
-            :fileFormat="fileFormat"
-            :sampleFileFormat="sampleFileFormat" />
+            :fileFormat="fileFormat"/>
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
         <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
@@ -147,7 +148,8 @@ const dataProfile = ref({
   db: {},
   column: [],
 });
-const sampleData = ref([]);
+const sampleData = ref([]); // 샘플 데이터 텍스트, 정형
+const sampleCaptureData = ref(""); // 이미지 캡쳐
 const sampleTotal = ref(null);
 const sampleFileFormat = ref(null);
 
@@ -723,10 +725,12 @@ const getSampleData = () => {
     }
   } else if (meta_type && meta_type.toUpperCase() == 'FILE') {
     const meta_id = ObjectUtils.getPropertyValue(entity.value, "meta_id", "")
+    const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "")
     const full_path = ObjectUtils.getPropertyValue(entity.value, "attributes/full_path", "")
 
     const params = {
       meta_id: meta_id,
+      meta_name: meta_name,
       file_format: fileFormat.value,
       full_path: full_path
     };
@@ -736,19 +740,21 @@ const getSampleData = () => {
         method: "POST",
         body: params,
       }).then((res) => {
-        if (res && res.data && res.data.sampleData) {
-          sampleData.value = res.data.sampleData
+        console.log(res)
+        if (res && res.data) {
+          sampleData.value = res.data.sampleData ? res.data.sampleData : []
           sampleTotal.value = res.data.sampleTotal
-          sampleFileFormat.value = res.data.sampleFileFormat
+          sampleCaptureData.value = res.data.sampleCaptureData ? res.data.sampleCaptureData : ""
         } else {
           sampleData.value = []
           sampleTotal.value = 0
-          sampleFileFormat.value = ""
+          sampleCaptureData.value = ""
         }
       });
     } catch (e) {
       sampleData.value = []
       sampleTotal.value = 0
+      sampleCaptureData.value = ""
       console.log(e);
     }
   }
@@ -774,7 +780,6 @@ const getRelatedData = () => {
     const topN = 5
 
     $ofetch(`/api/search/keywordRef?meta_id=${meta_id}&topN=${topN}`).then((res) => {
-      console.log(res)
       if (res && !res.errorMessage) {
         if (res.data && res.data.results) {
           relatedDataList.value = res.data.results
