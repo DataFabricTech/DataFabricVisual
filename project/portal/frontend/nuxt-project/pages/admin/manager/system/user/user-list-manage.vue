@@ -87,7 +87,7 @@
                     <td v-html="getWrapperDatetimeStr(item.last_login)"></td>
                     <td>
                       <button type="button" class="mu-btn mu-btn-sm" @click="onClickUserPasswordInitButton(item)">
-                        <span>해제</span>
+                        <span>초기화</span>
                       </button>
                     </td>
                     <td>
