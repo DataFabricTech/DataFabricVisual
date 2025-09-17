@@ -177,7 +177,10 @@
     <!-- //mu-button-wrap -->
   </div>
 
-  <select-dept-user-modal :toggle-dept-modal="toggleDeptModal" @onSelect="onSelectDept"
+  <select-dept-user-modal
+    :popupTitle="getPopupTitle(select_user_type)"
+    :toggle-dept-modal="toggleDeptModal"
+    @onSelect="onSelectDept"
     @onCloseModal="onToggleDeptModal" />
 </template>
 
@@ -235,9 +238,16 @@ const onClickSaveButton = (): void => {
 };
 
 //
+const getPopupTitle = (type) => {
+  if (type == 'sender') return "보내는 사람 정보"
+  else if (type == 'receiver') return "받는 사람 정보"
+  else if (type == 'cc_recipients') return "참조 정보"
+  else return "팝업"
+}
+
+//
 const onToggleDeptModal = (type: string) => {
   select_user_type.value = type;
-
   if (toggleDeptModal.value) {
     toggleDeptModal.value = false;
   } else {

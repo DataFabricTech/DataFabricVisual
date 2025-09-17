@@ -113,7 +113,10 @@
       </div>
     </div>
 
-    <select-dept-user-modal :toggle-dept-modal="toggleDeptModal" @onSelect="onSelectDept"
+    <select-dept-user-modal
+      :popupTitle="getPopupTitle(select_user_type)"
+      :toggle-dept-modal="toggleDeptModal"
+      @onSelect="onSelectDept"
       @onCloseModal="onToggleDeptModal" />
   </div>
 </template>
@@ -136,6 +139,13 @@ const variable = ref({
   _name: "",
   _value: "",
 })
+
+const getPopupTitle = (type) => {
+  if (type == 'sender') return "보내는 사람 정보"
+  else if (type == 'receiver') return "받는 사람 정보"
+  else if (type == 'cc_recipients') return "참조 정보"
+  else return "팝업"
+}
 
 //
 const onRegister = async () => {

@@ -3,7 +3,7 @@
     <div class="mu-dialog-background"></div>
     <div class="mu-dialog w960">
       <div class="mu-dialog-head">
-        <p class="title">조직 정보</p>
+        <p class="title">{{ title }}</p>
       </div>
       <div class="mu-dialog-body">
         <div class="filter-wrap">
@@ -187,11 +187,14 @@ interface SelectedDepartment {
 const { $ofetch } = useNuxtApp();
 const emit = defineEmits(["onCloseModal", "onSelect", "onDeptDataLoad", "onClickMenuItem"]);
 const props = defineProps([
+  "popupTitle",
   "toggleDeptModal",
   "onSelect",
   "onCloseModal",
   "name",
 ]);
+
+const title = computed(() => props.popupTitle ? props.popupTitle : "팝업")
 
 //
 const pagingObj = ref({
