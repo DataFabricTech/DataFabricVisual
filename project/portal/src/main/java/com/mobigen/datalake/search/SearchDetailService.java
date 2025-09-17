@@ -549,6 +549,7 @@ public class SearchDetailService {
             || file_format.equalsIgnoreCase("WEBP")
             || file_format.equalsIgnoreCase("CR2")
             || file_format.equalsIgnoreCase("NEF")
+            || file_format.equalsIgnoreCase("TIFF")
             || file_format.equalsIgnoreCase("TIF")
             || file_format.equalsIgnoreCase("ARW")
             || file_format.equalsIgnoreCase("ORF")
