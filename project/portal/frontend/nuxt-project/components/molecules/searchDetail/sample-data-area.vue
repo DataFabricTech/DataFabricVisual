@@ -176,6 +176,7 @@ const isCaptureAndDetection = computed(() => {
   || props.fileFormat.toUpperCase() == 'WEBP'
   || props.fileFormat.toUpperCase() == 'CR2'
   || props.fileFormat.toUpperCase() == 'NEF'
+  || props.fileFormat.toUpperCase() == 'TIFF'
   || props.fileFormat.toUpperCase() == 'TIF'
   || props.fileFormat.toUpperCase() == 'ARW'
   || props.fileFormat.toUpperCase() == 'ORF'
