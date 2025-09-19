@@ -35,42 +35,7 @@ public class CategoryService {
 
     // 카테고리별 테이블 수 전체 조회
     public Object getTableCountsByClassification() throws Exception {
-        List<Map<String, Object>> resultList = new ArrayList<>();
-
-        // 1. 카테고리 정보 테이블 조회
-        List<Map<String, Object>> originList = getCategoryList();
-
-        // 카테고리 항목 확인
-        // [{ id: 1, name: "MG", count: 0 }]
-        List<Map<String, Object>> metaList = categoryMapper.getMetaList();
-        Map<String, Object> classificationsCount = new LinkedHashMap();
-        for (int i=0; i<metaList.size(); i++) {
-            String[] classifications = (String[]) metaList.get(i).get("classifications");
-            if (classifications != null) {
-                for (int j=0; j<classifications.length; j++) {
-                    if (classificationsCount.containsKey(classifications[j])) {
-                        classificationsCount.put(classifications[j], (Integer) classificationsCount.get(classifications[j]) + 1);
-                    } else {
-                        classificationsCount.put(classifications[j], 1);
-                    }
-                }
-            }
-        }
-
-        // 2. 갱신된 카테고리 카운트 정보와 연동하여 리스트로 출력
-        if (originList != null) {
-            for (int i = 0; i < originList.size(); i++) {
-                String c_id = originList.get(i).get("id").toString();
-                if (classificationsCount.get(c_id) != null) {
-                    originList.get(i).put("count", classificationsCount.get(c_id));
-                } else {
-                    originList.get(i).put("count", 0);
-                }
-            }
-        }
-
-        resultList = originList;
-        return resultList;
+        return categoryMapper.getCategoryList();
     }
 
     // DB의 카테고리 목록 데이터 반환
