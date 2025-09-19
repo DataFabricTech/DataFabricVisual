@@ -538,8 +538,9 @@ const truncateText = (content, maxWidth) => {
 // 추천 검색어 조회
 const getRecommendedWordList = async () => {
   await $ofetch('/api/main/recommendedWordList').then((res) => {
-    if (res && !res.errorMessage) {
-      recommendedWordList.value = res.data
+    if (res && res.data && !res.errorMessage) {
+      const list = res.data
+      recommendedWordList.value = list.filter((el) => el.search_word != '')
     }
   }).catch((e) => {
     console.log(e)
