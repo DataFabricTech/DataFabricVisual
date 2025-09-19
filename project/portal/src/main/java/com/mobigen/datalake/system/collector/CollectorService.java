@@ -43,6 +43,9 @@ public class CollectorService {
   @Value("${properties.cryptKey}")
   private String cryptKey;
 
+  @Value("${properties.airflow.base_url}")
+  private String airflowUrl;
+
   Map<String, Object> getCollectorListInfo(Map<String, Object> params) throws Exception {
     Map resultMap = new HashMap<>();
     List<Map<String, Object>> list = new ArrayList<>();
@@ -405,6 +408,13 @@ public class CollectorService {
       result.put("minioInfo", null);
     }
     
+    return result;
+  }
+
+  // Airflow URL 조회
+  public Map<String, Object> getAirflowUrl() throws Exception {
+    Map<String, Object> result = new HashMap<>();
+    result.put("airflowUrl", airflowUrl);
     return result;
   }
 

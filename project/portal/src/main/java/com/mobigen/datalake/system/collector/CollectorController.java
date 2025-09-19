@@ -200,4 +200,16 @@ public class CollectorController {
 
         return js;
     }
+
+    /**
+     * Airflow 조회
+     * 
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/airflowUrl")
+    public Object getAirflowUrl() throws Exception {
+        return collectorService.getAirflowUrl();
+    }
 }
