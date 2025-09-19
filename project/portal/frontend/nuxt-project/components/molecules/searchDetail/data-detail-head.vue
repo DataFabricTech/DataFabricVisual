@@ -107,7 +107,7 @@ const entityTags = computed(() =>
   ObjectUtils.getPropertyValue(props.entity, "tags", "")
 )
 const showCategoryMapButton = computed(
-  () => props.isAdmin && props.typeName?.endsWith("table")
+  () => props.isAdmin
 );
 
 // 카테고리 맵핑 버튼 클릭 이벤트 핸들러
