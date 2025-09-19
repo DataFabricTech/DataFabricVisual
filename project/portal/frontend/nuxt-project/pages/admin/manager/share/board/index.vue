@@ -25,7 +25,7 @@
             </div>
 
             <NuxtLink :to="'/admin/manager/share/board/detail?id=' + item.id">
-              <div class="inner-thumb">
+              <div class="inner-thumb" style="margin-right: 20px;">
                 <div v-html="item.image_html"></div>
               </div>
               <div class="inner-data">
