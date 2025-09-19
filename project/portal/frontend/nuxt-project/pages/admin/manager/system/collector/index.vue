@@ -391,11 +391,20 @@ const onClickReloadOneButton = async (collector, index) => {
 // Airflow 수집 히스토리 조회 iframe
 const tog = ref(false)
 const airflowUrl = ref("")
-const airflow = (item) => {
+const airflow = async (item) => {
   const dag_id = "metadata_ingestion_" + item.system_id
   tog.value = !tog.value
   if (tog.value) {
-    airflowUrl.value = `http://<INTERNAL_HOST>:28080/dagrun/list/?_flt_3_dag_id=${dag_id}&_iframe=1`
+    await $ofetch(`/api/admin/system/collector/airflowUrl`).then((res) => {
+      if (res && res.data && res.data.airflowUrl) {
+        airflowUrl.value = `${res.data.airflowUrl}dagrun/list/?_flt_3_dag_id=${dag_id}&_iframe=1`
+      } else {
+        console.log('airflowUrl 조회 실패')
+        console.log(res)
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
   } else {
     airflowUrl.value = ""
   }
