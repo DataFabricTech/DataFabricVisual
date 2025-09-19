@@ -47,17 +47,17 @@
               </div>
             </div>
             <div v-else-if="isSampleTextAndCapture" style="display: flex; justify-content: center;">
-              <img v-if="sampleCaptureData" :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; margin: 5px; filter: brightness(0.99); object-fit:contain; align-self:flex-start;"/>
+              <img v-if="sampleCaptureData" :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; margin: 5px; filter: brightness(0.99); object-fit:contain; align-self:flex-start;" @click="selectImage(sampleCaptureData)"/>
               <p v-if="sampleData" style="margin: 5px;">{{ props.sampleData }}</p>
             </div>
             <div v-else-if="isSampleCapture" style="display: flex; justify-content: center;">
-              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);"/>
+              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);" @click="selectImage(sampleCaptureData)"/>
             </div>
             <div v-else-if="isSampleText" style="display: flex; justify-content: center; filter: brightness(0.99);">
               {{ props.sampleData }}
             </div>
             <div v-else-if="isCaptureAndDetection" style="display: flex; justify-content: center;">
-              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);"/>
+              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);" @click="selectImage(sampleCaptureData)"/>
             </div>
             <div v-else>
               {{ props.sampleData }}
@@ -189,6 +189,29 @@ const isCaptureAndDetection = computed(() => {
     return false
   }
 })
+
+const selectImage = (base64Image) => {
+  // 팝업 창 열기
+  const options = "width=800,height=600"
+  const popup = window.open("", "샘플 데이터", options)
+
+  // 팝업 안에 이미지 넣기
+  popup.document.write(`
+    <html>
+      <head>
+        <title>이미지 미리보기</title>
+        <style>
+          body { margin:0; display:flex; justify-content:center; align-items:center; background:#000; }
+          img { max-width:100%; max-height:100%; }
+        </style>
+      </head>
+      <body>
+        <img src="data:image/jpeg;base64,${base64Image}" />
+      </body>
+    </html>
+  `)
+  popup.document.close()
+}
 
 const toggleShowData = () => {
   showData.value = !showData.value;
