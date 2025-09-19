@@ -22,7 +22,7 @@
         </div>
         <ul class="file-sch-list">
           <li v-for="(item, index) in thumbFiles" :key="index">
-            <i class="mu-icon-svg file">썸네일있음</i>{{ item.name }}
+            <a @click="fileDownload(item)"><i class="mu-icon-svg file">썸네일있음</i>{{ item.name }}</a>
             <button type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButtonThumb">
               <i class="mu-icon-svg item-delete" :id="index"></i><span>썸네일 삭제</span>
             </button>
@@ -43,7 +43,7 @@
         </div>
         <ul class="file-sch-list">
           <li v-for="(item, index) in files" :key="index">
-            <i class="mu-icon-svg file">파일 있음</i>{{ item.name }}
+            <a @click="fileDownload(item)"><i class="mu-icon-svg file">파일 있음</i>{{ item.name }}</a>
             <button v-if="!item.delete_flag" type="button" class="mu-btn mu-btn-delete" @click="onClickDeleteButton">
               <i class="mu-icon-svg item-delete" :id="index"></i><span>파일 삭제</span>
             </button>
@@ -57,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import ObjectUtils from "@/utils/ObjectUtils";
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
 import { onMounted, ref, computed, ComputedRef } from "vue";
@@ -130,8 +131,14 @@ const share = ref<Share>({
 const getShareOne = async (id: number) => {
   try {
     let { data: result } = await $ofetch(`/api/share/one?id=${id}`);
-    files.value = result.fileList;
-    thumbFiles.value = result.thumbList;
+    files.value = result.fileList.map(el => ({
+      ...el,
+      is_new: false
+    }));
+    thumbFiles.value = result.thumbList.map(el => ({
+      ...el,
+      is_new: false
+    }));;
     share.value = result.share;
   } catch (error) {
     console.log(error);
@@ -146,7 +153,7 @@ const onClickListButton = async (): Promise<void> => {
 
 // 파일 삭제 버튼 클릭
 const onClickDeleteButton = (e: Event) => {
-  if (files.value[e.target.id] && files.value[e.target.id].isNew)
+  if (files.value[e.target.id] && files.value[e.target.id].is_new)
     files.value.splice(e.target.id, 1);
   // [10, 20] // 새로 추가된 파일이면 현재 파일 목록에서 제거
   else delete_files.value.push(files.value.splice(e.target.id, 1)[0]); // 기존 파일이면 id값을 삭제 목록에 추가
@@ -157,7 +164,7 @@ const onClickSaveButton = async () => {
   if (await confirmAlert("저장하시겠습니까?")) {
     let formData = new FormData();
     files.value.forEach((file) => {
-      if (file.isNew) formData.append("files", file);
+      if (file.is_new) formData.append("files", file);
     });
     delete_files.value.forEach((file) => {
       formData.append("delete_files", file.file_id);
@@ -211,8 +218,11 @@ const onChange = async (e: Event): Promise<void> => {
     return;
   }
 
-  e.target.files[0].isNew = true; // 첫번째 파일이 새파일임을 지정
+  e.target.files[0].is_new = true; // 첫번째 파일이 새파일임을 지정
+
   files.value.splice(files.value.length, 1, e.target.files[0]); // [10, 20] // 파일 크기의 인덱스부터 1개 요소 수정(파일 목록 맨 뒤에 추가)
+  console.log(e.target.files)
+  console.log(files.value)
 };
 
 // 썸네일 변경
@@ -236,8 +246,47 @@ const onChangeThumb = async (e: Event): Promise<void> => {
     return;
   }
 
+  e.target.files[0].is_new = true
+
   thumbFiles.value.splice(0, 1, e.target.files[0]);
   delete_thumb_flag.value = true;
+};
+
+// 첨부파일 다운로드
+const fileDownload = async (item): Promise<void> => {
+  // 파일첨부로 한 데이터 다운로드
+  if (item.is_new) {
+    const url = URL.createObjectURL(item);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = item.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } else { // 기존에 있던 파일 다운로드
+    const config = useRuntimeConfig();
+
+    const res = await $ofetch(`/api/service/file/fileDownload?fileId=${item.file_id}`, {
+      headers: { responseType: "blob" },
+    });
+
+    const errorMessage = ObjectUtils.getPropertyValue(res, "data/errorMessage", "");
+    if (!errorMessage) {
+      const link = document.createElement("a");
+      let url = "";
+
+      if (document.location.href.indexOf("localhost") > -1) {
+        url = config.public.baseURL + `api/service/file/fileDownload?fileId=${item.file_id}`;
+      } else url = `/api/service/file/fileDownload?fileId=${item.file_id}`;
+
+      link.href = url;
+      link.style.cssText = "display:none";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+  }
 };
 
 //썸네일 삭제 버튼 클릭
