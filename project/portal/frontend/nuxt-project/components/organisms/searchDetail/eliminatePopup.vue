@@ -822,7 +822,7 @@ const onClickFileEliminateButton = async () => {
     fnWhereQueryMake();
   }
 
-  let typeName = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_type", "table");
+  let typeName = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_type", "");
   let qualified_name = ObjectUtils.getPropertyValue(props.eliminateModal.entity,"qualified_name", "");
   let system_id = ObjectUtils.getPropertyValue(props.eliminateModal.entity,"system_id", "");
   let system_name = ObjectUtils.getPropertyValue(props.eliminateModal.entity,"system_name", "");
@@ -891,7 +891,7 @@ const onClickFileEliminateButton = async () => {
       system_name: system_name,
       system_type: system_type,
       meta_name: meta_name,
-      meta_type: "table",
+      meta_type: typeName,
       qualified_name: qualified_name,
       query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
       download_type: 0, // 다운로드 방식 (0:FILE 1:API 2:BIG)';

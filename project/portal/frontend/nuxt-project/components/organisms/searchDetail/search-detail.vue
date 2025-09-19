@@ -1024,14 +1024,35 @@ const onClickConfirm = async () => {
 const onToggleEliminateModal = async () => {
   // 데이터 권한이 없는 경우 추출 불가
   if (userDataAuth.value == 2) {
+    const metaId = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
     const metaName = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+    const description = ObjectUtils.getPropertyValue(entity.value, "description", "");
     const system_id = ObjectUtils.getPropertyValue(entity.value, "system_id", "");
+    const system_name = ObjectUtils.getPropertyValue(entity.value, "system_name", "");
+    const system_type = ObjectUtils.getPropertyValue(entity.value, "system_type", "");
+    const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "");
     const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
     const fullPath = ObjectUtils.getPropertyValue(entity.value, "attributes/full_path", "");
 
     // File의 경우 Minio 등록된 파일 다운로드
     if (typeName != "" && typeName.toUpperCase() === 'FILE') {
       if (await confirmAlert("파일을 다운로드하시겠습니까?")) {
+
+        let historyParams = {
+          meta_id: metaId,
+          system_id: system_id,
+          system_name: system_name,
+          system_type: system_type,
+          meta_name: metaName,
+          meta_type: "file",
+          qualified_name: qualified_name,
+          query: ``,
+          download_type: 0, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
+          description: description,
+        };
+
+        await insertDownloadHistory(historyParams);
+
         const params = {
           system_id: system_id,
           full_path: fullPath
@@ -1084,6 +1105,22 @@ const onToggleEliminateModal = async () => {
     return
   }
 };
+
+const insertDownloadHistory = async (historyParams) => {
+  await $ofetch("/api/search/detail/eliminate/history/add", {
+    method: "POST",
+    body: historyParams,
+  }).then((res) => {
+    if (res && res.data && res.data.result) {
+      console.log('이력 저장 성공')
+    } else {
+      console.log('이력 저장 실패')
+    }
+  }).catch((err) => {
+    // 이력 저장 실패
+    console.log('이력 저장 실패')
+  });
+}
 
 // 데이터 담당 부서 조회
 const getDataManagerInfoList = async () => {
