@@ -1382,7 +1382,7 @@ const onChangeCheckBox = async (key, event: any) => {
           meta_type.value = el.name
 
           // FILE 타입일 경우 확장자 필터 표시, 아닌 경우 확장자 필터 제거
-          if (meta_type.value.toUpperCase() == 'FILE') {
+          if (typeof meta_type.value === 'string' && meta_type.value.toUpperCase() == 'FILE') {
             if(detailFilters.value['METATYPE'].content.filter(item => item.name.toUpperCase() == 'FILE')[0].checked == false) {
               clearFilter("FILE_FORMAT")
               detailFilters.value["FILE_FORMAT"].visible = false
@@ -1402,7 +1402,7 @@ const onChangeCheckBox = async (key, event: any) => {
         el.checked = false // 단일로 체크되도록 설정
 
         // 현재 meta_type이 FILE이 아닌 경우 확장자 필터 초기화
-        if (meta_type.value.toUpperCase() != 'FILE') {
+        if (typeof meta_type.value !== 'string' || meta_type.value.toUpperCase() != 'FILE') {
           clearFilter("FILE_FORMAT")
           detailFilters.value["FILE_FORMAT"].visible = false
         }
