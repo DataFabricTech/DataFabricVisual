@@ -125,7 +125,7 @@ public class DataRequestController {
             }
 
         } catch (Exception e) {
-            js.setErrorMessage(e.getMessage());
+            log.error("Fail to update file {}", e.getMessage());
             js.setErrorMessage("파일 업데이트에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
         }
 
