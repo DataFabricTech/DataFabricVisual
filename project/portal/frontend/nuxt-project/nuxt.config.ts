@@ -33,7 +33,7 @@ function _routeAlias(route: any) {
 export default defineNuxtConfig({
   app: {
     head: {
-      title: 'TTA DATA FABRIC PORTAL'
+      title: 'DATA PORTAL'
     }
   },
 
