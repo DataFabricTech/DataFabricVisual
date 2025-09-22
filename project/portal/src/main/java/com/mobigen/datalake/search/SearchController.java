@@ -126,9 +126,9 @@ public class SearchController {
 
     // 연관 데이터 검색
     @ResponseJsonResult
-    @GetMapping("/search/keywordRef")
-    public Object getRelatedData(@RequestParam String meta_id, @RequestParam Integer topN) throws Exception {
-        return searchService.getRelatedData(meta_id, topN);
+    @PostMapping("/search/keywordRef")
+    public Object getRelatedData(@RequestBody Map<String, Object> params) throws Exception {
+        return searchService.getRelatedData(params);
     }
 
     // 메타타입 기본값 조회

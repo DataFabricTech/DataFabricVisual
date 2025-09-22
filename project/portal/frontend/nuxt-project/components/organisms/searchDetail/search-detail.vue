@@ -776,17 +776,22 @@ const setDataLineageStartNode = () => {
 // 연관 데이터 조회
 const getRelatedData = async () => {
   if (entity.value != null && entity.value != undefined) {
-    const meta_id = route.query.guid ? route.query.guid : ""
-    const topN = 5
+    let params = {
+      guid: route.query.guid ? route.query.guid : "",
+      system_type: entity.value.system_type ? entity.value.system_type : '',
+      meta_type: entity.value.meta_type ? entity.value.meta_type : '',
+    }
 
-    await $ofetch(`/api/search/keywordRef?meta_id=${meta_id}&topN=${topN}`).then((res) => {
+    await $ofetch(`/api/search/keywordRef`, {
+      method: 'POST',
+      body: params
+    }).then((res) => {
       if (res && !res.errorMessage) {
         if (res.data && res.data.results) {
-          relatedDataList.value = res.data.results
+          relatedDataList.value = res.data.results.splice(-5)
         } else {
           relatedDataList.value = []
         }
-
       }
     });
   }
