@@ -123,7 +123,7 @@ public class ShareController {
             }
 
         } catch (Exception e) {
-            log.error("Fail to update file {}", e.getMessage());
+            log.error("Fail to update file {}", e);
             js.setErrorMessage("파일 업데이트에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
         }
 
@@ -303,7 +303,7 @@ public class ShareController {
             }
 
         } catch (Exception e) {
-            log.error("Fail to update file {}", e.getMessage());
+            log.error("Fail to update file {}", e);
             js.setErrorMessage("파일 업데이트에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
         }
 
