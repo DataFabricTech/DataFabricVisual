@@ -780,15 +780,16 @@ const getRelatedData = async () => {
       guid: route.query.guid ? route.query.guid : "",
       system_type: entity.value.system_type ? entity.value.system_type : '',
       meta_type: entity.value.meta_type ? entity.value.meta_type : '',
+      topN: 5
     }
 
     await $ofetch(`/api/search/keywordRef`, {
       method: 'POST',
       body: params
-    }).then((res) => {
+    }).then(async (res) => {
       if (res && !res.errorMessage) {
         if (res.data && res.data.results) {
-          relatedDataList.value = res.data.results.splice(-5)
+          relatedDataList.value = res.data.results
         } else {
           relatedDataList.value = []
         }

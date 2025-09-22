@@ -53,47 +53,121 @@ public class SearchService {
     }
 
     // 연관 데이터 조회
-    public Object getRelatedData(Map<String, Object> params) throws Exception {
+    public Map<String, Object> getRelatedDataFromEs(Map<String, Object> params) throws Exception {
+        log.info("get related data from ES !!");
         Map<String, Object> resultMap = new HashMap<>();
 
-        // 1. 해당 데이터의 카테고리 조회
-        List<Map<String, Object>> classifications = searchMapper.getMetaDataClassifications(params);
-        Map<String, Object> map = classifications.get(0);
+        try {
+            // 1. 해당 데이터의 카테고리 조회
+            List<Map<String, Object>> classifications = searchMapper.getMetaDataClassifications(params);
+            Map<String, Object> map = classifications.get(0);
 
-        if (map != null && map.get("classifications") != null) {
-            // 2. 카테고리를 가지고 있는 메타데이터 id 조회 (system_type, meta_type 동일한 데이터로 createtime 내림차순)
-            params.put("classifications", map.get("classifications"));
-            List<String> guids = searchMapper.getMetaDataInfoFromClassifications(params);
-            if (guids != null && guids.size() > 0) {
-                RestTemplate restTemplate = new RestTemplate();
+            if (map != null) {
+                // 2. 카테고리를 가지고 있는 메타데이터 id 조회 (system_type, meta_type 동일한 데이터로 createtime 내림차순)
+                if (map.get("classifications") != null) params.put("classifications", map.get("classifications"));
+                
+                List<String> guids = searchMapper.getMetaDataInfoFromClassifications(params);
+                if (guids != null && guids.size() > 0) {
+                    RestTemplate restTemplate = new RestTemplate();
 
-                // esSearch API의 URL 생성
-                String fastUrl = "http://" + esSearchApiHost + ":" + esSearchApiPort + "/api/v1/search/keywordRef";
-                log.info("call essearch api : " + fastUrl);
+                    // esSearch API의 URL 생성
+                    String fastUrl = "http://" + esSearchApiHost + ":" + esSearchApiPort + "/api/v1/search/keywordRef";
+                    log.info("call essearch api : " + fastUrl);
 
-                Map<String, Object> requestBody = new HashMap<>();
-                requestBody.put("guids", guids);
-                Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
+                    Map<String, Object> requestBody = new HashMap<>();
+                    requestBody.put("guids", guids);
+                    Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
 
-                if (!restResponse.isEmpty()) {
-                    Map<String, String> res = (Map<String, String>) restResponse.get("result");
-                    if (res.get("result") != null && res.get("result").equals("success")) {
-                        resultMap.put("results", res.get("results"));
-                        resultMap.put("total_count", res.get("total_count"));
-                        return resultMap;
-                    } else {
-                        resultMap.put("results", new ArrayList<>());
-                        resultMap.put("total_count", 0);
+                    if (!restResponse.isEmpty()) {
+                        Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                        if (res.get("result") != null && res.get("result").equals("success")) {
+                            resultMap.put("results", res.get("results"));
+                            resultMap.put("total_count", res.get("total_count"));
+                            return resultMap;
+                        } else {
+                            log.error("fail to get related data from ES !!");
+                            resultMap.put("results", new ArrayList<>());
+                            resultMap.put("total_count", 0);
+                        }
                     }
+                } else {
+                    log.error("fail to get related data from ES - guids is null or size < 0 !!");
+                    resultMap.put("results", new ArrayList<>());
+                    resultMap.put("total_count", 0);
                 }
+
             } else {
+                log.error("fail to get related data from ES - classifications is null !!");
                 resultMap.put("results", new ArrayList<>());
                 resultMap.put("total_count", 0);
             }
-
-        } else {
+        } catch (Exception e) {
+            log.error("fail to get related data from ES !! - {}", e.getMessage());
             resultMap.put("results", new ArrayList<>());
             resultMap.put("total_count", 0);
+        }
+        
+        return resultMap;
+    }
+
+    // 연관 데이터 조회
+    public Object getRelatedData(Map<String, Object> params) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        String meta_id = params.get("guid").toString();
+        String topN = params.get("topN").toString();
+
+        // 1. Recommender 서버로부터 조회
+        try {
+            log.info("get related data from clustering !!");
+            RestTemplate restTemplate = new RestTemplate();
+
+
+            String url = recommenderBaseUrl + recommenderClustringUrl + "?meta_id=" + meta_id + "&topN=" + topN;
+            ResponseEntity<HashMap> restResponse = restTemplate.getForEntity(url, HashMap.class);
+
+            if (restResponse != null && restResponse.getBody() != null) {
+                Map<String, Object> body = restResponse.getBody();
+                log.info("body: {}", body);
+                if (body.get("result") != null && body.get("status_code") != null && (Integer) body.get("status_code") == 200) {
+                    List<Map<String, Object>> results = (List<Map<String, Object>>) body.get("result");
+                    if (results != null) {
+                        if (results.size() > 0) {
+                            // 메타정보 상세 조회
+                            for (int i=0; i<results.size(); i++) {
+                                String id = results.get(i).get("meta_id").toString();
+                                Map<String, Object> meta = searchMapper.getMetadataInfo(id);
+                                // 카테고리, description, meta_name
+                                results.get(i).put("meta_name", meta.get("meta_name"));
+                                results.get(i).put("description", meta.get("description"));
+                                PGobject pgObj = (PGobject) meta.get("classifications");
+                                String json = pgObj.getValue();
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                List<Map<String, Object>> classifications = objectMapper.readValue(json,new TypeReference<List<Map<String, Object>>>() {});
+                                results.get(i).put("classifications", classifications);
+                            }
+
+                            resultMap.put("results", results);
+                            resultMap.put("total_count", results.size());
+                        } else {
+                            log.info("No related data from clustering !!");
+                            resultMap = getRelatedDataFromEs(params);
+                        }
+                    } else {
+                        log.error("Failed to get related data from clustering !!");
+                        resultMap = getRelatedDataFromEs(params);
+                    }
+                } else {
+                    log.error("Failed to get related data from clustering !!");
+                    resultMap = getRelatedDataFromEs(params);
+                }
+            } else {
+                log.info("No related data from clustering !!");
+                resultMap = getRelatedDataFromEs(params);
+            }
+        } catch (Exception e) {
+            log.error("Failed to get related from clustering !! {}", e.getMessage());
+            resultMap = getRelatedDataFromEs(params);
         }
 
         return resultMap;
