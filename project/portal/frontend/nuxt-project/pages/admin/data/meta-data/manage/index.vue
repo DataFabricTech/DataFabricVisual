@@ -1110,6 +1110,7 @@ const onChangeRelease = (e) => {
 
 const onChangeMetaType = (e) => {
   currentMetaType.value = e.target.value
+  currentFileFormat.value = ""
   onSearchDataList();
 }
 
