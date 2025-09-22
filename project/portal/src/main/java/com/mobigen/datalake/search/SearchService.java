@@ -66,7 +66,7 @@ public class SearchService {
             if (restResponse != null && restResponse.getBody() != null) {
                 Map<String, Object> body = restResponse.getBody();
                 log.info("body: {}", body);
-                if (body.get("result") != null) {
+                if (body.get("result") != null && body.get("status_code") != null && (Integer) body.get("status_code") == 200) {
                     List<Map<String, Object>> results = (List<Map<String, Object>>) body.get("result");
                     if (results != null && results.size() > 0) {
                         // 메타정보 상세 조회
@@ -86,12 +86,13 @@ public class SearchService {
                         resultMap.put("total_count", results.size());
                     }
                 } else {
+                    log.error("Failed to get related data meta_id list !!");
                     resultMap.put("results", new ArrayList<>());
                     resultMap.put("total_count", 0);
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to get related data meta_id list !! {}", e.getMessage());
+            log.error("Failed to get related data meta_id list !!: {}", e.getMessage());
         }
 
         
