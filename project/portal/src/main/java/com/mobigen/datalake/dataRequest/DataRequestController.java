@@ -286,7 +286,7 @@ public class DataRequestController {
                 if (userId != null && !userId.equals("")) {
                     Map<String, Object> selectedPost = dataRequestService.getDataRequestOne(params.get("id").toString(),
                             request);
-                    String writer = (((Map<String, Object>) selectedPost.get("post")).get("writer")).toString();
+                    String writer = (((Map<String, Object>) selectedPost.get("dataRequest")).get("writer")).toString();
                     if (userId.equals(writer)) {
                         dataRequestService.updateDataRequest(params, delete_files);
 
