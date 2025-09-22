@@ -65,6 +65,7 @@ public class SearchService {
 
             if (restResponse != null && restResponse.getBody() != null) {
                 Map<String, Object> body = restResponse.getBody();
+                log.info("body: {}", body);
                 if (body.get("result") != null) {
                     List<Map<String, Object>> results = (List<Map<String, Object>>) body.get("result");
                     if (results != null && results.size() > 0) {
@@ -90,7 +91,7 @@ public class SearchService {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to get related data meta_id list !! {}", e);
+            log.error("Failed to get related data meta_id list !! {}", e.getMessage());
         }
 
         
