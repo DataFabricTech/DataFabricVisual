@@ -191,28 +191,10 @@ const isCaptureAndDetection = computed(() => {
 })
 
 const selectImage = (base64Image) => {
-  const popupWidth = 600;
-  const popupHeight = 400;
+  const screenWidth = window.screen.width
+  const screenHeight = window.screen.height
 
-  const dualScreenLeft = window.screenLeft ?? window.screenX;
-  const dualScreenTop = window.screenTop ?? window.screenY;
-
-  const width = window.innerWidth
-    ? window.innerWidth
-    : document.documentElement.clientWidth
-      ? document.documentElement.clientWidth
-      : screen.width;
-
-  const height = window.innerHeight
-    ? window.innerHeight
-    : document.documentElement.clientHeight
-      ? document.documentElement.clientHeight
-      : screen.height;
-
-  const left = dualScreenLeft + (width - popupWidth) / 2;
-  const top = dualScreenTop + (height - popupHeight) / 2;
-
-  const options = `scrollbars=yes,width=${popupWidth},height=${popupHeight},top=${top},left=${left}`
+  const options = `width=${screenWidth},height=${screenHeight}`
   const popup = window.open("", "샘플 데이터", options)
 
   // 팝업 안에 이미지 넣기
