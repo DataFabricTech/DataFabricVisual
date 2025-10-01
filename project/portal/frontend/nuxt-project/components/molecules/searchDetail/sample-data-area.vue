@@ -47,7 +47,7 @@
               </div>
             </div>
             <!-- 이미지 + 텍스트 -->
-            <div v-else-if="sampleCaptureData && sampleCaptureData.length > 0 && sampleData && sampleData.length > 0" style="display: flex; justify-content: center;">
+            <div v-else-if="sampleCaptureData && sampleCaptureData.length > 0 && sampleData && sampleData.length > 0" style="display: flex; justify-content: center; align-items: stretch">
               <div>
                 <swiper class="sample-image-swiper"
                   :modules="[Autoplay]"
@@ -55,7 +55,7 @@
                   @slide-change="onSlideChange"
                   :slides-per-view="1"
                   >
-                  <swiper-slide class="sample-slide" v-for="(image, idx) in sampleCaptureData" :key="idx">
+                  <swiper-slide v-for="(image, idx) in sampleCaptureData" :key="idx">
                     <img :src="'data:image/jpeg;base64,' + image" style="width: 300px; filter: brightness(0.99); object-fit:contain;" @click="selectImage(image)"/>
                   </swiper-slide>
                 </swiper>
@@ -68,8 +68,9 @@
                   @slide-change="onSlideChange"
                   :slides-per-view="1"
                   >
-                  <swiper-slide class="sample-slide" v-for="(data, idx) in sampleData" :key="idx">
-                    <p style="margin: 5px;">{{ data }}</p>
+                  <swiper-slide v-for="(data, idx) in sampleData" :key="idx">
+                    <pre v-if="props.fileFormat.toUpperCase() === 'JSON'" class="scrollable-pre">{{ data }}</pre>
+                    <p v-else style="margin: 5px;">{{ data }}</p>
                   </swiper-slide>
                 </swiper>
                 <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
@@ -84,7 +85,7 @@
                   @slide-change="onSlideChange"
                   :slides-per-view="1"
                   >
-                  <swiper-slide class="sample-slide" v-for="(image, idx) in sampleCaptureData" :key="idx">
+                  <swiper-slide v-for="(image, idx) in sampleCaptureData" :key="idx">
                     <img :src="'data:image/jpeg;base64,' + image" style="width: 300px; filter: brightness(0.99); object-fit:contain;" @click="selectImage(image)"/>
                   </swiper-slide>
                 </swiper>

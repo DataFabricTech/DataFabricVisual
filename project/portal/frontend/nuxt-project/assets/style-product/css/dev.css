@@ -664,9 +664,21 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 
 /* 샘플데이터 이미지 슬라이드 */
 .sample-image-swiper {flex:1 1 0%; overflow:hidden; position:relative; min-width: 100%; max-width: 300px;}
+.sample-image-swiper .swiper-wrapper {display:flex; align-items:center; height:100%;}
 .sample-image-swiper .swiper-slide {display:flex; justify-content:space-between; align-items:center; flex-shrink:10; width:100%; height:100%; transition-property:transform;}
 .sample-image-swiper .swiper-slide a:not(:only-child) {display:inline-block; overflow:hidden; max-width:calc(100% - 100px); line-height:32px; vertical-align:top; text-overflow:ellipsis; white-space:nowrap;}
 
 .sample-text-swiper {flex:1 1 0%; overflow:hidden; position:relative; min-width: 100%; max-width: 1000px;}
 .sample-text-swiper .swiper-slide {display:flex; flex-shrink:0; width:100%; height:100%; transition-property:transform;}
 .sample-text-swiper .swiper-slide a:not(:only-child) {display:inline-block; overflow:hidden; max-width:calc(100% - 100px); line-height:32px; vertical-align:top; text-overflow:ellipsis; white-space:nowrap;}
+
+.scrollable-pre {
+  width: 900px;
+  height: 422px;            /* 고정 높이 */
+  overflow-y: auto;         /* 세로 스크롤 활성화 */
+  overflow-x: auto;         /* 긴 코드 줄이 잘리지 않도록 가로 스크롤 */
+  white-space: pre-wrap;    /* 필요 시 줄바꿈 허용 (기본 pre는 줄 안바꿈) */
+  padding: 10px;
+  margin-bottom: 5px;
+  user-select: text;
+}
