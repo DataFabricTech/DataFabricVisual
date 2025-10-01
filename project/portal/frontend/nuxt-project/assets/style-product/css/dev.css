@@ -680,7 +680,6 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
   white-space: pre-wrap;    /* 필요 시 줄바꿈 허용 (기본 pre는 줄 안바꿈) */
   padding: 10px;
   margin-bottom: 5px;
-  user-select: text;
 }
 
 .scrollable-pre-center {
@@ -690,6 +689,5 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
   white-space: pre-wrap;    /* 필요 시 줄바꿈 허용 (기본 pre는 줄 안바꿈) */
   padding: 10px;
   margin-bottom: 5px;
-  user-select: text;
   background-color: #fdfdfd
 }
