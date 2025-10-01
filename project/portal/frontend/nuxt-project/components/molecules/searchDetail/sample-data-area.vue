@@ -46,21 +46,68 @@
                 </table>
               </div>
             </div>
-            <div v-else-if="isSampleTextAndCapture" style="display: flex; justify-content: center;">
-              <img v-if="sampleCaptureData" :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; margin: 5px; filter: brightness(0.99); object-fit:contain; align-self:flex-start;" @click="selectImage(sampleCaptureData)"/>
-              <p v-if="sampleData" style="margin: 5px;">{{ props.sampleData }}</p>
+            <!-- 이미지 + 텍스트 -->
+            <div v-else-if="sampleCaptureData && sampleCaptureData.length > 0 && sampleData && sampleData.length > 0" style="display: flex; justify-content: center;">
+              <div>
+                <swiper class="sample-image-swiper"
+                  :modules="[Autoplay]"
+                  @swiper="onSwiper"
+                  @slide-change="onSlideChange"
+                  :slides-per-view="1"
+                  >
+                  <swiper-slide class="sample-slide" v-for="(image, idx) in sampleCaptureData" :key="idx">
+                    <img :src="'data:image/jpeg;base64,' + image" style="width: 300px; filter: brightness(0.99); object-fit:contain;" @click="selectImage(image)"/>
+                  </swiper-slide>
+                </swiper>
+                <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
+              </div>
+              <div style="margin-left: 20px;">
+                <swiper class="sample-text-swiper"
+                  :modules="[Autoplay]"
+                  @swiper="onSwiper"
+                  @slide-change="onSlideChange"
+                  :slides-per-view="1"
+                  >
+                  <swiper-slide class="sample-slide" v-for="(data, idx) in sampleData" :key="idx">
+                    <p style="margin: 5px;">{{ data }}</p>
+                  </swiper-slide>
+                </swiper>
+                <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
+              </div>
             </div>
-            <div v-else-if="isSampleCapture" style="display: flex; justify-content: center;">
-              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);" @click="selectImage(sampleCaptureData)"/>
+            <!-- 이미지 -->
+            <div v-else-if="sampleCaptureData && sampleCaptureData.length > 0" style="display: flex; justify-content: center;">
+              <div>
+                <swiper class="sample-image-swiper"
+                  :modules="[Autoplay]"
+                  @swiper="onSwiper"
+                  @slide-change="onSlideChange"
+                  :slides-per-view="1"
+                  >
+                  <swiper-slide class="sample-slide" v-for="(image, idx) in sampleCaptureData" :key="idx">
+                    <img :src="'data:image/jpeg;base64,' + image" style="width: 300px; filter: brightness(0.99); object-fit:contain;" @click="selectImage(image)"/>
+                  </swiper-slide>
+                </swiper>
+                <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
+              </div>
             </div>
-            <div v-else-if="isSampleText" style="display: flex; justify-content: center; filter: brightness(0.99);">
-              {{ props.sampleData }}
-            </div>
-            <div v-else-if="isCaptureAndDetection" style="display: flex; justify-content: center;">
-              <img :src="'data:image/jpeg;base64,' + sampleCaptureData" style="width: 300px; filter: brightness(0.99);" @click="selectImage(sampleCaptureData)"/>
-            </div>
-            <div v-else>
-              {{ props.sampleData }}
+            <!-- 텍스트 -->
+            <div v-else-if="sampleData && sampleData.length > 0" style="display: flex; justify-content: center;">
+              <div>
+                <swiper
+                  class="sample-text-swiper"
+                  :modules="[Autoplay]"
+                  @swiper="onSwiper"
+                  @slide-change="onSlideChange"
+                  :slides-per-view="1"
+                  style="max-width: 1300px"
+                  >
+                  <swiper-slide class="sample-slide" v-for="(data, idx) in sampleData" :key="idx">
+                    <p style="margin: 5px;">{{ data }}</p>
+                  </swiper-slide>
+                </swiper>
+                <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
+              </div>
             </div>
           </div>
           <div class="data-result h300" v-else>
@@ -118,17 +165,23 @@
 </template>
 
 <script setup lang="ts">
+import { on } from 'ramda';
+import { Autoplay } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
 const props = defineProps(["sampleData", "sampleCaptureData", "entity", "typeName", "fileFormat", "sampleFileFormat", "isAdmin", "isModal", "userDataAuth"]);
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
 
+const currentImageNum = ref(1);
+const currentTextNum = ref(1);
+
 // File 데이터 중 테이블처럼 보여줄 데이터 확장자
 const isStructureData = computed(() => {
   if (props.fileFormat.toUpperCase() == 'CSV'
   || props.fileFormat.toUpperCase() == 'XLSX'
-  || props.fileFormat.toUpperCase() == 'XLS'
-  || props.fileFormat.toUpperCase() == 'JSON')  {
+  || props.fileFormat.toUpperCase() == 'XLS')  {
     return true
   } else {
     return false
@@ -145,50 +198,27 @@ const isSampleText = computed(() => {
   }
 })
 
-// File 데이터 중 샘플 데이터, 이미지 캡쳐 보여줄 확장자
-const isSampleCapture = computed(() => {
-  if (props.fileFormat.toUpperCase() == 'DOC')  {
-    return true
-  } else {
-    return false
-  }
-})
+// 스와이퍼 로드
+const onSwiper = (swiper) => {
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        // swiper.autoplay.start();
+        observer.disconnect();
+      }
+    },
+    { threshold: 0 }
+  );
+  observer.observe(swiper.el);
+};
 
-// File 데이터 중 샘플 데이터, 이미지 캡쳐 보여줄 확장자
-const isSampleTextAndCapture = computed(() => {
-  if (props.fileFormat.toUpperCase() == 'DOCX'
-  || props.fileFormat.toUpperCase() == 'TXT'
-  || props.fileFormat.toUpperCase() == 'XML')  {
-    return true
-  } else {
-    return false
+const onSlideChange = (swiper) => {
+  if (swiper.el.classList.contains('sample-image-swiper')) {
+    currentImageNum.value = swiper.realIndex + 1;
+  } else if (swiper.el.classList.contains('sample-text-swiper')) {
+    currentTextNum.value = swiper.realIndex + 1;
   }
-})
-
-// File 데이터 중 샘플 데이터, 이미지 캡쳐 보여줄 확장자
-const isCaptureAndDetection = computed(() => {
-  if (props.fileFormat.toUpperCase() == 'PDF'
-  || props.fileFormat.toUpperCase() == 'JPEG'
-  || props.fileFormat.toUpperCase() == 'JPG'
-  || props.fileFormat.toUpperCase() == 'PNG'
-  || props.fileFormat.toUpperCase() == 'BMP'
-  || props.fileFormat.toUpperCase() == 'GIF'
-  || props.fileFormat.toUpperCase() == 'WEBP'
-  || props.fileFormat.toUpperCase() == 'CR2'
-  || props.fileFormat.toUpperCase() == 'NEF'
-  || props.fileFormat.toUpperCase() == 'TIFF'
-  || props.fileFormat.toUpperCase() == 'TIF'
-  || props.fileFormat.toUpperCase() == 'ARW'
-  || props.fileFormat.toUpperCase() == 'ORF'
-  || props.fileFormat.toUpperCase() == 'PSD'
-  || props.fileFormat.toUpperCase() == 'HEIF'
-  || props.fileFormat.toUpperCase() == 'HEIC'
-  || props.fileFormat.toUpperCase() == 'HDR')  {
-    return true
-  } else {
-    return false
-  }
-})
+};
 
 const selectImage = (base64Image) => {
   const screenWidth = window.screen.width

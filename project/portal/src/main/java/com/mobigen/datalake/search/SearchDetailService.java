@@ -47,7 +47,10 @@ import com.mobigen.framework.utility.MinioFactory;
 import com.mobigen.framework.utility.S3Url;
 
 import io.minio.GetObjectArgs;
+import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
+import io.minio.Result;
+import io.minio.messages.Item;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -485,8 +488,8 @@ public class SearchDetailService {
 
     public Map<String, Object> getSampleDataFile(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        Object sampleData = null;
-        Object sampleCaptureData = null;
+        Object sampleDatas = null;
+        Object sampleCaptureDatas = null;
         Integer num_rows = null;
 
         try {
@@ -503,73 +506,72 @@ public class SearchDetailService {
                 file_format = arr[arr.length - 1];
             }
 
-            // file_format의 확장자 구분
-            // hwp, hwpx
-            if (file_format.equalsIgnoreCase("HWP")
-            || file_format.equalsIgnoreCase("HWPX")) {
-                sample_share_url = sample_share_url_prefix + "/sample_data.txt";
-                S3Url sample_path = S3Url.parse(sample_share_url);
-                sampleData = this.readText(mf, sample_path);
-            } else if (file_format.equalsIgnoreCase("DOCX")
-            || file_format.equalsIgnoreCase("TXT")
-            || file_format.equalsIgnoreCase("XML")) {
-                try {
-                    sample_share_url = sample_share_url_prefix + "/sample_data.txt";
-                    S3Url sample_path = S3Url.parse(sample_share_url);
-                    sampleData = this.readText(mf, sample_path);
-                } catch (Exception e) {
-                    log.error("No sample data !!");
-                }
-                
-                try {
-                    sample_share_capture_url = sample_share_url_prefix + "/image_capture.jpeg";
-                    S3Url sample_capture_path = S3Url.parse(sample_share_capture_url);
-                    sampleCaptureData = this.readImg(mf, sample_capture_path);
-                } catch (Exception e) {
-                    log.error("No sample capture file !!");
-                }
-            } else if (file_format.equalsIgnoreCase("DOC")) {
-                sample_share_capture_url = sample_share_url_prefix + "/image_capture.jpeg";
-                S3Url sample_capture_path = S3Url.parse(sample_share_capture_url);
-                sampleCaptureData = this.readImg(mf, sample_capture_path);
-            } else if (file_format.equalsIgnoreCase("CSV")
-            || file_format.equalsIgnoreCase("XLSX")
-            || file_format.equalsIgnoreCase("XLS")
-            || file_format.equalsIgnoreCase("JSON")) {
+            // 1. CSV 파일인 경우 해당 디렉토리 내 sample_data_structured.csv 파일 읽기
+            if (file_format.equalsIgnoreCase("csv")) {
                 sample_share_url = sample_share_url_prefix + "/sample_data_structured.csv";
                 S3Url sample_path = S3Url.parse(sample_share_url);
-                sampleData = this.readCsv(mf, sample_path);
+                sampleDatas = this.readCsv(mf, sample_path);
                 num_rows = searchDetailMapper.getFileSampleCount(meta_id);
-            } else if (file_format.equalsIgnoreCase("PDF")
-            || file_format.equalsIgnoreCase("JPEG")
-            || file_format.equalsIgnoreCase("JPG")
-            || file_format.equalsIgnoreCase("PNG")
-            || file_format.equalsIgnoreCase("BMP")
-            || file_format.equalsIgnoreCase("GIF")
-            || file_format.equalsIgnoreCase("WEBP")
-            || file_format.equalsIgnoreCase("CR2")
-            || file_format.equalsIgnoreCase("NEF")
-            || file_format.equalsIgnoreCase("TIFF")
-            || file_format.equalsIgnoreCase("TIF")
-            || file_format.equalsIgnoreCase("ARW")
-            || file_format.equalsIgnoreCase("ORF")
-            || file_format.equalsIgnoreCase("PSD")
-            || file_format.equalsIgnoreCase("HEIF")
-            || file_format.equalsIgnoreCase("HEIC")
-            || file_format.equalsIgnoreCase("HDR")) {
-                sample_share_url = sample_share_url_prefix + "/image_capture.jpeg";
-                S3Url sample_path = S3Url.parse(sample_share_url);
-                sampleCaptureData = this.readImg(mf, sample_path);
+            } else { // 나머지 확장자
+                // 해당 디렉토리의 샘플데이터 확인
+                // 샘플데이터는 JPEG, TXT 2개로 구분하며, Minio에 없을 경우 null 처리
+                // JPEG의 경우 Minio 디렉토리에 2개 이상인 경우 모두 조회하도록 함
+                List<String> jpegKeys = new ArrayList<>();
+                List<String> txtKeys = new ArrayList<>();
+
+                Iterable<Result<Item>> results = mf.listObjects(
+                        ListObjectsArgs.builder()
+                                .bucket(S3Url.parse(sample_share_url_prefix).getBucket())
+                                .prefix(S3Url.parse(sample_share_url_prefix).getObject().replaceAll("/$", "") + "/")
+                                .recursive(true)
+                                .build());
+
+                for (Result<Item> resultItem : results) {
+                    Item item = resultItem.get();
+                    if (item.objectName().toLowerCase().endsWith(".jpeg")) {
+                        jpegKeys.add(item.objectName());
+                    } else if (item.objectName().toLowerCase().endsWith(".txt")) {
+                        txtKeys.add(item.objectName());
+                    }
+                }
+
+
+                // 샘플데이터가 있는 경우 2개 이상있으면 모두 읽어오기
+                for (int i=0; i<jpegKeys.size(); i++) {
+                    sample_share_capture_url = "s3://" + S3Url.parse(sample_share_url_prefix).getBucket() + "/" + jpegKeys.get(i);
+                    S3Url sample_capture_path = S3Url.parse(sample_share_capture_url);
+                    String sampleCaptureData = this.readImg(mf, sample_capture_path);
+                    if (sampleCaptureDatas == null) {
+                        sampleCaptureDatas = new ArrayList<String>();
+                    }
+                    ((List<String>)sampleCaptureDatas).add(sampleCaptureData);
+                }
+
+                for (int i=0; i<txtKeys.size(); i++) {
+                    sample_share_url = "s3://" + S3Url.parse(sample_share_url_prefix).getBucket() + "/" + txtKeys.get(i);
+                    S3Url sample_path = S3Url.parse(sample_share_url);
+                    Object sampleData = null;
+                    if (txtKeys.get(i).toLowerCase().endsWith(".csv")) {
+                        sampleData = this.readCsv(mf, sample_path);
+                        num_rows = searchDetailMapper.getFileSampleCount(meta_id);
+                    } else {
+                        sampleData = this.readText(mf, sample_path);
+                    }
+                    if (sampleDatas == null) {
+                        sampleDatas = new ArrayList<Object>();
+                    }
+                    ((List<Object>)sampleDatas).add(sampleData);
+                }
             }
 
-            result.put("sampleData", sampleData);
-            result.put("sampleCaptureData", sampleCaptureData);
+            result.put("sampleData", sampleDatas);
+            result.put("sampleCaptureData", sampleCaptureDatas);
             result.put("sampleTotal", num_rows);
         } catch (Exception e) {
             log.error("fail to load sampleDataFile !!");
             log.error(e.getMessage());
-            result.put("sampleData", sampleData);
-            result.put("sampleCaptureData", sampleCaptureData);
+            result.put("sampleData", sampleDatas);
+            result.put("sampleCaptureData", sampleCaptureDatas);
             result.put("sampleTotal", num_rows);
         }
         return result;

@@ -740,7 +740,6 @@ const getSampleData = () => {
         method: "POST",
         body: params,
       }).then((res) => {
-        console.log(res)
         if (res && res.data) {
           sampleData.value = res.data.sampleData ? res.data.sampleData : []
           sampleTotal.value = res.data.sampleTotal

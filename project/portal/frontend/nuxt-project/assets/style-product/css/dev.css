@@ -661,3 +661,12 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 /* .release-status.public {background-color:#e0e1f6; color:#4e39f1;}
 .release-status.private {background-color:#f9e4e6; color:#e92c3b;}
 .release-status.secret {background-color:#eaeaee; color:#656d78;} */
+
+/* 샘플데이터 이미지 슬라이드 */
+.sample-image-swiper {flex:1 1 0%; overflow:hidden; position:relative; min-width: 100%; max-width: 300px;}
+.sample-image-swiper .swiper-slide {display:flex; justify-content:space-between; align-items:center; flex-shrink:10; width:100%; height:100%; transition-property:transform;}
+.sample-image-swiper .swiper-slide a:not(:only-child) {display:inline-block; overflow:hidden; max-width:calc(100% - 100px); line-height:32px; vertical-align:top; text-overflow:ellipsis; white-space:nowrap;}
+
+.sample-text-swiper {flex:1 1 0%; overflow:hidden; position:relative; min-width: 100%; max-width: 1000px;}
+.sample-text-swiper .swiper-slide {display:flex; flex-shrink:0; width:100%; height:100%; transition-property:transform;}
+.sample-text-swiper .swiper-slide a:not(:only-child) {display:inline-block; overflow:hidden; max-width:calc(100% - 100px); line-height:32px; vertical-align:top; text-overflow:ellipsis; white-space:nowrap;}
