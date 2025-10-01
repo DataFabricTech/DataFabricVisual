@@ -179,9 +179,7 @@ const currentTextNum = ref(1);
 
 // File 데이터 중 테이블처럼 보여줄 데이터 확장자
 const isStructureData = computed(() => {
-  if (props.fileFormat.toUpperCase() == 'CSV'
-  || props.fileFormat.toUpperCase() == 'XLSX'
-  || props.fileFormat.toUpperCase() == 'XLS')  {
+  if (props.fileFormat.toUpperCase() == 'CSV')  {
     return true
   } else {
     return false
