@@ -682,3 +682,14 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
   margin-bottom: 5px;
   user-select: text;
 }
+
+.scrollable-pre-center {
+  height: 422px;            /* 고정 높이 */
+  overflow-y: auto;         /* 세로 스크롤 활성화 */
+  overflow-x: auto;         /* 긴 코드 줄이 잘리지 않도록 가로 스크롤 */
+  white-space: pre-wrap;    /* 필요 시 줄바꿈 허용 (기본 pre는 줄 안바꿈) */
+  padding: 10px;
+  margin-bottom: 5px;
+  user-select: text;
+  background-color: #fdfdfd
+}

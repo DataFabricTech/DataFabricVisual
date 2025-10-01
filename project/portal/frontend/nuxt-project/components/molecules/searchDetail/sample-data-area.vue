@@ -69,8 +69,7 @@
                   :slides-per-view="1"
                   >
                   <swiper-slide v-for="(data, idx) in sampleData" :key="idx">
-                    <pre v-if="props.fileFormat.toUpperCase() === 'JSON'" class="scrollable-pre">{{ data }}</pre>
-                    <p v-else style="margin: 5px;">{{ data }}</p>
+                    <pre class="scrollable-pre">{{ data }}</pre>
                   </swiper-slide>
                 </swiper>
                 <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
@@ -104,7 +103,7 @@
                   style="max-width: 1300px"
                   >
                   <swiper-slide class="sample-slide" v-for="(data, idx) in sampleData" :key="idx">
-                    <p style="margin: 5px;">{{ data }}</p>
+                    <pre class="scrollable-pre-center">{{ data }}</pre>
                   </swiper-slide>
                 </swiper>
                 <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
