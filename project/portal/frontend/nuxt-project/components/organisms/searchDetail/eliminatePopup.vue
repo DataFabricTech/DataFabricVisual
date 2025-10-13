@@ -563,6 +563,7 @@ const fnWhereQueryMake = () => {
               filterLogic.value +
               " " +
               element.filterHeader +
+              " " +
               "IS NOT NULL" +
               " ";
           } else {
@@ -897,6 +898,9 @@ const onClickFileEliminateButton = async () => {
       download_type: 0, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
       description: description,
     };
+
+    console.log("============")
+    console.log(queryWhere.value)
 
     await insertDownloadHistory(historyParams);
 
