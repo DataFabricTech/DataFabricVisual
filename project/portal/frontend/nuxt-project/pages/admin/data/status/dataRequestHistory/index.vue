@@ -108,15 +108,15 @@ const searchObj = ref({
       "description": "사용자ID"
     },
     {
-      "name": "username",
+      "name": "user_name",
       "description": "사용자명"
     },
     {
-      "name": "dept_cd",
+      "name": "dept_id",
       "description": "조직ID"
     },
     {
-      "name": "dept_nm",
+      "name": "dept_name",
       "description": "조직명"
     }],
   searchType: "all",
