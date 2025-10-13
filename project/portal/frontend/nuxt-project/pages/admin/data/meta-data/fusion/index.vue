@@ -606,7 +606,7 @@
                       <input type="text" placeholder="" class="mu-input"
                         :title="meta_type" v-model="meta_type" maxlength="100" readonly/>
                     </td>
-                    <th scope="row">데이터베이스 명<strong class="required">필수</strong></th>
+                    <th scope="row">카탈로그 명<strong class="required">필수</strong></th>
                     <td>
                       <input type="text" placeholder="" class="mu-input"
                         :title="catalog" v-model="catalog" maxlength="100" readonly/>
