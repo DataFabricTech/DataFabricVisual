@@ -11,10 +11,21 @@
               <div class="login-box">
                 <div class="mu-input-id">
                   <label for="uid">아이디</label>
-                  <input class="mu-input" type="text" id="user_id" v-model="user_id" maxlength="15" required
-                    placeholder="아이디를 입력해주세요." oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')" />
+                  <input
+                    class="mu-input"
+                    type="text"
+                    id="user_id"
+                    v-model="user_id"
+                    maxlength="15"
+                    required
+                    placeholder="아이디를 입력해주세요."
+                    @input="filterInput"
+                  />
                   <button v-if="user_id != ''" type="button" class="mu-btn mu-btn-delete" v-on:click="user_id = ''"><i
                       class="mu-icon-svg item-delete"></i><span>아이디 삭제</span></button>
+                  <p v-if="showWarning" class="complete-msg error">
+                    영문과 숫자만 입력 가능합니다.
+                  </p>
                 </div>
                 <div class="mu-input-pw">
                   <label for="upw">비밀번호</label>
@@ -67,6 +78,7 @@ const emit = defineEmits(['login', 'toggleRegisterForm'])
 const user_id = ref("")
 const password = ref("")
 const isShowPassword = ref(false)
+const showWarning = ref(false)
 
 const onLogin = () => {
   const params = {
@@ -89,5 +101,15 @@ onMounted(() => {
   }
 });
 
+const filterInput = (e) => {
+  const original = e.target.value
+  const filtered = original.replace(/[^a-zA-Z0-9]/g, '')
+
+  // 한글이나 특수문자가 입력되었는지 확인
+  showWarning.value = original !== filtered
+
+  // 필터링된 값 반영
+  user_id.value = filtered
+}
 
 </script>

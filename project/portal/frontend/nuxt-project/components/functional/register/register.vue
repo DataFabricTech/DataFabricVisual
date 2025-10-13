@@ -30,9 +30,17 @@
                   <div><label for="ruid">아이디<strong class="required">필수</strong>
                       <div style="display: inline;"></div>
                     </label></div>
-                  <input v-bind:class="[!reg_userid_valid ? 'error' : '', 'mu-input']" type="text"
-                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')" id="reg_userid" name="reg_userid"
-                    v-model="reg_userid" maxlength="15" required placeholder="아이디를 입력해주세요." />
+                  <input
+                    :class="['mu-input', !reg_userid_valid ? 'error' : '']"
+                    type="text"
+                    id="reg_userid"
+                    name="reg_userid"
+                    v-model="reg_userid"
+                    maxlength="15"
+                    required
+                    placeholder="아이디를 입력해주세요."
+                    @input="handleUserIdInput"
+                  />
                   <button v-if="reg_userid != ''" type="button" class="mu-btn mu-btn-delete"
                     v-on:click="reg_userid = ''"><i class="mu-icon-svg item-delete"></i>
                     <span>아이디 삭제</span>
@@ -40,7 +48,10 @@
                   <button type="button" class="mu-btn" @click="checkDupUserId"
                     style="bottom: 10px"><span>중복확인</span></button>
                 </div>
-                <p v-if="!reg_userid_valid" class="complete-msg error">아이디를 입력해주세요.</p>
+                <p v-if="showLangWarning" class="complete-msg error">
+                  영문과 숫자만 입력 가능합니다.
+                </p>
+                <p v-else-if="!reg_userid_valid" class="complete-msg error">아이디를 입력해주세요.</p>
                 <div class="mu-input-pw">
                   <label for="rupw">비밀번호<strong class="required">필수</strong></label>
                   <input v-bind:class="[!reg_password_valid ? 'error' : '', 'mu-input']"
@@ -134,6 +145,7 @@ const isShowPassword = ref(false)
 const isShowPasswordOk = ref(false)
 const reg_userdeptId = ref("")
 const reg_userdeptNm = ref("")
+const showLangWarning = ref(false)
 
 const reg_username_valid: ComputedRef<boolean> = computed(() => {
   return reg_username.value.length > 0 ? true : false;
@@ -220,4 +232,20 @@ const onSelectDept = (info) => {
   reg_userdeptNm.value = info.dept_nm;
   reg_userdeptId.value = info.dept_cd;
 };
+
+const handleUserIdInput = (e) => {
+  const value = e.target.value
+
+  // 한글 포함 여부 확인
+  const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value)
+
+  // 영문/숫자만 남기기
+  const filtered = value.replace(/[^a-zA-Z0-9]/g, '')
+
+  // 한글 입력 시 경고 표시
+  showLangWarning.value = hasKorean
+
+  // 필터링된 값 반영
+  reg_userid.value = filtered
+}
 </script>
