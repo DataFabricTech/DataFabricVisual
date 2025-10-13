@@ -691,3 +691,11 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
   margin-bottom: 5px;
   background-color: #fdfdfd
 }
+
+.sampledata-image {
+  width: 300px;
+  height: 300px;
+  filter: brightness(0.99);
+  object-fit:contain;
+  /* border: 1px solid #ccc; */
+}

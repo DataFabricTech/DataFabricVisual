@@ -56,7 +56,7 @@
                   :slides-per-view="1"
                   >
                   <swiper-slide v-for="(image, idx) in sampleCaptureData" :key="idx">
-                    <img :src="'data:image/jpeg;base64,' + image" style="width: 300px; filter: brightness(0.99); object-fit:contain;" @click="selectImage(image)"/>
+                    <img :src="'data:image/jpeg;base64,' + image" @click="selectImage(image)" class="sampledata-image"/>
                   </swiper-slide>
                 </swiper>
                 <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
@@ -85,7 +85,7 @@
                   :slides-per-view="1"
                   >
                   <swiper-slide v-for="(image, idx) in sampleCaptureData" :key="idx">
-                    <img :src="'data:image/jpeg;base64,' + image" style="width: 300px; filter: brightness(0.99); object-fit:contain;" @click="selectImage(image)"/>
+                    <img :src="'data:image/jpeg;base64,' + image" class="sampledata-image" @click="selectImage(image)"/>
                   </swiper-slide>
                 </swiper>
                 <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
