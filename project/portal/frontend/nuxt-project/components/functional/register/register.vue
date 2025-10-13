@@ -211,6 +211,7 @@ const validateEmail = (email) => {
 }
 
 const checkDupUserId = () => {
+  showLangWarning.value = false
   emit('checkDupUserId', reg_userid.value)
 }
 
