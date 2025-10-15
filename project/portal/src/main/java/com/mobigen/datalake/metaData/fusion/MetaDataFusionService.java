@@ -56,6 +56,16 @@ public class MetaDataFusionService {
     @Value("${properties.catalog-api.url.profile.default}")
     private String catalogApiUrlProfile;
 
+    @Value("${properties.dataintegration.base_url}")
+    private String dataIntegrationBaseUrl;
+
+    @Value("${properties.dataintegration.url.predataintegration}")
+    private String dataIntegrationBaseUrlPredaIntegration;
+
+    @Value("${properties.dataintegration.url.confirmdataintegration}")
+    private String dataIntegrationBaseUrlConfirmDataIntegration;
+
+
     // 데이터 융합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataFusionList(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -99,119 +109,43 @@ public class MetaDataFusionService {
         try {
             // 샘플 데이터 조회 쿼리 제작
             String query = params.get("query").toString();
-            String countQuery = "SELECT COUNT(*) FROM (" + query + ") T";
-            String sampleQuery = query + " LIMIT 100";
             if (!query.equals("")) {
-                Connection connection = null;
-                Statement statement = null;
-                ResultSet rs = null;
-                try {
+                // 쿼리 실행 API 호출
+                Map<String, Object> executeBody = new HashMap<>();
+                executeBody.put("query", params.get("query").toString());
+                executeBody.put("system_infos", params.get("system_infos"));
+                executeBody.put("user_id", params.get("user_id").toString());
+                Map<String, Object> queryExecuteResult = queryExecute(executeBody);
 
-                    Properties properties = new Properties();
-                    properties.setProperty("SSL", "false");
-                    properties.setProperty("user", params.get("user_id").toString());
-                    // properties.setProperty("password", "secret");
-
-                    // 샘플데이터 조회를 위한 정보 조회
-                    connection = DriverManager.getConnection(trinoJdbcUrl, properties);
-
-                    statement = connection.createStatement();
-                    // 샘플데이터 카운트
-                    rs = statement.executeQuery(countQuery);
-
-                    String col;
-                    while(rs.next()) {
-                      ResultSetMetaData md = rs.getMetaData();
-                      int soc = md.getColumnCount();
-                      for (int indexOfColumn = 0; indexOfColumn < soc; indexOfColumn++) {
-                          col = md.getColumnName(indexOfColumn + 1);
-                          totalCount = Integer.parseInt(rs.getString(col));
-                      }
-                    }
-                    
-                    rs = statement.executeQuery(sampleQuery);
-
-                    ResultSetMetaData metaData = rs.getMetaData();
-
-                    Set<String> seen = new HashSet<>();
-                    List<String> duplicates = new ArrayList<>();
-                    
-                    for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                        String colName = metaData.getColumnLabel(i);
-                        if (!seen.add(colName)) {
-                            duplicates.add(colName);
+                String status_code = queryExecuteResult.get("status_code").toString();
+                if (status_code.equals("200")) {
+                    Map<String, Object> res = (Map<String, Object>) queryExecuteResult.get("result");
+                    if (res != null && res.size() > 0) {
+                        if (res.get("count") != null) {
+                            totalCount = Integer.parseInt(res.get("count").toString());
+                        }
+                        if (res.get("query") != null) {
+                            result.put("query", res.get("query").toString());
+                        }
+                        if (res.get("params") != null) {
+                            result.put("params", res.get("params").toString());
+                        }
+                        if (res.get("query_result_sample") != null) {
+                            list = (List<Map>) res.get("query_result_sample");
                         }
                     }
-
-                    if (!duplicates.isEmpty()) {
-                        throw new Exception("Query Failed - Column Duplicated: " + String.join(", ", duplicates));
-                    }
-
-
-                    int sizeOfColumn = metaData.getColumnCount(); // 컬럼 수
-                    // 메타데이터에서 컬럼명 추출
-                    Set<String> columnNames = new HashSet();
-                    for (int i = 1; i <= sizeOfColumn; i++) {
-                        columnNames.add(metaData.getColumnName(i));
-                    }
-
-                    result.put("columnNames" , columnNames);
-
-                    String column;
-                    while (rs.next()) {
-                        Map<String, Object> columnMap = new LinkedHashMap<>();
-                        for (int indexOfColumn = 0; indexOfColumn < sizeOfColumn; indexOfColumn++) {
-                            column = metaData.getColumnName(indexOfColumn + 1);
-
-                            columnMap.put(column, rs.getString(column));
+                    resultData = (Map<String, Object>) queryExecuteResult.get("result");
+                    if (resultData != null && resultData.size() > 0) {
+                        if (resultData.get("data") != null) {
+                            list = (List<Map>) resultData.get("data");
                         }
-                        list.add(columnMap);
-                    }
-
-                    rs.close();
-                    statement.close();
-                    connection.close();
-                } catch (Exception e) {
-                    String errorMessage = "데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
-                    // 권한 문제
-                    if (e.getMessage().toUpperCase().indexOf("ACCESS DENIED") != -1) {
-                        errorMessage = "데이터 조회 권한이 없습니다.";
-                    }
-                    // 쿼리 문제
-                    else if (e.getMessage().toUpperCase().indexOf("QUERY FAILED") != -1) {
-                        errorMessage = "쿼리가 잘못되었습니다.";
-                        if (e.getMessage().indexOf("COLUMN DUPLICATED") != -1) {
-                            // : 뒤에 오는 값만 추출
-                            String[] parts = e.getMessage().split(":", 2);  // 2개로만 split
-                            if (parts.length > 1) {
-                                String afterColon = parts[1].trim();
-                                errorMessage = "컬럼명이 중복되었습니다: " + afterColon;
-                            }
-                        }                        
-                    } else {
-                        errorMessage = "데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
-                    }
-                    result.put("errorMessage", errorMessage);
-                    e.printStackTrace();
-                } finally {
-                    if (rs != null)
-                        try {
-                            rs.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (resultData.get("totalCount") != null) {
+                            totalCount = Integer.parseInt(resultData.get("totalCount").toString());
                         }
-                    if (statement != null)
-                        try {
-                            statement.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    if (connection != null)
-                        try {
-                            connection.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    }
+                } else {
+                    log.error("Fail to execute query !!");
+                    result.put("errorMessage", "쿼리가 잘못되었습니다.");
                 }
             }
         } catch (Exception e) {
@@ -235,10 +169,7 @@ public class MetaDataFusionService {
 
     public Map<String, Object> saveFusionMetaData(Map<String, Object> metadata, Map<String, Object> user) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        Integer saveEventResult = 0; // event log 저장 성공 여부
         boolean createViewResult = false; // View 생성 성공 여부
-        Integer saveMetadataResult = 0; // 메타데이터 테이블 저장 성공 여부
-        boolean executeResult = false; // 메타데이터 수동수집 실행 여부
         
         try {            
             // 1. event_log 저장
@@ -250,12 +181,6 @@ public class MetaDataFusionService {
             eventParam.put("meta_id", metadata.get("meta_id"));
             eventParam.put("meta_name", metadata.get("meta_name"));
             eventParam.put("qualified_name", metadata.get("qualified_name"));
-            saveEventResult = metaDataFusionMapper.saveEvent(eventParam);
-            if (saveEventResult != null && saveEventResult > 0) {
-                log.info("event log saved !!");
-            } else {
-                log.error("event log not saved !!");
-            }
 
             String dateString = metadata.get("create_time") != null ? metadata.get("create_time").toString() : "";
             // LocalDateTime 변환
@@ -281,159 +206,27 @@ public class MetaDataFusionService {
             }
             metadata.put("tags", tags);
             
-            // jsonb 타입은 Map -> JSON형태의 String값으로 변환 필요 넣어줘야함.
-            metadata.put("attributes", objectMapper.writeValueAsString(metadata.get("attributes")));
-            metadata.put("business_attributes", objectMapper.writeValueAsString(metadata.get("business_attributes")));
-            
-            // 2. 융합데이터 생성을 위한 CREATE VIEW 수행
-            // internalhive.internalhive.default.fusion_test_1
-            String[] queryStrSplit = metadata.get("qualified_name").toString().split("\\.");
-            String system_id = queryStrSplit[0];
-            String catalog = queryStrSplit[1];
-            String tableSchema = queryStrSplit[2];
-            String tableName = queryStrSplit[3];
+            // 2. 융합데이터 생성 API 호출
+            Map<String, Object> confirmIntegrationBody = new HashMap<>();
+            confirmIntegrationBody.put("event_info", eventParam);
+            confirmIntegrationBody.put("meta_info", metadata);
 
-            String createViewQuery = "";
-            if (metadata.get("query") != null && !"".equals(metadata.get("query").toString())) {
-                createViewQuery = "CREATE VIEW \"" + metadata.get("system_id").toString() + "\".\"default\".\"" + metadata.get("meta_name").toString()
-                + "\" AS SELECT * FROM (" + metadata.get("query").toString() + ") VT";
-
-                createViewQuery = createViewQuery.replaceAll("\\r?\\n", " ");
-            }
-             
-            log.info("== create view query ==");
-            log.info(createViewQuery);
-            // Trino CREATE VIEW 수행
-            if (!createViewQuery.equals("")) {
-                Connection connection = null;
-                Statement statement = null;
-                ResultSet rs = null;
-                try {
-
-                    Properties properties = new Properties();
-                    properties.setProperty("SSL", "false");
-                    // properties.setProperty("user", params.get("user_id").toString());
-                    // properties.setProperty("password", "secret");
-
-                    // 융합 데이터 저장을 위한 시스템 정보 조회
-                    String connectionUrl = "";
-                    Map<String, Object> dbInfo = searchDetailMapper.getDbInfo(system_id);
-                    if (dbInfo != null) {
-                        properties.setProperty("user", "admin");
-                        // properties.setProperty("password", dbInfo.get("password").toString());
-                        connectionUrl = trinoJdbcUrl + dbInfo.get("system_id").toString().toLowerCase() + "/"
-                                + dbInfo.get("catalog");
-                    }
-
-                    if (connectionUrl == null || connectionUrl.equals("")) {
-                        return null;
-                    }
-                    connection = DriverManager.getConnection(connectionUrl, properties);
-
-                    statement = connection.createStatement();
-                    statement.executeUpdate(createViewQuery);
-                    createViewResult = true;
-
-                    result.put("createViewResult", createViewResult);
-
-                } catch (Exception e) {
-                    String errorMessage = "";
-                    // 권한 문제
-                    if (e.getMessage().indexOf("Access Denied") != -1) {
-                        errorMessage = "권한이 없습니다.";
-                    }
-                    // 쿼리 문제
-                    else if (e.getMessage().indexOf("Query failed") != -1) {
-                        if (e.getMessage().indexOf("Column name") != -1 && e.getMessage().indexOf("specified more than once") != -1) {
-                            Pattern p = Pattern.compile("'([^']+)'");
-                            Matcher m = p.matcher(e.getMessage());
-
-                            if (m.find()) {
-                                String columnName = m.group(1);
-                                errorMessage = "'" + columnName + "' 컬럼명이 중복되어 융합 데이터 생성에 실패하였습니다.";
-                            }
-                        } else {
-                            errorMessage = "쿼리에 실패하였습니다.";
-                        }
-                    } else {
-                        errorMessage = "융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
-                    }
-                    result.put("errorMessage", errorMessage);
-                    e.printStackTrace();
-                } finally {
-                    if (rs != null)
-                        try {
-                            rs.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    if (statement != null)
-                        try {
-                            statement.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    if (connection != null)
-                        try {
-                            connection.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                }
-
-                if (createViewResult) {
-                    // 3. 메타데이터 테이블에 저장
-                    saveMetadataResult = metaDataFusionMapper.saveMetadata(metadata);
-                    if (saveMetadataResult != null && saveMetadataResult > 0) {
-                        log.info("metadata saved !! !!");
-                        // ESSync release 갱신
-                        Map<String, Object> essyncParams = new HashMap<>();
-                        String meta_id = metadata.get("meta_id").toString();
-                        essyncParams.put("metaid", meta_id);
-                        essyncParams.put("event_status", 2);
-                        essyncParams.put("event_name", "데이터 권한설정 변경");
-                        essyncUpdate(essyncParams);
-
-                        Map<String, Object> executeBody = new HashMap<>();
-                        executeBody.put("system_id", metadata.get("system_id").toString());
-                        executeBody.put("meta_name", metadata.get("meta_name").toString());
-
-                        Map<String, Object> resMap = (Map<String, Object>) executeCollect(executeBody);
-                        if (resMap != null && (boolean)(resMap.get("executeResult"))) {
-                            log.info("success to run collect !!");    
-                            executeResult = true;
-                            // 테이블 프로파일링 요청
-                            executeBody.put("profile_type", "table");
-                            executeProfile(executeBody);
-
-                            executeBody.put("profile_type", "column");
-                            // 컬럼 프로파일링 요청
-                            executeProfile(executeBody);
-                        } else {
-                            log.error("fail to run collect !!");
-                            executeResult = false;
-                        }
-                    } else {
-                        log.error("metadata not saved !!");
-                    }
-                } else {
-                    log.error("fail to create view !!");
-                }
-
-                
+            Map<String, Object> confirmIntegrationResult = confirmIntegration(confirmIntegrationBody);
+            String status_code = confirmIntegrationResult.get("status_code").toString();
+            if (status_code.equals("200")) {
+                Map<String, Object> res = (Map<String, Object>) confirmIntegrationResult.get("result");
+                createViewResult = true;
             } else {
-                log.info("no query for create view !!");
+                log.error("Fail to execute query !!");
+                result.put("errorMessage", "쿼리가 잘못되었습니다.");
             }
 
-            result.put("executeResult", executeResult);
-            result.put("saveEventCount", saveEventResult);
-            result.put("saveMetadataCount", saveMetadataResult);
+            result.put("createViewResult", createViewResult);
             
         } catch (Exception e) {
             log.error("save fusion metadata Exception");
             e.printStackTrace();
-            result.put("saveEventCount", saveEventResult);
-            result.put("saveMetadataCount", saveMetadataResult);
+            result.put("createViewResult", false);
         }
         
         return result;
@@ -622,5 +415,60 @@ public class MetaDataFusionService {
         }
 
         return false;
+    }
+
+    // 쿼리 실행 POST
+    public Map<String, Object> queryExecute(Map<String, Object> executeBody) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        String status_code = "";
+        Map<String, Object> result = new HashMap<>();
+        RestTemplate restTemplate = new RestTemplate();
+
+        String executeUrl = dataIntegrationBaseUrl + dataIntegrationBaseUrlPredaIntegration;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        
+        requestBody.put("query", executeBody.get("query").toString());
+        requestBody.put("system_infos", executeBody.get("system_infos"));
+        requestBody.put("user_id", executeBody.get("user_id")); 
+
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+            if (responseEntity.getBody() != null) {
+                status_code = responseEntity.getBody().get("status_code").toString();
+                result = (Map<String, Object>) responseEntity.getBody().get("result");
+            }
+        }
+
+        resultMap.put("status_code", status_code);
+        resultMap.put("result", result);
+        return resultMap;
+    }
+
+    // 융합 데이터 생성 POST
+    public Map<String, Object> confirmIntegration(Map<String, Object> executeBody) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        String status_code = "";
+        Map<String, Object> result = new HashMap<>();
+        RestTemplate restTemplate = new RestTemplate();
+
+        String executeUrl = dataIntegrationBaseUrl + dataIntegrationBaseUrlConfirmDataIntegration;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        
+        requestBody.put("event_info", executeBody.get("event_info"));
+        requestBody.put("meta_info", executeBody.get("meta_info"));
+
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+            if (responseEntity.getBody() != null) {
+                status_code = responseEntity.getBody().get("status_code").toString();
+                result = (Map<String, Object>) responseEntity.getBody().get("result");
+            }
+        }
+
+        resultMap.put("status_code", status_code);
+        resultMap.put("result", result);
+        return resultMap;
     }
 }

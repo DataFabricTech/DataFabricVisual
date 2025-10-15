@@ -696,6 +696,8 @@ const visibleFusionSaveModal = ref(false) // 융합 데이터 저장 모달
 
 const isExecuteQuery = ref(false) // 쿼리 실행 여부
 const query = ref("")
+const executedQuery = ref("") // 쿼리 실행 후 전달받은 쿼리
+const queryParam = ref({}); // 쿼리 실행 후 전달받은 Where 쿼리 파라미터
 const editorOptions = { // Monaco Editor options 설정
   theme: "vs",
   language: "sql", // SQL 구문 강조
@@ -1065,44 +1067,8 @@ const selectFusion = (item) => {
     currentMetaColumns.value = []
   }
 
-  // 조회할 데이터명 복사 (system_id.database.meta_name)
-  const system_id = item.system_id ? item.system_id : "-"
-  const system_type = item.system_type
-  const database = item.database ? item.database : "-"
-  const schema = item.schema ? item.schema : "-"
-  const meta_name = item.meta_name ? item.meta_name : "-"
-  const meta_type = item.meta_type
-
-  // Trino
-  // - DB: {system_id}.{database or schema}.{table_name}
-  // MySQL, MariaDB, Hive는 database
-  // Postgresql은 schema로 입력
-
-  // - Storage: {system_id}.{bucket_name}.{data_name}
-
-  let codeContent = ""
-  if (meta_type.toUpperCase() == 'FILE') {
-    let file_system_id = item.qualified_name.split(".")[0]
-    let file_bucket_name = item.qualified_name.split(".")[1]
-    codeContent = `"${file_system_id}"."${file_bucket_name}"."${meta_name}"`
-  } else if (system_type.toUpperCase() == 'ALTIBASE'
-  || system_type.toUpperCase() == 'ORACLE'
-  || system_type.toUpperCase() == 'POSTGRES'
-  || system_type.toUpperCase() == 'POSTGRESQL'
-  || system_type.toUpperCase() == 'MSSQL') {
-    codeContent = `"${system_id}"."${schema}"."${meta_name}"`;
-  } else if (system_type.toUpperCase() == 'DRUID') {
-    let druid_schema = item.qualified_name.split(".")[2]
-    codeContent = `"${system_id}"."${druid_schema}"."${meta_name}"`;
-  } else if (system_type.toUpperCase() == 'TIBERO') {
-    let tibero_database = item.qualified_name.split(".")[2]
-    codeContent = `"${system_id}"."${tibero_database}"."${meta_name}"`;
-  } else if (system_type.toUpperCase() == 'TRINO') {
-    let trino_schema = item.qualified_name.split(".")[2]
-    codeContent = `"${system_id}"."${trino_schema}"."${meta_name}"`;
-  } else {
-    codeContent = `"${system_id}"."${database}"."${meta_name}"`;
-  }
+  const meta_id = item.meta_id ? item.meta_id : "-"
+  let codeContent = `"${meta_id}"`
 
   query.value += codeContent
 }
@@ -1121,11 +1087,23 @@ const executeQuery = async () => {
 
   // 3. 쿼리 실행 결과 응답
   if (query.value && query.value.length > 0) {
+    const system_infos = currentFusionList.value.map(item => {
+      return {
+        meta_id: item.meta_id,
+        data_name: item.meta_name,
+        system_id: item.system_id,
+        database_name: item.database,
+        schema_name: item.schema,
+      }
+    })
+
     const params = {
-      query: sql
+      query: sql,
+      system_infos: system_infos
     }
 
     await $ofetch(`/api/metadata/fusion/executeQuery`, { method: 'POST', body: params}).then((res) => {
+      console.log(res)
       if (res && res.data) {
         if (res.data.errorMessage && res.data.errorMessage != "") {
           defaultAlert(res.data.errorMessage);
@@ -1142,6 +1120,8 @@ const executeQuery = async () => {
         fusionSampleTotal.value = res.data.sampleDataTotal ? res.data.sampleDataTotal : '-'
         execute_duration.value = res.data.execute_duration ? res.data.execute_duration : '-'
         execute_start_time.value = res.data.execute_start_time ? res.data.execute_start_time : '-'
+        executedQuery.value = res.data.query
+        queryParam.value = res.data.params
 
         // 컬럼명 전체
         if (fusionSampleList.value.length > 0) all_columns.value = Object.keys(fusionSampleList.value[0])
@@ -1242,33 +1222,22 @@ const onClickSaveButton = async () => {
       tags: tags.value,
       status: "ACTIVE",
       release: currentAuthType.value ? currentAuthType.value : 0,
-      query: query.value.replace(/;+$/, ""),
+      query: executedQuery.value,
+      query_param: queryParam.value,
       columnNames: fusionSampleColumnNames.value.join(",")
     }
 
+    console.log(body)
     // 1. event log, 초기 metadata 저장
     await $ofetch(`/api/metadata/fusion/saveFusionMetaData`, { method: 'POST', body: body}).then(async (saveRes) => {
       console.log(saveRes)
       // event, metadata 저장 성공
       if (saveRes && saveRes.data) {
         if (!saveRes.data.createViewResult) {
-          if (saveRes.data.errorMessage) {
-            await defaultAlert(saveRes.data.errorMessage)
-          } else {
             await errorAlert("융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-          }
-
         } else {
-          if (saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
-            await successAlert("융합 데이터가 저장되었습니다.")
-            goToMetaDataManage()
-          } else {
-            if (!saveRes.data.executeResult) {
-              await errorAlert("융합 데이터 수집에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-            } else {
-              await errorAlert("융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-            }
-          }
+          await successAlert("융합 데이터가 저장되었습니다.")
+          goToMetaDataManage()
         }
       } else {
         errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
