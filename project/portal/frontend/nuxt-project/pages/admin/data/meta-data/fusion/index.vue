@@ -309,7 +309,7 @@
       <div class="mu-modal" v-if="visibleSystemModal">
         <div class="mu-dialog-background"></div>
 
-        <div :class="['mu-dialog', 'w1200']">
+        <div :class="['mu-dialog', 'w1300']">
           <div class="mu-dialog-head">
             <p class="title">데이터 정보</p>
           </div>
