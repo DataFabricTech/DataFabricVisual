@@ -358,19 +358,15 @@ public class MetaDataStandardService {
     public Map<String, Object> updateTermDomain(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
         Integer updateResult = 0;
-        Integer domainUpdateResult = 0;
         Integer domainCreateResult = 0;
 
         try {
-            // 1. 용어의 도메인 내용 수정
-            updateResult = metaDataStandardMapper.updateTermDomain(params);
-
             // 2. 수정하면서 생성된 도메인 등록
             // 2-1. 동일한 도메인 명 존재하면 그대로 두기
             Integer dupCnt = 0;
-            String origin_domain = params.get("origin_domain") != null ? params.get("origin_domain").toString() : "";
-            if (!origin_domain.equals("")) {
-                dupCnt = metaDataStandardMapper.dupCheckDomainName(origin_domain);
+            String domain = params.get("domain") != null ? params.get("domain").toString() : "";
+            if (!domain.equals("")) {
+                dupCnt = metaDataStandardMapper.dupCheckDomainName(domain);
                 if (dupCnt != null && dupCnt > 0) {
                 } else { // 신규 등록
                     Map<String, Object> domainParams = this.makeDomainParamByDomainName(params.get("domain").toString());
@@ -383,11 +379,18 @@ public class MetaDataStandardService {
                 domainCreateResult = metaDataStandardMapper.createTermDomain(domainParams);
             }
 
-            if ((updateResult != null && updateResult > 0)
-            && ((domainUpdateResult != null && domainUpdateResult > 0) || (domainCreateResult != null && domainCreateResult > 0))) {
-                result.put("result", true);
-            } else {
+            // 도메인 신규 추가된 경우
+            if (domainCreateResult != null && domainCreateResult > 0) {
+                result.put("message", "신규 도메인을 생성하여 도메인이 수정되었습니다.");
+                // 1. 용어의 도메인 내용 수정
+                updateResult = metaDataStandardMapper.updateTermDomain(params);
+                if (updateResult != null && updateResult > 0) {
+                    result.put("result", true);
+                }
+            } else { // 기존 도메인이 존재하는 경우
                 result.put("result", false);
+                result.put("message", "도메인이 수정되었습니다.");
+                updateResult = metaDataStandardMapper.updateTermDomain(params);
             }
         } catch (Exception e) {
             result.put("result", false);

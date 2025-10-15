@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { confirmAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
+import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
 import { useUserStore } from "@/store/user";
 import _ from 'lodash';
 import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
@@ -296,14 +296,19 @@ const onClickSaveButton = async () => {
         method: 'POST',
         body: params
       }).then((res) => {
-        console.log(res)
         if (res && res.data) {
           if (res.data.result) {
             successAlert('저장되었습니다.');
             emit("onCloseModal")
             emit("reload")
           } else {
-            errorAlert('수정에 실패하였습니다.')
+            if (res.data.message) {
+              defaultAlert(res.data.message)
+              emit("onCloseModal")
+              emit("reload")
+            } else {
+              errorAlert('수정에 실패하였습니다.')
+            }
           }
         } else {
           errorAlert('수정에 실패하였습니다.')

@@ -247,7 +247,6 @@ const onClickUpdateButton = async () => {
       method: 'POST',
       body: formData.value
     }).then(async (res) => {
-      console.log(res)
       if (res && res.data) {
         if (res.data.result) {
           await successAlert('저장되었습니다.');
