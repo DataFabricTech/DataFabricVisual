@@ -160,7 +160,7 @@ const drawChart = (raw) => {
     zMin: 0,
     borderRadius: 5,
     dataLabels: {
-      enabled: true,
+      enabled: false,
       format: '{point.name}', // description 표시
       style: { fontSize: '12px' }
     },
@@ -176,14 +176,22 @@ const drawChart = (raw) => {
 }
 
 const createSeries = (raw) => {
-  // variablepie에서 각 조각은 { name, y, z, meta_name } 형태
-  return raw.map(row => ({
-    name: row.description || 'Unknown',
-    y: row.similarity * 100,  // 각도 비율
-    z: row.similarity,        // 크기 반영
-    meta_name: row.meta_name  // 추가 데이터
-  }))
+  console.log(raw)
+  return raw.map(row => {
+    // similarity가 없거나 null/NaN이면 기본값 0.1로 설정
+    const similarity = (typeof row.similarity === 'number' && !isNaN(row.similarity))
+      ? row.similarity
+      : 0.1
+
+    return {
+      name: row.description || 'Unknown',
+      y: similarity * 100,   // 각도 비율
+      z: similarity,         // 크기 반영
+      meta_name: row.meta_name || 'N/A'
+    }
+  })
 }
+
 
 
 const deleteSeries = (chart) => {
