@@ -663,7 +663,7 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
 .release-status.secret {background-color:#eaeaee; color:#656d78;} */
 
 /* 샘플데이터 이미지 슬라이드 */
-.sample-image-swiper {flex:1 1 0%; overflow:hidden; position:relative; min-width: 100%; max-width: 300px;}
+.sample-image-swiper {flex:1 1 0%; overflow:hidden; position:relative; min-width: 100%; width: 300px;}
 .sample-image-swiper .swiper-wrapper {display:flex; align-items:center; height:100%;}
 .sample-image-swiper .swiper-slide {display:flex; justify-content:space-between; align-items:center; flex-shrink:10; width:100%; height:100%; transition-property:transform;}
 .sample-image-swiper .swiper-slide a:not(:only-child) {display:inline-block; overflow:hidden; max-width:calc(100% - 100px); line-height:32px; vertical-align:top; text-overflow:ellipsis; white-space:nowrap;}
@@ -689,13 +689,26 @@ h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat
   white-space: pre-wrap;    /* 필요 시 줄바꿈 허용 (기본 pre는 줄 안바꿈) */
   padding: 10px;
   margin-bottom: 5px;
-  background-color: #fdfdfd
+  background-color: #fdfdfd;
+}
+
+.sampledata-wrapper {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .sampledata-image {
-  width: 300px;
-  height: 300px;
-  filter: brightness(0.99);
-  object-fit:contain;
-  /* border: 1px solid #ccc; */
+  /* 기본적으로 원본 크기 표시 */
+  width: auto;
+  height: auto;
+  /* 박스보다 크면 비율 유지하며 축소 */
+  max-width: 100%;
+  max-height: 100%;
+  /* 비율 유지하면서 잘리지 않게 */
+  object-fit: contain;
 }
+

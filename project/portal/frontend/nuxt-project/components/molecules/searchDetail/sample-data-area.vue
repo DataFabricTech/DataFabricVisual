@@ -56,7 +56,9 @@
                   :slides-per-view="1"
                   >
                   <swiper-slide v-for="(image, idx) in sampleCaptureData" :key="idx">
-                    <img :src="'data:image/jpeg;base64,' + image" @click="selectImage(image)" class="sampledata-image"/>
+                    <div class="sampledata-wrapper">
+                      <img :src="'data:image/jpeg;base64,' + image" @click="selectImage(image)" class="sampledata-image"/>
+                    </div>
                   </swiper-slide>
                 </swiper>
                 <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
@@ -85,7 +87,9 @@
                   :slides-per-view="1"
                   >
                   <swiper-slide v-for="(image, idx) in sampleCaptureData" :key="idx">
-                    <img :src="'data:image/jpeg;base64,' + image" class="sampledata-image" @click="selectImage(image)"/>
+                    <div class="sampledata-wrapper">
+                      <img :src="'data:image/jpeg;base64,' + image" class="sampledata-image" @click="selectImage(image)"/>
+                    </div>
                   </swiper-slide>
                 </swiper>
                 <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
@@ -231,7 +235,14 @@ const selectImage = (base64Image) => {
       <head>
         <title>이미지 미리보기</title>
         <style>
-          body { margin:0; display:flex; justify-content:center; align-items:center; background:#000; }
+          html, body {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
           img { max-width:100%; max-height:100%; }
         </style>
       </head>
