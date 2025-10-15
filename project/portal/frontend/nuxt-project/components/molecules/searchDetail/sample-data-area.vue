@@ -61,7 +61,11 @@
                     </div>
                   </swiper-slide>
                 </swiper>
-                <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
+                <div class="controls" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;">
+                  <button @click="prevSlide('image')">◀</button>
+                  <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
+                  <button @click="nextSlide('image')">▶</button>
+                </div>
               </div>
               <div style="margin-left: 20px;">
                 <swiper class="sample-text-swiper"
@@ -74,7 +78,11 @@
                     <pre class="scrollable-pre">{{ data }}</pre>
                   </swiper-slide>
                 </swiper>
-                <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
+                <div class="controls" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;">
+                  <button @click="prevSlide('text')">◀</button>
+                  <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
+                  <button @click="nextSlide('text')">▶</button>
+                </div>
               </div>
             </div>
             <!-- 이미지 -->
@@ -92,7 +100,49 @@
                     </div>
                   </swiper-slide>
                 </swiper>
-                <p style="text-align:center; font-weight: bold;">{{ currentImageNum }} / {{ sampleCaptureData.length }}</p>
+                <div
+                  class="controls"
+                  style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;"
+                >
+                  <!-- 왼쪽 버튼 또는 placeholder -->
+                  <template v-if="currentImageNum > 1">
+                    <button
+                      @click="prevSlide('image')"
+                      class="nav-btn"
+                      style="width: 30px; height: 30px; background-color: #fdfdfd;"
+                    >
+                      ◀
+                    </button>
+                  </template>
+                  <template v-else>
+                    <span
+                      class="nav-placeholder"
+                      style="width: 30px; height: 30px; display: inline-block;"
+                    ></span>
+                  </template>
+
+                  <!-- 중앙 페이지 번호 -->
+                  <p style="text-align: center; font-weight: bold; margin: 0;">
+                    {{ currentImageNum }} / {{ sampleCaptureData.length }}
+                  </p>
+
+                  <!-- 오른쪽 버튼 또는 placeholder -->
+                  <template v-if="currentImageNum < sampleCaptureData.length">
+                    <button
+                      @click="nextSlide('image')"
+                      class="nav-btn"
+                      style="width: 30px; height: 30px; background-color: #fdfdfd;"
+                    >
+                      ▶
+                    </button>
+                  </template>
+                  <template v-else>
+                    <span
+                      class="nav-placeholder"
+                      style="width: 30px; height: 30px; display: inline-block;"
+                    ></span>
+                  </template>
+                </div>
               </div>
             </div>
             <!-- 텍스트 -->
@@ -110,7 +160,11 @@
                     <pre class="scrollable-pre-center">{{ data }}</pre>
                   </swiper-slide>
                 </swiper>
-                <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
+                <div class="controls" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;">
+                  <button @click="prevSlide('text')" v-if="currentTextNum > 1">◀</button>
+                  <p style="text-align:center; font-weight: bold;">{{ currentTextNum }} / {{ sampleData.length }}</p>
+                  <button @click="nextSlide('text')" v-if="currentTextNum < sampleData.length">▶</button>
+                </div>
               </div>
             </div>
           </div>
@@ -219,6 +273,34 @@ const onSlideChange = (swiper) => {
     currentImageNum.value = swiper.realIndex + 1;
   } else if (swiper.el.classList.contains('sample-text-swiper')) {
     currentTextNum.value = swiper.realIndex + 1;
+  }
+};
+
+const prevSlide = (type) => {
+  if (type === 'text') {
+    const textSwiper = document.querySelector('.sample-text-swiper')?.swiper;
+    if (textSwiper) {
+      textSwiper.slidePrev();
+    }
+  } else if (type === 'image') {
+    const imageSwiper = document.querySelector('.sample-image-swiper')?.swiper;
+    if (imageSwiper) {
+      imageSwiper.slidePrev();
+    }
+  }
+};
+
+const nextSlide = (type) => {
+  if (type === 'text') {
+    const textSwiper = document.querySelector('.sample-text-swiper')?.swiper;
+    if (textSwiper) {
+      textSwiper.slideNext();
+    }
+  } else if (type === 'image') {
+    const imageSwiper = document.querySelector('.sample-image-swiper')?.swiper;
+    if (imageSwiper) {
+      imageSwiper.slideNext();
+    }
   }
 };
 
