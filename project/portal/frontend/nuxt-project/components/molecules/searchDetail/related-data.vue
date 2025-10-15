@@ -27,7 +27,7 @@
             </ul>
           </div>
           <div class="mu-col mu-col-5">
-            <highcharts :constructorType="'chart'" :options="networkChartOptions" ref="networkChart"/>
+            <highcharts :constructorType="'chart'" :options="pieChartOptions" ref="pieChart"/>
           </div>
         </div>
       </div>
@@ -52,7 +52,7 @@ const props = defineProps(["relatedDataList", "entity", "isAdmin"]);
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
 
-const networkChart = ref(null)
+const pieChart = ref(null)
 
 // 연관데이터 링크 클릭 후 메타데이터 재조회 시 차트를 다시 그리기 위해 추가, 초기에는 차트 DOM이 생성되기 전 호출됨
 watch(() => props.relatedDataList, (newVal) => {
@@ -60,80 +60,66 @@ watch(() => props.relatedDataList, (newVal) => {
 })
 
 // 차트 DOM이 초기에 생성되었을 때 차트에 데이터를 설정하기 위해 호출
-watch(() => networkChart.value, () => {
+watch(() => pieChart.value, () => {
   drawChart(props.relatedDataList)
 })
 
-// 네트워크 차트 설정
-const networkChartOptions = ref({
+// 파이 차트 설정
+const pieChartOptions = ref({
   chart: {
-    type: 'networkgraph',
-    height: '250px',
-    width: "500",
-    backgroundColor: '#fafafa',
-    borderWidth: 1,
-    borderColor: '#ddd',},
-  title: { text: '' },
-  plotOptions: {
-    networkgraph: {
-      keys: ['from', 'to'],          // 4. data는 [[from,to], ...]
-      layoutAlgorithm: {
-        enableSimulation: true,
-        linkLength: 25,
-        friction: -0.9
-      },
-      dataLabels: {
-        enabled: true,          // 라벨 표시
-        linkFormat: '',         // 링크 라벨 숨김
-        style: {
-          fontSize: '0.8em',
-          fontWeight: 'normal',
-          textOutline: '2px contrast'
-        },
-        formatter() { return this.point.name || this.point.id }
-      }
-    }
+      type: 'variablepie'
+  },
+  title: {
+      text: ''
   },
   tooltip: {
-    useHTML: true,         // 원하는 HTML 구성 가능
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderRadius: 4,
-    shadow: false,
-    // 🔍 노드·링크 구분
-    formatter() {
-      // 링크(간선)일 때: this.from / this.to 존재
-      if (this.from && this.to) {
-        return `<b>${this.from}</b> → <b>${this.to}</b>`
-      }
-      // 노드일 때: this.point
-      const p = this.point
-      return `
-        <b>${p.options.name ? p.options.name : '-'}</b><br/>
-        <span>${p.options.meta_name ? p.options.meta_name : '-'}</span>
-      `
-    },
-    style: {
-      fontSize: '12px',
-      fontFamily: 'NanumSquare',
-      textOutline: 'none',   // 글자 테두리 제거
-      color: '#222'
-    }
+      headerFormat: '',
+      pointFormat: '{point.name}: <b>{point.y}</b> visits<br>Size: <b>{point.z}</b>'
   },
   series: [{
-    accessibility: {
-      enabled: false
-    },
-    dataLabels: {
-      enabled: false,
-      linkFormat: '',
-      style: {
-        fontSize: '14px',
-        fontWeight: 'normal',
-      }
-    },
-    id: 'lang-tree',
-    data: [],
-    nodes: []
+      minPointSize: 10,
+      innerSize: '10%',
+      zMin: 0,
+      name: 'countries',
+      borderRadius: 5,
+      data: [{
+          name: 'Spain', // 이름
+          y: 505992, //  수치값
+          z: 95 // 크기값
+      }, {
+          name: 'France',
+          y: 551695,
+          z: 118
+      }, {
+          name: 'Poland',
+          y: 312679,
+          z: 131
+      }, {
+          name: 'Czech Republic',
+          y: 78865,
+          z: 136
+      }, {
+          name: 'Italy',
+          y: 301336,
+          z: 198
+      }, {
+          name: 'Switzerland',
+          y: 41284,
+          z: 224
+      }, {
+          name: 'Germany',
+          y: 357114,
+          z: 238
+      }],
+      colors: [
+          '#4caefe',
+          '#3dc3e8',
+          '#2dd9db',
+          '#1feeaf',
+          '#0ff3a0',
+          '#00e887',
+          '#23e274'
+      ]
   }]
 })
 
@@ -156,64 +142,49 @@ const onClickDataName = (item) => {
 }
 
 const drawChart = (raw) => {
-  const chart = networkChart.value?.chart
+  const chart = pieChart.value?.chart
   if (!chart) return
 
-  // 1. 기존 시리즈 제거 (완전 초기화)
+  // 1️⃣ 기존 시리즈 제거
   deleteSeries(chart)
 
-  const { nodeArray, links } = createSeries(raw)
+  // 2️⃣ variablepie용 데이터 생성
+  const data = createSeries(raw)
 
-  // 2. 시리즈 새로 추가 (노드를 update할 경우 루트노드의 위치는 바뀌나 색상, 크기 등 설정값들이 바뀌지 않아서 추가)
+  // 3️⃣ 새 시리즈 추가
   chart.addSeries({
-    type: 'networkgraph',
-    data: links,
-    nodes: nodeArray,
+    type: 'variablepie',
+    name: 'Similarity',
+    minPointSize: 10,
+    innerSize: '20%',
+    zMin: 0,
+    borderRadius: 5,
     dataLabels: {
-      enabled: false // 노드 위 표시되는 글자 제거
-    }
-  }, true); // redraw = true
-};
+      enabled: true,
+      format: '{point.name}', // description 표시
+      style: { fontSize: '12px' }
+    },
+    tooltip: {
+      headerFormat: '',
+      pointFormat: `
+        <b>{point.name}</b><br/>
+        {point.meta_name}
+      `
+    },
+    data
+  }, true) // redraw = true
+}
 
 const createSeries = (raw) => {
-  const nodes = {};
-  const links = [];
-
-  const rootId = props.entity?.meta_id || "root_id";
-  const rootName = props.entity?.meta_name || "root_name";
-  const rootDesc = props.entity?.description || "Root";
-
-  // 루트 노드
-  nodes[rootId] = {
-    id: rootId,
-    name: rootDesc,
-    meta_name: rootName,
-    color: '#DC143C',
-    marker: { radius: 24 },
-  };
-
-  raw.forEach(row => {
-    const toId = row.meta_id;
-    const toName = row.meta_name;
-    const toDesc = row.description;
-
-    if (!nodes[toId]) {
-      nodes[toId] = {
-        id: toId,
-        name: toDesc,
-        meta_name: toName,
-        color: '#4169E1',
-        marker: { radius: 16 },
-      };
-    }
-
-    links.push({ from: rootId, to: toId });
-  });
-
-  const nodeArray = Object.values(nodes);
-
-  return { nodeArray, links }
+  // variablepie에서 각 조각은 { name, y, z, meta_name } 형태
+  return raw.map(row => ({
+    name: row.description || 'Unknown',
+    y: row.similarity * 100,  // 각도 비율
+    z: row.similarity,        // 크기 반영
+    meta_name: row.meta_name  // 추가 데이터
+  }))
 }
+
 
 const deleteSeries = (chart) => {
   while (chart.series.length > 0) {
