@@ -426,9 +426,8 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
         Promise.resolve(getRelatedData()),
         Promise.resolve(getDataManagerInfoList()),
         Promise.resolve(getUserDescriptionList("favorite")),
-        // 사용자 페이지에서 진입한 경우에만 리뷰 & 추천 관련 데이터 조회
-        Promise.resolve(props.isAdmin ? true : getReviewDataList()),
-        Promise.resolve(props.isAdmin ? true : getRecommendStatus()),
+        Promise.resolve(getReviewDataList()),
+        Promise.resolve(getRecommendStatus()),
       ];
     } else {
       promises = [
@@ -436,9 +435,8 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
         Promise.resolve(getSampleData()),
         Promise.resolve(getRelatedData()),
         Promise.resolve(getDataManagerInfoList()),
-        // 사용자 페이지에서 진입한 경우에만 리뷰 & 추천 관련 데이터 조회
-        Promise.resolve(props.isAdmin ? true : getReviewDataList()),
-        Promise.resolve(props.isAdmin ? true : getRecommendStatus()),
+        Promise.resolve(getReviewDataList()),
+        Promise.resolve(getRecommendStatus()),
       ];
     }
 
