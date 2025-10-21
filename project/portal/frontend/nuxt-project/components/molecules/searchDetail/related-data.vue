@@ -68,7 +68,8 @@ watch(() => pieChart.value, () => {
 const pieChartOptions = ref({
   credits: { enabled: false },
   chart: {
-      type: 'variablepie'
+      type: 'variablepie',
+      height: 300
   },
   title: {
       text: ''
@@ -144,6 +145,7 @@ const onClickDataName = (item) => {
 
 const drawChart = (raw) => {
   const chart = pieChart.value?.chart
+
   if (!chart) return
 
   // 1️⃣ 기존 시리즈 제거
@@ -161,9 +163,14 @@ const drawChart = (raw) => {
     zMin: 0,
     borderRadius: 5,
     dataLabels: {
-      enabled: false,
-      format: '{point.name}', // description 표시
-      style: { fontSize: '12px' }
+      enabled: true,
+      crop: false,         // 잘리지 않게 함
+      formatter: function () {
+        // 일부는 굵게, 일부는 일반
+        const name = this.point.name || '-';
+        return `${name}`
+      },
+      style: { fontSize: '12px',}
     },
     tooltip: {
       headerFormat: '',
@@ -177,7 +184,6 @@ const drawChart = (raw) => {
 }
 
 const createSeries = (raw) => {
-  console.log(raw)
   return raw.map(row => {
     // similarity가 없거나 null/NaN이면 기본값 0.1로 설정
     const similarity = (typeof row.similarity === 'number' && !isNaN(row.similarity))
@@ -185,10 +191,10 @@ const createSeries = (raw) => {
       : 0.1
 
     return {
-      name: row.description || 'Unknown',
+      name: row.description || row.meta_name || '-',
       y: similarity * 100,   // 각도 비율
       z: similarity,         // 크기 반영
-      meta_name: row.meta_name || 'N/A'
+      meta_name: row.meta_name || '-'
     }
   })
 }
