@@ -168,7 +168,7 @@ const drawChart = (raw) => {
       formatter: function () {
         // 일부는 굵게, 일부는 일반
         const name = this.point.name || '-';
-        return `${name}`
+        return `<span style="font-weight:bold; font-size: 12px;">${name}</span><br/>`
       },
       style: { fontSize: '12px',}
     },
