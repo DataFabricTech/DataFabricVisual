@@ -293,6 +293,7 @@ const pieChart2Options = ref({
 })
 
 const lineChartOptions = ref({
+  credits: { enabled: false },
   chart: {
     type: 'line'
   },
@@ -350,6 +351,7 @@ const lineChartOptions = ref({
 
 
 const lineChart2Options = ref({
+  credits: { enabled: false },
   chart: {
     type: 'line'
   },
@@ -402,6 +404,7 @@ const lineChart2Options = ref({
 })
 
 const columnChartOptions = ref({
+  credits: { enabled: false },
   chart: {
     type: 'column'
   },

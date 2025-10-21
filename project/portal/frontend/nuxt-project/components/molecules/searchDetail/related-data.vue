@@ -66,6 +66,7 @@ watch(() => pieChart.value, () => {
 
 // 파이 차트 설정
 const pieChartOptions = ref({
+  credits: { enabled: false },
   chart: {
       type: 'variablepie'
   },

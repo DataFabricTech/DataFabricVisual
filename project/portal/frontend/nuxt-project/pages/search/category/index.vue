@@ -391,6 +391,7 @@ const { nodes, links } = await buildNetwork(list);
 
 // 0. 초기 옵션
 const networkChartOptions = ref({
+  credits: { enabled: false },
   chart: { type: 'networkgraph', height: '850px', width: "1030" },
   title: { text: '' },
   plotOptions: {
