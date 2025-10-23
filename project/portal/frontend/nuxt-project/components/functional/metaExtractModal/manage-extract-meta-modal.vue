@@ -122,16 +122,20 @@ watch(
 
 const onClear = () => {
   currentExtractType.value = 0
+  currentDownloadType.value = 0
+  queueName.value = ""
 }
 
 // 취소 버튼 클릭 이벤트 핸들러
 const onCancel = () => {
   emit("onCloseModal");
+  onClear()
 };
 
 // 닫기 이벤트 핸들러
 const onClose = () => {
   emit("onCloseModal");
+  onClear()
 };
 
 // 확인 버튼 클릭 이벤트 핸들러
@@ -151,10 +155,7 @@ const onConfirm = async () => {
   }
 
   emit("onSubmit", params);
-
-  currentExtractType.value = 0
-  currentDownloadType.value = 0
-  queueName.value = ""
+  onClear()
 };
 
 defineExpose({

@@ -675,6 +675,18 @@ public class MetaDataManageService {
                 .format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"));
         String id = userId + "_" + timestamp;
 
+        // 전체 검색일 경우 메타 데이터 유형 목록 조회
+        List<Map<String, Object>> metaTypeList = new ArrayList<>();
+        if (params.get("metaType") != null && !"".equals(params.get("metaType").toString())) {
+
+        } else {
+            metaTypeList = metaDataManageMapper.getMetaTypeList();
+
+            if (metaTypeList != null && metaTypeList.size() > 0) {
+                params.put("metaTypeList", metaTypeList);
+            }
+        }
+
         List<LinkedHashMap<String, Object>> extractMetaList = metaDataManageMapper.getExtractMetaList(params);
 
         ObjectMapper mapper = new ObjectMapper(); // JSON 변환용
@@ -777,5 +789,24 @@ public class MetaDataManageService {
         writer.close();
 
         return sw.toString();
+    }
+
+    public Map<String, Object> getMetadataTotal(Map<String, Object> params) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        // 전체 검색일 경우 메타 데이터 유형 목록 조회
+        List<Map<String, Object>> metaTypeList = new ArrayList<>();
+        if (params.get("metaType") != null && !"".equals(params.get("metaType").toString())) {
+
+        } else {
+            metaTypeList = metaDataManageMapper.getMetaTypeList();
+
+            if (metaTypeList != null && metaTypeList.size() > 0) {
+                params.put("metaTypeList", metaTypeList);
+            }
+        }
+        
+        Integer totalCount = metaDataManageMapper.getMetadataTotal(params);
+        resultMap.put("totalCount", totalCount);
+        return resultMap;
     }
 }

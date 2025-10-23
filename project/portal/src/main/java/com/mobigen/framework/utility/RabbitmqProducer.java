@@ -35,7 +35,8 @@ public class RabbitmqProducer {
                     .build();
 
             // Default Exchange ("") 사용 → queueName을 routing key로 지정
-            rabbitTemplate.send("", queueName, message);
+            rabbitTemplate.convertAndSend("", queueName, message);
+            
         } catch (Exception e) {
             throw new RuntimeException("Failed to publish metadata", e);
         }

@@ -176,4 +176,16 @@ public class MetaDataManageController {
         exportBody.put("user_id", user.get("user_id"));
         return metaDataManageService.exportMetadataToQueue(exportBody);
     }
+
+    /**
+     * 모두선택 전체 데이터 수
+     * 
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/metadataTotal")
+    public Object getMetadataTotal(@RequestBody Map<String, Object> params) throws Exception {
+       return metaDataManageService.getMetadataTotal(params);
+    }
 }

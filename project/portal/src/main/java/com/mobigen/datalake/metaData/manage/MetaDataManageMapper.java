@@ -63,4 +63,6 @@ public interface MetaDataManageMapper {
     String getMetaIdFromQualifiedName(String qualified_name) throws Exception;
 
     List<LinkedHashMap<String, Object>> getExtractMetaList(Map<String, Object> params) throws Exception;
+
+    Integer getMetadataTotal(Map<String, Object> params) throws Exception;
 }

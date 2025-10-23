@@ -49,6 +49,12 @@
               </div>
               <!-- //board-list-search -->
               <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="mu-checkbox">
+                  <input type="checkbox" id="ckbTotal" title="전체선택" :checked="isTotalChecked"
+                    @click.stop="(e) => onToggleTotalChecked(e, true)" />
+                  <label for="ckbTotal"><span class="blind">전체선택</span></label>
+                </div>
+                <div style="margin-left: 25px;">모두 선택 : {{ isTotal }} 건</div>
                 <div class="mu-item-group">
                   <div class="mu-selectbox w160">
                     <select name="searchType2" :value="currentMetaType" @change="onChangeMetaType">
@@ -478,6 +484,11 @@ const extractModalObj = ref<ExtractModalObj>({
   type: null,
   target: null
 });
+
+const isTotal = computed(() => {
+  return pagingObj.value.total
+})
+const isTotalChecked = ref(false)
 
 await categoryStore.fetchCategories();
 await categoryTreeStore.fetchCategories()
@@ -1077,6 +1088,15 @@ const onClickButton = (type) => {
         break;
     }
   } else {
+    // 메타 타입인 경우 체크
+    if (type === 'extract') {
+      if (isTotalChecked.value) {
+        let targets: SelectedDataItem[] = [];
+        onToggleExtractModal("extract", targets);
+        return
+      }
+    }
+
     // 선택된 데이터가 없을 경우
     const MESSAGE_MAP = new Map<string, string>([
       ["category", "카테고리 맵핑"],
@@ -1189,6 +1209,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
       currentPage: 1
     };
   }
+  isTotalChecked.value = false
 };
 
 const onSearchDept = async (item = {}) => {
@@ -1261,6 +1282,14 @@ const isChecked = (item: any): boolean => {
   if (item && item.checked) return true;
   else return false;
 };
+
+const onToggleTotalChecked = (e) => {
+  const {
+    target: { checked }
+  } = e;
+
+  isTotalChecked.value = checked
+}
 
 // 체크박스 클릭 이벤트 핸들러
 const onToggleCheckbox = (e, isAll: boolean, item: any) => {
@@ -1360,16 +1389,28 @@ const onSubmitAuth = async (params: any) => {
 };
 
 // 메타 데이터 다운로드
-const downloadMetadata = async (params) => {
-  const downloadType = params.downloadType == 0 ? "queue" : "download";
-  const extractType = params.extractType == 0 ? "json" : "xml";
-  const queueName = params.queueName
+const downloadMetadata = async (param) => {
+  const downloadType = param.downloadType == 0 ? "queue" : "download";
+  const extractType = param.extractType == 0 ? "json" : "xml";
+  const queueName = param.queueName
 
-  const body = {
-    meta_ids: selectedData.value.map((item: any) => item.meta_id),
+  const params = {
+    word: filterSearchObj.value.word,
+    meta_ids: isTotalChecked.value ? [] : selectedData.value.map((item: any) => item.meta_id),
     extract_type: extractType,
     queue_name: queueName
-  }
+  }; // 데이터 조회 파라미터 객체
+
+  // 카테고리 검색
+  params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "");
+
+  const { word } = filterSearchObj.value;
+  params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;
+  params.metaType = currentMetaType.value
+  params.fileFormat = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' ? currentFileFormat.value : ""
+  params.systemType = currentSystemType.value
+  params.release = currentRelease.value
+  params.word = word.trim();
 
   // 메타 추출
   // 다운로드
@@ -1377,7 +1418,7 @@ const downloadMetadata = async (params) => {
     try {
       const response = await $ofetch(`/api/metadata/manage/extractMetadata`, {
         method: "POST",
-        body:  body,
+        body: params,
         responseType: "blob"
       })
 
@@ -1405,7 +1446,7 @@ const downloadMetadata = async (params) => {
   } else { // RabbitMQ 전송
     await $ofetch(`/api/metadata/manage/exportMetadata`, {
       method: "POST",
-      body:  body,
+      body: params,
     }).then((res) => {
       if (res && res.data) {
         if (res.data.result) {
