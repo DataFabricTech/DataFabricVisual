@@ -2,20 +2,26 @@ package com.mobigen.datalake.metaData.manage;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +34,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mobigen.datalake.metaData.manage.DTO.UploadMinioFileForm;
 import com.mobigen.datalake.system.collector.CollectorService;
 import com.mobigen.framework.utility.MinioFactory;
+import com.mobigen.framework.utility.RabbitmqProducer;
 
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
@@ -75,6 +82,9 @@ public class MetaDataManageService {
 
     @Value("${properties.minio.unstructured_bucket}")
     private String unstructuredBucket;
+
+    @Autowired
+    private RabbitmqProducer producer;
 
     // 메타 데이터 통합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
@@ -621,7 +631,6 @@ public class MetaDataManageService {
                 e.printStackTrace();
             }
         }
-        
     }
 
     private void writeJsonAsXml(XMLStreamWriter writer, JsonNode node, int depth) throws Exception {
@@ -654,5 +663,119 @@ public class MetaDataManageService {
         }
     }
 
+    public Map<String, Object> exportMetadataToQueue(Map<String, Object> params) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        boolean result = false;
+        String message = "";
+        String userId = params.get("user_id").toString();
+        String extractType = params.get("extract_type").toString().toUpperCase(Locale.ROOT);
+        String queueName = params.getOrDefault("queue_name", "metadata.queue").toString();
 
+        String timestamp = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"));
+        String id = userId + "_" + timestamp;
+
+        List<LinkedHashMap<String, Object>> extractMetaList = metaDataManageMapper.getExtractMetaList(params);
+
+        ObjectMapper mapper = new ObjectMapper(); // JSON 변환용
+        if (!extractMetaList.isEmpty()) {
+            try {
+                int totalSize = extractMetaList.size();
+                int index = 0;
+
+                for (LinkedHashMap<String, Object> meta : extractMetaList) {
+
+                    // tags 정상출력 되도록 변환 처리
+                    Object tagsValue = meta.get("tags");
+                    if (tagsValue instanceof String[]) {
+                        meta.put("tags", mapper.writeValueAsString((String[]) tagsValue));
+                    } else if (tagsValue instanceof Collection) {
+                        meta.put("tags", mapper.writeValueAsString(tagsValue));
+                    }
+
+                    // labels 정상출력 되도록 변환 처리
+                    Object labelsValue = meta.get("labels");
+                    if (tagsValue instanceof String[]) {
+                        meta.put("labels", mapper.writeValueAsString((String[]) labelsValue));
+                    } else if (tagsValue instanceof Collection) {
+                        meta.put("labels", mapper.writeValueAsString(labelsValue));
+                    }
+
+                    String payload;
+
+                    if ("JSON".equals(extractType)) {
+                        payload = createJsonSingle(meta);
+                    } else if ("XML".equals(extractType)) {
+                        payload = createXmlSingle(meta);
+                    } else {
+                        throw new IllegalArgumentException("Unsupported extract_type: " + extractType);
+                    }
+
+                    // RabbitMQ 전송용 메시지
+                    Map<String, Object> metadataMessage = new LinkedHashMap<>();
+                    metadataMessage.put("id", id);
+                    metadataMessage.put("index", index++);
+                    metadataMessage.put("user_id", userId);
+                    metadataMessage.put("extract_type", extractType);
+                    metadataMessage.put("total_size", totalSize);
+                    metadataMessage.put("payload", payload);
+
+                    // RabbitMQ 전송
+                    producer.publishMetadataTask(queueName, metadataMessage);
+                }
+
+                result = true;
+                message = "메타데이터 " + extractMetaList.size() + "건을 큐로 전송했습니다.";
+
+            } catch (Exception e) {
+                message = "메타데이터 전송 중 오류가 발생했습니다.";
+                log.error("fail to export metadata to queue", e);
+            }
+
+        } else {
+            message = "추출할 메타데이터가 존재하지 않습니다.";
+        }
+
+        resultMap.put("result", result);
+        resultMap.put("message", message);
+        return resultMap;
+    }
+
+
+    private String createJsonSingle(Map<String, Object> meta) throws Exception {
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("meta_id", meta.get("meta_id").toString());
+        root.putPOJO("data", meta);
+        return objectMapper.writeValueAsString(root);
+    }
+
+    private String createXmlSingle(Map<String, Object> meta) throws Exception {
+        XMLOutputFactory factory = XMLOutputFactory.newInstance();
+        StringWriter sw = new StringWriter();
+        XMLStreamWriter writer = factory.createXMLStreamWriter(sw);
+
+        writer.writeStartDocument("UTF-8", "1.0");
+        writer.writeCharacters("\n");
+        writer.writeStartElement("META");
+        writer.writeAttribute("ID", meta.get("meta_id").toString());
+        writer.writeCharacters("\n");
+
+        for (Map.Entry<String, Object> entry : meta.entrySet()) {
+            writer.writeCharacters("\t");
+            writer.writeStartElement(entry.getKey());
+            Object value = entry.getValue();
+            if (value != null) {
+                writer.writeCharacters(value.toString());
+            }
+            writer.writeEndElement();
+            writer.writeCharacters("\n");
+        }
+
+        writer.writeEndElement(); // </META>
+        writer.writeEndDocument();
+        writer.flush();
+        writer.close();
+
+        return sw.toString();
+    }
 }

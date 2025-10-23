@@ -148,7 +148,7 @@ public class MetaDataManageController {
     }
 
     /**
-     * 메타 추출
+     * 메타 추출(다운로드)
      * 
      * @param meta_id 메타 ID
      * @param qualified_name 메타 고유명
@@ -159,5 +159,21 @@ public class MetaDataManageController {
     @PostMapping("/extractMetadata")
     public void extractMetadata(@RequestBody Map<String, Object> extractBody, HttpServletResponse response) throws Exception {
         metaDataManageService.extractMetadata(extractBody, response);
+    }
+
+    /**
+     * 메타 추출(RabbitMQ 전송)
+     * 
+     * @param meta_id 메타 ID
+     * @param qualified_name 메타 고유명
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/exportMetadata")
+    public Object exportMetadata(@RequestBody Map<String, Object> exportBody, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        exportBody.put("user_id", user.get("user_id"));
+        return metaDataManageService.exportMetadataToQueue(exportBody);
     }
 }

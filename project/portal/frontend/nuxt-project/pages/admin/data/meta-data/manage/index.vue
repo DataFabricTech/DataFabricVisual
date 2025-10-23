@@ -198,6 +198,7 @@
 </template>
 
 <script setup lang="ts">
+import { defaultAlert } from "@/components/functional/alert/alert-default";
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import { isEmpties } from "@composables/ramda";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
@@ -471,7 +472,7 @@ const authModalObj = ref<AuthModalObj>({
 });
 const refManageRoleMappingModal = ref<any>(null); // 공개설정 모달 ref
 
-// 공개설정 관리 모달 제어
+// 메타 추출 관리 모달 제어
 const extractModalObj = ref<ExtractModalObj>({
   toggle: false,
   type: null,
@@ -1360,41 +1361,69 @@ const onSubmitAuth = async (params: any) => {
 
 // 메타 데이터 다운로드
 const downloadMetadata = async (params) => {
+  const downloadType = params.downloadType == 0 ? "queue" : "download";
   const extractType = params.extractType == 0 ? "json" : "xml";
+  const queueName = params.queueName
 
   const body = {
     meta_ids: selectedData.value.map((item: any) => item.meta_id),
-    extract_type: extractType
+    extract_type: extractType,
+    queue_name: queueName
   }
 
   // 메타 추출
-  try {
-    const response = await $ofetch(`/api/metadata/manage/extractMetadata`, {
+  // 다운로드
+  if (downloadType == 'download') {
+    try {
+      const response = await $ofetch(`/api/metadata/manage/extractMetadata`, {
+        method: "POST",
+        body:  body,
+        responseType: "blob"
+      })
+
+      // 2) blob → URL 객체 생성
+      const downloadUrl = window.URL.createObjectURL(response)
+
+      // 3) a 태그로 다운로드 트리거
+      const link = document.createElement('a')
+      link.href = downloadUrl
+      link.setAttribute('download', `${`metadata_extract_${$getNowWithSeconds(new Date())}`}.${extractType}`) // 다운로드 파일명 설정
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+
+      // 4) 메모리 해제
+      window.URL.revokeObjectURL(downloadUrl)
+
+      // 5) 모달 닫기
+      onToggleExtractModal();
+
+    } catch (err) {
+      console.log(err);
+      errorAlert("메타 데이터를 추출 요청에 실패하였습니다.");
+    }
+  } else { // RabbitMQ 전송
+    await $ofetch(`/api/metadata/manage/exportMetadata`, {
       method: "POST",
       body:  body,
-      responseType: "blob"
+    }).then((res) => {
+      if (res && res.data) {
+        if (res.data.result) {
+          defaultAlert("전송되었습니다.");
+          onToggleExtractModal();
+        } else {
+          if (res.data.message) {
+            defaultAlert(res.data.message);
+          } else {
+            errorAlert("메타 데이터 전송에 실패하였습니다.");
+          }
+        }
+
+      } else {}
+    }).catch((err) => {
+      console.log(err)
+      errorAlert("메타 데이터 전송에 실패하였습니다.")
     })
-
-    // 2) blob → URL 객체 생성
-    const downloadUrl = window.URL.createObjectURL(response)
-
-    // 3) a 태그로 다운로드 트리거
-    const link = document.createElement('a')
-    link.href = downloadUrl
-    link.setAttribute('download', `${`metadata_extract_${$getNowWithSeconds(new Date())}`}.${extractType}`) // 다운로드 파일명 설정
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-
-    // 4) 메모리 해제
-    window.URL.revokeObjectURL(downloadUrl)
-
-    // 5) 모달 닫기
-    onToggleExtractModal();
-
-  } catch (err) {
-    console.log(err);
-    errorAlert("메타 데이터를 추출 요청에 실패하였습니다.");
   }
 }
 

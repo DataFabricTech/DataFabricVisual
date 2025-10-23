@@ -21,10 +21,36 @@
                 </th>
                 <td>
                   <div class="mu-radio" v-for="(extractType, idx) in extractTypeList">
-                    <input type="radio" :id="'rd_' + idx" name="authTypeSelect" :value="extractType.id"
+                    <input type="radio" :id="'rd_extract' + idx" name="extractsTypeSelect" :value="extractType.id"
                       v-model="currentExtractType" />
-                    <label :for="'rd_' + idx"><span>{{ extractType.description }}</span></label>
+                    <label :for="'rd_extract' + idx"><span>{{ extractType.description }}</span></label>
                   </div>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  추출 방식
+                </th>
+                <td>
+                  <div class="mu-radio" v-for="(downloadType, idx) in downloadTypeList">
+                    <input type="radio" :id="'rd_download' + idx" name="downloadTypeSelect" :value="downloadType.id"
+                      v-model="currentDownloadType" />
+                    <label :for="'rd_download' + idx"><span>{{ downloadType.description }}</span></label>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="currentDownloadType == 0">
+                <th>
+                  Queue 이름
+                </th>
+                <td>
+                  <input
+                    type="text"
+                    class="mu-input"
+                    pattern="^\S+$"
+                    title="Queue 이름에는 공백을 포함할 수 없습니다."
+                    v-model="queueName"
+                    placeholder="Queue 이름에는 공백을 포함할 수 없습니다."></input>
                 </td>
               </tr>
             </tbody>
@@ -50,9 +76,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { errorAlert } from "../alert/alert-default";
 
 const emit = defineEmits(["onCloseModal", "onSubmit"]);
-const props = defineProps(["extractModal", "currentExtractType"]);
+const props = defineProps(["extractModal", "currentExtractType", "currentDownloadType"]);
 
 const currentExtractType = ref(0)
 const extractTypeList = ref([
@@ -64,6 +91,19 @@ const extractTypeList = ref([
     description: "XML"       
   }
 ])
+
+const currentDownloadType = ref(0)
+const downloadTypeList = ref([
+  {
+    id: 0,
+    description: "RabbitMQ"
+  }, {
+    id: 1,
+    description: "다운로드"
+  }
+])
+
+const queueName = ref("")
 
 // 공개설정 모달 여는 시점에서
 watch(
@@ -86,22 +126,35 @@ const onClear = () => {
 
 // 취소 버튼 클릭 이벤트 핸들러
 const onCancel = () => {
-  onClear();
   emit("onCloseModal");
 };
 
 // 닫기 이벤트 핸들러
 const onClose = () => {
-  onClear();
   emit("onCloseModal");
 };
 
 // 확인 버튼 클릭 이벤트 핸들러
 const onConfirm = async () => {
   let params = {
-    extractType: currentExtractType.value
+    extractType: currentExtractType.value,
+    downloadType: currentDownloadType.value,
+    queueName: queueName.value
   }
+
+  // RabbitMQ 전송 시 Queue 이름이 있는 경우 동작
+  if (currentDownloadType.value == 0) {
+    if (!queueName.value || queueName.value.trim() === "") {
+      errorAlert("Queue 이름을 입력해주세요.")
+      return
+    }
+  }
+
   emit("onSubmit", params);
+
+  currentExtractType.value = 0
+  currentDownloadType.value = 0
+  queueName.value = ""
 };
 
 defineExpose({
