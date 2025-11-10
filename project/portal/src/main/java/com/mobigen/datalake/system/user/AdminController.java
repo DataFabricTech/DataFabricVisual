@@ -89,21 +89,6 @@ public class AdminController {
     }
 
     /**
-     * 장기 미접속 해제
-     * 
-     * @param param
-     * @return
-     * @throws Exception
-     */
-    @ResponseJsonResult
-    @PostMapping("/user/UnlockLoginDeactivation")
-    @ResponseBody
-    public Object unlockLoginDeactivation(@RequestBody Map<String, Object> param, HttpServletRequest request)
-            throws Exception {
-        return adminService.unlockLoginDeactivation(param, request);
-    }
-
-    /**
      * 패스워드 초기화
      * 
      * @param param

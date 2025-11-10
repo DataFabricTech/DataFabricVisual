@@ -249,14 +249,6 @@ public class UserService {
             return result;
         }
 
-        // 4. 장기 미접속자 체크
-        if ((Integer) user.get("login_term") >= loginDeactivationDateThreshold) {
-            result.put("login_result", "N");
-            result.put("login_result_message",
-                    Integer.toString(loginDeactivationDateThreshold) + "일 이상 접속하지 않아 로그인이 차단되었습니다. 관리자에게 문의해주시기 바랍니다.");
-            return result;
-        }
-
         result.put("login_result", "Y");
         userMapper.updateLoginUser(user_id); // 사용자 정보 업데이트
 
@@ -482,15 +474,7 @@ public class UserService {
             result.put("login_result_message", "비밀번호가 일치하지 않습니다.");
             return result;
         }
-
-        // 4. 장기 미접속자 체크
-        if ((Integer) user.get("login_term") >= loginDeactivationDateThreshold) {
-            result.put("login_result", "N");
-            result.put("login_result_message",
-                    Integer.toString(loginDeactivationDateThreshold) + "일 이상 접속하지 않아 로그인이 차단되었습니다. 관리자에게 문의해주시기 바랍니다.");
-            return result;
-        }
-
+        
         result.put("login_result", "Y");
 
         return result;

@@ -120,26 +120,6 @@ public class AdminService {
     }
 
     /**
-     * 장기 미접속 해제
-     * 
-     * @param param
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public Object unlockLoginDeactivation(Map<String, Object> param, HttpServletRequest request) throws Exception {
-        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        Object result = null;
-
-        if (user.get("authority").toString().equals("Super-Admin")
-                || user.get("authority").toString().equals("Manager")) {
-            result = adminMapper.UnlockLoginDeactivation(param);
-        }
-
-        return result;
-    }
-
-    /**
      * 패스워드 초기화
      * 
      * @param param
