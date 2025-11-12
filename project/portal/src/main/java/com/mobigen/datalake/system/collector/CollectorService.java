@@ -138,6 +138,7 @@ public class CollectorService {
 
       result.put("addCount", addCount);
     } catch (Exception e) {
+      e.printStackTrace();
       result.put("addCount", 0);
     }
 
@@ -166,6 +167,7 @@ public class CollectorService {
 
       result.put("updateCount", updateCount);
     } catch (Exception e) {
+      e.printStackTrace();
       result.put("updateCount", 0);
     }
 
