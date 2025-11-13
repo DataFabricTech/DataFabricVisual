@@ -133,4 +133,18 @@ public class AdminController {
     public Object getCommonCodeList(@RequestBody Map<String, Object> param) throws Exception {
         return adminService.getCommonCodeList(param);
     }
+
+    
+    /**
+     * 로고 이미지 업데이트
+     * 
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/updateLogo")
+    public Object updateLogo(@RequestParam String file_id) throws Exception {
+        return adminService.updateLogo(file_id);
+    }
 }

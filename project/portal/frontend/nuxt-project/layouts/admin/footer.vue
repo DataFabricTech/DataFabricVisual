@@ -77,21 +77,29 @@ const getLogoImage = async () => {
           if (location.hostname === "localhost" && logoImageFileId.value != "") {
             logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + logoImageFileId.value;
           } else if (logoImageFileId.value == "") {
-
+            console.log("No logo image !!")
+            logoImageFile.value = "/logo-basic.png"
           } else {
             logoImageFile.value = "/api/ckeditor/attachFile/" + logoImageFileId.value;
           }
         }
+      } else {
+        console.log("No logo image !!")
+        logoImageFile.value = "/logo-basic.png"
       }
     }
   }).catch((err) => {
+    console.error("Fail to load !!")
     logoImageFileId.value = ""
+    logoImageFile.value = "/logo-basic.png"
   })
 }
 
 // 로고 이미지 경로에 파일이 없는 경우 처리
 const setDefaultImage = () => {
+  console.log("set default logo Image !!")
   logoImageFileId.value = ""
   logoImageFile.value = "/logo-basic.png"
 }
+
 </script>

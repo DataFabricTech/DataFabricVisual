@@ -439,4 +439,27 @@ public class AdminService {
         return distinctList;
     }
 
+    public Map<String, Object> updateLogo(String file_id) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        Integer updateResult = 0;
+        try {
+            // <table> 테이블에 로고 설정 정보가 있는 경우 추가, 없는경우 업데이트
+            Integer existsLogoFileId = adminMapper.isExistsLogoFileId();
+
+            if (existsLogoFileId != null && existsLogoFileId > 0) {
+                updateResult = adminMapper.updateLogoFileId(file_id);
+            } else {
+                updateResult = adminMapper.insertLogoFileId(file_id);
+            }
+            
+        } catch (Exception e) {
+            log.error("Fail to updateLogo !!");
+            log.error(e.getMessage());
+        }
+
+        result.put("updateResult", updateResult);
+
+        return result;
+    }
+
 }

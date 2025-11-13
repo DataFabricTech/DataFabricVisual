@@ -39,61 +39,66 @@ public class CkeditorFileUploadService {
     HashMap param = new HashMap();
     param.put("fileId", fileId);
 
-    FileUploadResponse fileInfo = fileMapper.selectFileInfo(param);
-    ServletContext context = request.getServletContext();
-    String fullPath = fileInfo.getFileLocation();
-    String fileName = fileInfo.getFileName();
-    FileInputStream inputStream = null;
-    OutputStream outStream = null;
-
     try {
-      // 경로에서 ../, ./, \.., /../ 등의 문자열을 제거
-      fullPath = fullPath.replaceAll("\\.\\./", "")
-          .replaceAll("\\.\\.\\\\", "")
-          .replaceAll("\\./", "")
-          .replaceAll("\\\\", "/");
+      FileUploadResponse fileInfo = fileMapper.selectFileInfo(param);
+      ServletContext context = request.getServletContext();
+      String fullPath = fileInfo.getFileLocation();
+      String fileName = fileInfo.getFileName();
+      FileInputStream inputStream = null;
+      OutputStream outStream = null;
 
-      File baseDir = new File(fileUploadPath);
-      File downloadFile = new File(fullPath);
+      try {
+        // 경로에서 ../, ./, \.., /../ 등의 문자열을 제거
+        fullPath = fullPath.replaceAll("\\.\\./", "")
+            .replaceAll("\\.\\.\\\\", "")
+            .replaceAll("\\./", "")
+            .replaceAll("\\\\", "/");
 
-      // 경로가 기본 디렉토리를 벗어나지 않도록 확인
-      if (!downloadFile.getCanonicalPath().startsWith(baseDir.getCanonicalPath())) {
-        log.info("Out of default directory path !!!!");
-        return;
-      }
+        File baseDir = new File(fileUploadPath);
+        File downloadFile = new File(fullPath);
 
-      inputStream = new FileInputStream(downloadFile);
+        // 경로가 기본 디렉토리를 벗어나지 않도록 확인
+        if (!downloadFile.getCanonicalPath().startsWith(baseDir.getCanonicalPath())) {
+          log.info("Out of default directory path !!!!");
+          return;
+        }
 
-      String mimeType = context.getMimeType(fullPath);
-      if (mimeType == null)
-        mimeType = "application/octet-stream";
+        inputStream = new FileInputStream(downloadFile);
 
-      response.setContentType(mimeType);
-      response.setContentLength((int) downloadFile.length());
+        String mimeType = context.getMimeType(fullPath);
+        if (mimeType == null)
+          mimeType = "application/octet-stream";
 
-      String headerKey = "Content-Disposition";
-      String headerValue = fileService.getDisposition(fileName, request);
-      response.setHeader(headerKey, headerValue);
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
 
-      outStream = response.getOutputStream();
+        String headerKey = "Content-Disposition";
+        String headerValue = fileService.getDisposition(fileName, request);
+        response.setHeader(headerKey, headerValue);
 
-      byte[] buffer = new byte[BUFFER_SIZE];
-      int bytesRead = -1;
+        outStream = response.getOutputStream();
 
-      while ((bytesRead = inputStream.read(buffer)) != -1) {
-        outStream.write(buffer, 0, bytesRead);
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+          outStream.write(buffer, 0, bytesRead);
+        }
+      } catch (Exception e) {
+        log.error("Download Error", e);
+      } finally {
+        try {
+          if (inputStream != null)
+            inputStream.close();
+          if (outStream != null)
+            outStream.close();
+        } catch (Exception e1) {
+          log.error("Download Error", e1);
+        }
       }
     } catch (Exception e) {
-      log.error("Download Error", e);
-    } finally {
-      try {
-        if (inputStream != null)
-          inputStream.close();
-        if (outStream != null)
-          outStream.close();
-      } catch (Exception e1) {
-        log.error("Download Error", e1);
-      }
+      log.error(e.getMessage());
+      log.error("ckeditorDownload Exception !! - file_id: " + fileId);
     }
   }
 }

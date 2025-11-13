@@ -26,4 +26,8 @@ public interface AdminMapper {
     List<Map<String, Object>> getLogoImageList() throws Exception;
 
     List<Map<String, Object>> getCommonCodeList(Map<String, String> param) throws Exception;
+
+    Integer isExistsLogoFileId() throws Exception;
+    Integer insertLogoFileId(String file_id) throws Exception;
+    Integer updateLogoFileId(String file_id) throws Exception;
 }

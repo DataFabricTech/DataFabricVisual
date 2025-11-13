@@ -158,6 +158,7 @@
 </template>
 
 <script setup lang="ts">
+import { defaultAlert } from "@/components/functional/alert/alert-default";
 import { confirmAlert, errorAlert, successAlert } from "@functional/alert/alert-default";
 import { onMounted, ref } from 'vue';
 
@@ -608,19 +609,43 @@ const fileUpload = (e) => {
 
   formData.append("files", e.target.files[0]);
 
+  let uploadSuccess = false;
+  let fid = 0
+
   $ofetch("/api/service/file/fileUpload.do", {
     method: "POST",
     body: formData
-  }).then((res) => {
-    if (location.hostname === "localhost") {
-      logoImageFileId.value = res.data[0].file_id;
-      logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + res.data[0].file_id;
-      logoImageList.value[0].value = res.data[0].file_id
+  }).then(async (res) => {
+    if (res && res.data && res.data[0].file_id) {
+      if (location.hostname === "localhost") {
+        logoImageFileId.value = res.data[0].file_id;
+        logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + res.data[0].file_id;
+        logoImageList.value[0].value = res.data[0].file_id
+      } else {
+        logoImageFileId.value = res.data[0].file_id;
+        logoImageFile.value = "/api/ckeditor/attachFile/" + res.data[0].file_id;
+        logoImageList.value[0].value = res.data[0].file_id
+      }
+
+      fid = res.data[0].file_id;
+      uploadSuccess = true
+
+      if (uploadSuccess && fid > 0) {
+        // file_id 값을 <table> 테이블에서 업데이트 처리
+        await $ofetch(`/api/admin/manager/updateLogo?file_id=${fid}`).then((res) => {
+          if (res && res.data && res.data.updateResult > 0) {
+            defaultAlert("로고가 변경되었습니다.")
+          } else {
+            errorAlert("로고 파일 업로드에 실패하였습니다.")
+          }
+        })
+      } else {
+        console.log('failed !!!')
+      }
     } else {
-      logoImageFileId.value = res.data[0].file_id;
-      logoImageFile.value = "/api/ckeditor/attachFile/" + res.data[0].file_id;
-      logoImageList.value[0].value = res.data[0].file_id
+      errorAlert("로고 파일 업로드에 실패하였습니다.")
     }
+
   });
 };
 
