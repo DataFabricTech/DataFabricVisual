@@ -66,7 +66,10 @@ public class SearchController {
             if (param.get("query") != null) {
                 Map<String, Object> textHistoryParam = new HashMap<>();
                 textHistoryParam.put("search_string", param.get("query"));
-                textHistoryParam.put("userId", user.get("user_id"));
+                textHistoryParam.put("user_id", user.get("user_id"));
+                textHistoryParam.put("user_name", user.get("username"));
+                textHistoryParam.put("dept_id", user.get("dept_id"));
+                textHistoryParam.put("dept_name", user.get("dept_nm"));
                 searchService.insertSearchTextHistory(textHistoryParam);
             }
 
