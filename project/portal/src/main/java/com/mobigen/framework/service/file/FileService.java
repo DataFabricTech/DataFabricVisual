@@ -1,6 +1,7 @@
 package com.mobigen.framework.service.file;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -188,115 +189,127 @@ public class FileService {
 	}
 
 	/**
-	 * 파일 업로드
-	 * @param uploadForm
-	 * @return
-	 * @throws Exception
-	 */
-	public List<FileUploadResponse> fileUpload(FileUploadRequest uploadForm, String savePath, HttpServletRequest request) throws Exception
-	{
-		List<FileUploadResponse> result = new ArrayList<FileUploadResponse>();
-		SimpleDateFormat ym = new SimpleDateFormat("yyyyMM");
-		savePath = savePath + "/" + ym.format(new Date());
+     * 파일 업로드
+     * @param uploadForm
+     * @return
+     * @throws Exception
+     */
+    public List<FileUploadResponse> fileUpload(FileUploadRequest uploadForm, String savePath, HttpServletRequest request) throws Exception
+    {
+        List<FileUploadResponse> result = new ArrayList<FileUploadResponse>();
+        SimpleDateFormat ym = new SimpleDateFormat("yyyyMM");
+        // 파일 저장 경로에 월별 폴더 추가
+        String fullDirPath = savePath + "/" + ym.format(new Date());
 
-		List<MultipartFile> files = uploadForm.getFiles();
-		if(null != files && files.size() > 0)
-		{
-			// 확장자 확인
-			if(!validateUploadFile(files)) {
-				throw new Exception("확장자가 잘못되었습니다.");
-			}
+        // --- 파일 업로드 로직 시작 ---
+        List<MultipartFile> files = uploadForm.getFiles();
+        if(null != files && files.size() > 0)
+        {
+            // 확장자 확인
+            if(!validateUploadFile(files)) {
+                throw new Exception("확장자가 잘못되었습니다.");
+            }
 
-			for (MultipartFile multipartFile : files)
-			{
-				String originalFileName = multipartFile.getOriginalFilename();
-				String extType = originalFileName.substring(originalFileName.indexOf("."), originalFileName.length());
+            // ⚠️ 디렉토리 생성 로직: 파일을 저장하기 전에 한 번만 수행
+            File dir = new File(fullDirPath);
+            if (!dir.exists()) {
+                // dir.mkdirs()를 호출하여 상위 경로가 모두 없어도 생성합니다.
+                // 이 메소드는 생성에 실패하면 false를 반환하므로, 로그를 남기거나 예외를 던지는 것이 좋습니다.
+                if (!dir.mkdirs()) {
+                    throw new IOException("파일 저장 디렉토리(" + fullDirPath + ") 생성에 실패했거나 쓰기 권한이 없습니다.");
+                }
+            }
 
-				String saveFileName = getRandomFileName() + extType;
-				String path = getUploadPath(savePath, saveFileName);
+            for (MultipartFile multipartFile : files)
+            {
+                String originalFileName = multipartFile.getOriginalFilename();
+                String extType = originalFileName.substring(originalFileName.indexOf("."), originalFileName.length());
 
-				File dir = new File(savePath);
-				// 디렉토리가 없으면 생성
-				if (!dir.exists()) {
-					dir.mkdirs(); // 경로에 맞는 모든 디렉토리를 생성합니다.
-				}
-				
-				File f = new File(path);
-				multipartFile.transferTo(f);
+                String saveFileName = getRandomFileName() + extType;
+                // getUploadPath 함수가 fullDirPath와 saveFileName을 결합하여 절대 경로를 반환해야 합니다.
+                String fullFilePath = getUploadPath(fullDirPath, saveFileName); 
+                
+                File f = new File(fullFilePath);
+                
+                // 파일 저장 시도. dir.mkdirs() 성공 후 권한 문제 또는 path 문제로 여기서 오류 발생 가능성이 높습니다.
+                multipartFile.transferTo(f);
 
-				String fullFileName = savePath + "/" + saveFileName;
-				String loginId = "";
-				Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-				if(user != null) {
-					loginId = user.get("user_id").toString();
-				}
+                String fullFileName = fullDirPath + "/" + saveFileName;
+                String loginId = "";
+                Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+                if(user != null) {
+                    loginId = user.get("user_id").toString();
+                }
 
-				int file_id =fileMapper.fineFileId()+1;
+                int file_id =fileMapper.fineFileId()+1;
 
-				FileUploadResponse fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartFile.getSize(),file_id);
-				if (file_id == 1) {
-					fileMapper.insertFile(fure);
-					file_id =fileMapper.fineFileId()+1;
-					fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartFile.getSize(),file_id);
-				}
-				fure.setPost_id(uploadForm.getPost_id());
-				fure.setFile_type("file");
-				fileMapper.insertFile(fure);
-				
-				result.add(fure);
-			}
-		}
+                FileUploadResponse fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartFile.getSize(),file_id);
+                if (file_id == 1) {
+                    fileMapper.insertFile(fure);
+                    file_id =fileMapper.fineFileId()+1;
+                    fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartFile.getSize(),file_id);
+                }
+                fure.setPost_id(uploadForm.getPost_id());
+                fure.setFile_type("file");
+                fileMapper.insertFile(fure);
+                
+                result.add(fure);
+            }
+        }
 
-		List<MultipartFile> thumb_img = uploadForm.getThumb_img();
-		if(null != thumb_img && thumb_img.size() > 0)
-		{
-			// 확장자 확인
-			if(!validateThumbFile(thumb_img)) {
-				throw new Exception("확장자가 잘못되었습니다.");
-			}
+        // --- 썸네일 업로드 로직 시작 ---
+        List<MultipartFile> thumb_img = uploadForm.getThumb_img();
+        if(null != thumb_img && thumb_img.size() > 0)
+        {
+            // 확장자 확인
+            if(!validateThumbFile(thumb_img)) {
+                throw new Exception("확장자가 잘못되었습니다.");
+            }
+            
+            // ⚠️ 디렉토리 생성 로직: 썸네일 업로드 직전에 다시 한번 확인 (상위 블록에서 이미 했지만 안전을 위해)
+            File dir = new File(fullDirPath);
+            if (!dir.exists()) {
+                if (!dir.mkdirs()) {
+                    throw new IOException("파일 저장 디렉토리(" + fullDirPath + ") 생성에 실패했거나 쓰기 권한이 없습니다.");
+                }
+            }
 
-			for (MultipartFile multipartThumbFile : thumb_img)
-			{
-				String originalFileName = multipartThumbFile.getOriginalFilename();
-				String extType = originalFileName.substring(originalFileName.indexOf("."), originalFileName.length());
+            for (MultipartFile multipartThumbFile : thumb_img)
+            {
+                String originalFileName = multipartThumbFile.getOriginalFilename();
+                String extType = originalFileName.substring(originalFileName.indexOf("."), originalFileName.length());
 
-				String saveFileName = getRandomFileName() + extType;
-				String path = getUploadPath(savePath, saveFileName);
+                String saveFileName = getRandomFileName() + extType;
+                String fullFilePath = getUploadPath(fullDirPath, saveFileName);
 
-				File dir = new File(savePath);
-				// 디렉토리가 없으면 생성
-				if (!dir.exists()) {
-					dir.mkdirs(); // 경로에 맞는 모든 디렉토리를 생성합니다.
-				}
-				
-				File f = new File(path);
-				multipartThumbFile.transferTo(f);
+                File f = new File(fullFilePath);
+                multipartThumbFile.transferTo(f);
 
-				String fullFileName = savePath + "/" + saveFileName;
-				String loginId = "";
-				Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-				if(user != null) {
-					loginId = user.get("user_id").toString();
-				}
+                String fullFileName = fullDirPath + "/" + saveFileName;
+                String loginId = "";
+                Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+                if(user != null) {
+                    loginId = user.get("user_id").toString();
+                }
 
-				int file_id =fileMapper.fineFileId()+1;
+                int file_id =fileMapper.fineFileId()+1;
 
-				FileUploadResponse fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartThumbFile.getSize(),file_id);
-				if (file_id == 1) {
-					fileMapper.insertFile(fure);
-					file_id =fileMapper.fineFileId()+1;
-					fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartThumbFile.getSize(),file_id);
-				}
-				fure.setPost_id(uploadForm.getPost_id());
-				fure.setFile_type("thumb");
-				fileMapper.insertFile(fure);
+                FileUploadResponse fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartThumbFile.getSize(),file_id);
+                if (file_id == 1) {
+                    fileMapper.insertFile(fure);
+                    file_id =fileMapper.fineFileId()+1;
+                    fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartThumbFile.getSize(),file_id);
+                }
+                fure.setPost_id(uploadForm.getPost_id());
+                fure.setFile_type("thumb");
+                fileMapper.insertFile(fure);
 
-				result.add(fure);
-			}
-		}
+                result.add(fure);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 	/**
 	 * 샘플파일 업로드
