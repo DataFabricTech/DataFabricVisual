@@ -82,6 +82,9 @@ public class SearchDetailService {
 
     @Value("${properties.cryptKey}")
     private String cryptKey;
+    
+    @Value("${properties.activeLineage}")
+    public String activeLineage;
 
     // 데이터 상세 조회
     public Object getDetailData(Map<String, Object> params) throws Exception {
@@ -1436,6 +1439,13 @@ public class SearchDetailService {
         result.put("isFailed", isFailed);
         result.put("esUpdated", esUpdated);
         
+        return result;
+    }
+
+    public Map<String, Object> getLineageActive() throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("activeLineage", activeLineage);
         return result;
     }
 }

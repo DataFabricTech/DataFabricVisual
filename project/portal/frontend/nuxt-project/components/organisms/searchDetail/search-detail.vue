@@ -50,9 +50,11 @@
             :fileFormat="fileFormat"/>
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
-        <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
-          <data-lineage-area v-if="typeName && typeName.toUpperCase() != 'FILE'" :isAdmin="props.isAdmin" :startNode="startNode" :entity="entity"
-            :userDataParam="userDataParam" />
+        <div v-if="activeLineage">
+          <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
+            <data-lineage-area v-if="typeName && typeName.toUpperCase() != 'FILE'" :isAdmin="props.isAdmin" :startNode="startNode" :entity="entity"
+              :userDataParam="userDataParam" />
+          </div>
         </div>
         <!-- detail-section : 연관 데이터 -->
         <div :ref="el => sectionRefs['related-data'] = el" class="content-block">
@@ -127,11 +129,12 @@ const categoryStore = useCategoryStore();
 const categoryTreeStore = useCategoryTreeStore();
 
 const resetTab = ref(false)
-const tabs = ref(['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area'])
+const tabs = ref(['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'related-data', 'user-review-area'])
 const sectionRefs = ref({}); // 탭 클릭 시 이동할 DOM
 const isSticky = ref(false) // 탭이 보이지 않는 곳으로 스크롤이 되었는지 여부
 
 const entity = ref({}); // 데이터 상세 정보
+const isActiveLineage = ref(false); // 리니지 활성화 여부
 const referredEntitiesAttributes = ref([]);
 const businessAttributes = ref([]);
 const currentGuid = ref("");
@@ -248,6 +251,12 @@ const isProfileArea = computed(() => {
   }
 
   return true
+})
+
+// 리니지 활성화 여부
+const activeLineage = computed(() => {
+  const currentActiveLineage = ObjectUtils.getPropertyValue(isActiveLineage.value, false, false)
+  return currentActiveLineage
 })
 
 // entity 값이 변동되면 파라미터도 동기화
@@ -451,7 +460,7 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
 };
 
 const settingTabOption = (entity) => {
-  tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area']
+  tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'related-data', 'user-review-area']
 
   // Table, File만 샘플데이터 존재
   if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE') {
@@ -468,9 +477,10 @@ const settingTabOption = (entity) => {
     }
   }
 
-
-
-
+  // 리니지 활성화 여부에 따른 탭 제어
+  if (activeLineage.value) {
+    tabs.value.push('data-lineage-area')
+  }
 }
 
 // 객체 키 유무 확인
@@ -484,6 +494,20 @@ const getDetailDataByGuid = async (newGuid) => {
   currentGuid.value = guid;
 
   if (currentGuid.value) {
+    // 리니지 활성화 여부 조회
+    await $ofetch(`/api/search/detail/isActiveLineage`).then((res) => {
+      if (res && res.data && res.data.activeLineage) {
+        isActiveLineage.value = res.data.activeLineage
+        tabs.value.push('data-lineage-area')
+      } else {
+        isActiveLineage.value = false
+      }
+    }).catch((err) => {
+      console.log('리니지 활성화 여부 조회 실패 !!')
+      console.log(err)
+      isActiveLineage.value = false
+    });
+
     const result = await $ofetch(`/api/search/detail/${currentGuid.value}`);
 
     if (result && result.errorMessage) {

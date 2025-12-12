@@ -412,4 +412,16 @@ public class DetailController {
         params.put("user", user);
         return searchDetailService.updateUnstructuredMetadata(params);
     }
+
+    /**
+     * 리니지 활성화 여부 조회
+     *
+     * @param guid 조회용 메타 ID
+     * @return Object 상세 데이터
+     */
+    @ResponseJsonResult
+    @GetMapping("/isActiveLineage")
+    public Object getIsActiveLineage() throws Exception {
+        return searchDetailService.getLineageActive();
+    }
 }
