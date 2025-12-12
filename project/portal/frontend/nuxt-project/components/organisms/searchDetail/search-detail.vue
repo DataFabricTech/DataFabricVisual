@@ -50,7 +50,7 @@
             :fileFormat="fileFormat"/>
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
-        <div v-if="activeLineage">
+        <div v-if="isActiveLineage">
           <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
             <data-lineage-area v-if="typeName && typeName.toUpperCase() != 'FILE'" :isAdmin="props.isAdmin" :startNode="startNode" :entity="entity"
               :userDataParam="userDataParam" />
@@ -251,12 +251,6 @@ const isProfileArea = computed(() => {
   }
 
   return true
-})
-
-// 리니지 활성화 여부
-const activeLineage = computed(() => {
-  const currentActiveLineage = ObjectUtils.getPropertyValue(isActiveLineage.value, false, false)
-  return currentActiveLineage
 })
 
 // entity 값이 변동되면 파라미터도 동기화
@@ -477,9 +471,31 @@ const settingTabOption = (entity) => {
     }
   }
 
-  // 리니지 활성화 여부에 따른 탭 제어
-  if (activeLineage.value) {
-    tabs.value.push('data-lineage-area')
+  // -----------------------------
+  // 🔥 리니지 탭 위치 제어 (sample-data-area ↔ related-data 사이)
+  // -----------------------------
+  const LINEAGE_TAB = 'data-lineage-area'
+
+  // lineage 활성 ON
+  if (isActiveLineage.value) {
+    // 기존에 있으면 제거 후 새로 삽입 (중복 방지)
+    tabs.value = tabs.value.filter(tab => tab !== LINEAGE_TAB)
+
+    // sample-data-area와 related-data 사이 위치 찾기
+    const sampleIdx = tabs.value.indexOf('sample-data-area')
+    const relatedIdx = tabs.value.indexOf('related-data')
+
+    // sample과 related가 둘 다 존재할 때 → 지정 위치 삽입
+    if (sampleIdx !== -1 && relatedIdx !== -1 && relatedIdx > sampleIdx) {
+      tabs.value.splice(relatedIdx, 0, LINEAGE_TAB)
+    } else {
+      // 기본 fallback: related-data 앞에 삽입
+      const insertPos = relatedIdx !== -1 ? relatedIdx : tabs.value.length
+      tabs.value.splice(insertPos, 0, LINEAGE_TAB)
+    }
+  } else {
+    // lineage 비활성 → 제거
+    tabs.value = tabs.value.filter(tab => tab !== LINEAGE_TAB)
   }
 }
 
@@ -496,9 +512,8 @@ const getDetailDataByGuid = async (newGuid) => {
   if (currentGuid.value) {
     // 리니지 활성화 여부 조회
     await $ofetch(`/api/search/detail/isActiveLineage`).then((res) => {
-      if (res && res.data && res.data.activeLineage) {
-        isActiveLineage.value = res.data.activeLineage
-        tabs.value.push('data-lineage-area')
+      if (res && res.data && res.data.activeLineage && res.data.activeLineage == true) {
+        isActiveLineage.value = true
       } else {
         isActiveLineage.value = false
       }
