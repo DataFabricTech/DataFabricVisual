@@ -84,7 +84,7 @@ public class SearchDetailService {
     private String cryptKey;
     
     @Value("${properties.activeLineage}")
-    public String activeLineage;
+    public Boolean activeLineage;
 
     // 데이터 상세 조회
     public Object getDetailData(Map<String, Object> params) throws Exception {
