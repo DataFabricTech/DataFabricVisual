@@ -456,21 +456,6 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
 const settingTabOption = (entity) => {
   tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'related-data', 'user-review-area']
 
-  // Table, File만 샘플데이터 존재
-  if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE') {
-    tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
-  } else {
-    // File의 경우 사용자 데이터 설명, 데이터 흐름 탭 제거
-    // 확장자가 CSV인 경우 프로파일링 제거
-    if (entity.meta_type.toUpperCase() == 'FILE') {
-      if (entity.attributes.file_format.toUpperCase() != 'CSV') {
-        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area' && el != 'data-profile-area')
-      } else {
-        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area')
-      }
-    }
-  }
-
   // -----------------------------
   // 🔥 리니지 탭 위치 제어 (sample-data-area ↔ related-data 사이)
   // -----------------------------
@@ -493,9 +478,21 @@ const settingTabOption = (entity) => {
       const insertPos = relatedIdx !== -1 ? relatedIdx : tabs.value.length
       tabs.value.splice(insertPos, 0, LINEAGE_TAB)
     }
+  }
+
+  // Table, File만 샘플데이터 존재
+  if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE') {
+    tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
   } else {
-    // lineage 비활성 → 제거
-    tabs.value = tabs.value.filter(tab => tab !== LINEAGE_TAB)
+    // File의 경우 사용자 데이터 설명, 데이터 흐름 탭 제거
+    // 확장자가 CSV인 경우 프로파일링 제거
+    if (entity.meta_type.toUpperCase() == 'FILE') {
+      if (entity.attributes.file_format.toUpperCase() != 'CSV') {
+        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area' && el != 'data-profile-area')
+      } else {
+        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area')
+      }
+    }
   }
 }
 
