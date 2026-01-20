@@ -479,14 +479,14 @@
                       <input type="text" id="file-name" class="mu-input" placeholder="데이터명을 입력하세요."
                         :title="meta_name" v-model="meta_name" />
                     </td>
-                    <th scope="row" rowspan="3">사용자 데이터 설명</th>
+                    <th scope="row" rowspan="3">사용자 데이터 설명<strong class="required">필수</strong></th>
                     <td rowspan="3">
                       <textarea class="mu-area h100" :placeholder="`사용자 데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대512자)`" title="데이터 설명 입력"
                         maxlength="512" v-model="user_description" @keydown="preventNewline" />
                     </td>
                   </tr>
                   <tr>
-                    <th scope="row">데이터 설명</th>
+                    <th scope="row">데이터 설명<strong class="required">필수</strong></th>
                     <td>
                       <input type="text" placeholder="데이터 설명을 작성해주세요." class="mu-input"
                         :title="description" v-model="description" maxlength="100"/>
@@ -1382,9 +1382,21 @@ const isValidInput = () => {
     return false
   }
 
-  // 3. 파일선택 여부
+  // 3. 데이터명 입력 여부
   if (!meta_name.value || meta_name.value == '') { // 데이터 명(파일명)
     errorAlert("데이터명을 입력해 주세요.")
+    return false
+  }
+
+  // 4. 데이터 설명 입력 여부
+  if (!description.value || description.value == '') { // 데이터 설명
+    errorAlert("데이터 설명을 입력해 주세요.")
+    return false
+  }
+
+  // 5. 사용자 데이터 설명 입력 여부
+  if (!user_description.value || user_description.value == '') { // 사용자 데이터 설명
+    errorAlert("사용자 데이터 설명을 입력해 주세요.")
     return false
   }
 
