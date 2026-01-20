@@ -75,6 +75,7 @@
                   class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('HIVE')
                   || currentCollector.system_type.toUpperCase().includes('MYSQL')
                   || currentCollector.system_type.toUpperCase().includes('MARIADB')
+                  || currentCollector.system_type.toUpperCase().includes('ORACLE')
                   || currentCollector.system_type.toUpperCase().includes('TIBERO')
                   || currentCollector.system_type.toUpperCase().includes('S3')
                   || currentCollector.system_type.toUpperCase().includes('MINIO')
@@ -357,6 +358,11 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
     if (currentCollector.value.schema != "") currentCollector.value.schema = ""
   }
 
+  // ORACLE의 경우 schema 값 제거
+  if (newVal.toUpperCase().includes('ORACLE')) {
+    if (currentCollector.value.schema != "") currentCollector.value.schema = ""
+  }
+
   // Tibero의 경우 schema 값 제거
   if (newVal.toUpperCase().includes('TIBERO')) {
     currentCollector.value.schema = ""
@@ -481,6 +487,7 @@ const isValidInput = () => {
   && !currentCollector.value.system_type.toUpperCase().includes('MYSQL')
   && !currentCollector.value.system_type.toUpperCase().includes('MARIADB')
   && !currentCollector.value.system_type.toUpperCase().includes('DRUID')
+  && !currentCollector.value.system_type.toUpperCase().includes('ORACLE')
   && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
   && (!currentCollector.value.schema || currentCollector.value.schema == '')) { // Schema
     if (currentCollector.value.system_type.toUpperCase().includes('TIBERO')) { // Tibero는 기본 default 입력
@@ -488,7 +495,9 @@ const isValidInput = () => {
     } else {
       if (!currentCollector.value.system_type.toUpperCase().includes('S3')
       && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
-      && !currentCollector.value.system_type.toUpperCase().includes('TRINO')) {
+      && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
+      && !currentCollector.value.system_type.toUpperCase().includes('POSTGRES')
+      && !currentCollector.value.system_type.toUpperCase().includes('MSSQL')) {
         errorAlert("Schema 값을 입력해 주세요.")
         return false
       }
