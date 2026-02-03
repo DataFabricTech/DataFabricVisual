@@ -167,18 +167,6 @@ public class MetaDataClassificationService {
         // 매핑 카테고리의 상위 타입 목록
         List<String> superTypes = (List<String>) params.get("superTypes");
 
-        // 테이블 유형일 경우 하위 컬럼 ID 목록 추출하여 함께 카테고리 맵핑
-        // List<String> tableTypes = (List<String>) params.get("tableTypes");
-        // if (tableTypes.size() > 0) {
-        // List<String> columnIds = new ArrayList<>();
-
-        // for (String tableTypeId : tableTypes) {
-        // columnIds.addAll(this.getColumns(tableTypeId));
-        // }
-
-        // entityIds.addAll(columnIds);
-        // }
-
         // 중복된 카테고리 매핑이 있는 엔티티 제거
         entityIds = removeDuplicateMappingEntity(classificationId, entityIds);
         entityIdsCount = entityIds.size();

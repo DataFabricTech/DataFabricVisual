@@ -91,6 +91,7 @@ public class MetaDataManageService {
         Map<String, Object> result = new HashMap<String, Object>();
         int totCnt = 0;
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        List<String> totalMetaIds = new ArrayList<String>();
 
         // 전체 검색일 경우 메타 데이터 유형 목록 조회
         List<Map<String, Object>> metaTypeList = new ArrayList<>();
@@ -104,11 +105,13 @@ public class MetaDataManageService {
             }
         }
 
+        totalMetaIds = metaDataManageMapper.getMetaDataManageIds(params);
         totCnt = metaDataManageMapper.getMetaDataManageListTotCnt(params);
         resultList = metaDataManageMapper.getMetaDataManageList(params);
         
         result.put("totalCount", totCnt);
         result.put("list", resultList);
+        result.put("totalMetaIds", totalMetaIds);
 
         return result;
     }
@@ -155,6 +158,8 @@ public class MetaDataManageService {
                     addResult = true;
                     essyncUpdates(meta_ids, 2, "데이터 권한 공개설정");
                 }
+            } else {
+                // 모두 선택인 경우 조회된 
             }
         } catch (Exception e) {
             e.printStackTrace();

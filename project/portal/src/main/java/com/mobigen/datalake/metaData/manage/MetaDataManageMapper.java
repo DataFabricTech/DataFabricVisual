@@ -65,4 +65,6 @@ public interface MetaDataManageMapper {
     List<LinkedHashMap<String, Object>> getExtractMetaList(Map<String, Object> params) throws Exception;
 
     Integer getMetadataTotal(Map<String, Object> params) throws Exception;
+
+    List<String> getMetaDataManageIds(Map<String, Object> params) throws Exception;
 }
