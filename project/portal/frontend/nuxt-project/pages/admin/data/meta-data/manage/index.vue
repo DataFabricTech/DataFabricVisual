@@ -54,7 +54,7 @@
                     @click.stop="(e) => onToggleTotalChecked(e, true)" />
                   <label for="ckbTotal"><span class="blind">전체선택</span></label>
                 </div>
-                <div style="margin-left: 25px;">모두 선택 : {{ isTotal }} 건</div>
+                <div style="margin-left: 25px;">모두 선택 : {{ $numberComma(isTotal) }} 건</div>
                 <div class="mu-item-group">
                   <div class="mu-selectbox w160">
                     <select name="searchType2" :value="currentMetaType" @change="onChangeMetaType">
@@ -305,6 +305,8 @@ interface TooltipObj {
 }
 
 interface ManageModalObj {
+  isTotalChecked: boolean;
+  totalMetaIds: [];
   toggle: boolean;
   type: string | number;
   target: null;
@@ -464,6 +466,8 @@ const tooltipObj = ref<TooltipObj>({
 
 // 카테고리 관리 모달 제어
 const manageModalObj = ref<ManageModalObj>({
+  isTotalChecked: false,
+  totalMetaIds: [],
   toggle: false,
   type: null,
   target: null
@@ -489,6 +493,7 @@ const isTotal = computed(() => {
   return pagingObj.value.total
 })
 const isTotalChecked = ref(false)
+const totalMetaIds = ref([])
 
 await categoryStore.fetchCategories();
 await categoryTreeStore.fetchCategories()
@@ -860,6 +865,8 @@ const onToggleManageModal = (type: string | null, targets: any = null) => {
   }
 
   manageModalObj.value = {
+    isTotalChecked: isTotalChecked.value,
+    totalMetaIds: totalMetaIds.value,
     type: type ? type : null,
     toggle: !toggle,
     target
@@ -979,7 +986,7 @@ const onSubmitCategory = async (params: any) => {
               event_name: "메타 데이터 카테고리 매핑[변경]"
             }
 
-            for (const entity of params.entityTargets) {
+            for (const entity of params.entityIds) {
               syncParams.meta_ids.push(entity.meta_id)
             }
 
@@ -1088,11 +1095,17 @@ const onClickButton = (type) => {
         break;
     }
   } else {
-    // 메타 타입인 경우 체크
+    // 모두선택인 경우 처리
     if (type === 'extract') {
       if (isTotalChecked.value) {
         let targets: SelectedDataItem[] = [];
         onToggleExtractModal("extract", targets);
+        return
+      }
+    } else if (type === 'roles') {
+      if (isTotalChecked.value) {
+        let targets: SelectedDataItem[] = [];
+        onToggleAuthModal("roles", targets);
         return
       }
     }
@@ -1201,6 +1214,13 @@ const onSearchDataList = async (offset = 0, item = {}) => {
         currentPage: offset + 1
       };
     }
+
+    if (result.totalMetaIds && result.totalMetaIds.length > 0) {
+      totalMetaIds.value = result.totalMetaIds.map((item: any) => item.meta_id)
+    } else {
+      totalMetaIds.value = []
+    }
+
   } else {
     dataList.value = [];
     pagingObj.value = {
@@ -1274,7 +1294,8 @@ const onClickOptionalButtons = (type: any): void => {
 
 // 전체 체크박스 체크 표시 여부 계산
 const isAllChecked = () => {
-  return dataList.value.length > 0 && selectedData.value.length === dataList.value.length;
+  return (dataList.value.length > 0 && selectedData.value.length === dataList.value.length)
+        || isTotalChecked.value;
 };
 
 // 체크박스 체크 표시 여부 계산
@@ -1283,12 +1304,21 @@ const isChecked = (item: any): boolean => {
   else return false;
 };
 
+// 모두 선택 체크박스
 const onToggleTotalChecked = (e) => {
   const {
     target: { checked }
   } = e;
 
   isTotalChecked.value = checked
+
+  // 테이블 최상단 체크박스 클릭 시 전체 선택/해제
+  let tmpList = dataList.value;
+  tmpList.forEach((el) => {
+    el.checked = checked;
+  });
+
+  selectedData.value = checked ? [...tmpList] : [];;
 }
 
 // 체크박스 클릭 이벤트 핸들러
@@ -1299,6 +1329,9 @@ const onToggleCheckbox = (e, isAll: boolean, item: any) => {
   let newItems = [...selectedData.value];
 
   if (isAll) {
+    // 모두 선택 체크박스 제거
+    isTotalChecked.value = false
+
     // 테이블 최상단 체크박스 클릭 시 전체 선택/해제
     let tmpList = dataList.value;
     tmpList.forEach((el) => {
@@ -1313,7 +1346,11 @@ const onToggleCheckbox = (e, isAll: boolean, item: any) => {
     } else {
       const targetIndex = newItems.findIndex((el: any) => el.meta_id === item.meta_id);
       newItems.splice(targetIndex, 1);
+
+      // 모두 선택 체크박스 제거
+      isTotalChecked.value = false;
     }
+
   }
   selectedData.value = newItems;
 };
@@ -1364,7 +1401,7 @@ const onDeleteCategoryMap = async (target) => {
 // 공개설정 버튼 이벤트 핸들러
 const onSubmitAuth = async (params: any) => {
   let auth_params = {
-    meta_ids: selectedData.value.map((item: any) => item.meta_id),
+    meta_ids: isTotalChecked.value ? totalMetaIds.value : selectedData.value.map((item: any) => item.meta_id),
     release: params.updatedRelease
   };
 

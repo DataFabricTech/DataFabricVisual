@@ -73,12 +73,12 @@ const authTypeList = ref([
 watch(
   () => props.authModal,
   (newVal, oldVal) => {
-    // 설정하고자 하는 항목이 2개 이상이면 기본 0 설정
+    // 설정하고자 하는 항목이 없거나(모두선택) 2개 이상이면 기본 0 설정
     if (newVal && newVal.target) {
-      if (newVal.target.length > 1) {
-        currentAuthType.value = 0
-      } else {
+      if (newVal.target.length == 1) {
         currentAuthType.value = newVal.target[0].release ? newVal.target[0].release : 0
+      } else {
+        currentAuthType.value = 0
       }
     }
   }

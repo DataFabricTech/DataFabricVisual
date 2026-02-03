@@ -369,26 +369,17 @@ const createMappingParams = () => {
 
   let entityIds = []; // 선택한 카테고리를 맵핑할 엔티티의 id 목록
   let superTypes = []; // 맵핑 카테고리의 상위 타입 목록
-  const tableTypes = []; // table 유형 엔티티일 경우 하위 컬럼도 맵핑 대상에 추가
-  const tempTargets = []; // 테이블 타입 엔티티 id 추출용 임시 변수
 
-  if (Array.isArray(props.manageModal.target)) {
+  // 모두 선택을 선택하여 진입한 경우
+  if (props.manageModal.isTotalChecked){
+    entityIds = props.manageModal.totalMetaIds
+  } else if (Array.isArray(props.manageModal.target)) {
     // 테이블에서 체크박스로 데이터 선택하여 모달 진입한 경우
     entityIds = props.manageModal.target.map((el) => el.meta_id);
-    tempTargets.push(...props.manageModal.target);
   } else {
     // 테이블 내에서 카테고리 맵핑 버튼 클릭하여 모달 진입한 경우
     entityIds = [props.manageModal.target.meta_id];
-    tempTargets.push(props.manageModal.target);
   }
-
-  tempTargets.forEach((el) => {
-    const { meta_type, meta_id } = el;
-    if (meta_type.includes("table")) {
-      // 엔티티 유형이 테이블일 경우 변수에 추가 저장
-      tableTypes.push(meta_id);
-    }
-  });
 
   // 선택한 맵핑 카테고리의 상위 타입 목록 탐색
   const mappingItem = categoryMap[upperCategory.value.id]; // 맵핑 카테고리
@@ -397,7 +388,7 @@ const createMappingParams = () => {
     superTypes = mappingItem.superTypes;
   }
 
-  return { entityIds, superTypes, tableTypes, entityTargets: tempTargets };
+  return { entityIds, superTypes };
 };
 
 // 확인 버튼 클릭 이벤트 핸들러
@@ -408,15 +399,13 @@ const onConfirm = async () => {
     // 카테고리 맵핑 모달일 경우
     if (upperCategory.value.id) {
       // 선택한 카테고리를 맵핑할 엔티티의 ID 가공
-      const { entityIds, superTypes, tableTypes, entityTargets } = createMappingParams();
+      const { entityIds, superTypes } = createMappingParams();
 
       params = {
         // 선택된 카테고리의 맵핑용 파라미터
         entityIds, // 선택된 entity id 목록
         classificationId: upperCategory.value.id, // 선택된 카테고리 아이디
         superTypes, // 상위 카테고리 맵핑용 파라미터
-        tableTypes, // 테이블 유형 선택 시 하위 컬럼 맵핑용 파라미터
-        entityTargets // 선택된 entity object 목록
       };
     }
   } else {
@@ -452,6 +441,7 @@ const onConfirm = async () => {
       params.deptCd = selectedDept.value.dept_cd;
     }
   }
+
   emit("onSubmit", params);
 };
 
