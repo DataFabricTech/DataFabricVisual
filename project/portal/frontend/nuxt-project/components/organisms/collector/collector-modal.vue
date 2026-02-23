@@ -333,9 +333,9 @@ watch(() => currentCollector.value.hive_thrift_port, (newVal, oldVal) => {
 // 시스템 타입 변동에 따른 처리
 watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
   // 아무것도 입력하지 않은 경우만 기본값 입력되도록 설정
-  // Postgres의 기본 스키마 설정
+  // Postgres의 기본 스키마 없는 경우 빈 문자열 표시
   if (newVal.toUpperCase().includes('POSTGRES') && !props.isUpdate) {
-    if (!currentCollector.value.schema || currentCollector.value.schema == "") currentCollector.value.schema = "public"
+    if (!currentCollector.value.schema || currentCollector.value.schema == "") currentCollector.value.schema = ""
   }
 
   // Mssql의 기본 스키마 설정
