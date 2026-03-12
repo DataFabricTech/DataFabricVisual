@@ -608,6 +608,13 @@ const onClickSaveButton = async () => {
     return;
   }
 
+  const pattern = /^([가-힣]+)([A-Za-z])(.+)?$/;
+
+  if (!pattern.test(formData.value.domain)) {
+    errorAlert('도메인 형식이 올바르지 않습니다.');
+    return;
+  }
+
   if (await confirmAlert("등록하시겠습니까?")) {
     await $ofetch(`/api/metadata/standard/createTerm`, {
       method: 'POST',
