@@ -16,7 +16,7 @@
 
         <div v-if="activeTab === 0">
           <div class="board-list slim-scroll" style="overflow-x: auto;white-space: nowrap;">
-            <table class="mu-grid" style="table-layout: auto;margin-top:0px;">
+            <table class="mu-grid mu-grid-data" style="table-layout: auto;margin-top:0px;">
               <colgroup>
                 <col v-for="(header, index) in tableHeaders" :key="index" />
               </colgroup>
@@ -86,7 +86,7 @@
 
         <div v-if="activeTab === 1">
           <div class="board-list slim-scroll" style="overflow-x: auto;white-space: nowrap;">
-            <table class="mu-grid" style="table-layout: auto;margin-top:0px;">
+            <table class="mu-grid mu-grid-data" style="table-layout: auto;margin-top:0px;">
               <thead>
                 <tr>
                   <th colspan="3" :colspan="tableHeaders[1]?.length || 1" class="sticky-column">구분</th>
@@ -224,15 +224,18 @@ const onMenuDataLoad = async () => {
 
     let i = 0;
     result.data[0].roleMenuList.forEach(menu => {
-      headers.push({ index: i, menu_name: menu.menu_name, colspan: menu.child.length, menu_id: menu.menu_id });
-      i += menu.child.length;
+      // child가 없는 메뉴는 건너뜀
+      const visibleChildren = menu.child.filter(child => child.menu_visible === true);
+      if (visibleChildren.length === 0) return; // ← 이 줄 추가
 
-      menu.child.filter(child => child.menu_visible === true).forEach(child => {
+      headers.push({ index: i, menu_name: menu.menu_name, colspan: visibleChildren.length, menu_id: menu.menu_id });
+      i += visibleChildren.length;
+
+      visibleChildren.forEach(child => {
         childHeaders.push(child);
-
-        for (let i = 0; i < systemRoleGubun.value.length; i++) {
-          if (systemRoleGubun.value[i].id === menu.menu_auth) {
-            systemRoleGubun.value[i].collength++;
+        for (let j = 0; j < systemRoleGubun.value.length; j++) {
+          if (systemRoleGubun.value[j].id === menu.menu_auth) {
+            systemRoleGubun.value[j].collength++;
           }
         }
       });
