@@ -85,7 +85,7 @@
               <Swiper @swiper="onSwiperChartCategory" @mouseenter="controlSwiper(false)"
                 @mouseleave="controlSwiper(true)" @touch-end="controlSwiper(null)" class="swiper" :modules="[Autoplay]"
                 slidesPerView="10" :autoplay="{ delay: 1000, disableOnInteraction: true, }" :speed="1000" loop
-                loopAdditionalSlides="1">
+                :loopAdditionalSlides="1">
                 <swiper-slide v-for="(cat, idx) in addCategoryList">
                   <div
                     style="width: 100%; height: 100%;margin-top: 30px; justify-content: center; align-items: center; text-align: center;">
