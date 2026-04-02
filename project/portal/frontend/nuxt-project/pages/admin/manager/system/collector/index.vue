@@ -319,13 +319,15 @@ const onCloseCollectorModal = async () => {
 const updateCollector = async (newCollector) => {
   let suffix = newCollector.flag
 
-  // Hive의 경우 파일 등록 처리
-  if (newCollector.system_type.toUpperCase().includes('HIVE')) {
+  // Hive 또는 Elasticsearch(https)의 경우 파일 등록 처리
+  if (newCollector.system_type.toUpperCase().includes('HIVE') || 
+     (newCollector.system_type.toUpperCase().includes('ELASTICSEARCH') && newCollector.es_protocol == 'https')) {
 
     const formData = new FormData()
     formData.append("systemId", newCollector.system_id)
     if (newCollector.core_site_file) formData.append("coreSiteFile", newCollector.core_site_file)
     if (newCollector.hdfs_site_file) formData.append("hdfsSiteFile", newCollector.hdfs_site_file)
+    if (newCollector.es_ssl_file) formData.append("esSslFile", newCollector.es_ssl_file)
 
     await $ofetch(`/api/admin/system/collector/add/saveFile`, {
       method: 'POST',
@@ -335,8 +337,6 @@ const updateCollector = async (newCollector) => {
         if ((res.errorMessage && res.errorMessage != "")) {
           await errorAlert("파일 저장에 실패하였습니다.");
           return;
-        } else {
-
         }
       }
     })

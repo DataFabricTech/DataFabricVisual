@@ -77,23 +77,31 @@ public class CollectorService {
             list.get(i).put("isActiveIngestion", false);
           }
 
-          // HIVE인 경우 core-site.xml, hdfs-site.xml 파일 조회
           String system_id = list.get(i).get("system_id").toString();
           List<Map<String, Object>> fileInfoList = collectorMapper.getFileInfoList(system_id);
           Map<String, Object> coreSiteFileInfo = null;
           Map<String, Object> hdfsSiteFileInfo = null;
+          Map<String, Object> esFileInfo = null;
           if (fileInfoList != null) {
             for (int j = 0; j < fileInfoList.size(); j++) {
-              if (fileInfoList.get(j).get("file_name").toString().equals("core-site.xml")) {
+              // HIVE인 경우 core-site.xml, hdfs-site.xml 파일 조회
+              if (list.get(i).get("system_type").equals("Hive")){
+                if (fileInfoList.get(j).get("file_name").toString().equals("core-site.xml")) {
                 coreSiteFileInfo = fileInfoList.get(j);
-              } else if (fileInfoList.get(j).get("file_name").toString().equals("hdfs-site.xml")) {
-                hdfsSiteFileInfo = fileInfoList.get(j);
+                } else if (fileInfoList.get(j).get("file_name").toString().equals("hdfs-site.xml")) {
+                  hdfsSiteFileInfo = fileInfoList.get(j);
+                }
+              }
+              // ElasticSearch인 경우 ssl 파일 조회
+              if (list.get(i).get("system_type").equals("ElasticSearch")){
+                esFileInfo = fileInfoList.get(j);
               }
             }
           }
 
           list.get(i).put("core_site_file", coreSiteFileInfo);
           list.get(i).put("hdfs_site_file", hdfsSiteFileInfo);
+          list.get(i).put("es_ssl_file", esFileInfo);
         }
       }
 
@@ -131,6 +139,10 @@ public class CollectorService {
         params.put("password", encoder.encrypt(params.get("password").toString()));
       }
 
+      if (params.get("es_ssl_password") != null && !params.get("es_ssl_password").toString().equals("")) {
+        params.put("es_ssl_password", encoder.encrypt(params.get("es_ssl_password").toString()));
+      }
+
       addCount = collectorMapper.addCollector(params);
       if (addCount > 0) {
         putIngestionDagApi(params.get("system_id").toString());
@@ -151,15 +163,19 @@ public class CollectorService {
     int updateCount = 0;
 
     try {
+      AESGCMUtil encoder = new AESGCMUtil(cryptKey);
+
       // 비밀번호를 입력한 경우는 암호화해서 같이 저장
-      if (params.get("password") != null && !params.get("password").equals("")) {
-        AESGCMUtil encoder = new AESGCMUtil(cryptKey);
+      if (params.get("password") != null && !params.get("password").toString().equals("")) {
         params.put("password", encoder.encrypt(params.get("password").toString()));
-        updateCount = collectorMapper.updateCollector(params);
-      } else {
-        params.remove("password");
-        updateCount = collectorMapper.updateCollectorNoPassword(params);
       }
+
+      // Elasticsearch SSL 비밀번호 암호화
+      if (params.get("es_ssl_password") != null && !params.get("es_ssl_password").toString().equals("")) {
+        params.put("es_ssl_password", encoder.encrypt(params.get("es_ssl_password").toString()));
+      }
+
+      updateCount = collectorMapper.updateCollector(params);
 
       if (updateCount > 0) {
         putIngestionDagApi(params.get("system_id").toString());
@@ -232,6 +248,7 @@ public class CollectorService {
   private boolean putIngestionDagApi(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
     String executeUrl = catalogApiBaseUrl + catalogApiUrlDag;
+
 
     try {
       HttpHeaders headers = new HttpHeaders();
@@ -323,18 +340,25 @@ public class CollectorService {
         List<Map<String, Object>> fileInfoList = collectorMapper.getFileInfoList(system_id);
         Map<String, Object> coreSiteFileInfo = null;
         Map<String, Object> hdfsSiteFileInfo = null;
+        Map<String, Object> esFileInfo = null;
         if (fileInfoList != null) {
           for (int j = 0; j < fileInfoList.size(); j++) {
-            if (fileInfoList.get(j).get("file_name").toString().equals("core-site.xml")) {
+            if (collector.get("system_type").equals("Hive")){
+              if (fileInfoList.get(j).get("file_name").toString().equals("core-site.xml")) {
               coreSiteFileInfo = fileInfoList.get(j);
-            } else if (fileInfoList.get(j).get("file_name").toString().equals("hdfs-site.xml")) {
-              hdfsSiteFileInfo = fileInfoList.get(j);
+              } else if (fileInfoList.get(j).get("file_name").toString().equals("hdfs-site.xml")) {
+                hdfsSiteFileInfo = fileInfoList.get(j);
+              }
+            }
+            if (collector.get("system_type").equals("ElasticSearch")) {
+              esFileInfo = fileInfoList.get(j);
             }
           }
         }
 
         collector.put("core_site_file", coreSiteFileInfo);
         collector.put("hdfs_site_file", hdfsSiteFileInfo);
+        collector.put("es_ssl_file", esFileInfo);
 
         result.put("result", true);
         result.put("collector", collector);

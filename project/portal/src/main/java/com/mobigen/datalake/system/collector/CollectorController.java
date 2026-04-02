@@ -182,7 +182,7 @@ public class CollectorController {
 
             if (user != null) {
                 // 파일 업로드 경로 숨기기
-                List<FileUploadResponse> uploadResult = fileService.fileHiveConfigUpload(uploadForm, systemConfigPath,
+                List<FileUploadResponse> uploadResult = fileService.fileConfigUpload(uploadForm, systemConfigPath,
                         request);
                 if (uploadResult.size() != 0)
                     uploadResult.get(0).setSaveFileName(null);
@@ -190,7 +190,7 @@ public class CollectorController {
                 js.setData(uploadResult);
             } else {
                 js.setData(0);
-                js.setErrorMessage("Hive 설정파일 저장에 실패하였습니다.");
+                js.setErrorMessage("설정파일 저장에 실패하였습니다.");
             }
 
         } catch (Exception e) {

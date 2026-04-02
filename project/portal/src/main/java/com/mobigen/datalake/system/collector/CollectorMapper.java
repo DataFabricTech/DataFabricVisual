@@ -17,8 +17,6 @@ public interface CollectorMapper {
 
   int updateCollector(Map<String, Object> params) throws Exception;
 
-  int updateCollectorNoPassword(Map<String, Object> params) throws Exception;
-
   int deleteCollector(String system_id) throws Exception;
 
   List<String> getSystemTypes() throws Exception;

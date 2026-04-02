@@ -23,7 +23,7 @@ RUN mkdir /data_catalog_portal/conf
 RUN mkdir /data_catalog_portal/data
 RUN mkdir /data_catalog_portal/csv
 # RUN mkdir /data_catalog_portal/sample
-RUN mkdir /data_catalog_portal/hive_system_config
+RUN mkdir /data_catalog_portal/system_config
 RUN mkdir /data_catalog_portal/unstructured_data
 
 #volume 구성을 위한 기본 복제

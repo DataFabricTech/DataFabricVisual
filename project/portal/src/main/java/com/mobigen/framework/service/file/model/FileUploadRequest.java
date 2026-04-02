@@ -22,4 +22,5 @@ public class FileUploadRequest {
     private String systemId;
 	private MultipartFile coreSiteFile;
 	private MultipartFile hdfsSiteFile;
+	private MultipartFile esSslFile;
 }

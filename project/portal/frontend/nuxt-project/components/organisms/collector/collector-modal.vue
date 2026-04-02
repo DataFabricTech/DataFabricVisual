@@ -55,9 +55,18 @@
                 </div>
               </td>
               <th v-if="currentCollector.system_type.toUpperCase().includes('TRINO')">Catalog</th>
+              <th v-else-if="currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH')">Protocol</th>
               <th v-else>Database</th>
               <td v-if="currentCollector.system_type.toUpperCase().includes('TRINO')" colspan="3"><input type="text" v-model="currentCollector.catalog" :title="currentCollector.catalog"
                   class="mu-input" :readonly="isDetail">
+              </td>
+              <td v-else-if="currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH')" colspan="3">
+                <div class="mu-selectbox">
+                  <select v-model="currentCollector.es_protocol" :disabled="isDetail" @change="()=>{currentCollector.login=''; currentCollector.password='';}">
+                    <option value="https">https</option>
+                    <option value="http">http</option>
+                  </select>
+                </div>
               </td>
               <td v-else colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database"
                   class="mu-input"
@@ -80,7 +89,8 @@
                   || currentCollector.system_type.toUpperCase().includes('S3')
                   || currentCollector.system_type.toUpperCase().includes('MINIO')
                   || currentCollector.system_type.toUpperCase().includes('DRUID')
-                  || currentCollector.system_type.toUpperCase().includes('TRINO')"></td>
+                  || currentCollector.system_type.toUpperCase().includes('TRINO')
+                  || currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH')"></td>
             </tr>
             <tr>
               <th>수집 주기</th>
@@ -88,7 +98,9 @@
                   placeholder="ex) * * * * *" class="mu-input" :readonly="isDetail"></td>
               <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Access Key' : 'Login' }}</th>
               <td colspan="3"><input type="text" v-model="currentCollector.login" :title="currentCollector.login"
-                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')"></td>
+                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')
+                    || (currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH') && currentCollector.es_protocol=='http')
+                  "></td>
             </tr>
             <tr>
               <th>수집 여부</th>
@@ -102,7 +114,56 @@
               </td>
               <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Secret Key' : 'Password' }}</th>
               <td colspan="3"><input type="text" v-model="currentCollector.password" :title="currentCollector.password"
-                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')"></td>
+                  class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')
+                    || (currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH') && currentCollector.es_protocol=='http')
+                  "></td>
+            </tr>
+            <tr v-if="currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH') && currentCollector.es_protocol == 'https'">
+              <th></th>
+              <td></td>
+              <th>SSL 파일</th>
+              <td colspan="3">
+                <div class="mu-item-vgroup" style="width: 350px;">
+                  <!-- 첨부파일 : 파일찾기 , 삭제 편집모드 -->
+                  <div class="mu-file-attach" v-if="!isDetail">
+                    <input type="text" id="file-name-ssl" class="mu-input" placeholder=".jks 파일 지원" style="width: 300px;"
+                      readonly />
+                    <div class="mu-file-btn" style="margin-left: 10px">
+                      <button type="button" class="mu-btn">
+                        <label for="file-find-ssl">파일찾기</label>
+                      </button>
+                      <input type="file" id="file-find-ssl" class="mu-btn-hide" @change="onChange($event, 'ssl-file')" />
+                    </div>
+                  </div>
+                  <!-- 첨부파일 안내 문구 -->
+                  <div v-if="!isDetail" style="margin-top: 5px; font-size: 11px; color: #666; line-height: 1.4;">
+                    * Elasticsearch HTTPS 연결을 위해 Truststore(.jks) 파일이 필요합니다.<br/>
+                    * 관리자로부터 발급받은 CA 인증서 기반 JKS 파일을 업로드해 주세요.<br/>
+                    * 지원 형식: .jks (Java KeyStore)
+                  </div>
+                  <!-- 첨부파일 : 리스트 개발삭제 가능함 -->
+                  <ul class="file-sch-list"
+                    v-if="currentCollector.es_ssl_file && currentCollector.es_ssl_file != null"
+                    style="width: 350px;">
+                    <li>
+                      <a href="#" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>{{
+                        currentCollector.es_ssl_file.name ? currentCollector.es_ssl_file.name :
+                          currentCollector.es_ssl_file.file_name }}</a>
+                      <button v-if="!isDetail" type="button" class="mu-btn mu-btn-delete"
+                        @click="onClickDeleteButton($event, 'ssl-file')">
+                        <i class="mu-icon-svg item-delete"></i><span>첨부파일 삭제</span>
+                      </button>
+                    </li>
+                  </ul>
+                  <!-- // 첨부파일 -->
+                </div>
+              </td>
+            </tr>
+            <tr v-if="currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH') && currentCollector.es_protocol == 'https'">
+              <th></th>
+              <td></td>
+              <th>SSL Password</th>
+              <td colspan="3"><input v-model="currentCollector.es_ssl_password" class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr v-if="currentCollector.system_type.toUpperCase().includes('HIVE')">
               <th></th>
@@ -252,7 +313,7 @@ import { confirmAlert, errorAlert, successAlert } from "@/components/functional/
 import { useUserStore } from "@/store/user";
 import { useNuxtApp } from "nuxt/app";
 import { v4 as uuidv4 } from 'uuid';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const { $ofetch } = useNuxtApp();
 const emit = defineEmits(["onCloseModal", "updateCollector"]);
@@ -300,6 +361,9 @@ const currentCollector = ref({
   update_user: "",
   update_user_name: "",
   update_date: "",
+  es_protocol: "",
+  es_ssl_file: null,
+  es_ssl_password: "",
   core_site_file: null,
   hdfs_site_file: null,
   formData: null,
@@ -332,6 +396,9 @@ watch(() => currentCollector.value.hive_thrift_port, (newVal, oldVal) => {
 
 // 시스템 타입 변동에 따른 처리
 watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
+  
+  if(currentCollector.value.flag != 'add') return;
+
   // 아무것도 입력하지 않은 경우만 기본값 입력되도록 설정
   // Postgres의 기본 스키마 없는 경우 빈 문자열 표시
   if (newVal.toUpperCase().includes('POSTGRES') && !props.isUpdate) {
@@ -374,6 +441,15 @@ watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
    || newVal.toUpperCase().includes('TRINO')) {
     currentCollector.value.database = ""
     currentCollector.value.schema = ""
+  }
+
+  // Elasticsearch의 경우 database, schema 값 제거
+  if(newVal.toUpperCase().includes('ELASTICSEARCH')){
+    currentCollector.value.database = ""
+    currentCollector.value.schema = ""
+    currentCollector.value.es_protocol = 'https'
+    currentCollector.value.es_ssl_file = null
+    currentCollector.value.es_ssl_password = ""
   }
 })
 
@@ -438,9 +514,11 @@ const onConfirm = async () => {
         // 수정된 파일만 추가
         currentCollector.value.core_site_file = currentCollector.value.core_site_file instanceof File ? currentCollector.value.core_site_file : null
         currentCollector.value.hdfs_site_file = currentCollector.value.hdfs_site_file instanceof File ? currentCollector.value.hdfs_site_file : null
+        currentCollector.value.es_ssl_file = currentCollector.value.es_ssl_file instanceof File ? currentCollector.value.es_ssl_file : null
       } else {
         currentCollector.value.flag = 'add'
       }
+
       emit("updateCollector", currentCollector.value);
     }
   }
@@ -474,6 +552,7 @@ const isValidInput = () => {
   && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
   && !currentCollector.value.system_type.toUpperCase().includes('DRUID')
   && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
+  && !currentCollector.value.system_type.toUpperCase().includes('ELASTICSEARCH')
   && (!currentCollector.value.database || currentCollector.value.database == '')) { // Database
     errorAlert("Database 값을 입력해 주세요.")
     return false
@@ -496,6 +575,7 @@ const isValidInput = () => {
       if (!currentCollector.value.system_type.toUpperCase().includes('S3')
       && !currentCollector.value.system_type.toUpperCase().includes('MINIO')
       && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
+      && !currentCollector.value.system_type.toUpperCase().includes('ELASTICSEARCH')
       && !currentCollector.value.system_type.toUpperCase().includes('POSTGRES')
       && !currentCollector.value.system_type.toUpperCase().includes('MSSQL')) {
         errorAlert("Schema 값을 입력해 주세요.")
@@ -509,6 +589,7 @@ const isValidInput = () => {
   }
   if (!currentCollector.value.system_type.toUpperCase().includes('DRUID')
     && !currentCollector.value.system_type.toUpperCase().includes('TRINO')
+    && !(currentCollector.value.system_type.toUpperCase().includes('ELASTICSEARCH') && (currentCollector.value.es_protocol == 'http' || currentCollector.value.es_protocol == ''))
     && (!currentCollector.value.login || currentCollector.value.login == '')) { // Login
     errorAlert("Login 값을 입력해 주세요.")
     return false
@@ -531,6 +612,19 @@ const isValidInput = () => {
     }
   }
 
+  // 등록모드에서 ELASTICSEARCH https 인 경우 password나 ssl_password가 비어있으면 errorAlert 및 return false
+  if(!props.isUpdate
+      && currentCollector.value.system_type.toUpperCase().includes("ELASTICSEARCH")){
+    if(!currentCollector.value.password || currentCollector.value.password == ''){
+      errorAlert("Password를 입력해 주세요.")
+      return false
+    }
+    if(!currentCollector.value.es_ssl_password || currentCollector.value.es_ssl_password == ''){
+      errorAlert("SSL Password를 입력해 주세요.")
+      return false
+    }
+  }
+
   // Hive의 경우 core-site.xml , hdfs-site.xml 파일 업로드 확인
   if (currentCollector.value.system_type.toUpperCase().includes('HIVE') && !currentCollector.value.core_site_file || currentCollector.value.core_site_file == '') { // core-site.xml
     errorAlert("core-site.xml 설정파일을 추가해 주세요.")
@@ -540,6 +634,15 @@ const isValidInput = () => {
   if (currentCollector.value.system_type.toUpperCase().includes('HIVE') && !currentCollector.value.hdfs_site_file || currentCollector.value.hdfs_site_file == '') { // hdfs-site.xml
     errorAlert("hdfs-site.xml 설정파일을 추가해 주세요.")
     return false
+  }
+
+  // ES의 경우 SSL 파일 업로드 확인
+  if (currentCollector.value.system_type.toUpperCase().includes('ELASTICSEARCH') 
+    && currentCollector.value.es_protocol == 'https'){
+    if(!currentCollector.value.es_ssl_file || currentCollector.value.es_ssl_file == ''){
+      errorAlert("SSL 파일을 추가해 주세요.")
+      return false
+    }
   }
 
   // 2. 시스템 ID 중복체크
@@ -568,8 +671,12 @@ const onChange = (e: any, type) => {
   );
   let reg = /xml/i;
 
-  if (!reg.test(fileName)) {
+  if (type != 'ssl-file' && !reg.test(fileName)) {
     errorAlert("XML 파일만 업로드 할 수 있습니다.");
+    return false;
+  }
+  if (type == 'ssl-file' && !/jks/i.test(fileName)) {
+    errorAlert(".jks 파일만 업로드 할 수 있습니다.");
     return false;
   }
   if (fileSize > maxSize) {
@@ -579,6 +686,7 @@ const onChange = (e: any, type) => {
 
   if (type == 'core-site') currentCollector.value.core_site_file = e.target.files[0]
   if (type == 'hdfs-site') currentCollector.value.hdfs_site_file = e.target.files[0]
+  if (type == 'ssl-file') currentCollector.value.es_ssl_file = e.target.files[0]
 
 };
 
@@ -586,6 +694,7 @@ const onChange = (e: any, type) => {
 const onClickDeleteButton = (e: any, type): void => {
   if (type == 'core-site') currentCollector.value.core_site_file = null; // [10, 20]
   if (type == 'hdfs-site') currentCollector.value.hdfs_site_file = null; // [10, 20]
+  if (type == 'ssl-file') currentCollector.value.es_ssl_file = null;
 };
 
 </script>

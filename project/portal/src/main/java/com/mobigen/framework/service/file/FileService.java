@@ -149,16 +149,16 @@ public class FileService {
 		return isValidate;
 	}
 
-	private boolean validateUploadHiveConfigFile(List<MultipartFile> files) {
+	private boolean validateUploadConfigFile(List<MultipartFile> files) {
 		boolean isValidate = false;
 
 		for (MultipartFile multipartFile : files)
 		{
 			String originalFileName = multipartFile.getOriginalFilename();
-			String extType = originalFileName.substring(originalFileName.indexOf("."));
+			String extType = originalFileName.substring(originalFileName.lastIndexOf("."));
 
 			// 확장자 확인
-			if(extType.toLowerCase().endsWith(".xml")) {
+			if(extType.toLowerCase().endsWith(".xml") || extType.toLowerCase().endsWith(".jks")) {
 				isValidate = true;
 			}
 			
@@ -364,24 +364,27 @@ public class FileService {
 	}
 
 	/**
-	 * Hive 설정파일 업로드
+	 * 시스템 설정파일 업로드
 	 * @param uploadForm
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FileUploadResponse> fileHiveConfigUpload(FileUploadRequest uploadForm, String savePath, HttpServletRequest request) throws Exception {
+	public List<FileUploadResponse> fileConfigUpload(FileUploadRequest uploadForm, String savePath, HttpServletRequest request) throws Exception {
 		List<FileUploadResponse> result = new ArrayList<FileUploadResponse>();
 		String system_id = uploadForm.getSystemId();
 
 		MultipartFile coreSiteFile = uploadForm.getCoreSiteFile();
 		MultipartFile hdfsSiteFile = uploadForm.getHdfsSiteFile();
+		MultipartFile sslFile = uploadForm.getEsSslFile();
+
 		List<MultipartFile> files = new ArrayList<>();
 		if (coreSiteFile != null) files.add(coreSiteFile);
 		if (hdfsSiteFile != null) files.add(hdfsSiteFile);
+		if (sslFile != null) files.add(sslFile);
 
 		if(null != files && files.size() > 0) {
 			// 확장자 확인
-			if(!validateUploadHiveConfigFile(files)) {
+			if(!validateUploadConfigFile(files)) {
 				throw new Exception("확장자가 잘못되었습니다.");
 			}
 
