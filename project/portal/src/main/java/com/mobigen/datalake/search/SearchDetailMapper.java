@@ -93,4 +93,6 @@ public interface SearchDetailMapper {
     Map<String, Object> getSystemInfo(String system_id);
 
     int updateUnstructuredMetadata(Map<String, Object> params);
+
+    Map<String, Object> getMetaDataByMetaName(String system_id, String meta_name);
 }

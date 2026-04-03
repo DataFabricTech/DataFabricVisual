@@ -396,6 +396,48 @@ public class SearchDetailService {
                 query = "select * from \"" + system_id + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
             }
         }
+        // ElasticSearch searchIndex Type인 경우
+        else if (params.get("typeName").toString().equals("searchIndex")) {
+            String[] queryStrSplit = params.get("qualified_name").toString().split("\\.");
+            String system_id = queryStrSplit[0];
+            String meta_name = queryStrSplit[1];
+
+            // <table>에서 meta_name으로 attributes(fields) 조회
+            Map<String, Object> metaData = searchDetailMapper.getMetaDataByMetaName(system_id, meta_name);
+            if (metaData != null && metaData.get("attributes") != null) {
+                try {
+                    Map<String, Object> attributes = convertJsonbToMap(metaData.get("attributes"));
+                    @SuppressWarnings("unchecked")
+                    List<Map<String, Object>> fields = (List<Map<String, Object>>) attributes.get("fields");
+
+                    if (fields != null && fields.size() > 0) {
+                        StringBuilder selectColumns = new StringBuilder();
+                        for (int i = 0; i < fields.size(); i++) {
+                            Map<String, Object> field = fields.get(i);
+                            String fieldName = field.get("meta_name").toString();
+                            String fieldType = field.get("field_type") != null ? field.get("field_type").toString() : "";
+
+                            if (i > 0) {
+                                selectColumns.append(",");
+                            }
+
+                            if (fieldType.equalsIgnoreCase("OBJECT")) {
+                                // OBJECT 타입은 json_extract로 조회
+                                selectColumns.append("json_extract(_source, '$." + fieldName + "') as \"" + fieldName + "\"");
+                            } else {
+                                selectColumns.append("\"" + fieldName + "\"");
+                            }
+                        }
+
+                        query = "select " + selectColumns.toString()
+                                + " from \"" + system_id + "\".\"default\".\"" + meta_name + "\""
+                                + " limit " + (params.get("limit") != null ? params.get("limit").toString() : "10");
+                    }
+                } catch (Exception e) {
+                    log.error("ElasticSearch 샘플데이터 쿼리 생성 실패", e);
+                }
+            }
+        }
 
         // Trino 조회
         if (!query.equals("")) {

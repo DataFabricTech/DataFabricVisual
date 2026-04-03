@@ -40,7 +40,7 @@
             :columnCommentMap="columnCommentMap" />
         </div>
         <!-- detail-section : 샘플 데이터 -->
-        <div v-if="typeName && (typeName.toUpperCase() == 'TABLE' || typeName.toUpperCase() == 'FILE')" :ref="el => sectionRefs['sample-data-area'] = el"
+        <div v-if="typeName && showSampleData(typeName)" :ref="el => sectionRefs['sample-data-area'] = el"
           class="content-block">
           <sample-data-area :isAdmin="props.isAdmin"
             :sampleData="sampleData"
@@ -479,9 +479,8 @@ const settingTabOption = (entity) => {
       tabs.value.splice(insertPos, 0, LINEAGE_TAB)
     }
   }
-
-  // Table, File만 샘플데이터 존재
-  if (entity.meta_type.toUpperCase() != 'TABLE' && entity.meta_type.toUpperCase() != 'FILE') {
+  
+  if (!showSampleData(entity.meta_type)) {
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
   } else {
     // File의 경우 사용자 데이터 설명, 데이터 흐름 탭 제거
@@ -494,6 +493,10 @@ const settingTabOption = (entity) => {
       }
     }
   }
+}
+
+const showSampleData = (metaType : string) =>{
+  return ['TABLE','FILE','SEARCHINDEX'].includes(metaType.toUpperCase())
 }
 
 // 객체 키 유무 확인
@@ -687,7 +690,8 @@ const getSampleData = () => {
   const system_name = ObjectUtils.getPropertyValue(entity.value, "system_name", "")
   const system_type = ObjectUtils.getPropertyValue(entity.value, "system_type", "")
 
-  if (meta_type && meta_type.toUpperCase() == 'TABLE') {
+  // TABLE, SEARCHINDEX 일때
+  if (meta_type && ['TABLE','SEARCHINDEX'].includes(meta_type.toUpperCase())) {
     let trinoColumns = "";
     for (
       let columnNum = 0;
