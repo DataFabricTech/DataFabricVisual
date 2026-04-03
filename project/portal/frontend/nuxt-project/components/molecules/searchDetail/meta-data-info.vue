@@ -222,7 +222,7 @@
                         <td>{{ idx + 1 }}</td>
                         <td :title="value[idx] && value[idx].meta_name ? value[idx].meta_name : '-'">{{ value[idx] && value[idx].meta_name ? value[idx].meta_name : '-'}}</td>
                         <td :title="value[idx] && value[idx].description ? value[idx].description : '-'">{{ value[idx] && value[idx].description ? value[idx].description : '-' }}</td>
-                        <td :title="value[idx] && value[idx].column_type ? value[idx].column_type : '-'">{{ value[idx] && value[idx].column_type ? value[idx].column_type : '-' }}</td>
+                        <td :title="value[idx] && value[idx].type ? value[idx].type : '-'">{{ value[idx] && value[idx].type ? value[idx].type : '-' }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -320,20 +320,31 @@ const metaDataInfo = computed(() => {
     // 화면 렌더에 필요한 형태로 데이터 가공
     const metaDataInfoResult = obj
 
-    const columns = obj.columns;
+    const key =  entity.system_type=='ElasticSearch' ? 'fields' : 'columns'
+    const typeKey = entity.system_type=='ElasticSearch' ? 'field_type' : 'column_type'
+    
+    // 컬럼(필드) 메타 데이터
+    const columns =  obj[key]
     if (columns) {
       if (Array.isArray(columns)) {
         const uniqueColumns = columns.filter((el, idx) => {
           return columns.indexOf(el) === idx;
         });
 
-        metaDataInfoResult.columns = uniqueColumns;
+        // column_type, field_type 모두 "type" 으로 사용
+        uniqueColumns.forEach((el)=>el.type = el[typeKey])
+        metaDataInfoResult[key] = uniqueColumns;
       } else {
-        metaDataInfoResult.columns = []
+        metaDataInfoResult[key] = []
       }
     } else {
-      metaDataInfoResult.columns = []
+      metaDataInfoResult[key] = []
     }
+
+    // desiredOrder의 'columns'를 system_type=='ElasticSearch' 인 경우 'fields'로 수정
+    desiredOrder.value = desiredOrder.value.map(d=>{ 
+      return d == 'columns' ? key : d
+    })
 
     const sortedEntries = desiredOrder.value
       .map((key) => [key, metaDataInfoResult[key]])
@@ -420,6 +431,7 @@ const getKrKey = (key) => {
     if (key == "description") return "메타데이터 description";
     if (key == "user_description") return "메타데이터 description";
     if (key == "columns") return "컬럼 목록";
+    if (key == "fields") return "필드 목록";
     if (key == "column_type") return "컬럼 데이터 타입";
     if (key == "display_name") return "화면 표출 메타명";
     if (key == "qualified_name") return "객체 고유명"
@@ -464,10 +476,8 @@ const getTypeByValue = (key, value) => {
   let type = "";
 
   if (typeof value === "object") {
-    if (value && key === "columns") {
+    if (value && ["columns","fields"].includes(key) ) {
       type = "DIV";
-    } else if (value && key === "columns") {
-      type = "TEXT_AREA";
     }
   } else {
     if (key === "table") {
