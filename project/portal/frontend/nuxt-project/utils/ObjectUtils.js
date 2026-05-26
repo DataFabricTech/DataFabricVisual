@@ -1,5 +1,5 @@
 
-export default class ObjectUtils {
+export class ObjectUtils {
 
   /**
    * @desc      Object 내 대상 property가 있는지 확인
@@ -101,3 +101,6 @@ export default class ObjectUtils {
     return JSON.parse(JSON.stringify(value));
   }
 }
+
+// Nuxt auto-import는 named export를 기대하고, 기존 코드는 default import 사용 → 둘 다 export
+export default ObjectUtils;

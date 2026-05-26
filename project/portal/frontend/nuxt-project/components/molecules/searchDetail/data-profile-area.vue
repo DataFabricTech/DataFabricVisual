@@ -6,10 +6,26 @@
       <div class="mu-heading">
         <h4>데이터 프로파일링</h4>
         <div class="mu-item-group">
+          <button
+            type="button"
+            class="mu-btn mu-btn-primary"
+            :disabled="!reportExists"
+            @click="onClickReport()"
+          >
+            <span>{{ reportButtonText }}</span>
+          </button>
           <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" @click="toggleShowData()">
             <span>{{ toggleShowDataText }}</span>
           </button>
         </div>
+      </div>
+
+      <!-- ydata 프로파일링 HTML 리포트 -->
+      <div v-if="reportVisible && reportExists" class="detail-box">
+        <iframe
+          :src="reportUrl"
+          style="width: 100%; height: 800px; border: 1px solid #e0e0e0;"
+        />
       </div>
       <div
         v-if="(props.userDataAuth == 1 || props.userDataAuth == 2) && ((table && table.status) || (column && column.length > 0))">
@@ -127,10 +143,44 @@
 
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
-const props = defineProps(["dataProfile", "columnCommentMap", "isAdmin", "userDataAuth"]);
+const props = defineProps(["dataProfile", "columnCommentMap", "isAdmin", "userDataAuth", "metaId"]);
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
+
+const reportVisible = ref(false);
+// null = 미확인, true = 파일 있음, false = 없음
+const reportExists = ref<boolean | null>(null);
+const reportUrl = computed(() => props.metaId ? `/profile-reports/${props.metaId}.html` : "");
+const reportButtonText = computed(() => {
+  if (reportExists.value === null) return "확인 중...";
+  if (reportExists.value === false) return "리포트 없음";
+  return reportVisible.value ? "리포트 닫기" : "프로파일링 리포트 보기";
+});
+
+// Nuxt dev 서버는 없는 정적 경로에도 SPA index를 200으로 응답하므로
+// x-powered-by: Nuxt 헤더 유무로 실제 정적 파일인지 판별
+const checkReportExists = async () => {
+  if (!props.metaId) {
+    reportExists.value = false;
+    return;
+  }
+  try {
+    const res = await fetch(reportUrl.value, { method: "HEAD" });
+    const isSpaFallback = (res.headers.get("x-powered-by") || "").toLowerCase().includes("nuxt");
+    reportExists.value = res.ok && !isSpaFallback;
+  } catch (e) {
+    reportExists.value = false;
+  }
+};
+
+const onClickReport = () => {
+  if (!reportExists.value) return;
+  reportVisible.value = !reportVisible.value;
+};
+
+// metaId가 늦게 들어오는 경우(부모에서 비동기 로드)도 커버
+watch(() => props.metaId, (id) => { if (id) checkReportExists(); }, { immediate: true });
 
 const toggleShowData = () => {
   showData.value = !showData.value;
