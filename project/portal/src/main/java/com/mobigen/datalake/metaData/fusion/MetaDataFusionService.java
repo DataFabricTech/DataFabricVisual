@@ -16,16 +16,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.datalake.search.SearchDetailMapper;
+import org.postgresql.util.PGobject;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -110,9 +114,15 @@ public class MetaDataFusionService {
             // 샘플 데이터 조회 쿼리 제작
             String query = params.get("query").toString();
             if (!query.equals("")) {
+                // WITH FUNCTION 자동 주입 (등록된 전체 UDF)
+                List<Map<String, Object>> udfList = getUdfList();
+                if (udfList != null && !udfList.isEmpty()) {
+                    query = buildWithFunctions(udfList) + "\n" + query;
+                }
+
                 // 쿼리 실행 API 호출
                 Map<String, Object> executeBody = new HashMap<>();
-                executeBody.put("query", params.get("query").toString());
+                executeBody.put("query", query);
                 executeBody.put("system_infos", params.get("system_infos"));
                 executeBody.put("user_id", params.get("user_id").toString());
                 Map<String, Object> queryExecuteResult = queryExecute(executeBody);
@@ -214,8 +224,11 @@ public class MetaDataFusionService {
             Map<String, Object> confirmIntegrationResult = confirmIntegration(confirmIntegrationBody);
             String status_code = confirmIntegrationResult.get("status_code").toString();
             if (status_code.equals("200")) {
-                Map<String, Object> res = (Map<String, Object>) confirmIntegrationResult.get("result");
                 createViewResult = true;
+                // 3. UDF 의존성 저장
+                String metaId = metadata.get("meta_id").toString();
+                String query = metadata.get("query") != null ? metadata.get("query").toString() : "";
+                saveViewUdfDependencies(metaId, query);
             } else {
                 log.error("Fail to execute query !!");
                 result.put("errorMessage", "쿼리가 잘못되었습니다.");
@@ -415,6 +428,176 @@ public class MetaDataFusionService {
         }
 
         return false;
+    }
+
+    // ── Trino UDF 관리 ──
+
+    public List<Map<String, Object>> getUdfList() throws Exception {
+        List<Map<String, Object>> list = metaDataFusionMapper.getUdfList();
+        for (Map<String, Object> udf : list) {
+            Object paramsObj = udf.get("params");
+            if (paramsObj instanceof PGobject) {
+                String json = ((PGobject) paramsObj).getValue();
+                List<Map<String, Object>> paramList = objectMapper.readValue(json,
+                    new TypeReference<List<Map<String, Object>>>() {});
+                udf.put("params", paramList);
+            }
+        }
+        return list;
+    }
+
+    public Map<String, Object> registerUdf(Map<String, Object> param, Map<String, Object> user) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            String udfId = UUID.randomUUID().toString();
+            param.put("udf_id", udfId);
+            param.put("create_by", user.get("user_id"));
+            metaDataFusionMapper.insertUdf(param);
+
+            List<Map<String, Object>> params = (List<Map<String, Object>>) param.get("params");
+            if (params != null) {
+                for (int i = 0; i < params.size(); i++) {
+                    Map<String, Object> p = params.get(i);
+                    p.put("udf_id", udfId);
+                    p.put("param_order", i);
+                    metaDataFusionMapper.insertUdfParam(p);
+                }
+            }
+            result.put("result", true);
+        } catch (Exception e) {
+            log.error("Fail to register UDF");
+            e.printStackTrace();
+            result.put("result", false);
+        }
+        return result;
+    }
+
+    public Map<String, Object> updateUdf(Map<String, Object> param, Map<String, Object> user) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            param.put("update_by", user.get("user_id"));
+            metaDataFusionMapper.updateUdf(param);
+
+            String udfId = param.get("udf_id").toString();
+            metaDataFusionMapper.deleteUdfParams(udfId);
+
+            List<Map<String, Object>> params = (List<Map<String, Object>>) param.get("params");
+            if (params != null) {
+                for (int i = 0; i < params.size(); i++) {
+                    Map<String, Object> p = params.get(i);
+                    p.put("udf_id", udfId);
+                    p.put("param_order", i);
+                    metaDataFusionMapper.insertUdfParam(p);
+                }
+            }
+            result.put("result", true);
+        } catch (Exception e) {
+            log.error("Fail to update UDF");
+            e.printStackTrace();
+            result.put("result", false);
+        }
+        return result;
+    }
+
+    public Map<String, Object> deleteUdf(String udfId) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            metaDataFusionMapper.deleteUdf(udfId);
+            result.put("result", true);
+        } catch (Exception e) {
+            log.error("Fail to delete UDF");
+            e.printStackTrace();
+            result.put("result", false);
+        }
+        return result;
+    }
+
+    private void saveViewUdfDependencies(String metaId, String query) {
+        try {
+            metaDataFusionMapper.deleteFusionViewUdfs(metaId);
+            List<String> calledNames = extractCalledFunctionNames(query);
+            if (calledNames.isEmpty()) return;
+            List<Map<String, Object>> usedUdfs = metaDataFusionMapper.getUdfListByNames(calledNames);
+            for (Map<String, Object> udf : usedUdfs) {
+                Map<String, Object> param = new HashMap<>();
+                param.put("meta_id", metaId);
+                param.put("udf_id", udf.get("udf_id").toString());
+                metaDataFusionMapper.insertFusionViewUdf(param);
+            }
+        } catch (Exception e) {
+            log.error("Fail to save view UDF dependencies");
+            e.printStackTrace();
+        }
+    }
+
+    public String buildWithFunctionsForMetaId(String metaId) {
+        try {
+            List<Map<String, Object>> list = metaDataFusionMapper.getUdfListByMetaId(metaId);
+            if (list == null || list.isEmpty()) return "";
+            for (Map<String, Object> udf : list) {
+                Object paramsObj = udf.get("params");
+                if (paramsObj instanceof PGobject) {
+                    String json = ((PGobject) paramsObj).getValue();
+                    List<Map<String, Object>> paramList = objectMapper.readValue(json,
+                        new TypeReference<List<Map<String, Object>>>() {});
+                    udf.put("params", paramList);
+                }
+            }
+            return buildWithFunctions(list);
+        } catch (Exception e) {
+            log.error("Fail to build WITH FUNCTIONS for meta_id: {}", metaId);
+            return "";
+        }
+    }
+
+    private List<String> extractCalledFunctionNames(String query) {
+        Set<String> names = new HashSet<>();
+        Matcher m = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(").matcher(query);
+        while (m.find()) {
+            names.add(m.group(1));
+        }
+        return new ArrayList<>(names);
+    }
+
+    private List<Map<String, Object>> getUdfListByNames(List<String> names) throws Exception {
+        List<Map<String, Object>> list = metaDataFusionMapper.getUdfListByNames(names);
+        for (Map<String, Object> udf : list) {
+            Object paramsObj = udf.get("params");
+            if (paramsObj instanceof PGobject) {
+                String json = ((PGobject) paramsObj).getValue();
+                List<Map<String, Object>> paramList = objectMapper.readValue(json,
+                    new TypeReference<List<Map<String, Object>>>() {});
+                udf.put("params", paramList);
+            }
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String buildWithFunctions(List<Map<String, Object>> udfList) {
+        StringBuilder sb = new StringBuilder("WITH\n");
+        for (int i = 0; i < udfList.size(); i++) {
+            Map<String, Object> udf = udfList.get(i);
+            String name       = udf.get("udf_name").toString();
+            String returnType = udf.get("return_type").toString();
+            String body       = udf.get("body").toString();
+
+            String paramStr = "";
+            Object paramsObj = udf.get("params");
+            if (paramsObj instanceof List) {
+                List<Map<String, Object>> paramList = (List<Map<String, Object>>) paramsObj;
+                paramStr = paramList.stream()
+                    .map(p -> p.get("param_name") + " " + p.get("param_type"))
+                    .collect(Collectors.joining(", "));
+            }
+
+            sb.append("  FUNCTION ").append(name).append("(").append(paramStr).append(")\n");
+            sb.append("  RETURNS ").append(returnType).append("\n");
+            sb.append("  RETURN ").append(body);
+            if (i < udfList.size() - 1) sb.append(",");
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     // 쿼리 실행 POST

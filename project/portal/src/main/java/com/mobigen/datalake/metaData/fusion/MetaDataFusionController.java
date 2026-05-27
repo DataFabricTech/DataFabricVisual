@@ -2,10 +2,13 @@ package com.mobigen.datalake.metaData.fusion;
 
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
@@ -66,14 +69,38 @@ public class MetaDataFusionController {
 
     /**
      * 융합 데이터 전용 수집시스템 조회 (Hive)
-     * 
-     * @param system_name 검색 종류
-     * @return
-     * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/fusionSystemInfo")
     public Object getFusionSystemInfo() throws Exception {
         return metaDataFusionService.getFusionSystemInfo();
+    }
+
+    // ── Trino UDF 관리 ──
+
+    @ResponseJsonResult
+    @GetMapping("/udf/list")
+    public Object getUdfList() throws Exception {
+        return metaDataFusionService.getUdfList();
+    }
+
+    @ResponseJsonResult
+    @PostMapping("/udf/register")
+    public Object registerUdf(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        return metaDataFusionService.registerUdf(param, user);
+    }
+
+    @ResponseJsonResult
+    @PutMapping("/udf/update")
+    public Object updateUdf(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        return metaDataFusionService.updateUdf(param, user);
+    }
+
+    @ResponseJsonResult
+    @DeleteMapping("/udf/delete")
+    public Object deleteUdf(@RequestParam String udf_id) throws Exception {
+        return metaDataFusionService.deleteUdf(udf_id);
     }
 }
