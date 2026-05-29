@@ -212,6 +212,7 @@
 <script setup lang="ts">
 import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
 
+const props = defineProps<{ initialUdfList?: any[] }>();
 const emit = defineEmits(["close", "insert"]);
 
 const { $ofetch } = useNuxtApp();
@@ -230,7 +231,7 @@ const TYPES = [
   "TIMESTAMP"
 ];
 
-const udfList = ref<any[]>([]);
+const udfList = ref<any[]>(props.initialUdfList ?? []);
 const currentIdx = ref(-1);
 const isEditMode = computed(() => currentIdx.value >= 0);
 
@@ -398,7 +399,11 @@ const deleteRow = (idx: number) => {
   confirmAlert(`"${udf.udf_name}" UDF를 삭제하시겠습니까?`, {
     confirm: async () => {
       try {
-        await $ofetch(`/api/metadata/fusion/udf/delete?udf_id=${udf.udf_id}`, { method: "DELETE" });
+        const res: any = await $ofetch(`/api/metadata/fusion/udf/delete?udf_id=${udf.udf_id}`, { method: "DELETE" });
+        if (res?.data?.result === false) {
+          await errorAlert(res.data.reason ?? "삭제에 실패하였습니다.");
+          return;
+        }
         if (currentIdx.value === idx) {
           currentIdx.value = -1;
           clearForm();
@@ -423,7 +428,12 @@ const insertSnippet = (idx: number) => {
 // ── 닫기 ──
 const close = () => emit("close");
 
-onMounted(loadUdfList);
+onMounted(async () => {
+  // 부모에서 초기 목록을 받지 못한 경우에만 API 호출
+  if (!props.initialUdfList || props.initialUdfList.length === 0) {
+    await loadUdfList();
+  }
+});
 </script>
 
 <style scoped>

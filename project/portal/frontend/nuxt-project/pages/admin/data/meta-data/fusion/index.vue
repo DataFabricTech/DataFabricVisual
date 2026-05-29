@@ -780,7 +780,7 @@
           @onCloseModal="onClickCategoryInfoSearchCloseButton"
         />
       </div>
-      <udf-manage-modal v-if="visibleUdfModal" @close="onClickUDFModalButton" @insert="onUdfInsert" />
+      <udf-manage-modal v-if="visibleUdfModal" :initial-udf-list="udfList" @close="onClickUDFModalButton" @insert="onUdfInsert" />
     </main>
   </div>
 </template>
@@ -832,6 +832,7 @@ const pageIds = computed(() => metaList.value.map((i) => i.meta_id)); // 현재 
 const visibleSystemModal = ref(false); // 융합 데이터 정보 > 추가 모달
 const visibleFusionSaveModal = ref(false); // 융합 데이터 저장 모달
 const visibleUdfModal = ref(false); // UDF 관리 모달
+const udfList = ref<any[]>([]); // 등록된 UDF 목록 (모달 공유 + 저장 시 검증용)
 
 const isExecuteQuery = ref(false); // 쿼리 실행 여부
 const query = ref("");
@@ -940,7 +941,8 @@ watch(
 
 onMounted(async () => {
   await searchTagList();
-  await getFusionSysteInfo(); // 융합 데이터 등록 전용 시스템 정보 조회
+  await getFusionSysteInfo();
+  await loadUdfList();
   window.addEventListener("mousemove", handleMousemove);
   onSearchMetaList();
 });
@@ -1342,10 +1344,31 @@ const onRightButton = (column_name: string, e: MouseEvent) => {
   });
 };
 
+// SELECT 절에서 alias 없는 UDF 호출 목록 반환
+const getMissingAliasUdfs = (): string[] => {
+  if (!udfList.value.length) return [];
+  const selectMatch = query.value.match(/\bSELECT\b([\s\S]+?)\bFROM\b/i);
+  if (!selectMatch) return [];
+  const selectClause = selectMatch[1];
+  return udfList.value
+    .map((u: any) => u.udf_name as string)
+    .filter((name) => {
+      if (!new RegExp(`\\b${name}\\s*\\(`, "i").test(selectClause)) return false;
+      return !new RegExp(`\\b${name}\\s*\\(.*?\\)\\s+AS\\s+\\w+`, "is").test(selectClause);
+    });
+};
+
 const saveFusion = async () => {
-  // 쿼리 실행여부
   if (!isExecuteQuery.value) {
     await defaultAlert("쿼리를 실행해주세요.");
+    return;
+  }
+
+  const missingAliases = getMissingAliasUdfs();
+  if (missingAliases.length > 0) {
+    await errorAlert(
+      `SELECT 절의 UDF 호출에는 반드시 AS alias를 지정해야 합니다.`
+    );
     return;
   }
 
@@ -1645,13 +1668,15 @@ const onClickAddTag = async (list) => {
   tags.value = list;
 };
 
-const onClickUDFModalButton = () => {
-  console.log("!!!!!!");
-  try {
-    visibleUdfModal.value = !visibleUdfModal.value;
-  } catch (error) {
-    console.log(error);
-  }
+const loadUdfList = async () => {
+  await $ofetch("/api/metadata/fusion/udf/list")
+    .then((res: any) => { if (res?.data) udfList.value = res.data; })
+    .catch(() => {});
+};
+
+const onClickUDFModalButton = async () => {
+  if (!visibleUdfModal.value) await loadUdfList(); // 열 때 최신 목록 갱신
+  visibleUdfModal.value = !visibleUdfModal.value;
 };
 
 const getCurrentTime = () => {
