@@ -16,7 +16,7 @@
           <div class="udf-panel-left-body">
             <table class="mu-grid mu-grid-data mu-grid-narrow">
               <colgroup>
-                <col style="width: 22px" />
+                <col style="width: 36px" />
                 <col />
                 <col style="width: 86px" />
                 <col style="width: 48px" />
@@ -91,7 +91,17 @@
                   </div>
                 </div>
 
-                <div class="udf-field">
+                <div class="udf-field" style="margin-top: 10px">
+                  <label class="udf-label">설명</label>
+                  <textarea
+                    class="mu-area"
+                    v-model="fDesc"
+                    rows="2"
+                    placeholder="함수의 용도를 간략히 입력하세요"
+                  ></textarea>
+                </div>
+
+                <div class="udf-field" style="margin-top: 4px">
                   <div class="udf-label-row">
                     <label class="udf-label">RETURN 표현식 <span class="udf-req">*</span></label>
                     <span class="udf-hint">RETURN 키워드 없이 표현식만 입력하세요.</span>
@@ -102,16 +112,6 @@
                     rows="4"
                     placeholder="예) regexp_replace(email, '(?<=.{2}).(?=.*@)', '*')"
                     @input="updateSqlLive"
-                  ></textarea>
-                </div>
-
-                <div class="udf-field">
-                  <label class="udf-label">설명</label>
-                  <textarea
-                    class="mu-area"
-                    v-model="fDesc"
-                    rows="2"
-                    placeholder="함수의 용도를 간략히 입력하세요"
                   ></textarea>
                 </div>
               </div>
@@ -125,14 +125,14 @@
                 <div class="udf-params-body">
                   <table class="mu-grid mu-grid-data mu-grid-narrow">
                     <colgroup>
-                      <col style="width: 28px" />
+                      <col style="width: 12%" />
                       <col />
                       <col />
                       <col style="width: 28px" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>No,</th>
+                        <th>No.</th>
                         <th>파라미터명</th>
                         <th>타입</th>
                         <th></th>
@@ -440,7 +440,7 @@ onMounted(async () => {
 .udf-dialog-body {
   padding: 0 !important;
   display: flex !important;
-  height: 620px;
+  height: 480px;
   overflow: hidden;
 }
 
@@ -493,13 +493,12 @@ onMounted(async () => {
 .udf-form-cols {
   display: flex;
   gap: 16px;
-  height: 100%;
 }
 .udf-form-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   min-width: 0;
 }
 .udf-form-params {
@@ -507,6 +506,8 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
 }
 .udf-row-fields {
   display: flex;
@@ -517,6 +518,7 @@ onMounted(async () => {
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  margin-bottom: 0;
 }
 .udf-label-row {
   display: flex;
@@ -548,6 +550,7 @@ onMounted(async () => {
 .udf-params-body {
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 /* ── SQL 영역 ── */
