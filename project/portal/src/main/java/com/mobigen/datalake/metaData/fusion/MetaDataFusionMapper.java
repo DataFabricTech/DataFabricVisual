@@ -38,4 +38,5 @@ public interface MetaDataFusionMapper {
     int insertFusionViewUdf(Map<String, Object> param) throws Exception;
     List<Map<String, Object>> getUdfListByMetaId(String metaId) throws Exception;
     int deleteFusionViewUdfs(String metaId) throws Exception;
+    int getUdfViewCount(String udfId) throws Exception;
 }

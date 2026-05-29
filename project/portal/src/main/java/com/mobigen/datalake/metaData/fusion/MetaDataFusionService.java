@@ -45,6 +45,12 @@ public class MetaDataFusionService {
     @Value("${properties.trino.hikari.jdbc-url}")
     private String trinoJdbcUrl;
 
+    @Value("${properties.trino.udf-schema}")
+    private String trinoUdfSchema;
+
+    @Value("${properties.trino.udf-catalog}")
+    private String trinoUdfCatalog;
+
     @Value("${properties.ESSync.base_url}")
     private String esSyncBaseUrl;
 
@@ -112,13 +118,11 @@ public class MetaDataFusionService {
         long startTime = System.currentTimeMillis(); // 시작 시간(ms)
         try {
             // 샘플 데이터 조회 쿼리 제작
-            String query = params.get("query").toString();
-            if (!query.equals("")) {
-                // WITH FUNCTION 자동 주입 (등록된 전체 UDF)
-                List<Map<String, Object>> udfList = getUdfList();
-                if (udfList != null && !udfList.isEmpty()) {
-                    query = buildWithFunctions(udfList) + "\n" + query;
-                }
+            String originalQuery = params.get("query").toString();
+            if (!originalQuery.equals("")) {
+                // UDF 호출을 internalhive.default.name( 형태로 치환
+                List<Map<String, Object>> allUdfs = getUdfList();
+                String query = qualifyUdfCalls(originalQuery, allUdfs);
 
                 // 쿼리 실행 API 호출
                 Map<String, Object> executeBody = new HashMap<>();
@@ -134,6 +138,7 @@ public class MetaDataFusionService {
                         if (res.get("count") != null) {
                             totalCount = Integer.parseInt(res.get("count").toString());
                         }
+                        // DataIntegration이 반환한 쿼리 사용 (실제 테이블명으로 치환된 버전)
                         if (res.get("query") != null) {
                             result.put("query", res.get("query").toString());
                         }
@@ -179,8 +184,8 @@ public class MetaDataFusionService {
 
     public Map<String, Object> saveFusionMetaData(Map<String, Object> metadata, Map<String, Object> user) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        boolean createViewResult = false; // View 생성 성공 여부
-        
+        boolean createViewResult = false;
+
         try {            
             // 1. event_log 저장
             Map<String, Object> eventParam = new HashMap<>();
@@ -216,7 +221,13 @@ public class MetaDataFusionService {
             }
             metadata.put("tags", tags);
             
-            // 2. 융합데이터 생성 API 호출
+            // 2. UDF 호출을 정규화된 이름으로 치환 후 View 생성
+            String query = metadata.get("query") != null ? metadata.get("query").toString() : "";
+            List<Map<String, Object>> allUdfs = getUdfList();
+            String qualifiedQuery = qualifyUdfCalls(query, allUdfs);
+            metadata.put("query", qualifiedQuery);
+
+            // 3. 융합데이터 생성 API 호출
             Map<String, Object> confirmIntegrationBody = new HashMap<>();
             confirmIntegrationBody.put("event_info", eventParam);
             confirmIntegrationBody.put("meta_info", metadata);
@@ -225,9 +236,8 @@ public class MetaDataFusionService {
             String status_code = confirmIntegrationResult.get("status_code").toString();
             if (status_code.equals("200")) {
                 createViewResult = true;
-                // 3. UDF 의존성 저장
+                // 4. UDF 의존성 기록 (원본 쿼리 기준)
                 String metaId = metadata.get("meta_id").toString();
-                String query = metadata.get("query") != null ? metadata.get("query").toString() : "";
                 saveViewUdfDependencies(metaId, query);
             } else {
                 log.error("Fail to execute query !!");
@@ -235,7 +245,7 @@ public class MetaDataFusionService {
             }
 
             result.put("createViewResult", createViewResult);
-            
+
         } catch (Exception e) {
             log.error("save fusion metadata Exception");
             e.printStackTrace();
@@ -432,6 +442,70 @@ public class MetaDataFusionService {
 
     // ── Trino UDF 관리 ──
 
+/** Hive 카탈로그에 UDF를 CREATE OR REPLACE FUNCTION으로 등록 */
+    private void registerUdfsToHive(List<Map<String, Object>> udfList, String catalog) {
+        if (udfList == null || udfList.isEmpty()) return;
+        for (Map<String, Object> udf : udfList) {
+            try {
+                executeTrinoStatement(buildCreateFunctionSql(udf, catalog, trinoUdfSchema));
+            } catch (Exception e) {
+                log.error("Fail to register UDF to Hive: {}", udf.get("udf_name"), e);
+            }
+        }
+    }
+
+    /** Hive 카탈로그에서 UDF를 DROP — Trino는 파라미터 타입까지 포함해야 함 */
+    @SuppressWarnings("unchecked")
+    private void dropUdfFromHive(Map<String, Object> udf, String catalog) {
+        String udfName = udf.get("udf_name").toString();
+        try {
+            String paramTypes = "";
+            Object paramsObj = udf.get("params");
+            if (paramsObj instanceof List) {
+                paramTypes = ((List<Map<String, Object>>) paramsObj).stream()
+                    .map(p -> p.get("param_type").toString())
+                    .collect(Collectors.joining(", "));
+            }
+            executeTrinoStatement(
+                String.format("DROP FUNCTION IF EXISTS %s.%s.%s(%s)", catalog, trinoUdfSchema, udfName, paramTypes)
+            );
+        } catch (Exception e) {
+            log.error("Fail to drop UDF from Hive: {}", udfName, e);
+        }
+    }
+
+    /** CREATE OR REPLACE FUNCTION SQL 생성 */
+    @SuppressWarnings("unchecked")
+    private String buildCreateFunctionSql(Map<String, Object> udf, String catalog, String schema) {
+        String name       = udf.get("udf_name").toString();
+        String returnType = udf.get("return_type").toString();
+        String body       = udf.get("body").toString();
+
+        String paramStr = "";
+        Object paramsObj = udf.get("params");
+        if (paramsObj instanceof List) {
+            List<Map<String, Object>> paramList = (List<Map<String, Object>>) paramsObj;
+            paramStr = paramList.stream()
+                .map(p -> p.get("param_name") + " " + p.get("param_type"))
+                .collect(Collectors.joining(", "));
+        }
+
+        return String.format(
+            "CREATE OR REPLACE FUNCTION %s.%s.%s(%s) RETURNS %s RETURN %s",
+            catalog, schema, name, paramStr, returnType, body
+        );
+    }
+
+    /** Trino JDBC로 DDL 실행 */
+    private void executeTrinoStatement(String sql) throws Exception {
+        Properties props = new Properties();
+        props.setProperty("user", "trino");
+        try (Connection conn = DriverManager.getConnection(trinoJdbcUrl, props);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        }
+    }
+
     public List<Map<String, Object>> getUdfList() throws Exception {
         List<Map<String, Object>> list = metaDataFusionMapper.getUdfList();
         for (Map<String, Object> udf : list) {
@@ -452,6 +526,8 @@ public class MetaDataFusionService {
             String udfId = UUID.randomUUID().toString();
             param.put("udf_id", udfId);
             param.put("create_by", user.get("user_id"));
+            // DB에 저장되는 udf_name은 lower() 강제 (mapper SQL)
+            param.put("udf_name", param.get("udf_name").toString().toLowerCase());
             metaDataFusionMapper.insertUdf(param);
 
             List<Map<String, Object>> params = (List<Map<String, Object>>) param.get("params");
@@ -463,6 +539,10 @@ public class MetaDataFusionService {
                     metaDataFusionMapper.insertUdfParam(p);
                 }
             }
+
+            // Hive 카탈로그에 등록
+            registerUdfsToHive(List.of(param), trinoUdfCatalog);
+
             result.put("result", true);
         } catch (Exception e) {
             log.error("Fail to register UDF");
@@ -476,6 +556,7 @@ public class MetaDataFusionService {
         Map<String, Object> result = new HashMap<>();
         try {
             param.put("update_by", user.get("user_id"));
+            param.put("udf_name", param.get("udf_name").toString().toLowerCase());
             metaDataFusionMapper.updateUdf(param);
 
             String udfId = param.get("udf_id").toString();
@@ -490,6 +571,10 @@ public class MetaDataFusionService {
                     metaDataFusionMapper.insertUdfParam(p);
                 }
             }
+
+            // View 사용 여부와 관계없이 항상 Hive 동기화
+            registerUdfsToHive(getUdfListByNames(List.of(param.get("udf_name").toString())), trinoUdfCatalog);
+
             result.put("result", true);
         } catch (Exception e) {
             log.error("Fail to update UDF");
@@ -502,7 +587,25 @@ public class MetaDataFusionService {
     public Map<String, Object> deleteUdf(String udfId) throws Exception {
         Map<String, Object> result = new HashMap<>();
         try {
+            int viewCount = metaDataFusionMapper.getUdfViewCount(udfId);
+            if (viewCount > 0) {
+                result.put("result", false);
+                result.put("reason", "UDF를 사용 중인 융합 뷰가 " + viewCount + "개 있습니다.");
+                return result;
+            }
+
+            // DROP 전 UDF 정보 조회 (params 타입 포함 필요)
+            Map<String, Object> targetUdf = getUdfList().stream()
+                .filter(u -> udfId.equals(u.get("udf_id")))
+                .findFirst()
+                .orElse(null);
+
             metaDataFusionMapper.deleteUdf(udfId);
+
+            if (targetUdf != null) {
+                dropUdfFromHive(targetUdf, trinoUdfCatalog);
+            }
+
             result.put("result", true);
         } catch (Exception e) {
             log.error("Fail to delete UDF");
@@ -511,6 +614,7 @@ public class MetaDataFusionService {
         }
         return result;
     }
+
 
     private void saveViewUdfDependencies(String metaId, String query) {
         try {
@@ -530,24 +634,18 @@ public class MetaDataFusionService {
         }
     }
 
-    public String buildWithFunctionsForMetaId(String metaId) {
-        try {
-            List<Map<String, Object>> list = metaDataFusionMapper.getUdfListByMetaId(metaId);
-            if (list == null || list.isEmpty()) return "";
-            for (Map<String, Object> udf : list) {
-                Object paramsObj = udf.get("params");
-                if (paramsObj instanceof PGobject) {
-                    String json = ((PGobject) paramsObj).getValue();
-                    List<Map<String, Object>> paramList = objectMapper.readValue(json,
-                        new TypeReference<List<Map<String, Object>>>() {});
-                    udf.put("params", paramList);
-                }
-            }
-            return buildWithFunctions(list);
-        } catch (Exception e) {
-            log.error("Fail to build WITH FUNCTIONS for meta_id: {}", metaId);
-            return "";
+    /** 쿼리 내 UDF 호출을 internalhive.default.name( 형태로 치환 */
+    private String qualifyUdfCalls(String query, List<Map<String, Object>> udfs) {
+        String result = query;
+        for (Map<String, Object> udf : udfs) {
+            String name = udf.get("udf_name").toString();
+            // 이미 정규화된 이름(앞에 점이 있는 경우)은 건너뜀
+            result = result.replaceAll(
+                "(?i)(?<!\\.)\\b" + Pattern.quote(name) + "\\s*\\(",
+                trinoUdfCatalog + "." + trinoUdfSchema + "." + name + "("
+            );
         }
+        return result;
     }
 
     private List<String> extractCalledFunctionNames(String query) {
@@ -573,32 +671,6 @@ public class MetaDataFusionService {
         return list;
     }
 
-    @SuppressWarnings("unchecked")
-    private String buildWithFunctions(List<Map<String, Object>> udfList) {
-        StringBuilder sb = new StringBuilder("WITH\n");
-        for (int i = 0; i < udfList.size(); i++) {
-            Map<String, Object> udf = udfList.get(i);
-            String name       = udf.get("udf_name").toString();
-            String returnType = udf.get("return_type").toString();
-            String body       = udf.get("body").toString();
-
-            String paramStr = "";
-            Object paramsObj = udf.get("params");
-            if (paramsObj instanceof List) {
-                List<Map<String, Object>> paramList = (List<Map<String, Object>>) paramsObj;
-                paramStr = paramList.stream()
-                    .map(p -> p.get("param_name") + " " + p.get("param_type"))
-                    .collect(Collectors.joining(", "));
-            }
-
-            sb.append("  FUNCTION ").append(name).append("(").append(paramStr).append(")\n");
-            sb.append("  RETURNS ").append(returnType).append("\n");
-            sb.append("  RETURN ").append(body);
-            if (i < udfList.size() - 1) sb.append(",");
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
 
     // 쿼리 실행 POST
     public Map<String, Object> queryExecute(Map<String, Object> executeBody) throws Exception {
