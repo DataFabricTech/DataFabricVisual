@@ -186,7 +186,17 @@ public class MetaDataFusionService {
         Map<String, Object> result = new HashMap<>();
         boolean createViewResult = false;
 
-        try {            
+        try {
+            // Trino 뷰 이름 정규화: 공백 → _
+            if (metadata.get("meta_name") != null) {
+                String sanitizedName = metadata.get("meta_name").toString().replaceAll("\\s+", "_");
+                metadata.put("meta_name", sanitizedName);
+                // qualified_name은 프론트에서 meta_name 포함해 조합되므로 함께 재구성
+                if (metadata.get("qualified_name") != null) {
+                    metadata.put("qualified_name", metadata.get("qualified_name").toString().replaceAll("\\s+", "_"));
+                }
+            }
+
             // 1. event_log 저장
             Map<String, Object> eventParam = new HashMap<>();
             eventParam.put("event_type", 0); // 메타데이터 이벤트: 0 | 시스템 이벤트: 1
@@ -490,9 +500,11 @@ public class MetaDataFusionService {
                 .collect(Collectors.joining(", "));
         }
 
+        String bodyPart = body.toUpperCase().startsWith("BEGIN") ? body : "RETURN " + body;
+
         return String.format(
-            "CREATE OR REPLACE FUNCTION %s.%s.%s(%s) RETURNS %s RETURN %s",
-            catalog, schema, name, paramStr, returnType, body
+            "CREATE OR REPLACE FUNCTION %s.%s.%s(%s) RETURNS %s %s",
+            catalog, schema, name, paramStr, returnType, bodyPart
         );
     }
 
