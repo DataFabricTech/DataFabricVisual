@@ -101,16 +101,14 @@
                   ></textarea>
                 </div>
 
-                <div class="udf-field" style="margin-top: 4px">
+                <div class="udf-field udf-field-grow" style="margin-top: 10px">
                   <div class="udf-label-row">
-                    <label class="udf-label">RETURN 표현식 <span class="udf-req">*</span></label>
-                    <span class="udf-hint">RETURN 키워드 없이 표현식만 입력하세요.</span>
+                    <label class="udf-label">함수 본문 <span class="udf-req">*</span></label>
                   </div>
                   <textarea
-                    class="mu-area udf-mono"
+                    class="mu-area udf-mono udf-body-textarea"
                     v-model="fBody"
-                    rows="4"
-                    placeholder="예) regexp_replace(email, '(?<=.{2}).(?=.*@)', '*')"
+                    placeholder="단순: regexp_replace(email, '(?<=.{2}).(?=.*@)', '*')&#10;블록: BEGIN&#10;  DECLARE v VARCHAR DEFAULT p;&#10;  RETURN v;&#10;END"
                     @input="updateSqlLive"
                   ></textarea>
                 </div>
@@ -186,7 +184,7 @@
               v-model="sqlLive"
               rows="4"
               style="width: 100%; resize: none"
-              placeholder="WITH&#10;  FUNCTION name(param TYPE)&#10;  RETURNS TYPE&#10;  RETURN expression"
+              placeholder="-- 단순 표현식&#10;CREATE OR REPLACE FUNCTION name(param TYPE)&#10;RETURNS TYPE&#10;RETURN expression&#10;&#10;-- BEGIN/END 블록&#10;CREATE OR REPLACE FUNCTION name(param TYPE)&#10;RETURNS TYPE&#10;BEGIN&#10;  DECLARE v TYPE DEFAULT param;&#10;  RETURN v;&#10;END"
             ></textarea>
             <p v-if="parseError" class="udf-parse-error">{{ parseError }}</p>
           </div>
@@ -196,7 +194,7 @@
       <div class="mu-dialog-foot">
         <button class="mu-btn" type="button" @click="cancelForm">취소</button>
         <button class="mu-btn mu-btn-primary" type="button" @click="saveUdf">
-          {{ isEditMode ? "수정" : "저장" }}
+          <span>{{ isEditMode ? "수정" : "저장" }}</span>
         </button>
       </div>
 
@@ -476,9 +474,11 @@ onMounted(async () => {
 }
 .udf-panel-body {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 16px;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .udf-panel-foot {
   padding: 10px 16px;
@@ -493,6 +493,9 @@ onMounted(async () => {
 .udf-form-cols {
   display: flex;
   gap: 16px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 .udf-form-main {
   flex: 1;
@@ -500,6 +503,18 @@ onMounted(async () => {
   flex-direction: column;
   gap: 0;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.udf-field-grow {
+  flex: 1;
+  min-height: 0;
+}
+.udf-body-textarea {
+  flex: 1;
+  min-height: 0;
+  resize: none;
+  height: 100%;
 }
 .udf-form-params {
   flex: 1;
@@ -507,7 +522,6 @@ onMounted(async () => {
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  height: 100%;
 }
 .udf-row-fields {
   display: flex;
@@ -517,7 +531,6 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
   margin-bottom: 0;
 }
 .udf-label-row {
@@ -635,12 +648,4 @@ onMounted(async () => {
 .mu-dialog-foot {
   border-top: 1px solid #e4e7ef;
 }
-
-/* ── 저장/수정 버튼 색상 ── */
-/*.mu-btn.mu-btn-primary {
-  background-color: #3b6ff5 !important;
-  border-color: #3b6ff5 !important;
-  color: #fff !important;
-}
- */
 </style>
