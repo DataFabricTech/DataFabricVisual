@@ -313,7 +313,10 @@ const updateSqlLive = () => {
     .map((p) => [p.param_name, p.param_type].filter(Boolean).join(" "))
     .filter(Boolean)
     .join(", ");
-  sqlLive.value = `WITH\n  FUNCTION ${fName.value.trim()}(${paramStr})\n  RETURNS ${fReturn.value || "VARCHAR"}\n  RETURN ${fBody.value.trim() || "-- 표현식 입력"}`;
+  const body = fBody.value.trim();
+  const isBlock = body.toUpperCase().startsWith("BEGIN");
+  const bodyPart = isBlock ? body : `RETURN ${body || "-- 표현식 입력"}`;
+  sqlLive.value = `CREATE OR REPLACE FUNCTION internalhive.default.${fName.value.trim()}(${paramStr})\nRETURNS ${fReturn.value || "VARCHAR"}\n${bodyPart}`;
 };
 
 // ── SQL 붙여넣기 → 폼 채우기 ──
@@ -324,17 +327,28 @@ const applyPastedSql = () => {
 
   const funcMatch = sql.match(/FUNCTION\s+([\w.]+)\s*\(([^)]*)\)/i);
   const returnsMatch = sql.match(/RETURNS\s+(\S+)/i);
-  const returnMatch = sql.match(/RETURN\s+([\s\S]+?)(?:\s*$)/i);
 
-  if (!funcMatch || !returnsMatch || !returnMatch) {
-    parseError.value = "파싱 실패: FUNCTION / RETURNS / RETURN 절을 찾을 수 없습니다.";
+  if (!funcMatch || !returnsMatch) {
+    parseError.value = "파싱 실패: FUNCTION / RETURNS 절을 찾을 수 없습니다.";
     return;
+  }
+
+  const afterReturns = sql.replace(/[\s\S]*?RETURNS\s+\S+\s*/i, "").trim();
+  let body = "";
+  if (afterReturns.toUpperCase().startsWith("BEGIN")) {
+    body = afterReturns;
+  } else {
+    const returnMatch = afterReturns.match(/^RETURN\s+([\s\S]+)/i);
+    if (!returnMatch) {
+      parseError.value = "파싱 실패: RETURN 또는 BEGIN/END 블록을 찾을 수 없습니다.";
+      return;
+    }
+    body = returnMatch[1].trim();
   }
 
   const funcName = funcMatch[1].split(".").pop() ?? "";
   const paramStr = funcMatch[2].trim();
   const returnType = returnsMatch[1].trim();
-  const body = returnMatch[1].trim();
 
   fName.value = funcName;
   fReturn.value = TYPES.includes(returnType) ? returnType : "";
