@@ -567,11 +567,30 @@ public class MetaDataFusionService {
     public Map<String, Object> updateUdf(Map<String, Object> param, Map<String, Object> user) throws Exception {
         Map<String, Object> result = new HashMap<>();
         try {
+            String udfId = param.get("udf_id").toString();
+
+            // 사용 중인 뷰가 있으면 수정 불가
+            int viewCount = metaDataFusionMapper.getUdfViewCount(udfId);
+            if (viewCount > 0) {
+                result.put("result", false);
+                result.put("reason", "UDF를 사용 중인 융합 뷰가 " + viewCount + "개 있습니다. 수정이 불가합니다.");
+                return result;
+            }
+
+            // 수정 전 UDF 정보 조회 (기존 시그니처로 Hive DROP)
+            Map<String, Object> oldUdf = getUdfList().stream()
+                .filter(u -> udfId.equals(u.get("udf_id")))
+                .findFirst()
+                .orElse(null);
+            if (oldUdf != null) {
+                dropUdfFromHive(oldUdf, trinoUdfCatalog);
+            }
+
+            // DB 업데이트
             param.put("update_by", user.get("user_id"));
             param.put("udf_name", param.get("udf_name").toString().toLowerCase());
             metaDataFusionMapper.updateUdf(param);
 
-            String udfId = param.get("udf_id").toString();
             metaDataFusionMapper.deleteUdfParams(udfId);
 
             List<Map<String, Object>> params = (List<Map<String, Object>>) param.get("params");
@@ -584,7 +603,7 @@ public class MetaDataFusionService {
                 }
             }
 
-            // View 사용 여부와 관계없이 항상 Hive 동기화
+            // Hive에 새 시그니처로 등록
             registerUdfsToHive(getUdfListByNames(List.of(param.get("udf_name").toString())), trinoUdfCatalog);
 
             result.put("result", true);

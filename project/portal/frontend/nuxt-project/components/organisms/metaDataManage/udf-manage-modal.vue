@@ -386,10 +386,14 @@ const saveUdf = async () => {
 
   try {
     if (isEditMode.value) {
-      await $ofetch("/api/metadata/fusion/udf/update", {
+      const res: any = await $ofetch("/api/metadata/fusion/udf/update", {
         method: "PUT",
         body: { ...payload, udf_id: udfList.value[currentIdx.value].udf_id }
       });
+      if (res?.data?.result === false) {
+        await errorAlert(res.data.reason ?? "수정에 실패하였습니다.");
+        return;
+      }
       await successAlert("수정되었습니다.");
     } else {
       await $ofetch("/api/metadata/fusion/udf/register", {
