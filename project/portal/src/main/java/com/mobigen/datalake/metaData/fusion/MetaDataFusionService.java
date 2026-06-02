@@ -1,21 +1,15 @@
 package com.mobigen.datalake.metaData.fusion;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,8 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mobigen.datalake.search.SearchDetailMapper;
+import org.postgresql.util.PGobject;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,26 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MetaDataFusionService {
     private final ObjectMapper objectMapper;
-    private final SearchDetailMapper searchDetailMapper;
     private final MetaDataFusionMapper metaDataFusionMapper;
 
-    @Value("${properties.trino.hikari.jdbc-url}")
-    private String trinoJdbcUrl;
-
-    @Value("${properties.ESSync.base_url}")
-    private String esSyncBaseUrl;
-
-    @Value("${properties.ESSync.url.update}")
-    private String esSyncUrlUpdate;
-
-    @Value("${properties.catalog-api.base_url}")
-    private String catalogApiBaseUrl;
-    
-    @Value("${properties.catalog-api.url.executeSync}")
-    private String catalogApiUrlExecuteSync;
-
-    @Value("${properties.catalog-api.url.profile.default}")
-    private String catalogApiUrlProfile;
+    @Value("${properties.trino.udf-schema}")
+    private String trinoUdfSchema;
 
     @Value("${properties.dataintegration.base_url}")
     private String dataIntegrationBaseUrl;
@@ -64,6 +43,18 @@ public class MetaDataFusionService {
 
     @Value("${properties.dataintegration.url.confirmdataintegration}")
     private String dataIntegrationBaseUrlConfirmDataIntegration;
+
+    @Value("${properties.dataintegration.url.deletedataintegration}")
+    private String dataIntegrationUrlDeleteDataIntegration;
+
+    @Value("${properties.dataintegration.url.udf.register}")
+    private String dataIntegrationUrlUdfRegister;
+
+    @Value("${properties.dataintegration.url.udf.update}")
+    private String dataIntegrationUrlUdfUpdate;
+
+    @Value("${properties.dataintegration.url.udf.drop}")
+    private String dataIntegrationUrlUdfDrop;
 
 
     // 데이터 융합 관리 대상 목록 조회
@@ -97,7 +88,6 @@ public class MetaDataFusionService {
     // 쿼리 실행
     public Map<String, Object> executeQuery(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
-        Map<String, Object> resultData = new LinkedHashMap<>();
         List<Map> list = new ArrayList<Map>();
         Integer totalCount = 0;
 
@@ -108,11 +98,14 @@ public class MetaDataFusionService {
         long startTime = System.currentTimeMillis(); // 시작 시간(ms)
         try {
             // 샘플 데이터 조회 쿼리 제작
-            String query = params.get("query").toString();
-            if (!query.equals("")) {
+            String originalQuery = params.get("query").toString();
+            if (!originalQuery.equals("")) {
+                List<Map<String, Object>> allUdfs = getUdfList();
+                String query = qualifyUdfCalls(originalQuery, allUdfs, getFusionCatalog());
+
                 // 쿼리 실행 API 호출
                 Map<String, Object> executeBody = new HashMap<>();
-                executeBody.put("query", params.get("query").toString());
+                executeBody.put("query", query);
                 executeBody.put("system_infos", params.get("system_infos"));
                 executeBody.put("user_id", params.get("user_id").toString());
                 Map<String, Object> queryExecuteResult = queryExecute(executeBody);
@@ -124,6 +117,7 @@ public class MetaDataFusionService {
                         if (res.get("count") != null) {
                             totalCount = Integer.parseInt(res.get("count").toString());
                         }
+                        // DataIntegration이 반환한 쿼리 사용 (실제 테이블명으로 치환된 버전)
                         if (res.get("query") != null) {
                             result.put("query", res.get("query").toString());
                         }
@@ -132,15 +126,6 @@ public class MetaDataFusionService {
                         }
                         if (res.get("query_result_sample") != null) {
                             list = (List<Map>) res.get("query_result_sample");
-                        }
-                    }
-                    resultData = (Map<String, Object>) queryExecuteResult.get("result");
-                    if (resultData != null && resultData.size() > 0) {
-                        if (resultData.get("data") != null) {
-                            list = (List<Map>) resultData.get("data");
-                        }
-                        if (resultData.get("totalCount") != null) {
-                            totalCount = Integer.parseInt(resultData.get("totalCount").toString());
                         }
                     }
                 } else {
@@ -169,9 +154,19 @@ public class MetaDataFusionService {
 
     public Map<String, Object> saveFusionMetaData(Map<String, Object> metadata, Map<String, Object> user) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        boolean createViewResult = false; // View 생성 성공 여부
-        
-        try {            
+        boolean createViewResult = false;
+
+        try {
+            // Trino 뷰 이름 정규화: 공백 → _
+            if (metadata.get("meta_name") != null) {
+                String sanitizedName = metadata.get("meta_name").toString().replaceAll("\\s+", "_");
+                metadata.put("meta_name", sanitizedName);
+                // qualified_name은 프론트에서 meta_name 포함해 조합되므로 함께 재구성
+                if (metadata.get("qualified_name") != null) {
+                    metadata.put("qualified_name", metadata.get("qualified_name").toString().replaceAll("\\s+", "_"));
+                }
+            }
+
             // 1. event_log 저장
             Map<String, Object> eventParam = new HashMap<>();
             eventParam.put("event_type", 0); // 메타데이터 이벤트: 0 | 시스템 이벤트: 1
@@ -206,7 +201,13 @@ public class MetaDataFusionService {
             }
             metadata.put("tags", tags);
             
-            // 2. 융합데이터 생성 API 호출
+            // 2. UDF 호출을 정규화된 이름으로 치환 후 View 생성
+            String query = metadata.get("query") != null ? metadata.get("query").toString() : "";
+            List<Map<String, Object>> allUdfs = getUdfList();
+            String qualifiedQuery = qualifyUdfCalls(query, allUdfs, getFusionCatalog());
+            metadata.put("query", qualifiedQuery);
+
+            // 3. 융합데이터 생성 API 호출
             Map<String, Object> confirmIntegrationBody = new HashMap<>();
             confirmIntegrationBody.put("event_info", eventParam);
             confirmIntegrationBody.put("meta_info", metadata);
@@ -214,15 +215,17 @@ public class MetaDataFusionService {
             Map<String, Object> confirmIntegrationResult = confirmIntegration(confirmIntegrationBody);
             String status_code = confirmIntegrationResult.get("status_code").toString();
             if (status_code.equals("200")) {
-                Map<String, Object> res = (Map<String, Object>) confirmIntegrationResult.get("result");
                 createViewResult = true;
+                // 4. UDF 의존성 기록 (원본 쿼리 기준)
+                String metaId = metadata.get("meta_id").toString();
+                saveViewUdfDependencies(metaId, query);
             } else {
                 log.error("Fail to execute query !!");
                 result.put("errorMessage", "쿼리가 잘못되었습니다.");
             }
 
             result.put("createViewResult", createViewResult);
-            
+
         } catch (Exception e) {
             log.error("save fusion metadata Exception");
             e.printStackTrace();
@@ -230,6 +233,89 @@ public class MetaDataFusionService {
         }
         
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> deleteFusionMetaData(String metaId, Map<String, Object> user) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            // 1. 융합 전용 시스템 정보 조회
+            String fusionSystemId = getFusionCatalog();
+
+            // 2. 삭제 대상 메타데이터 조회
+            Map<String, Object> meta = metaDataFusionMapper.getFusionMetaById(metaId);
+            if (meta == null) {
+                result.put("result", false);
+                result.put("reason", "메타데이터를 찾을 수 없습니다.");
+                return result;
+            }
+
+            // 3. 융합 시스템 소속 여부 검증
+            String metaSystemId = meta.get("system_id").toString();
+            if (!fusionSystemId.equals(metaSystemId)) {
+                result.put("result", false);
+                result.put("reason", "융합 데이터가 아닙니다.");
+                return result;
+            }
+
+            // 4. UDF 의존성 삭제 (포털 전용 테이블)
+            metaDataFusionMapper.deleteFusionViewUdfs(metaId);
+
+            // 5. DataIntegration 서버에 위임 (DROP VIEW + <table> + event_log + ESSync)
+            Map<String, Object> eventInfo = new HashMap<>();
+            eventInfo.put("event_type", 0);
+            eventInfo.put("event_status", 3);
+            eventInfo.put("event_name", "융합 메타 데이터 삭제");
+            eventInfo.put("event_user_id", user.get("user_id"));
+            eventInfo.put("meta_id", metaId);
+            eventInfo.put("meta_name", meta.get("meta_name").toString());
+            eventInfo.put("qualified_name", meta.get("qualified_name").toString());
+
+            Map<String, Object> metaInfo = new HashMap<>();
+            metaInfo.put("meta_id", metaId);
+            metaInfo.put("meta_name", meta.get("meta_name").toString());
+            metaInfo.put("system_id", metaSystemId);
+            metaInfo.put("qualified_name", meta.get("qualified_name").toString());
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("event_info", eventInfo);
+            requestBody.put("meta_info", metaInfo);
+
+            Map<String, Object> deleteResult = deleteIntegration(requestBody);
+            String statusCode = deleteResult.get("status_code").toString();
+            if (!statusCode.equals("200")) {
+                result.put("result", false);
+                result.put("reason", "DataIntegration 삭제 요청 실패");
+                return result;
+            }
+
+            result.put("result", true);
+        } catch (Exception e) {
+            log.error("Fail to delete fusion metadata");
+            e.printStackTrace();
+            result.put("result", false);
+        }
+        return result;
+    }
+
+    private Map<String, Object> deleteIntegration(Map<String, Object> requestBody) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        String status_code = "";
+        Map<String, Object> result = new HashMap<>();
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = dataIntegrationBaseUrl + dataIntegrationUrlDeleteDataIntegration;
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(url, requestBody, HashMap.class);
+        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+            if (responseEntity.getBody() != null) {
+                status_code = responseEntity.getBody().get("status_code").toString();
+                result = (Map<String, Object>) responseEntity.getBody().get("result");
+            }
+        }
+
+        resultMap.put("status_code", status_code);
+        resultMap.put("result", result);
+        return resultMap;
     }
 
     public Map<String, Object> getFusionSystemInfo() throws Exception {
@@ -253,7 +339,7 @@ public class MetaDataFusionService {
             meta_type = fusionCodeList.get(i).get("value").toString();
         }
 
-        if (system_name != null && !system_name.equals("") && system_type != null && !system_type.equals("")) {
+        if (!system_name.equals("") && !system_type.equals("")) {
           Map<String, Object> collectorMap = metaDataFusionMapper.getFusionSystemInfo(system_name, system_type);
           if (collectorMap != null) {
             collectorMap.put("meta_type", meta_type);
@@ -289,136 +375,208 @@ public class MetaDataFusionService {
     return result;
   }
 
-  public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
-        Map<String, Object> restResponse = new HashMap<>();
+    // ── Trino UDF 관리 (DataIntegration 서버 위임) ──
 
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-
-            Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("metaid", params.get("metaid"));
-            requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
-            requestBody.put("event_name", params.get("event_name"));
-
-            String url = esSyncBaseUrl + esSyncUrlUpdate;
-            restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
-        } catch (Exception e) {
-            log.error("essyncUpdate API 호출 오류");
+    @SuppressWarnings("unchecked")
+    private String getFusionCatalog() throws Exception {
+        Map<String, Object> fusionResult = getFusionSystemInfo();
+        if (Boolean.TRUE.equals(fusionResult.get("result"))) {
+            Map<String, Object> info = (Map<String, Object>) fusionResult.get("fusionInfo");
+            return info.get("system_id").toString();
         }
-
-        return restResponse;
+        throw new Exception("Fusion system info not found");
     }
 
-    // 융합 데이터 저장 Trino 수동수집 실행
-    public Object executeCollect(Map<String, Object> executeBody) throws Exception {
-        Map<String, Object> result = new HashMap<>();
-        boolean executeResult = false;
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> buildUdfBody(Map<String, Object> udf, String catalog) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("udf_name", udf.get("udf_name").toString());
+        body.put("return_type", udf.get("return_type").toString());
+        body.put("body", udf.get("body").toString());
+        body.put("catalog", catalog);
+        body.put("udf_schema", trinoUdfSchema);
 
-        try {
-            String system_id = "";
-            String meta_name = "";
-            if (executeBody.get("system_id") != null) {
-                system_id = executeBody.get("system_id").toString();
-            }
-            if (executeBody.get("meta_name") != null) {
-                meta_name = executeBody.get("meta_name").toString();
-            }
-
-            log.info("start to execute ingestion execute");
-            
-            // 시작 시각 초단위까지
-            long startTime = System.currentTimeMillis(); // 시작 시간(ms)
-            executeResult = ingestionExecuteSync(system_id, meta_name);
-            // 종료 시각 초단위까지
-            long endTime = System.currentTimeMillis(); // 종료 시간(ms)
-            long execute_duration_ms = endTime - startTime;
-            double execute_duration_sec = execute_duration_ms / 1000.0;
-            log.info("end to execute ingestion execute - " + execute_duration_sec);
-
-        } catch (Exception e) {
-            executeResult = false;
-            log.error("fail to execute direct Collect");
-            e.printStackTrace();
+        Object paramsObj = udf.get("params");
+        List<Map<String, Object>> paramList = new ArrayList<>();
+        if (paramsObj instanceof List) {
+            paramList = (List<Map<String, Object>>) paramsObj;
         }
-        
-        result.put("executeResult", executeResult);
+        body.put("params", paramList);
+        return body;
+    }
+
+    private void callUdfApi(String urlPath, Map<String, Object> requestBody) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = dataIntegrationBaseUrl + urlPath;
+        restTemplate.postForObject(url, requestBody, HashMap.class);
+    }
+
+    public List<Map<String, Object>> getUdfList() throws Exception {
+        List<Map<String, Object>> list = metaDataFusionMapper.getUdfList();
+        for (Map<String, Object> udf : list) {
+            Object paramsObj = udf.get("params");
+            if (paramsObj instanceof PGobject) {
+                String json = ((PGobject) paramsObj).getValue();
+                List<Map<String, Object>> paramList = objectMapper.readValue(json,
+                    new TypeReference<List<Map<String, Object>>>() {});
+                udf.put("params", paramList);
+            }
+        }
+        return list;
+    }
+
+    public Map<String, Object> registerUdf(Map<String, Object> param, Map<String, Object> user) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            String udfId = UUID.randomUUID().toString();
+            param.put("udf_id", udfId);
+            param.put("create_by", user.get("user_id"));
+            param.put("udf_name", param.get("udf_name").toString().toLowerCase());
+            metaDataFusionMapper.insertUdf(param);
+
+            List<Map<String, Object>> params = (List<Map<String, Object>>) param.get("params");
+            if (params != null) {
+                for (int i = 0; i < params.size(); i++) {
+                    Map<String, Object> p = params.get(i);
+                    p.put("udf_id", udfId);
+                    p.put("param_order", i);
+                    metaDataFusionMapper.insertUdfParam(p);
+                }
+            }
+
+            callUdfApi(dataIntegrationUrlUdfRegister, buildUdfBody(param, getFusionCatalog()));
+
+            result.put("result", true);
+        } catch (Exception e) {
+            log.error("Fail to register UDF");
+            e.printStackTrace();
+            result.put("result", false);
+        }
         return result;
     }
 
-    // 수동 수집 실행 POST - SYNC
-    public boolean ingestionExecuteSync(String system_id, String table_name) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-
-        String executeUrl = catalogApiBaseUrl + catalogApiUrlExecuteSync;
-
-        Map<String, Object> requestBody = new HashMap<>();
-        List<String> include = new ArrayList<>();
-        List<String> exclude = new ArrayList<>();
-        
-        // 융합의 경우 table={테이블명}
-        if (!table_name.equals("")) {
-            // table=my_view1
-            include.add("table=" + table_name);
-        }
-
-        requestBody.put("system_id", system_id);
-        requestBody.put("include", include); 
-        requestBody.put("exclude", exclude);
-        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
-        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    // trino 프로파일링 실행
-    public Object executeProfile(Map<String, Object> executeBody) throws Exception {
+    public Map<String, Object> updateUdf(Map<String, Object> param, Map<String, Object> user) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        boolean executeResult = false;
-
         try {
-            log.info("start to execute profile execute");
-            executeResult = profileExecute(executeBody);
-            log.info("end to execute profile execute");
+            String udfId = param.get("udf_id").toString();
 
+            int viewCount = metaDataFusionMapper.getUdfViewCount(udfId);
+            if (viewCount > 0) {
+                result.put("result", false);
+                result.put("reason", "UDF를 사용 중인 융합 뷰가 " + viewCount + "개 있습니다. 수정이 불가합니다.");
+                return result;
+            }
+
+            Map<String, Object> oldUdf = getUdfList().stream()
+                .filter(u -> udfId.equals(u.get("udf_id")))
+                .findFirst()
+                .orElse(null);
+
+            param.put("update_by", user.get("user_id"));
+            param.put("udf_name", param.get("udf_name").toString().toLowerCase());
+            metaDataFusionMapper.updateUdf(param);
+
+            metaDataFusionMapper.deleteUdfParams(udfId);
+
+            List<Map<String, Object>> params = (List<Map<String, Object>>) param.get("params");
+            if (params != null) {
+                for (int i = 0; i < params.size(); i++) {
+                    Map<String, Object> p = params.get(i);
+                    p.put("udf_id", udfId);
+                    p.put("param_order", i);
+                    metaDataFusionMapper.insertUdfParam(p);
+                }
+            }
+
+            // old/new UDF 정보를 묶어 DataIntegration 서버에 위임
+            String catalog = getFusionCatalog();
+            Map<String, Object> updateBody = new HashMap<>();
+            updateBody.put("old_udf", oldUdf != null ? buildUdfBody(oldUdf, catalog) : buildUdfBody(param, catalog));
+            updateBody.put("new_udf", buildUdfBody(param, catalog));
+            callUdfApi(dataIntegrationUrlUdfUpdate, updateBody);
+
+            result.put("result", true);
         } catch (Exception e) {
-            executeResult = false;
-            log.error("fail to execute direct Collect");
+            log.error("Fail to update UDF");
             e.printStackTrace();
+            result.put("result", false);
         }
-        
-        result.put("executeResult", executeResult);
         return result;
     }
 
-    // 수동 프로파일링 실행 POST
-    public boolean profileExecute(Map<String, Object> executeBody) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+    public Map<String, Object> deleteUdf(String udfId) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            int viewCount = metaDataFusionMapper.getUdfViewCount(udfId);
+            if (viewCount > 0) {
+                result.put("result", false);
+                result.put("reason", "UDF를 사용 중인 융합 뷰가 " + viewCount + "개 있습니다.");
+                return result;
+            }
 
-        String executeUrl = catalogApiBaseUrl + catalogApiUrlProfile;
+            Map<String, Object> targetUdf = getUdfList().stream()
+                .filter(u -> udfId.equals(u.get("udf_id")))
+                .findFirst()
+                .orElse(null);
 
-        Map<String, Object> requestBody = new HashMap<>();
-        List<String> include = new ArrayList<>();
-        List<String> exclude = new ArrayList<>();
+            metaDataFusionMapper.deleteUdf(udfId);
 
-        // table=my_view
-        include.add("table=" + executeBody.get("meta_name").toString());
-        
-        requestBody.put("system_id", executeBody.get("system_id").toString());
-        requestBody.put("profile_type", executeBody.get("profile_type").toString());
-        requestBody.put("include", include); 
-        requestBody.put("exclude", exclude);
-        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
-        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
-            return true;
+            if (targetUdf != null) {
+                callUdfApi(dataIntegrationUrlUdfDrop, buildUdfBody(targetUdf, getFusionCatalog()));
+            }
+
+            result.put("result", true);
+        } catch (Exception e) {
+            log.error("Fail to delete UDF");
+            e.printStackTrace();
+            result.put("result", false);
         }
+        return result;
+    }
 
-        return false;
+
+    private void saveViewUdfDependencies(String metaId, String query) {
+        try {
+            metaDataFusionMapper.deleteFusionViewUdfs(metaId);
+            List<String> calledNames = extractCalledFunctionNames(query);
+            if (calledNames.isEmpty()) return;
+            List<Map<String, Object>> usedUdfs = metaDataFusionMapper.getUdfListByNames(calledNames);
+            for (Map<String, Object> udf : usedUdfs) {
+                Map<String, Object> param = new HashMap<>();
+                param.put("meta_id", metaId);
+                param.put("udf_id", udf.get("udf_id").toString());
+                metaDataFusionMapper.insertFusionViewUdf(param);
+            }
+        } catch (Exception e) {
+            log.error("Fail to save view UDF dependencies");
+            e.printStackTrace();
+        }
+    }
+
+    private String qualifyUdfCalls(String query, List<Map<String, Object>> udfs, String catalog) {
+        String result = query;
+        for (Map<String, Object> udf : udfs) {
+            String name = udf.get("udf_name").toString();
+            // 이미 정규화된 이름(앞에 점이 있는 경우)은 건너뜀
+            result = result.replaceAll(
+                "(?i)(?<!\\.)\\b" + Pattern.quote(name) + "\\s*\\(",
+                catalog + "." + trinoUdfSchema + "." + name + "("
+            );
+        }
+        return result;
+    }
+
+    private List<String> extractCalledFunctionNames(String query) {
+        Set<String> names = new HashSet<>();
+        Matcher m = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(").matcher(query);
+        while (m.find()) {
+            names.add(m.group(1));
+        }
+        return new ArrayList<>(names);
     }
 
     // 쿼리 실행 POST
-    public Map<String, Object> queryExecute(Map<String, Object> executeBody) throws Exception {
+    private Map<String, Object> queryExecute(Map<String, Object> executeBody) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         String status_code = "";
         Map<String, Object> result = new HashMap<>();
@@ -446,7 +604,7 @@ public class MetaDataFusionService {
     }
 
     // 융합 데이터 생성 POST
-    public Map<String, Object> confirmIntegration(Map<String, Object> executeBody) throws Exception {
+    private Map<String, Object> confirmIntegration(Map<String, Object> executeBody) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         String status_code = "";
         Map<String, Object> result = new HashMap<>();
