@@ -210,11 +210,6 @@
 <script setup lang="ts">
 import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
 
-const props = defineProps<{ initialUdfList?: any[] }>();
-const emit = defineEmits(["close", "insert"]);
-
-const { $ofetch } = useNuxtApp();
-
 const TYPES = [
   "BOOLEAN",
   "TINYINT",
@@ -227,9 +222,41 @@ const TYPES = [
   "VARBINARY",
   "DATE",
   "TIMESTAMP"
-];
+] as const;
 
-const udfList = ref<any[]>(props.initialUdfList ?? []);
+type UdfType = typeof TYPES[number];
+
+interface UdfParam {
+  param_name: string;
+  param_type: string;
+}
+
+interface Udf {
+  udf_id: string;
+  udf_name: string;
+  return_type: string;
+  body: string;
+  description: string;
+  params: UdfParam[];
+}
+
+interface ApiResponse<T> {
+  data: T;
+}
+
+interface UdfActionResult {
+  result: boolean;
+  reason?: string;
+}
+
+const isUdfType = (v: string): v is UdfType => (TYPES as readonly string[]).includes(v);
+
+const props = defineProps<{ initialUdfList?: Udf[] }>();
+const emit = defineEmits(["close", "insert"]);
+
+const { $ofetch } = useNuxtApp();
+
+const udfList = ref<Udf[]>(props.initialUdfList ?? []);
 const currentIdx = ref(-1);
 const isEditMode = computed(() => currentIdx.value >= 0);
 
@@ -243,13 +270,12 @@ const parseError = ref("");
 
 // ── 목록 조회 ──
 const loadUdfList = async () => {
-  await $ofetch("/api/metadata/fusion/udf/list")
-    .then((res: any) => {
-      if (res?.data) udfList.value = res.data;
-    })
-    .catch(() => {
-      errorAlert("UDF 목록 조회에 실패하였습니다.");
-    });
+  try {
+    const res = await $ofetch<ApiResponse<Udf[]>>("/api/metadata/fusion/udf/list");
+    if (res?.data) udfList.value = res.data;
+  } catch {
+    errorAlert("UDF 목록 조회에 실패하였습니다.");
+  }
 };
 
 // ── 신규 모드 ──
@@ -266,9 +292,9 @@ const loadRow = (idx: number) => {
   fReturn.value = udf.return_type ?? "";
   fBody.value = udf.body ?? "";
   fDesc.value = udf.description ?? "";
-  params.value = (udf.params ?? []).map((p: any) => ({
-    param_name: p.param_name ?? "",
-    param_type: p.param_type ?? ""
+  params.value = udf.params.map((p) => ({
+    param_name: p.param_name,
+    param_type: p.param_type
   }));
   updateSqlLive();
 };
@@ -348,7 +374,7 @@ const applyPastedSql = () => {
   const returnType = returnsMatch[1].trim();
 
   fName.value = funcName;
-  fReturn.value = TYPES.includes(returnType) ? returnType : "";
+  fReturn.value = isUdfType(returnType) ? returnType : "";
   fBody.value = body;
   params.value = paramStr
     ? paramStr.split(",").map((p) => {
@@ -383,7 +409,7 @@ const saveUdf = async () => {
 
   try {
     if (isEditMode.value) {
-      const res: any = await $ofetch("/api/metadata/fusion/udf/update", {
+      const res = await $ofetch<ApiResponse<UdfActionResult>>("/api/metadata/fusion/udf/update", {
         method: "PUT",
         body: { ...payload, udf_id: udfList.value[currentIdx.value].udf_id }
       });
@@ -393,7 +419,7 @@ const saveUdf = async () => {
       }
       await successAlert("수정되었습니다.");
     } else {
-      const res: any = await $ofetch("/api/metadata/fusion/udf/register", {
+      const res = await $ofetch<ApiResponse<UdfActionResult>>("/api/metadata/fusion/udf/register", {
         method: "POST",
         body: payload
       });
@@ -416,7 +442,7 @@ const deleteRow = async (idx: number) => {
   await confirmAlert(`"${udf.udf_name}" UDF를 삭제하시겠습니까?`, {
     confirm: async () => {
       try {
-        const res: any = await $ofetch(`/api/metadata/fusion/udf/delete?udf_id=${udf.udf_id}`, { method: "DELETE" });
+        const res = await $ofetch<ApiResponse<UdfActionResult>>(`/api/metadata/fusion/udf/delete?udf_id=${udf.udf_id}`, { method: "DELETE" });
         if (res?.data?.result === false) {
           await errorAlert(res.data.reason ?? "삭제에 실패하였습니다.");
           return;
@@ -438,7 +464,7 @@ const deleteRow = async (idx: number) => {
 // ── 에디터 스니펫 삽입 ──
 const insertSnippet = (idx: number) => {
   const udf = udfList.value[idx];
-  const args = (udf.params ?? []).map((p: any) => p.param_name).join(", ");
+  const args = udf.params.map((p) => p.param_name).join(", ");
   emit("insert", `${udf.udf_name}(${args})`);
 };
 
