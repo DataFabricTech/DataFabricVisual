@@ -25,6 +25,9 @@ public interface MetaDataFusionMapper {
     // 융합 데이터 저장소 시스템 정보 조회
     Map<String, Object> getFusionSystemInfo(String system_name, String system_type) throws Exception;
 
+    // 융합 메타데이터 단건 조회 (system_id 검증용)
+    Map<String, Object> getFusionMetaById(String metaId) throws Exception;
+
     // ── Trino UDF 관리 ──
     List<Map<String, Object>> getUdfList() throws Exception;
     List<Map<String, Object>> getUdfListByNames(List<String> names) throws Exception;

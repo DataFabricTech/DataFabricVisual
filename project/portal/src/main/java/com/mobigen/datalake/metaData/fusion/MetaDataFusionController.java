@@ -103,4 +103,14 @@ public class MetaDataFusionController {
     public Object deleteUdf(@RequestParam String udf_id) throws Exception {
         return metaDataFusionService.deleteUdf(udf_id);
     }
+
+    /**
+     * 융합 데이터 삭제 (융합 전용 시스템 소속 데이터만 허용)
+     */
+    @ResponseJsonResult
+    @DeleteMapping("/delete")
+    public Object deleteFusionMetaData(@RequestParam String meta_id, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        return metaDataFusionService.deleteFusionMetaData(meta_id, user);
+    }
 }
