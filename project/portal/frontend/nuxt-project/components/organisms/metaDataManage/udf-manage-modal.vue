@@ -286,9 +286,6 @@ const clearForm = () => {
 
 // ── 취소 ──
 const cancelForm = () => {
-  if (isEditMode.value) loadRow(currentIdx.value);
-  else clearForm();
-
   close();
 };
 
@@ -343,7 +340,7 @@ const applyPastedSql = () => {
       parseError.value = "파싱 실패: RETURN 또는 BEGIN/END 블록을 찾을 수 없습니다.";
       return;
     }
-    body = returnMatch[1].trim();
+    body = returnMatch[1].trim().replace(/;$/, "");
   }
 
   const funcName = funcMatch[1].split(".").pop() ?? "";
@@ -396,10 +393,14 @@ const saveUdf = async () => {
       }
       await successAlert("수정되었습니다.");
     } else {
-      await $ofetch("/api/metadata/fusion/udf/register", {
+      const res: any = await $ofetch("/api/metadata/fusion/udf/register", {
         method: "POST",
         body: payload
       });
+      if (res?.data?.result === false) {
+        await errorAlert(res.data.reason ?? "저장에 실패하였습니다.");
+        return;
+      }
       await successAlert("저장되었습니다.");
       clearForm();
     }
@@ -410,9 +411,9 @@ const saveUdf = async () => {
 };
 
 // ── 삭제 ──
-const deleteRow = (idx: number) => {
+const deleteRow = async (idx: number) => {
   const udf = udfList.value[idx];
-  confirmAlert(`"${udf.udf_name}" UDF를 삭제하시겠습니까?`, {
+  await confirmAlert(`"${udf.udf_name}" UDF를 삭제하시겠습니까?`, {
     confirm: async () => {
       try {
         const res: any = await $ofetch(`/api/metadata/fusion/udf/delete?udf_id=${udf.udf_id}`, { method: "DELETE" });
@@ -428,7 +429,7 @@ const deleteRow = (idx: number) => {
         }
         await loadUdfList();
       } catch {
-        errorAlert("삭제에 실패하였습니다.");
+        await errorAlert("삭제에 실패하였습니다.");
       }
     }
   });
@@ -437,7 +438,7 @@ const deleteRow = (idx: number) => {
 // ── 에디터 스니펫 삽입 ──
 const insertSnippet = (idx: number) => {
   const udf = udfList.value[idx];
-  const args = (udf.params ?? []).map((p: any) => p.param_type).join(", ");
+  const args = (udf.params ?? []).map((p: any) => p.param_name).join(", ");
   emit("insert", `${udf.udf_name}(${args})`);
 };
 
