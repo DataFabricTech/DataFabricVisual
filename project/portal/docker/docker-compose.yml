@@ -17,6 +17,7 @@ services:
       - $DATA_CATALOG_SOLUTION_DATA/data-catalog-portal/data:/data_catalog_portal/data
       - $DATA_CATALOG_SOLUTION_DATA/data-catalog-portal/csv:/data_catalog_portal/csv
       - $DATA_CATALOG_SOLUTION_DATA/data-catalog-portal/unstructured_data:/data_catalog_portal/unstructured_data
+      - $DATA_CATALOG_SOLUTION_DATA/data-catalog-portal/profile-reports:/data_catalog_portal/profile-reports
       - $DATA_CATALOG_SOLUTION_DATA/ingestion/system_config:/data_catalog_portal/system_config
     working_dir: /data_catalog_portal
     command: ["sh", "-c", "set -e; /data_catalog_portal/docker_start.sh"]

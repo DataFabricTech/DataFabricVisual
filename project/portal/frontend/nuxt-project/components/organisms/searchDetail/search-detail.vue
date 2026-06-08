@@ -37,7 +37,7 @@
         <!-- detail-section : 데이터 프로파일링 -->
         <div v-if="isProfileArea" :ref="el => sectionRefs['data-profile-area'] = el" class="content-block">
           <data-profile-area :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :data-profile="dataProfile"
-            :columnCommentMap="columnCommentMap" />
+            :columnCommentMap="columnCommentMap" :meta-id="currentGuid" />
         </div>
         <!-- detail-section : 샘플 데이터 -->
         <div v-if="typeName && showSampleData(typeName)" :ref="el => sectionRefs['sample-data-area'] = el"
