@@ -158,15 +158,17 @@ const reportButtonText = computed(() => {
   return reportVisible.value ? "리포트 닫기" : "프로파일링 리포트 보기";
 });
 
-// Nuxt dev 서버는 없는 정적 경로에도 SPA index를 200으로 응답하므로
-// x-powered-by: Nuxt 헤더 유무로 실제 정적 파일인지 판별
+// 리포트 존재 여부 판별:
+// - 운영(Spring): 없는 파일은 302→/error 로 리다이렉트됨. redirect:"manual"로 따라가지 않게 하면
+//   opaqueredirect 응답(res.ok=false)이 되어 "없음"으로 정확히 판별 (안 막으면 /error(200)를 받아 "있음"으로 오판).
+// - Nuxt dev: 없는 경로도 SPA index를 200으로 응답하므로 x-powered-by: Nuxt 헤더 유무로 판별.
 const checkReportExists = async () => {
   if (!props.metaId) {
     reportExists.value = false;
     return;
   }
   try {
-    const res = await fetch(reportUrl.value, { method: "HEAD" });
+    const res = await fetch(reportUrl.value, { method: "HEAD", redirect: "manual" });
     const isSpaFallback = (res.headers.get("x-powered-by") || "").toLowerCase().includes("nuxt");
     reportExists.value = res.ok && !isSpaFallback;
   } catch (e) {
