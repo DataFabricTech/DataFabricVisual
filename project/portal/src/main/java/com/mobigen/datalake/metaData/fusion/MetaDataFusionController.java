@@ -41,6 +41,18 @@ public class MetaDataFusionController {
     }
 
     /**
+     * 데이터 융합 관리 > 생성된 융합 뷰 목록 조회
+     *
+     * @params Object 검색 조건, 페이징 정보
+     * @return Object 융합 뷰 목록 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/manageList")
+    public Object getFusionViewList(@RequestBody Map<String, Object> param) throws Exception {
+        return metaDataFusionService.getFusionViewList(param);
+    }
+
+    /**
      * 데이터 융합 관리 > 쿼리 실행
      *
      * @params String 쿼리문
