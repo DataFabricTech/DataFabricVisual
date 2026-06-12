@@ -902,7 +902,11 @@ const getRecommendStatus = () => {
 // 목록 버튼 클릭
 const onClickListButton = () => {
   if (props.isAdmin) {
-    router.push("/admin/data/meta-data/manage");
+    if (userStore.getFromPath === "/admin/data/meta-data/fusion") {
+      router.push("/admin/data/meta-data/fusion");
+    } else {
+      router.push("/admin/data/meta-data/manage");
+    }
   } else {
     router.push("/search/keyword");
   }
@@ -1008,7 +1012,11 @@ const onCancel = async () => {
       (await confirmAlert("수정한 내용이 저장되지 않습니다.<br />취소 하시겠습니까?"))) ||
     !isEdited.value
   ) {
-    router.push("/admin/data/meta-data/manage");
+    if (userStore.getFromPath === "/admin/data/meta-data/fusion") {
+      router.push("/admin/data/meta-data/fusion");
+    } else {
+      router.push("/admin/data/meta-data/manage");
+    }
   }
 };
 

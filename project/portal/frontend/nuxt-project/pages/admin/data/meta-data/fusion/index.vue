@@ -6,7 +6,8 @@
         <h2 class="blind">System Monitoring</h2>
         <!-- contents -->
         <div class="contents">
-          <div class="fusion-wrap">
+          <select-tab :tabs="tabs" :activeTab="currentTab" @onSelectTab="onSelectCurrentTab" />
+          <div class="fusion-wrap" v-if="currentTab == 0">
             <div class="mu-row gap-10">
               <div class="mu-col mu-col-4">
                 <div class="board-list-wrap">
@@ -313,6 +314,101 @@
             <div class="mu-dialog-foot">
               <button type="button" class="mu-btn mu-btn-primary" @click="saveFusion()"><span>저장</span></button>
             </div>
+          </div>
+          <div class="board-list-wrap" v-if="currentTab == 1">
+            <div class="mu-heading">
+              <!-- board-list-search -->
+              <div class="board-list-search">
+                <form action="" @submit.prevent="onManageSearch">
+                  <fieldset>
+                    <legend>데이터 검색</legend>
+                    <div class="inner-search">
+                      <div class="mu-selectbox w160">
+                        <select v-model="manageSearchType">
+                          <option value="all">전체</option>
+                          <option value="meta_name">데이터 명</option>
+                          <option value="description">데이터 설명</option>
+                        </select>
+                      </div>
+                      <div class="mu-input-icon">
+                        <input
+                          type="text"
+                          class="mu-input"
+                          placeholder="Search"
+                          title="검색어입력"
+                          v-model="manageSearchWord"
+                          @keypress.enter.prevent="onManageSearch"
+                        />
+                        <button type="button" class="mu-btn mu-btn-sch" @click="onManageSearch">
+                          <i class="mu-icon-svg search"></i>
+                          <span>검색</span>
+                        </button>
+                      </div>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
+              <!-- //board-list-search -->
+              <div class="mu-item-group">
+                <page-size v-model:pageSize="managePagingObj.limit" @searchMethod="getFusionViewList" />
+              </div>
+            </div>
+            <div class="board-list">
+              <table class="mu-grid mu-grid-data">
+                <colgroup>
+                  <col style="width: 25%" />
+                  <col style="width: 30%" />
+                  <col style="width: 15%" />
+                  <col style="width: 10%" />
+                  <col style="width: 10%" />
+                  <col style="width: 10%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">데이터 명</th>
+                    <th scope="col">데이터 설명</th>
+                    <th scope="col">등록자</th>
+                    <th scope="col">등록일</th>
+                    <th scope="col">공개설정</th>
+                    <th scope="col">관리</th>
+                  </tr>
+                </thead>
+                <tbody v-if="manageDataList && manageDataList.length > 0">
+                  <tr v-for="(item, index) in manageDataList" :key="index">
+                    <td>
+                      <a @click="goToFusionDetail(item)" :title="item.meta_name ? item.meta_name : '-'">
+                        {{ item.meta_name ? item.meta_name : "-" }}
+                      </a>
+                    </td>
+                    <td :title="item.description ? item.description : '-'">
+                      {{ item.description ? item.description : "-" }}
+                    </td>
+                    <td :title="item.create_by_name ? item.create_by_name : '-'">
+                      {{ item.create_by_name ? item.create_by_name : "-" }}
+                    </td>
+                    <td>{{ $yyyyMMdd(item.create_time) }}</td>
+                    <td>
+                      <span :class="getReleaseClass(item.release)">{{ getRelease(item.release) }}</span>
+                    </td>
+                    <td>
+                      <button type="button" class="mu-btn mu-btn-sm" @click="onClickDeleteFusionView(item)">
+                        <i class="mu-icon-svg del"></i><span>삭제</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="6">
+                      <p class="nodata">데이터가 존재하지 않습니다.</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- mu-pagination -->
+            <pagination :paging="managePagingObj" @onClickPage="onManagePage" />
+            <!-- //mu-pagination -->
           </div>
         </div>
         <!-- //contents -->
@@ -798,6 +894,7 @@ import "@imengyu/vue3-context-menu/lib/vue3-context-menu.css";
 
 import BusinessAttributesArea from "@molecules/searchDetail/business-attributes-area";
 import TagRegisterArea from "@molecules/searchDetail/tag-register-area";
+import SelectTab from "@functional/selectTab/select-tab.vue";
 import UdfManageModal from "@organisms/metaDataManage/udf-manage-modal.vue";
 import { useCategoryStore } from "@store/category.ts";
 import ObjectUtils from "@utils/ObjectUtils";
@@ -870,6 +967,106 @@ const mouseY = ref(0);
 const categoryTreeStore = useCategoryTreeStore();
 const router = useRouter();
 
+// 데이터 융합 저장 | 데이터 융합 관리 탭
+const tabs = ref([
+  { idx: 0, key: "데이터 융합 저장", type: "save" },
+  { idx: 1, key: "데이터 융합 관리", type: "manage" }
+]);
+const currentTab = ref(0);
+
+// 데이터 융합 관리 탭 > 생성된 융합 뷰 목록
+const manageDataList = ref([]);
+const manageSearchType = ref("all");
+const manageSearchWord = ref("");
+const managePagingObj = ref({
+  total: 0,
+  limit: 10,
+  block: 10,
+  currentPage: 1
+});
+
+const onSelectCurrentTab = (curTabObj) => {
+  currentTab.value = curTabObj ? curTabObj.idx : 0;
+
+  if (currentTab.value === 1) {
+    getFusionViewList();
+  }
+};
+
+// 생성된 융합 뷰 목록 조회
+const getFusionViewList = async (offset = 1) => {
+  const params = {
+    offset: (offset - 1) * managePagingObj.value.limit,
+    limit: managePagingObj.value.limit,
+    searchType: manageSearchType.value,
+    word: manageSearchWord.value
+  };
+
+  await $ofetch(`/api/metadata/fusion/manageList`, { method: "POST", body: params })
+    .then((res) => {
+      if (res && !res.errorMessage && res.data) {
+        manageDataList.value = res.data.list ? res.data.list : [];
+        managePagingObj.value = {
+          ...managePagingObj.value,
+          total: res.data.totalCount ? res.data.totalCount : 0,
+          currentPage: offset
+        };
+      } else {
+        manageDataList.value = [];
+        managePagingObj.value = { ...managePagingObj.value, total: 0, currentPage: 1 };
+      }
+    })
+    .catch(() => {
+      manageDataList.value = [];
+      managePagingObj.value = { ...managePagingObj.value, total: 0, currentPage: 1 };
+    });
+};
+
+const onManageSearch = () => {
+  getFusionViewList(1);
+};
+
+const onManagePage = (page) => {
+  getFusionViewList(page);
+};
+
+const goToFusionDetail = (item) => {
+  router.push("/admin/data/meta-data/detail?guid=" + item.meta_id);
+};
+
+const getRelease = (release) => {
+  if (release == 0) return "secret";
+  else if (release == 1) return "public";
+  else if (release == 2) return "private";
+  else return "-";
+};
+
+const getReleaseClass = (release) => {
+  let className = "release-status";
+  if (release == 0) className += " secret";
+  else if (release == 1) className += " public";
+  else if (release == 2) className += " private";
+  return className;
+};
+
+// 융합 데이터(View) 삭제
+const onClickDeleteFusionView = async (item) => {
+  if (await confirmAlert(`'${item.meta_name}' 데이터를 삭제하시겠습니까?`)) {
+    await $ofetch(`/api/metadata/fusion/delete?meta_id=${item.meta_id}`, { method: "DELETE" })
+      .then(async (res) => {
+        if (res && res.data && res.data.result) {
+          await successAlert("삭제되었습니다.");
+          getFusionViewList(managePagingObj.value.currentPage);
+        } else {
+          await errorAlert(res?.data?.reason ? res.data.reason : "삭제에 실패하였습니다.");
+        }
+      })
+      .catch(() => {
+        errorAlert("삭제에 실패하였습니다.");
+      });
+  }
+};
+
 const categoryTreeList = await categoryTreeStore.fetchCategories();
 
 // 융합 데이터 등록
@@ -899,6 +1096,7 @@ const authTypeList = ref([
 // 시스템 정보
 const system_id = ref(); // 시스템 ID
 const catalog = ref(); // 카탈로그명
+const schema = ref("default"); // 스키마명
 const system_type = ref(""); // 시스템 타입
 const system_name = ref(""); // 시스템 명
 const create_by = computed(() => userStore.getUser.user_id); // 등록자
@@ -945,6 +1143,12 @@ onMounted(async () => {
   await loadUdfList();
   window.addEventListener("mousemove", handleMousemove);
   onSearchMetaList();
+
+  // 상세 조회 페이지에서 돌아온 경우, 데이터 융합 관리 탭으로 복귀
+  if (userStore.getFromPath === "/admin/data/meta-data/detail") {
+    currentTab.value = 1;
+    getFusionViewList();
+  }
 });
 onUnmounted(() => {
   window.removeEventListener("mousemove", handleMousemove);
@@ -969,6 +1173,7 @@ const getFusionSysteInfo = async () => {
         system_name.value = fusionInfo.system_name;
         meta_type.value = fusionInfo.meta_type;
         catalog.value = fusionInfo.catalog;
+        schema.value = fusionInfo.schema;
         create_time.value = getCurrentTime();
       }
     })
@@ -1385,7 +1590,7 @@ const onClickSaveButton = async () => {
     if (!(await confirmAlert("등록하시겠습니까?"))) return;
     attributes.value.data_from = data_from.value; // 출처 설정
 
-    qualified_name.value = system_id.value + "." + catalog.value + "." + "default" + "." + meta_name.value;
+    qualified_name.value = system_id.value + "." + catalog.value + "." + schema.value + "." + meta_name.value;
 
     const body = {
       meta_id: meta_id.value,
