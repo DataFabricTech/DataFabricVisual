@@ -85,6 +85,28 @@ public class MetaDataFusionService {
         return result;
     }
 
+    // 데이터 융합 관리 > 생성된 융합 뷰 목록 조회
+    public Map<String, Object> getFusionViewList(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        int totCnt = 0;
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+
+        try {
+            params.put("systemId", getFusionCatalog());
+            params.put("schema", trinoUdfSchema);
+            totCnt = metaDataFusionMapper.getFusionViewListTotCnt(params);
+            resultList = metaDataFusionMapper.getFusionViewList(params);
+        } catch (Exception e) {
+            log.error("Fail to search fusion view list");
+            e.printStackTrace();
+        }
+
+        result.put("totalCount", totCnt);
+        result.put("list", resultList);
+
+        return result;
+    }
+
     // 쿼리 실행
     public Map<String, Object> executeQuery(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -177,12 +199,10 @@ public class MetaDataFusionService {
             eventParam.put("meta_name", metadata.get("meta_name"));
             eventParam.put("qualified_name", metadata.get("qualified_name"));
 
+            // 형식 검증 (DataIntegration 서버에 Timestamp 객체로 전달하면 epoch(ms)로 직렬화되어
+            // create_time이 정상 저장되지 않으므로, 프론트에서 받은 문자열 형식 그대로 전달)
             String dateString = metadata.get("create_time") != null ? metadata.get("create_time").toString() : "";
-            // LocalDateTime 변환
-            LocalDateTime ldt = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            // Timestamp 변환
-            Timestamp ts = Timestamp.valueOf(ldt);
-            metadata.put("create_time", ts);
+            LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
             // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
             List<String> classificationList = (List<String>) metadata.get("classifications");
@@ -343,6 +363,7 @@ public class MetaDataFusionService {
           Map<String, Object> collectorMap = metaDataFusionMapper.getFusionSystemInfo(system_name, system_type);
           if (collectorMap != null) {
             collectorMap.put("meta_type", meta_type);
+            collectorMap.put("schema", trinoUdfSchema);
             result.put("result", true);
             result.put("fusionInfo", collectorMap);
           } else {
@@ -617,7 +638,12 @@ public class MetaDataFusionService {
         requestBody.put("event_info", executeBody.get("event_info"));
         requestBody.put("meta_info", executeBody.get("meta_info"));
 
+        log.info("[DEBUG] confirmIntegration request: {}", requestBody);
+
         ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+
+        log.info("[DEBUG] confirmIntegration response: {}", responseEntity != null ? responseEntity.getBody() : null);
+
         if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
             if (responseEntity.getBody() != null) {
                 status_code = responseEntity.getBody().get("status_code").toString();

@@ -13,6 +13,12 @@ public interface MetaDataFusionMapper {
     // 메타 데이터 목록 count
     int getMetaDataFusionListTotCnt(Map<String, Object> params) throws Exception;
 
+    // 데이터 융합 관리 > 생성된 융합 뷰 목록
+    List<Map<String, Object>> getFusionViewList(Map<String, Object> params) throws Exception;
+
+    // 데이터 융합 관리 > 생성된 융합 뷰 목록 count
+    int getFusionViewListTotCnt(Map<String, Object> params) throws Exception;
+
     // 메타데이터 이벤트 저장
     Integer saveEvent(Map<String, Object> eventParams) throws Exception;
 
