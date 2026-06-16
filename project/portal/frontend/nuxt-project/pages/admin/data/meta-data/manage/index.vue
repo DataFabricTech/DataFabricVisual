@@ -190,7 +190,12 @@
 
       <!-- 카테고리 추가/수정/매핑 처리 모달 -->
       <manage-classification-modal ref="refManageModal" :manage-modal="manageModalObj"
-        @onCloseModal="onToggleManageModal" @onSubmit="onSubmitCategory" />
+        @onCloseModal="onToggleManageModal" @onSubmit="onSubmitCategory"
+        @onSubmitSimilarAttr="onSubmitSimilarAttrAdd" />
+
+      <!-- 유사 카테고리 수정 모달 -->
+      <similar-attr-category-modal ref="refSimilarAttrModal" :similar-attr-modal="similarAttrModalObj"
+        @onCloseModal="onCloseSimilarAttrModal" @onSubmit="onSubmitSimilarAttrUpdate" />
 
       <!-- 메타추출 처리 모달 -->
       <manage-extract-meta-modal ref="refManageExtractModal" :extract-modal="extractModalObj"
@@ -209,6 +214,7 @@ import PageSize from "@/pages/admin/manager/system/user/page-size";
 import { isEmpties } from "@composables/ramda";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
+import SimilarAttrCategoryModal from "@functional/classificationModal/similar-attr-category-modal.vue";
 import portalConfirm from "@functional/confirm/portal-confirm";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
 import ManageExtractMetaModal from "@functional/metaExtractModal/manage-extract-meta-modal.vue";
@@ -463,6 +469,10 @@ const tooltipObj = ref<TooltipObj>({
   e: {},
   targets: null
 });
+
+// 유사 카테고리 수정 모달 제어
+const similarAttrModalObj = ref({ toggle: false, target: null as any });
+const refSimilarAttrModal = ref<any>(null);
 
 // 카테고리 관리 모달 제어
 const manageModalObj = ref<ManageModalObj>({
@@ -1047,6 +1057,63 @@ const onSubmitCategory = async (params: any) => {
   refManageModal.value.onClose();
 };
 
+// 유사속성 카테고리 추가 (manage-classification-modal Tab 2)
+const onSubmitSimilarAttrAdd = async (params: any) => {
+  try {
+    const dupRes = await $ofetch(
+      `/api/metadata/similar-attr-category/checkNameDuplicated?name=${encodeURIComponent(params.name)}`
+    );
+    if (dupRes?.data?.duplicated) {
+      errorAlert("이미 존재하는 카테고리명입니다.");
+      return;
+    }
+    await $ofetch("/api/metadata/similar-attr-category/create", { method: "POST", body: params });
+    await categoryStore.fetchSimilarAttrCategories();
+    refManageModal.value.onClose();
+  } catch (e) {
+    errorAlert("등록에 실패했습니다.");
+  }
+};
+
+// 유사 카테고리 수정/삭제 (좌측 메뉴 버튼 → eventStore)
+const onSimilarAttrMenuAction = async (item: any, action: string) => {
+  if (action === "update") {
+    similarAttrModalObj.value = { toggle: true, target: item };
+  } else if (action === "delete") {
+    confirmAlert(
+      { content: `'${item.description}' 카테고리를 삭제하시겠습니까?` },
+      {
+        confirm: async () => {
+          try {
+            await $ofetch(`/api/metadata/similar-attr-category/delete?id=${item.id}`, { method: "DELETE" });
+            if (categoryStore._selectedItemId === item.id) categoryStore.setSelectedItemId("");
+            await categoryStore.fetchSimilarAttrCategories();
+          } catch (e) {
+            errorAlert("삭제에 실패했습니다.");
+          }
+        }
+      }
+    );
+  }
+};
+
+// 유사 카테고리 수정 모달 닫기
+const onCloseSimilarAttrModal = () => {
+  similarAttrModalObj.value = { toggle: false, target: null };
+};
+
+// 유사 카테고리 수정 제출 (similar-attr-category-modal)
+const onSubmitSimilarAttrUpdate = async (params: any) => {
+  try {
+    await $ofetch("/api/metadata/similar-attr-category/update", { method: "POST", body: params });
+    await categoryStore.fetchSimilarAttrCategories();
+    refSimilarAttrModal.value.onClose();
+    onCloseSimilarAttrModal();
+  } catch (e) {
+    errorAlert("수정에 실패했습니다.");
+  }
+};
+
 // 카테고리명 중복 체크
 const checkBeforeInsert = async (name) => {
   let isDup = false;
@@ -1066,6 +1133,11 @@ const checkBeforeInsert = async (name) => {
 
 // 카테고리 세팅 툴팁 내 추가/삭제/수정 버튼 클릭 이벤트 핸들러
 const onClickCategoryManageMenu = (type) => {
+  // 유사 속성 카테고리 설정 툴팁 액션
+  if (tooltipObj.value.targets?.isSimilarAttrCategory) {
+    onSimilarAttrMenuAction(tooltipObj.value.targets, type);
+    return;
+  }
   if (type === "delete") {
     onDeleteCategory(selectedCategory.value); // 카테고리 삭제 실행
   } else {

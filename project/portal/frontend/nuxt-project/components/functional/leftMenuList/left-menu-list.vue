@@ -19,7 +19,7 @@
           <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggle('all')">
             <span>펼치기</span>
           </button>
-          <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']" title="카테고리 전체"
+          <a href="javascript:void(0);" :class="[activeFolderSection === 'all' ? 'active' : '', 'item-label']" title="카테고리 전체"
             @click="() => onClick()">
             카테고리 전체
           </a>
@@ -32,8 +32,8 @@
             @click="onToggle('similarAttrAll')">
             <span>펼치기</span>
           </button>
-          <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']"
-            title="유사 속성 카테고리 전체" @click="() => onClick()">
+          <a href="javascript:void(0);" :class="[activeFolderSection === 'similarAttrAll' ? 'active' : '', 'item-label']"
+            title="유사 속성 카테고리 전체" @click="() => onClickSimilarAttrAll()">
             유사 속성 카테고리 전체
           </a>
           <menu-item :list="similarAttrCategoryList" :toggle-targets="toggleTargets" :selected-id="selectedId"
@@ -67,10 +67,22 @@ const calledFrom = categoryStore.getCalledFrom;
 
 const eventStore = useEventStore();
 
+// 상단 "전체" 폴더의 active 상태 — 페이지 핸들러가 selectedId를 덮어쓰므로 로컬 상태로 별도 관리
+// "all" = 카테고리 전체, "similarAttrAll" = 유사 속성 카테고리 전체, "" = 개별 항목 선택 중
+const activeFolderSection = ref("all");
+
 // 메뉴 클릭 이벤트 핸들러
 const onClick = (item) => {
+  activeFolderSection.value = item && item.id ? "" : "all";
   categoryStore.setSelectedItemId(item && item.id ? item.id : "");
   emit("onClickMenuItem", item);
+};
+
+// 유사 속성 카테고리 전체 클릭 핸들러
+const onClickSimilarAttrAll = () => {
+  activeFolderSection.value = "similarAttrAll";
+  categoryStore.setSelectedItemId("");
+  emit("onClickMenuItem", null);
 };
 
 // 카테고리 세팅 버튼 클릭 이벤트 핸들러

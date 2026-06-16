@@ -63,6 +63,7 @@ export const useCategoryStore = defineStore("categoryStore", () => {
       categoryDescription: category.description,
       keyword: category.keyword,
       ord_no: category.ord_no,
+      use_yn: category.use_yn,
       level: 1,
       isSimilarAttrCategory: true,
       superTypes: [],

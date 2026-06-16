@@ -23,6 +23,13 @@
         @click.stop="(e) => onToggleTooltip(e, item, 'setup')">
         <span>설정</span>
       </button>
+      <!-- 유사 속성 카테고리: 설정 버튼 (기존 카테고리와 동일한 점 버튼 패턴) -->
+      <button style="width: max-content"
+        v-if="calledFrom === 'metaDataManage' && item.isSimilarAttrCategory"
+        v-show="selectedId === item.id" type="button" class="item-set" :id="`setup_${item.id}`"
+        @click.stop="(e) => onToggleTooltip(e, item, 'similarAttrSetup')">
+        <span>설정</span>
+      </button>
 
       <menu-item v-if="item.subTypes" :list="item.subTypes" :toggle-targets="toggleTargets" :selected-id="selectedId"
         @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
