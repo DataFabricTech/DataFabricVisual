@@ -542,6 +542,7 @@ const pagingObj = ref<PagingObj>({
 const listData = ref<any>([]); // 통합 검색 결과 리스트
 
 await categoryStore.fetchCategories();
+await categoryStore.fetchSimilarAttrCategories(); // 좌측 카테고리 메뉴 하단 "유사 속성 카테고리" 폴더
 
 onMounted(async () => {
   // 메타타입 기본값 조회

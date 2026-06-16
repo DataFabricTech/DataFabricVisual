@@ -26,6 +26,19 @@
           <menu-item :list="categoryList" :toggle-targets="toggleTargets" :selected-id="selectedId"
             @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
         </li>
+        <li v-if="similarAttrCategoryList.length > 0"
+          :class="[toggleTargets.similarAttrAll ? 'open' : '', 'has-sub', 'similar-attr-category-top']">
+          <button type="button" :class="[toggleTargets.similarAttrAll ? 'on' : '', 'item-toggle']"
+            @click="onToggle('similarAttrAll')">
+            <span>펼치기</span>
+          </button>
+          <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']"
+            title="유사 속성 카테고리 전체" @click="() => onClick()">
+            유사 속성 카테고리 전체
+          </a>
+          <menu-item :list="similarAttrCategoryList" :toggle-targets="toggleTargets" :selected-id="selectedId"
+            @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
+        </li>
       </ul>
     </div>
   </div>
@@ -47,6 +60,7 @@ const emit = defineEmits([
 
 const categoryStore = useCategoryStore();
 const categoryList = computed(() => categoryStore.getCategoryList);
+const similarAttrCategoryList = computed(() => categoryStore.getSimilarAttrCategoryList);
 const toggleTargets = categoryStore.getToggleTargets;
 const selectedId = categoryStore.getSelectedItemId;
 const calledFrom = categoryStore.getCalledFrom;
@@ -73,3 +87,10 @@ const onToggle = (value) => {
   categoryStore.setToggleTargetOnClick(value);
 };
 </script>
+
+<style scoped>
+/* 유사 속성 카테고리 전체 폴더 아이콘 강조 색상 (노란색) */
+.category-menu > li.similar-attr-category-top > .item-toggle:before {
+  filter: hue-rotate(200deg) saturate(1.4);
+}
+</style>

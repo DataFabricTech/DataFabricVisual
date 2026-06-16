@@ -17,7 +17,8 @@
         {{ item.description }}
       </a>
       <!-- 메타 데이터 통합 관리 페이지에서 호출 시에만 추가 버튼 세팅 -->
-      <button style="width: max-content" v-if="calledFrom === 'metaDataManage' && item.id !== '_NOT_CLASSIFIED'"
+      <button style="width: max-content"
+        v-if="calledFrom === 'metaDataManage' && item.id !== '_NOT_CLASSIFIED' && !item.isSimilarAttrCategory"
         v-show="selectedId === item.id" type="button" class="item-set" :id="`setup_${item.id}`"
         @click.stop="(e) => onToggleTooltip(e, item, 'setup')">
         <span>설정</span>

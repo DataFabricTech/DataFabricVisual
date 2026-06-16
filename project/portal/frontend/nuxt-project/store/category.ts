@@ -15,6 +15,7 @@ export const useCategoryStore = defineStore("categoryStore", () => {
   const _calledFrom = ref(null); // 좌측 카테고리 메뉴 목록 컴포넌트 호출 페이지
   const _categoryMap = ref({});
   const _dbData = ref({});
+  const _similarAttrCategoryList = ref([]); // 유사 속성 카테고리 목록 (좌측 카테고리 메뉴 하단 폴더용)
 
   // getters
   // 가공 전 카테고리 목록 데
@@ -50,8 +51,24 @@ export const useCategoryStore = defineStore("categoryStore", () => {
       subTypes: [],
       superTypes: []
     });
+
     return categories;
   });
+  // 유사 속성 카테고리 목록 (좌측 카테고리 메뉴의 "유사 속성 카테고리 전체" 폴더용, 별도 최상위 트리)
+  const getSimilarAttrCategoryList = computed(() =>
+    _similarAttrCategoryList.value.map((category) => ({
+      id: category.id,
+      name: category.name,
+      description: category.name,
+      categoryDescription: category.description,
+      keyword: category.keyword,
+      ord_no: category.ord_no,
+      level: 1,
+      isSimilarAttrCategory: true,
+      superTypes: [],
+      subTypes: []
+    }))
+  );
   const getToggleTargets = computed(() => _toggleTargets);
   const getSelectedItemId = computed(() => _selectedItemId);
   const getCalledFrom = computed(() => _calledFrom);
@@ -103,9 +120,25 @@ export const useCategoryStore = defineStore("categoryStore", () => {
     return (_dbData.value = payload);
   };
 
+  // 유사 속성 카테고리 목록 데이터 조회 (좌측 카테고리 메뉴 하단 폴더용, 호출한 화면에서만 노출됨)
+  const fetchSimilarAttrCategories = async () => {
+    try {
+      const res = await $ofetch("/api/metadata/similar-attr-category/list", {
+        method: "POST",
+        body: { used: "Y", limit: 100, offset: 0 }
+      });
+      _similarAttrCategoryList.value = res && res.data && res.data.list ? res.data.list : [];
+    } catch (e) {
+      _similarAttrCategoryList.value = [];
+    }
+  };
+
   // 카테고리 목록 데이터 조회
   const fetchCategories = async (payload) => {
     let originalList: Array<{ [key: string]: any }> = [];
+
+    // 유사 속성 카테고리 폴더는 호출한 화면에서 별도로 조회한 경우에만 노출
+    _similarAttrCategoryList.value = [];
 
     const promises = [
       await Promise.resolve($ofetch("/api/search/category/list", { method: "GET" })), // 카테고리 목록 조회
@@ -252,6 +285,7 @@ const sortDataByOrdNo = (data) => {
     getDbDescription,
     getTableCountList,
     getCategoryList,
+    getSimilarAttrCategoryList,
     getToggleTargets,
     getSelectedItemId,
     getCalledFrom,
@@ -266,6 +300,7 @@ const sortDataByOrdNo = (data) => {
     setSelectedItemId,
     setDbData,
     fetchCategories,
+    fetchSimilarAttrCategories,
     getDbData
   };
 });

@@ -496,6 +496,7 @@ const isTotalChecked = ref(false)
 const totalMetaIds = ref([])
 
 await categoryStore.fetchCategories();
+await categoryStore.fetchSimilarAttrCategories(); // 좌측 카테고리 메뉴 "유사 속성 카테고리 전체" 폴더
 await categoryTreeStore.fetchCategories()
 
 onMounted(() => {
@@ -595,6 +596,7 @@ const getFilterOptions = () => {
 
 const fetchCategories = async (payload: any) => {
   await categoryStore.fetchCategories(payload);
+  await categoryStore.fetchSimilarAttrCategories(); // 좌측 카테고리 메뉴 "유사 속성 카테고리 전체" 폴더
 
   return categoryStore.getCategoryList;
 };
