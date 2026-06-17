@@ -1272,7 +1272,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
       return {
         ...el,
         attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {},
-        similar_attr_categories: el.similar_attr_categories
+        attr_category_name: el.attr_category_name
       };
     });
 

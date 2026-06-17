@@ -127,7 +127,13 @@
                     <i :class="getMetaIcon(data.meta_type)"></i>
                   </div>
                   <div class="inner-data">
-                    <div class="category-group" v-if="data && data.classifications && data.classifications.length > 0">
+                    <div class="category-group" v-if="(data && data.classifications && data.classifications.length > 0) || data.attr_category_name">
+                      <category-label
+                        v-if="data.attr_category_name"
+                        :name="data.attr_category_name"
+                        :readOnly="true"
+                        class="similar-attr-tag"
+                      />
                       <div class="category" v-for="(c, idx) in data.classifications" :key="idx">
                         <span em class="category-label">{{ c.c_description }}</span>
                       </div>
@@ -187,6 +193,7 @@ import { useSearchStore } from "@/store/search";
 import { errorAlert } from "@functional/alert/alert-default.ts";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
 import pagination from "@functional/pagination/pagination.vue";
+import CategoryLabel from "@functional/categoryLabel/category-label";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import { useCategoryStore } from "~/store/category.ts";
@@ -826,6 +833,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
           el.classifications.sort((a, b) => a.c_id - b.c_id);
         }
       });
+
     } else {
       // 페이징
       pagingObj.value = {
@@ -1535,3 +1543,13 @@ const getMetaIcon = (type) => {
 }
 
 </script>
+
+<style scoped>
+.similar-attr-tag {
+  background-color: #fef9c3;
+}
+
+.similar-attr-tag :deep(.category-label) {
+  color: #713f12;
+}
+</style>

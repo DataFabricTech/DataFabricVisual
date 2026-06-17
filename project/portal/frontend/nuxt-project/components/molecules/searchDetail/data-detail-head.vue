@@ -92,7 +92,7 @@ const props = defineProps([
 ]);
 
 const similarAttrCategories = computed(() => {
-  const val = props.entity?.similar_attr_categories;
+  const val = props.entity?.attr_category_name;
   if (!val || typeof val !== "string") return [];
   return val.split(",").filter(Boolean);
 });

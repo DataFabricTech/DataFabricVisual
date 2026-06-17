@@ -42,7 +42,7 @@ const categories = computed(() => {
 
 // 유사 속성 카테고리 이름 목록
 const similarAttrCategories = computed(() => {
-  const val = props.item?.similar_attr_categories;
+  const val = props.item?.attr_category_name;
   if (!val || typeof val !== "string") return [];
   return val.split(",").filter(Boolean);
 });
