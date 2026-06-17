@@ -1271,7 +1271,8 @@ const onSearchDataList = async (offset = 0, item = {}) => {
     dataList.value = list.map((el: { [key: string]: any }) => {
       return {
         ...el,
-        attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
+        attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {},
+        similar_attr_categories: el.similar_attr_categories
       };
     });
 
