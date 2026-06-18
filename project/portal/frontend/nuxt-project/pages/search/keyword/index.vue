@@ -312,6 +312,14 @@ const detailFilters = ref({
     checkedCount: 0,
     visible: false
   },
+  ATTR_CATEGORY: {
+    all: true,
+    ord: 4,
+    name: '유사 속성',
+    content: [],
+    checkedCount: 0,
+    visible: true
+  },
   ORDER: {
     all: true,
     ord: 5,
@@ -353,6 +361,7 @@ const word = ref<string>(""); // 검색어
 const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
 const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
 const file_format = ref<string>(""); // 메타데이터 타입이 File일 때 파일 포맷
+const attr_category_name = ref<string>(""); // 유사 속성 카테고리
 const default_meta_type_list = ref<Array<string>>([]); // 메타타입 기본값 목록
 const sortBy = ref<string>("create_time") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
@@ -805,6 +814,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     system_type: system_type.value ? system_type.value : "",
     meta_type: meta_type.value ? meta_type.value : default_meta_type_list.value,
     file_format: file_format.value ? file_format.value : "",
+    attr_category_name: attr_category_name.value ? attr_category_name.value : "",
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
@@ -1107,11 +1117,13 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
   if (detailFilters.value['CATEGORY']
     && detailFilters.value['SYSTEMTYPE']
     && detailFilters.value['METATYPE']
+    && detailFilters.value['ATTR_CATEGORY']
     && detailFilters.value['ORDER']
   ) {
     if (!detailFilters.value['CATEGORY'].allChecked
       || !detailFilters.value['SYSTEMTYPE'].allChecked
       || !detailFilters.value['METATYPE'].allChecked
+      || !detailFilters.value['ATTR_CATEGORY'].allChecked
       || !detailFilters.value['ORDER'].allChecked) {
       return true
     }
@@ -1152,6 +1164,8 @@ const clearFilter = (key) => {
       description: ""
     };
     leftMenuToggleAndBold("") // 왼쪽메뉴 연동
+  } else if (key == 'ATTR_CATEGORY') {
+    attr_category_name.value = ""
   } else if (key == 'SYSTEMTYPE') {
     system_type.value = ""
   } else if (key == 'METATYPE') {
@@ -1194,10 +1208,33 @@ const onClickMenuItem = (item: any): void => {
   if (!item) {
     clearFilter("CATEGORY")
 
-  } else if (item.id == "_NOT_CLASSIFIED") { // 2. 카테고리 미분류
+  } else if (item.id == "__SIMILAR_ATTR_ALL__") { // 2. 유사 속성 카테고리 전체
+    clearFilter("ATTR_CATEGORY")
+    leftMenuToggleAndBold("")
+
+  } else if (item.id == "_NOT_CLASSIFIED") { // 3. 카테고리 미분류
     clearFilter("_NOT_CLASSIFIED")
 
-  } else { // 3. 카테고리들
+  } else if (item.isSimilarAttrCategory) { // 4. 유사 속성 카테고리 개별 항목
+    leftMenuToggleAndBold(item.id)
+    attr_category_name.value = item.name
+
+    // 상세필터 ATTR_CATEGORY 체크 설정
+    if (detailFilters.value['ATTR_CATEGORY']) {
+      detailFilters.value['ATTR_CATEGORY'].content.forEach((el) => {
+        el.checked = el.name === item.name
+      })
+      detailFilters.value['ATTR_CATEGORY'].allChecked = false
+      detailFilters.value['ATTR_CATEGORY'].checkedCount = 1
+    }
+
+    // 일반 카테고리 필터 초기화 (leftMenuToggleAndBold는 이미 위에서 호출)
+    classification.value = { id: "", name: "", description: "" }
+    detailFilters.value['CATEGORY'].content.forEach((el) => { el.checked = false })
+    detailFilters.value['CATEGORY'].allChecked = true
+    detailFilters.value['CATEGORY'].checkedCount = 0
+
+  } else { // 5. 일반 카테고리
     leftMenuToggleAndBold(item.id)
     classification.value = item;
 
@@ -1212,6 +1249,9 @@ const onClickMenuItem = (item: any): void => {
         el.checked = false;
       }
     })
+
+    // 유사 속성 카테고리 필터 초기화
+    clearFilter("ATTR_CATEGORY")
   }
 
   getSearch(0);
@@ -1344,6 +1384,7 @@ const deleteCategoryTag = async (): void => {
 
 const getRootDescription = (key) => {
   if (key == 'CATEGORY') return "카테고리"
+  else if (key == 'ATTR_CATEGORY') return "유사 속성"
   else if (key == 'SYSTEMTYPE') return "시스템 타입"
   else if (key == 'METATYPE') return "메타 타입"
   else if (key == 'FILE_FORMAT') return "확장자"
@@ -1386,6 +1427,7 @@ const onChangeCheckBox = async (key, event: any) => {
           };
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
+        if (key == 'ATTR_CATEGORY') attr_category_name.value = el.name
         if (key == 'SYSTEMTYPE') system_type.value = el.name
         if (key == 'METATYPE') {
           meta_type.value = el.name
