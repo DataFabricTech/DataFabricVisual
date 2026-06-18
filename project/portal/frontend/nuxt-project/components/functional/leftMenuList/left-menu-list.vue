@@ -82,7 +82,7 @@ const onClick = (item) => {
 const onClickSimilarAttrAll = () => {
   activeFolderSection.value = "similarAttrAll";
   categoryStore.setSelectedItemId("");
-  emit("onClickMenuItem", null);
+  emit("onClickMenuItem", { id: "__SIMILAR_ATTR_ALL__" });
 };
 
 // 카테고리 세팅 버튼 클릭 이벤트 핸들러
