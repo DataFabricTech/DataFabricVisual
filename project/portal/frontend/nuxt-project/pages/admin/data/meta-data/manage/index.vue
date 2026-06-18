@@ -16,7 +16,7 @@
         <!-- page-content : R 서브내용 -->
         <div class="page-content">
           <div class="board-list-wrap">
-            <classification-info :selected-category="selectedCategory" @onClickUpdate="onClickCategoryManageMenu" />
+            <classification-info :selected-category="selectedCategory" :is-similar-attr-category="!!currentAttrCategoryName" @onClickUpdate="onClickCategoryManageMenu" />
 
             <!-- 메타 테이블 헤더  -->
             <div class="mu-heading" style="display: block;">
@@ -1143,10 +1143,18 @@ const checkBeforeInsert = async (name) => {
 
 // 카테고리 세팅 툴팁 내 추가/삭제/수정 버튼 클릭 이벤트 핸들러
 const onClickCategoryManageMenu = (type) => {
-  // 유사 속성 카테고리 설정 툴팁 액션
+  // 유사 속성 카테고리 설정 툴팁 액션 (툴팁에서 호출된 경우)
   if (tooltipObj.value.targets?.isSimilarAttrCategory) {
     onSimilarAttrMenuAction(tooltipObj.value.targets, type);
     return;
+  }
+  // 유사 속성 카테고리가 선택된 상태에서 ClassificationInfo 수정/삭제 버튼 클릭
+  if (currentAttrCategoryName.value) {
+    const target = categoryStore.getSimilarAttrCategoryList.find((c) => c.name === currentAttrCategoryName.value);
+    if (target) {
+      onSimilarAttrMenuAction(target, type);
+      return;
+    }
   }
   if (type === "delete") {
     onDeleteCategory(selectedCategory.value); // 카테고리 삭제 실행
@@ -1260,8 +1268,16 @@ const onSearchDataList = async (offset = 0, item = {}) => {
     limit: pagingObj.value.limit
   }; // 데이터 조회 파라미터 객체
 
-  // 카테고리 검색
-  params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "");
+  // 카테고리 필터와 유사 속성 카테고리 필터는 완전히 별개로 처리
+  if (currentAttrCategoryName.value) {
+    // 유사 속성 카테고리 선택 시: attrCategoryName 필터만 사용
+    params.searchClassification = ""
+    params.attrCategoryName = currentAttrCategoryName.value
+  } else {
+    // 일반 카테고리 선택 시: searchClassification 필터만 사용
+    params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "")
+    params.attrCategoryName = ""
+  }
 
   const { word } = filterSearchObj.value;
   params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;
@@ -1269,7 +1285,6 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   params.fileFormat = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' ? currentFileFormat.value : ""
   params.systemType = currentSystemType.value
   params.release = currentRelease.value
-  params.attrCategoryName = currentAttrCategoryName.value
   params.word = word.trim();
 
   // 테이블 데이터 조회
@@ -1372,15 +1387,33 @@ const onClickMenuItem = async (item: any = null) => {
     // 유사 속성 카테고리 개별 항목
     currentAttrCategoryName.value = item.name
     selectedCategory.value = {
-      id: "", parent_id: "", level: "", name: null,
-      description: "전체 카테고리", dept: { dept_cd: "", dept_nm: "" },
-      file_id: "", ord_no: 0
+      id: item.id,
+      parent_id: "",
+      level: "",
+      name: item.name,
+      description: item.categoryDescription || "",
+      dept: { dept_cd: "", dept_nm: "" },
+      file_id: "",
+      ord_no: item.ord_no || 0
     }
     onSearchDataList();
   } else {
     // 일반 카테고리
     currentAttrCategoryName.value = ""
-    await onSearchDept(item);
+    try {
+      await onSearchDept(item);
+    } catch (e) {
+      selectedCategory.value = {
+        id: item.id || "",
+        parent_id: item.parent_id || "",
+        level: item.level || "",
+        name: item.name || null,
+        description: item.description || "",
+        dept: { dept_cd: "", dept_nm: "" },
+        file_id: item.file_id || "",
+        ord_no: item.ord_no || 0
+      };
+    }
     onSearchDataList(0, item);
   }
 };
@@ -1542,8 +1575,14 @@ const downloadMetadata = async (param) => {
     queue_name: queueName
   }; // 데이터 조회 파라미터 객체
 
-  // 카테고리 검색
-  params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "");
+  // 카테고리 필터와 유사 속성 카테고리 필터는 완전히 별개로 처리
+  if (currentAttrCategoryName.value) {
+    params.searchClassification = ""
+    params.attrCategoryName = currentAttrCategoryName.value
+  } else {
+    params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "")
+    params.attrCategoryName = ""
+  }
 
   const { word } = filterSearchObj.value;
   params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;
@@ -1551,7 +1590,6 @@ const downloadMetadata = async (param) => {
   params.fileFormat = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' ? currentFileFormat.value : ""
   params.systemType = currentSystemType.value
   params.release = currentRelease.value
-  params.attrCategoryName = currentAttrCategoryName.value
   params.word = word.trim();
 
   // 메타 추출
