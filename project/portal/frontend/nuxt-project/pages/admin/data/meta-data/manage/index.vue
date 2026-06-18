@@ -446,6 +446,7 @@ const filterSystemTypeList = ref<Array<FilterSystemType>>([
 const currentMetaType = ref<string>("");
 const currentFileFormat = ref<string>("");
 const currentSystemType = ref<string>("");
+const currentAttrCategoryName = ref<string>("");
 
 // 선택된 카테고리 정보
 const selectedCategory = ref<SelectedCategory>({
@@ -563,8 +564,11 @@ onUnmounted(() => {
   // 확장자(전체) 필터 정보 저장
   const file_format = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' && currentFileFormat.value ? currentFileFormat.value : null;
 
+  // 유사 속성 카테고리 필터 정보 저장
+  const attr_category_name = currentAttrCategoryName.value ? currentAttrCategoryName.value : null;
+
   // 검색에 사용된 파라미터 중 default 값과 상이한 값이 없으면 path를 empty string으로 저장하여 저장된 파라미터 초기화
-  const path = paging || condition || category || release ? "/admin/data/meta-data/manage" : "";
+  const path = paging || condition || category || release || attr_category_name ? "/admin/data/meta-data/manage" : "";
 
   const params = {
     path,
@@ -575,6 +579,7 @@ onUnmounted(() => {
     file_format,
     system_type,
     release,
+    attr_category_name,
   };
 
   setParams(params);
@@ -689,6 +694,7 @@ const onFetchPageDataByPrevCondition = () => {
   const system_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "system_type", "");
   const meta_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "meta_type", "");
   const file_format = ObjectUtils.getDeepCopiedPropertyValue(userParams, "file_format", "");
+  const attr_category_name = ObjectUtils.getDeepCopiedPropertyValue(userParams, "attr_category_name", "");
 
   let offset = 0;
   const item: any = {};
@@ -722,6 +728,10 @@ const onFetchPageDataByPrevCondition = () => {
 
   if (file_format) {
     currentFileFormat.value = file_format
+  }
+
+  if (attr_category_name) {
+    currentAttrCategoryName.value = attr_category_name
   }
 
   onSearchDataList(offset, item);
@@ -1259,6 +1269,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   params.fileFormat = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' ? currentFileFormat.value : ""
   params.systemType = currentSystemType.value
   params.release = currentRelease.value
+  params.attrCategoryName = currentAttrCategoryName.value
   params.word = word.trim();
 
   // 테이블 데이터 조회
@@ -1348,9 +1359,27 @@ const onSearchDept = async (item = {}) => {
 // 좌측 카테고리 리스트 내 노드 클릭 이벤트 핸들러
 const onClickMenuItem = async (item: any = null) => {
   if (!item) {
+    // 카테고리 전체
+    currentAttrCategoryName.value = ""
     await onSearchDept();
     onSearchDataList();
+  } else if (item.id === "__SIMILAR_ATTR_ALL__") {
+    // 유사 속성 카테고리 전체
+    currentAttrCategoryName.value = ""
+    await onSearchDept();
+    onSearchDataList();
+  } else if (item.isSimilarAttrCategory) {
+    // 유사 속성 카테고리 개별 항목
+    currentAttrCategoryName.value = item.name
+    selectedCategory.value = {
+      id: "", parent_id: "", level: "", name: null,
+      description: "전체 카테고리", dept: { dept_cd: "", dept_nm: "" },
+      file_id: "", ord_no: 0
+    }
+    onSearchDataList();
   } else {
+    // 일반 카테고리
+    currentAttrCategoryName.value = ""
     await onSearchDept(item);
     onSearchDataList(0, item);
   }
@@ -1522,6 +1551,7 @@ const downloadMetadata = async (param) => {
   params.fileFormat = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' ? currentFileFormat.value : ""
   params.systemType = currentSystemType.value
   params.release = currentRelease.value
+  params.attrCategoryName = currentAttrCategoryName.value
   params.word = word.trim();
 
   // 메타 추출
