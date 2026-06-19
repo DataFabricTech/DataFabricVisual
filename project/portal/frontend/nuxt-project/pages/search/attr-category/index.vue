@@ -72,6 +72,7 @@ const searchStore = useSearchStore();
 
 const ROOT_NAME = "유사 속성 카테고리";
 const DRILL_LIMIT = 10;
+const MORE_NODE_PREFIX = "__MORE__";
 
 // ── 상태 ──────────────────────────────────────────────────────────────────────
 
@@ -107,8 +108,8 @@ const onNodeClick = function (this: any) {
 
   if (pointId === ROOT_NAME) return;
 
-  if (pointId.startsWith("__MORE__")) {
-    const catName = pointId.slice("__MORE__".length);
+  if (pointId.startsWith(MORE_NODE_PREFIX)) {
+    const catName = pointId.slice(MORE_NODE_PREFIX.length);
     const cat = categoryList.value.find((c) => c.name === catName);
     if (cat) {
       categoryStore.setSelectedItemId(cat.id);
@@ -168,7 +169,7 @@ const networkChartOptions = ref<any>({
       if (id === ROOT_NAME) {
         return `<b>${p.options.name}</b><br/><span>총 ${p.options.tableCount ?? 0}개</span>`;
       }
-      if (id.startsWith("__MORE__")) {
+      if (id.startsWith(MORE_NODE_PREFIX)) {
         return `<b>${p.options.name}</b>`;
       }
       if (p.options.similarity != null) {
@@ -248,7 +249,7 @@ const buildGraph = async () => {
       });
 
       if (remaining > 0) {
-        const moreId = `__MORE__${cat.name}`;
+        const moreId = `${MORE_NODE_PREFIX}${cat.name}`;
         nodes.push({
           id: moreId,
           name: `+${remaining}개 더보기`,
