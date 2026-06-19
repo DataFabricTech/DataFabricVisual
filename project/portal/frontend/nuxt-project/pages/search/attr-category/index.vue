@@ -325,12 +325,7 @@ const fetchCategories = async () => {
 // ── 검색 / 사이드바 핸들러 ─────────────────────────────────────────────────────
 
 const onClickMenuItem = (item: any) => {
-  if (!item) return;
-  if (item.id === "__SIMILAR_ATTR_ALL__") {
-    moveToSearchPage(null);
-    return;
-  }
-  moveToSearchPage(item);
+  moveToSearchPage(item ?? null);
 };
 
 const moveToSearchPage = (cat: any) => {
