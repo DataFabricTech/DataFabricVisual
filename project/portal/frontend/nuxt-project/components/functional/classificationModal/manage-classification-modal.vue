@@ -530,9 +530,8 @@ const removeSaKeyword = (index: number) => {
 const onClickSimilarAttrTab = async () => {
   activeTab.value = "similarAttr";
   try {
-    const res = await $ofetch("/api/metadata/similar-attr-category/list", {
-      method: "POST",
-      body: { limit: 1, offset: 0 }
+    const res = await $ofetch("/api/attr-category?limit=1&offset=0", {
+      method: "GET"
     });
     similarAttrTotal.value = res?.data?.total ?? 0;
   } catch {

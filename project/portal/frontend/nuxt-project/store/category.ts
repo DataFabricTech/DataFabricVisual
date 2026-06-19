@@ -124,9 +124,8 @@ export const useCategoryStore = defineStore("categoryStore", () => {
   // 유사 속성 카테고리 목록 데이터 조회 (좌측 카테고리 메뉴 하단 폴더용, 호출한 화면에서만 노출됨)
   const fetchSimilarAttrCategories = async () => {
     try {
-      const res = await $ofetch("/api/metadata/similar-attr-category/list", {
-        method: "POST",
-        body: { used: "Y", limit: 100, offset: 0 }
+      const res = await $ofetch("/api/attr-category?used=Y&limit=100&offset=0", {
+        method: "GET"
       });
       _similarAttrCategoryList.value = res && res.data && res.data.list ? res.data.list : [];
     } catch (e) {

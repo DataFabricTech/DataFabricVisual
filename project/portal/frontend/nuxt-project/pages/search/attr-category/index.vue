@@ -39,7 +39,17 @@
 
         <!-- 네트워크 맵 차트 -->
         <div class="visual-map-wrap" id="chart-map-wrap">
-          <div v-if="loading" class="nodata-msg">데이터를 불러오는 중입니다...</div>
+          <!-- 드릴다운 헤더 (뒤로가기) -->
+          <div v-if="drillMode" class="chart-toolbar">
+            <button type="button" class="mu-btn mu-btn-sm" @click="goBackToOverview">
+              <span>← 전체 카테고리</span>
+            </button>
+            <span class="drill-category-name">{{ currentDrillCategory?.name }}</span>
+          </div>
+
+          <div v-if="loading || tableLoading" class="nodata-msg">
+            {{ tableLoading ? '테이블 목록을 불러오는 중...' : '데이터를 불러오는 중입니다...' }}
+          </div>
           <highcharts
             v-else
             :constructorType="'chart'"
@@ -68,10 +78,20 @@ const router = useRouter();
 const categoryStore = useCategoryStore();
 const searchStore = useSearchStore();
 
+// ── 상수 ──────────────────────────────────────────────────────────────────────
+
+const ROOT_NAME = "유사 속성 카테고리";
+const MORE_ID = "__MORE__";
+const DRILL_LIMIT = 10;
+
 // ── 상태 ──────────────────────────────────────────────────────────────────────
 
 const loading = ref(true);
+const tableLoading = ref(false);
 const word = ref("");
+const categoryList = ref<any[]>([]);
+const drillMode = ref(false);
+const currentDrillCategory = ref<any>(null);
 
 // 드래그 리사이즈
 const divider = ref<HTMLElement | null>(null);
@@ -80,52 +100,38 @@ const rightSide = ref<HTMLElement | null>(null);
 const mouseX = ref(0);
 const leftWidth = ref(0);
 
-// ── 색상 팔레트 (search/category 네트워크 맵과 동일) ───────────────────────────
+// ── 색상 팔레트 ────────────────────────────────────────────────────────────────
 
 const parentPalette = ["#e57373", "#64b5f6", "#81c784", "#ffb74d", "#ba68c8", "#4db6ac", "#9575cd"];
 
-// ── 네트워크 데이터 빌드 ───────────────────────────────────────────────────────
+// ── 노드 클릭 핸들러 (chartOptions보다 먼저 정의) ─────────────────────────────
 
-const ROOT_NAME = "유사 속성 카테고리";
+const onNodeClick = function (this: any) {
+  const pointId = String(this.id);
 
-const buildNetwork = (categories: any[]) => {
-  const nodes: Record<string, any> = {};
-  const links: any[] = [];
-
-  const maxCount = Math.max(...categories.map((c) => Number(c.table_count) || 0), 1);
-
-  // 루트 노드
-  nodes[ROOT_NAME] = {
-    id: ROOT_NAME,
-    name: ROOT_NAME,
-    tableCount: categories.reduce((sum, c) => sum + (Number(c.table_count) || 0), 0),
-    color: "#999999",
-    marker: { radius: 40 },
-    fixedPosition: { x: 0, y: 0 },
-  };
-
-  categories.forEach((cat, idx) => {
-    const name = cat.name;
-    const tableCount = Number(cat.table_count) || 0;
-    // table_count 비례 반지름 (10 ~ 26)
-    const radius = Math.round(10 + (tableCount / maxCount) * 16);
-    const color = parentPalette[idx % parentPalette.length];
-
-    nodes[name] = {
-      id: name,
-      name,
-      tableCount,
-      color,
-      marker: { radius },
-    };
-
-    links.push({ from: ROOT_NAME, to: name, color });
-  });
-
-  return { nodes: Object.values(nodes), links };
+  if (!drillMode.value) {
+    // 개요 모드: 카테고리 노드 클릭
+    if (pointId === ROOT_NAME) return;
+    const cat = categoryList.value.find((c) => c.name === pointId);
+    if (cat) drillIntoCategory(cat);
+  } else {
+    // 드릴다운 모드: 테이블 / 더보기 노드 클릭
+    if (pointId === MORE_ID) {
+      // 더보기 → 키워드 검색으로 이동
+      if (currentDrillCategory.value) {
+        moveToSearchPage({ id: "", name: "", description: "" });
+      }
+    } else if (pointId === currentDrillCategory.value?.name) {
+      // 중심(카테고리) 노드 클릭 → 뒤로가기
+      goBackToOverview();
+    } else {
+      // 테이블 노드 클릭 → 상세 페이지
+      router.push(`/search/detail?guid=${pointId}`);
+    }
+  }
 };
 
-// ── 차트 옵션 (search/category 네트워크 맵과 동일) ─────────────────────────────
+// ── 차트 옵션 ─────────────────────────────────────────────────────────────────
 
 const networkChartOptions = ref<any>({
   credits: { enabled: false },
@@ -151,6 +157,11 @@ const networkChartOptions = ref<any>({
           return (this as any).point.name || (this as any).point.id;
         },
       },
+      point: {
+        events: {
+          click: onNodeClick,
+        },
+      },
     },
   },
   tooltip: {
@@ -164,7 +175,18 @@ const networkChartOptions = ref<any>({
         return `<b>${self.from}</b> → <b>${self.to}</b>`;
       }
       const p = self.point;
-      return `<b>${p.options.name}</b><br/><span>${p.options.tableCount} 개</span>`;
+      const id = String(p.id);
+      if (id === ROOT_NAME) {
+        return `<b>${p.options.name}</b><br/><span>총 ${p.options.tableCount ?? 0}개</span>`;
+      }
+      if (id === MORE_ID) {
+        return `<b>${p.options.name}</b><br/><span>클릭하면 전체 검색으로 이동합니다</span>`;
+      }
+      if (p.options.similarityScore != null) {
+        const pct = Math.round(p.options.similarityScore * 100);
+        return `<b>${p.options.name}</b><br/><span>유사도 ${pct}%</span>`;
+      }
+      return `<b>${p.options.name}</b><br/><span>${p.options.tableCount ?? 0}개</span>`;
     },
     style: {
       fontSize: "12px",
@@ -188,31 +210,134 @@ const networkChartOptions = ref<any>({
   ],
 });
 
+// ── 네트워크 빌드 함수 ─────────────────────────────────────────────────────────
+
+const buildCategoryNetwork = (categories: any[]) => {
+  const nodes: any[] = [];
+  const links: any[] = [];
+  const maxCount = Math.max(...categories.map((c) => Number(c.table_count) || 0), 1);
+  const total = categories.reduce((s, c) => s + (Number(c.table_count) || 0), 0);
+
+  nodes.push({
+    id: ROOT_NAME,
+    name: ROOT_NAME,
+    tableCount: total,
+    color: "#999999",
+    marker: { radius: 40 },
+    fixedPosition: { x: 0, y: 0 },
+  });
+
+  categories.forEach((cat, idx) => {
+    const tableCount = Number(cat.table_count) || 0;
+    const radius = Math.round(10 + (tableCount / maxCount) * 16);
+    const color = parentPalette[idx % parentPalette.length];
+
+    nodes.push({
+      id: cat.name,
+      name: cat.name,
+      tableCount,
+      color,
+      marker: { radius },
+    });
+    links.push({ from: ROOT_NAME, to: cat.name, color });
+  });
+
+  networkChartOptions.value.series[0] = {
+    ...networkChartOptions.value.series[0],
+    data: links,
+    nodes,
+  };
+};
+
+const buildTableNetwork = (cat: any, tables: any[]) => {
+  const nodes: any[] = [];
+  const links: any[] = [];
+  const displayTables = tables.slice(0, DRILL_LIMIT);
+  const remaining = tables.length - displayTables.length;
+
+  // 중심: 카테고리 노드
+  nodes.push({
+    id: cat.name,
+    name: cat.name,
+    color: "#999999",
+    marker: { radius: 36 },
+    fixedPosition: { x: 0, y: 0 },
+  });
+
+  // 테이블 노드
+  displayTables.forEach((tbl) => {
+    const score = tbl.similarity_score != null ? Number(tbl.similarity_score) : null;
+    nodes.push({
+      id: tbl.meta_id,
+      name: tbl.meta_name,
+      similarityScore: score,
+      color: "#64b5f6",
+      marker: { radius: 16 },
+    });
+    links.push({ from: cat.name, to: tbl.meta_id, color: "#64b5f6" });
+  });
+
+  // 더보기 노드
+  if (remaining > 0) {
+    nodes.push({
+      id: MORE_ID,
+      name: `+${remaining}개 더보기`,
+      color: "#bdbdbd",
+      marker: { radius: 20 },
+    });
+    links.push({ from: cat.name, to: MORE_ID, color: "#bdbdbd" });
+  }
+
+  networkChartOptions.value.series[0] = {
+    ...networkChartOptions.value.series[0],
+    data: links,
+    nodes,
+  };
+};
+
+// ── 드릴다운 / 뒤로가기 ────────────────────────────────────────────────────────
+
+const drillIntoCategory = async (cat: any) => {
+  currentDrillCategory.value = cat;
+  drillMode.value = true;
+  tableLoading.value = true;
+
+  try {
+    const res = await $ofetch(`/api/attr-category/${cat.id}/tables`, { method: "GET" });
+    const tables = Array.isArray(res?.data) ? res.data : [];
+    buildTableNetwork(cat, tables);
+  } catch {
+    buildTableNetwork(cat, []);
+  } finally {
+    tableLoading.value = false;
+  }
+};
+
+const goBackToOverview = () => {
+  drillMode.value = false;
+  currentDrillCategory.value = null;
+  buildCategoryNetwork(categoryList.value);
+};
+
 // ── 데이터 조회 ────────────────────────────────────────────────────────────────
 
 const fetchCategories = async () => {
   try {
     const res = await $ofetch("/api/attr-category/list", { method: "GET" });
-    const categories = Array.isArray(res?.data) ? res.data : [];
-    const { nodes, links } = buildNetwork(categories);
-    networkChartOptions.value.series[0].data = links;
-    networkChartOptions.value.series[0].nodes = nodes;
+    categoryList.value = Array.isArray(res?.data) ? res.data : [];
   } catch {
-    // 빈 차트 유지
+    categoryList.value = [];
   } finally {
     loading.value = false;
   }
+  buildCategoryNetwork(categoryList.value);
 };
 
-// ── 이벤트 핸들러 ─────────────────────────────────────────────────────────────
+// ── 검색 / 사이드바 핸들러 ─────────────────────────────────────────────────────
 
 const onClickMenuItem = (item: any) => {
   if (!item) return;
-  moveToSearchPage({
-    id: item.id || "",
-    name: item.name || "",
-    description: item.description || "",
-  });
+  moveToSearchPage({ id: item.id || "", name: item.name || "", description: item.description || "" });
 };
 
 const moveToSearchPage = (classification: any) => {
@@ -313,6 +438,21 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f9f9f9;
+}
+
+.drill-category-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+}
+
 .nodata-msg {
   text-align: center;
   color: #999;

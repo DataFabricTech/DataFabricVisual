@@ -1,5 +1,6 @@
 package com.mobigen.datalake.attrcategory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,39 +58,50 @@ public class AttrCategoryController {
     // ── CRUD ───────────────────────────────────────────────────────────────────
 
     @ResponseJsonResult
-    @PostMapping("/api/metadata/similar-attr-category/list")
-    public Object getList(@RequestBody Map<String, Object> params) throws Exception {
+    @GetMapping("/api/attr-category")
+    public Object getList(
+            @RequestParam(required = false) String used,
+            @RequestParam(required = false) String searchWord,
+            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(defaultValue = "0") int offset) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("used", used);
+        params.put("searchWord", searchWord);
+        params.put("limit", limit);
+        params.put("offset", offset);
         return attrCategoryService.getList(params);
     }
 
     @ResponseJsonResult
-    @GetMapping("/api/metadata/similar-attr-category/info")
-    public Object getInfo(@RequestParam String id) throws Exception {
+    @GetMapping("/api/attr-category/{id}")
+    public Object getInfo(@PathVariable String id) throws Exception {
         return attrCategoryService.getInfo(id);
     }
 
     @ResponseJsonResult
-    @PostMapping("/api/metadata/similar-attr-category/create")
+    @PostMapping("/api/attr-category")
     public Object create(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         return attrCategoryService.create(params, user);
     }
 
     @ResponseJsonResult
-    @PostMapping("/api/metadata/similar-attr-category/update")
-    public Object update(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+    @PutMapping("/api/attr-category/{id}")
+    public Object update(@PathVariable String id, @RequestBody Map<String, Object> params,
+            HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("id", id);
         return attrCategoryService.update(params, user);
     }
 
     @ResponseJsonResult
-    @DeleteMapping("/api/metadata/similar-attr-category/delete")
-    public Object delete(@RequestParam String id) throws Exception {
+    @DeleteMapping("/api/attr-category/{id}")
+    public Object delete(@PathVariable String id) throws Exception {
         return attrCategoryService.delete(id);
     }
 
     @ResponseJsonResult
-    @GetMapping("/api/metadata/similar-attr-category/checkNameDuplicated")
+    @GetMapping("/api/attr-category/name-check")
     public Object checkNameDuplicated(@RequestParam String name) throws Exception {
         return attrCategoryService.checkNameDuplicated(name);
     }

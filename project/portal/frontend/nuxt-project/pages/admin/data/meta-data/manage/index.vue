@@ -1071,13 +1071,13 @@ const onSubmitCategory = async (params: any) => {
 const onSubmitSimilarAttrAdd = async (params: any) => {
   try {
     const dupRes = await $ofetch(
-      `/api/metadata/similar-attr-category/checkNameDuplicated?name=${encodeURIComponent(params.name)}`
+      `/api/attr-category/name-check?name=${encodeURIComponent(params.name)}`
     );
     if (dupRes?.data?.duplicated) {
       errorAlert("이미 존재하는 카테고리명입니다.");
       return;
     }
-    await $ofetch("/api/metadata/similar-attr-category/create", { method: "POST", body: params });
+    await $ofetch("/api/attr-category", { method: "POST", body: params });
     await categoryStore.fetchSimilarAttrCategories();
     refManageModal.value.onClose();
   } catch (e) {
@@ -1095,7 +1095,7 @@ const onSimilarAttrMenuAction = async (item: any, action: string) => {
       {
         confirm: async () => {
           try {
-            await $ofetch(`/api/metadata/similar-attr-category/delete?id=${item.id}`, { method: "DELETE" });
+            await $ofetch(`/api/attr-category/${item.id}`, { method: "DELETE" });
             if (categoryStore._selectedItemId === item.id) categoryStore.setSelectedItemId("");
             await categoryStore.fetchSimilarAttrCategories();
           } catch (e) {
@@ -1115,7 +1115,7 @@ const onCloseSimilarAttrModal = () => {
 // 유사 카테고리 수정 제출 (similar-attr-category-modal)
 const onSubmitSimilarAttrUpdate = async (params: any) => {
   try {
-    await $ofetch("/api/metadata/similar-attr-category/update", { method: "POST", body: params });
+    await $ofetch(`/api/attr-category/${params.id}`, { method: "PUT", body: params });
     await categoryStore.fetchSimilarAttrCategories();
     refSimilarAttrModal.value.onClose();
     onCloseSimilarAttrModal();
