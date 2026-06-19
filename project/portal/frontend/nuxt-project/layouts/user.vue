@@ -13,6 +13,7 @@
               '/search/keyword',
               `/search/detail?guid=${router.currentRoute.value.query.guid}`,
               '/search/category',
+              '/search/attr-category',
             ].includes(userStore.getTab.currentPath)
               ? 'sch-contents'
               : '',
