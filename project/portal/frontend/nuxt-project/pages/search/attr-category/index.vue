@@ -106,7 +106,16 @@ const onNodeClick = function (this: any) {
   if (!pointId) return;
 
   if (pointId === ROOT_NAME) return;
-  if (pointId.startsWith("__MORE__")) return;
+
+  if (pointId.startsWith("__MORE__")) {
+    const catName = pointId.slice("__MORE__".length);
+    const cat = categoryList.value.find((c) => c.name === catName);
+    if (cat) {
+      categoryStore.setSelectedItemId(cat.id);
+      moveToSearchPage({ id: cat.id, name: cat.name, description: cat.description || "" });
+    }
+    return;
+  }
 
   // 카테고리 노드 클릭 → 확장 / 축소
   const cat = categoryList.value.find((c) => c.name === pointId);
@@ -269,9 +278,13 @@ const toggleCategory = async (cat: any) => {
 
   if (expandedCategories.value[cat.name]) {
     delete expandedCategories.value[cat.name];
+    categoryStore.setSelectedItemId("");
     await buildGraph();
     return;
   }
+
+  // 다른 카테고리가 펼쳐져 있으면 닫기 (expandedTables 캐시는 유지)
+  expandedCategories.value = {};
 
   // 캐시된 데이터가 없으면 API 호출
   if (!expandedTables.value[cat.name]) {
@@ -290,6 +303,7 @@ const toggleCategory = async (cat: any) => {
   }
 
   expandedCategories.value[cat.name] = true;
+  categoryStore.setSelectedItemId(cat.id);
   await buildGraph();
 };
 
@@ -311,10 +325,14 @@ const fetchCategories = async () => {
 
 const onClickMenuItem = (item: any) => {
   if (!item) return;
-  moveToSearchPage({ id: item.id || "", name: item.name || "", description: item.description || "" });
+  if (item.id === "__SIMILAR_ATTR_ALL__") {
+    moveToSearchPage(null);
+    return;
+  }
+  moveToSearchPage(item);
 };
 
-const moveToSearchPage = (classification: any) => {
+const moveToSearchPage = (cat: any) => {
   categoryStore.setCalledFrom({ from: "searchByKeyword" });
   searchStore.setSearchParams({
     query: word.value,
@@ -325,7 +343,8 @@ const moveToSearchPage = (classification: any) => {
     tag: "",
     limit: 10,
     offset: 0,
-    classification,
+    classification: { id: "", name: "", description: "" },
+    attrCategory: cat?.id ? { id: cat.id, name: cat.name } : null,
     sortOrder: "",
     entityFilters: {},
   });
@@ -397,6 +416,8 @@ const mouseUp = () => {
 onMounted(async () => {
   await categoryStore.fetchCategories({ from: "searchByAttrCategory" });
   await categoryStore.fetchSimilarAttrCategories();
+  categoryStore.setToggleTargets({ all: false, similarAttrAll: true });
+  categoryStore.setSelectedItemId("");
   await fetchCategories();
 
   divider.value = document.getElementById("divider");

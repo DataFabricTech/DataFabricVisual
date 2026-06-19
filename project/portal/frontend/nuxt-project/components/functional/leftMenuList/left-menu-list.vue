@@ -60,6 +60,7 @@ const emit = defineEmits([
 
 const props = defineProps({
   onlySimilarAttr: { type: Boolean, default: false },
+  initialFolderSection: { type: String, default: "all" },
 });
 
 const categoryStore = useCategoryStore();
@@ -71,9 +72,9 @@ const calledFrom = categoryStore.getCalledFrom;
 
 const eventStore = useEventStore();
 
-// 상단 "전체" 폴더의 active 상태 — 페이지 핸들러가 selectedId를 덮어쓰므로 로컬 상태로 별도 관리
+// 상단 "전체" 폴더의 active 상태
 // "all" = 카테고리 전체, "similarAttrAll" = 유사 속성 카테고리 전체, "" = 개별 항목 선택 중
-const activeFolderSection = ref("all");
+const activeFolderSection = ref(props.initialFolderSection);
 
 // 메뉴 클릭 이벤트 핸들러
 const onClick = (item) => {

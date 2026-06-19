@@ -100,7 +100,7 @@
 
       <div class="inner">
         <div class="mu-section">
-          <left-menu-list @onClickMenuItem="onClickMenuItem" />
+          <left-menu-list :initial-folder-section="fromPath.includes('/search/attr-category') ? '' : 'all'" @onClickMenuItem="onClickMenuItem" />
 
           <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)" />
 
@@ -705,6 +705,31 @@ onMounted(async () => {
       }
 
       // 추가속성 필터
+      initSubFilter()
+    } else if (fromPath.includes('/search/attr-category')) {
+      word.value = searchParams.value.query || ""
+      const ac = searchParams.value.attrCategory
+      if (ac?.id) {
+        // 유사 속성 카테고리 폴더 열기, 일반 카테고리 폴더 닫기
+        categoryStore.setToggleTargets({ all: false, similarAttrAll: true })
+        categoryStore.setSelectedItemId(ac.id)
+
+        attr_category_name.value = ac.name
+        if (detailFilters.value['ATTR_CATEGORY']) {
+          detailFilters.value['ATTR_CATEGORY'].content.forEach((el) => {
+            el.checked = el.name === ac.name
+          })
+          detailFilters.value['ATTR_CATEGORY'].allChecked = false
+          detailFilters.value['ATTR_CATEGORY'].checkedCount = 1
+        }
+        classification.value = { id: "", name: "", description: "" }
+        if (detailFilters.value['CATEGORY']) {
+          detailFilters.value['CATEGORY'].content.forEach((el) => { el.checked = false })
+          detailFilters.value['CATEGORY'].allChecked = true
+          detailFilters.value['CATEGORY'].checkedCount = 0
+        }
+        await searchStore.setSearchParamsDetailFilters(detailFilters.value)
+      }
       initSubFilter()
     } else { // 그 외 검색조건 초기화
       searchStore.setSearchParams(searchParams.value)
