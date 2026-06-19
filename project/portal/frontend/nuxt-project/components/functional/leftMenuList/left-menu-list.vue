@@ -15,7 +15,7 @@
     </div>
     <div class="category-body">
       <ul class="category-menu slim-scroll">
-        <li :class="[toggleTargets.all ? 'open' : '', 'has-sub']">
+        <li v-if="!onlySimilarAttr" :class="[toggleTargets.all ? 'open' : '', 'has-sub']">
           <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggle('all')">
             <span>펼치기</span>
           </button>
@@ -57,6 +57,10 @@ const emit = defineEmits([
   "onClickOptionalButtons", // 메타 데이터 통합 관리 화면용 추가 버튼 클릭 이벤트 핸들러
   "onClickFromTreeMap"
 ]);
+
+const props = defineProps({
+  onlySimilarAttr: { type: Boolean, default: false },
+});
 
 const categoryStore = useCategoryStore();
 const categoryList = computed(() => categoryStore.getCategoryList);
