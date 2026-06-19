@@ -32,10 +32,12 @@ public class AttrCategoryService {
         return attrCategoryMapper.getCategoryList();
     }
 
-    /** 특정 카테고리의 테이블 목록 (sort: similarity | name) */
-    public List<Map<String, Object>> getTables(String categoryId, String sort) {
+    public Map<String, Object> getTables(String categoryId, String sort, int limit) {
         String sortKey = "name".equalsIgnoreCase(sort) ? "name" : "similarity";
-        return attrCategoryMapper.getTables(categoryId, sortKey);
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", attrCategoryMapper.getTables(categoryId, sortKey, limit));
+        result.put("total", attrCategoryMapper.getTablesCount(categoryId));
+        return result;
     }
 
     // ── CRUD ───────────────────────────────────────────────────────────────────
@@ -45,10 +47,6 @@ public class AttrCategoryService {
         result.put("list", attrCategoryMapper.getList(params));
         result.put("total", attrCategoryMapper.getListCount(params));
         return result;
-    }
-
-    public Map<String, Object> getInfo(String id) throws Exception {
-        return attrCategoryMapper.getInfo(id);
     }
 
     public Map<String, Object> create(Map<String, Object> params, Map<String, Object> user) throws Exception {

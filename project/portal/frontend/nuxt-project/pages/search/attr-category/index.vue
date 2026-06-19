@@ -278,7 +278,7 @@ const toggleCategory = async (cat: any) => {
     loadingCategory.value = cat.name;
     await buildGraph(); // 로딩 중 라벨 반영
     try {
-      const res = await $ofetch(`/api/attr-category/${cat.id}/tables?limit=${DRILL_LIMIT}`, { method: "GET" });
+      const res = await $ofetch(`/api/attr-category/${cat.id}/tables?sort=similarity&limit=${DRILL_LIMIT}`, { method: "GET" });
       const list = Array.isArray(res?.data?.list) ? res.data.list : [];
       const total = Number(res?.data?.total ?? list.length);
       expandedTables.value[cat.name] = { list, total };

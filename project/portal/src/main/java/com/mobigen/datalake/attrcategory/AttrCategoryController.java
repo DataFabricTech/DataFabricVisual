@@ -6,11 +6,10 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,15 +20,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 유사 속성 카테고리 차트 - FE용 조회 API.
- * - 차트: 카테고리 20개 + 테이블 수
- * - 상세화면: 특정 카테고리에 속한 테이블 목록
- * (매핑 산정/적재는 recommender 배치가 수행, 본 API는 조회만)
- */
 @Slf4j
+@RestController
 @RequestMapping("/api/attr-category")
-@Controller
 @AllArgsConstructor
 public class AttrCategoryController {
 
@@ -37,28 +30,25 @@ public class AttrCategoryController {
     private final SessionManager sessionManager;
 
     // ── 차트 조회 ──────────────────────────────────────────────────────────────
-    /** 카테고리 목록 + 카테고리별 테이블 수 (차트 초기 20노드용) */
+
     @ResponseJsonResult
     @GetMapping("/list")
     public Object getCategoryList() {
         return attrCategoryService.getCategoryList();
     }
 
-    /**
-     * 특정 카테고리에 속한 테이블 목록 (카테고리 클릭 시 상세화면용).
-     * @param sort 정렬 기준: similarity(대표성 유사도 내림차순, 기본) | name(테이블명 오름차순)
-     */
     @ResponseJsonResult
     @GetMapping("/{categoryId}/tables")
     public Object getTables(@PathVariable String categoryId,
-                            @RequestParam(name = "sort", defaultValue = "similarity") String sort) {
-        return attrCategoryService.getTables(categoryId, sort);
+            @RequestParam(defaultValue = "similarity") String sort,
+            @RequestParam(defaultValue = "10") int limit) {
+        return attrCategoryService.getTables(categoryId, sort, limit);
     }
 
     // ── CRUD ───────────────────────────────────────────────────────────────────
 
     @ResponseJsonResult
-    @GetMapping("/api/attr-category")
+    @GetMapping
     public Object getList(
             @RequestParam(required = false) String used,
             @RequestParam(required = false) String searchWord,
@@ -73,20 +63,20 @@ public class AttrCategoryController {
     }
 
     @ResponseJsonResult
-    @GetMapping("/api/attr-category/{id}")
-    public Object getInfo(@PathVariable String id) throws Exception {
-        return attrCategoryService.getInfo(id);
+    @GetMapping("/name-check")
+    public Object checkNameDuplicated(@RequestParam String name) throws Exception {
+        return attrCategoryService.checkNameDuplicated(name);
     }
 
     @ResponseJsonResult
-    @PostMapping("/api/attr-category")
+    @PostMapping
     public Object create(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         return attrCategoryService.create(params, user);
     }
 
     @ResponseJsonResult
-    @PutMapping("/api/attr-category/{id}")
+    @PutMapping("/{id}")
     public Object update(@PathVariable String id, @RequestBody Map<String, Object> params,
             HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
@@ -95,14 +85,8 @@ public class AttrCategoryController {
     }
 
     @ResponseJsonResult
-    @DeleteMapping("/api/attr-category/{id}")
+    @DeleteMapping("/{id}")
     public Object delete(@PathVariable String id) throws Exception {
         return attrCategoryService.delete(id);
-    }
-
-    @ResponseJsonResult
-    @GetMapping("/api/attr-category/name-check")
-    public Object checkNameDuplicated(@RequestParam String name) throws Exception {
-        return attrCategoryService.checkNameDuplicated(name);
     }
 }
