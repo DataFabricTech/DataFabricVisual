@@ -20,8 +20,9 @@ public class AttrCategoryService {
         return attrCategoryMapper.getCategoryList();
     }
 
-    /** 특정 카테고리의 테이블 목록 */
-    public List<Map<String, Object>> getTables(String categoryId) {
-        return attrCategoryMapper.getTables(categoryId);
+    /** 특정 카테고리의 테이블 목록 (sort: similarity | name) */
+    public List<Map<String, Object>> getTables(String categoryId, String sort) {
+        String sortKey = "name".equalsIgnoreCase(sort) ? "name" : "similarity";
+        return attrCategoryMapper.getTables(categoryId, sortKey);
     }
 }

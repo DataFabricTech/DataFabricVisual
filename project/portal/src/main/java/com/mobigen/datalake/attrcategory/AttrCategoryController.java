@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 
@@ -31,10 +32,14 @@ public class AttrCategoryController {
         return attrCategoryService.getCategoryList();
     }
 
-    /** 특정 카테고리에 속한 테이블 목록 (카테고리 클릭 시 상세화면용) */
+    /**
+     * 특정 카테고리에 속한 테이블 목록 (카테고리 클릭 시 상세화면용).
+     * @param sort 정렬 기준: similarity(대표성 유사도 내림차순, 기본) | name(테이블명 오름차순)
+     */
     @ResponseJsonResult
     @GetMapping("/{categoryId}/tables")
-    public Object getTables(@PathVariable String categoryId) {
-        return attrCategoryService.getTables(categoryId);
+    public Object getTables(@PathVariable String categoryId,
+                            @RequestParam(name = "sort", defaultValue = "similarity") String sort) {
+        return attrCategoryService.getTables(categoryId, sort);
     }
 }
