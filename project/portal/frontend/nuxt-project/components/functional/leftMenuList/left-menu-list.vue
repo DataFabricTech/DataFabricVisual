@@ -15,15 +15,28 @@
     </div>
     <div class="category-body">
       <ul class="category-menu slim-scroll">
-        <li :class="[toggleTargets.all ? 'open' : '', 'has-sub']">
+        <li v-if="!onlySimilarAttr" :class="[toggleTargets.all ? 'open' : '', 'has-sub']">
           <button type="button" :class="[toggleTargets.all ? 'on' : '', 'item-toggle']" @click="onToggle('all')">
             <span>펼치기</span>
           </button>
-          <a href="javascript:void(0);" :class="['' === selectedId ? 'active' : '', 'item-label']" title="카테고리 전체"
+          <a href="javascript:void(0);" :class="[activeFolderSection === 'all' ? 'active' : '', 'item-label']" title="카테고리 전체"
             @click="() => onClick()">
             카테고리 전체
           </a>
           <menu-item :list="categoryList" :toggle-targets="toggleTargets" :selected-id="selectedId"
+            @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
+        </li>
+        <li v-if="similarAttrCategoryList.length > 0"
+          :class="[toggleTargets.similarAttrAll ? 'open' : '', 'has-sub', 'similar-attr-category-top']">
+          <button type="button" :class="[toggleTargets.similarAttrAll ? 'on' : '', 'item-toggle']"
+            @click="onToggle('similarAttrAll')">
+            <span>펼치기</span>
+          </button>
+          <a href="javascript:void(0);" :class="[activeFolderSection === 'similarAttrAll' ? 'active' : '', 'item-label']"
+            title="유사 속성 카테고리 전체" @click="() => onClickSimilarAttrAll()">
+            유사 속성 카테고리 전체
+          </a>
+          <menu-item :list="similarAttrCategoryList" :toggle-targets="toggleTargets" :selected-id="selectedId"
             @onToggleNode="onToggle" @onClickMenuItem="onClick" @onClickSetup="onToggleTooltip" />
         </li>
       </ul>
@@ -45,18 +58,36 @@ const emit = defineEmits([
   "onClickFromTreeMap"
 ]);
 
+const props = defineProps({
+  onlySimilarAttr: { type: Boolean, default: false },
+  initialFolderSection: { type: String, default: "all" },
+});
+
 const categoryStore = useCategoryStore();
 const categoryList = computed(() => categoryStore.getCategoryList);
+const similarAttrCategoryList = computed(() => categoryStore.getSimilarAttrCategoryList);
 const toggleTargets = categoryStore.getToggleTargets;
 const selectedId = categoryStore.getSelectedItemId;
 const calledFrom = categoryStore.getCalledFrom;
 
 const eventStore = useEventStore();
 
+// 상단 "전체" 폴더의 active 상태
+// "all" = 카테고리 전체, "similarAttrAll" = 유사 속성 카테고리 전체, "" = 개별 항목 선택 중
+const activeFolderSection = ref(props.initialFolderSection);
+
 // 메뉴 클릭 이벤트 핸들러
 const onClick = (item) => {
+  activeFolderSection.value = item && item.id ? "" : "all";
   categoryStore.setSelectedItemId(item && item.id ? item.id : "");
   emit("onClickMenuItem", item);
+};
+
+// 유사 속성 카테고리 전체 클릭 핸들러
+const onClickSimilarAttrAll = () => {
+  activeFolderSection.value = "similarAttrAll";
+  categoryStore.setSelectedItemId("");
+  emit("onClickMenuItem", undefined);
 };
 
 // 카테고리 세팅 버튼 클릭 이벤트 핸들러
@@ -73,3 +104,10 @@ const onToggle = (value) => {
   categoryStore.setToggleTargetOnClick(value);
 };
 </script>
+
+<style scoped>
+/* 유사 속성 카테고리 전체 폴더 아이콘 강조 색상 (노란색) */
+.category-menu > li.similar-attr-category-top > .item-toggle:before {
+  filter: hue-rotate(200deg) saturate(1.4);
+}
+</style>

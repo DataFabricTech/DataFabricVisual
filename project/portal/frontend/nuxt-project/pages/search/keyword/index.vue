@@ -100,7 +100,7 @@
 
       <div class="inner">
         <div class="mu-section">
-          <left-menu-list @onClickMenuItem="onClickMenuItem" />
+          <left-menu-list :initial-folder-section="fromPath.includes('/search/attr-category') ? '' : 'all'" @onClickMenuItem="onClickMenuItem" />
 
           <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)" />
 
@@ -127,7 +127,13 @@
                     <i :class="getMetaIcon(data.meta_type)"></i>
                   </div>
                   <div class="inner-data">
-                    <div class="category-group" v-if="data && data.classifications && data.classifications.length > 0">
+                    <div class="category-group" v-if="(data && data.classifications && data.classifications.length > 0) || data.attr_category_name">
+                      <category-label
+                        v-if="data.attr_category_name"
+                        :name="data.attr_category_name"
+                        :readOnly="true"
+                        class="similar-attr-tag"
+                      />
                       <div class="category" v-for="(c, idx) in data.classifications" :key="idx">
                         <span em class="category-label">{{ c.c_description }}</span>
                       </div>
@@ -187,6 +193,7 @@ import { useSearchStore } from "@/store/search";
 import { errorAlert } from "@functional/alert/alert-default.ts";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
 import pagination from "@functional/pagination/pagination.vue";
+import CategoryLabel from "@functional/categoryLabel/category-label";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import { useCategoryStore } from "~/store/category.ts";
@@ -305,6 +312,14 @@ const detailFilters = ref({
     checkedCount: 0,
     visible: false
   },
+  ATTR_CATEGORY: {
+    all: true,
+    ord: 4,
+    name: '유사 속성',
+    content: [],
+    checkedCount: 0,
+    visible: true
+  },
   ORDER: {
     all: true,
     ord: 5,
@@ -346,6 +361,7 @@ const word = ref<string>(""); // 검색어
 const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
 const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
 const file_format = ref<string>(""); // 메타데이터 타입이 File일 때 파일 포맷
+const attr_category_name = ref<string>(""); // 유사 속성 카테고리
 const default_meta_type_list = ref<Array<string>>([]); // 메타타입 기본값 목록
 const sortBy = ref<string>("create_time") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
@@ -542,6 +558,7 @@ const pagingObj = ref<PagingObj>({
 const listData = ref<any>([]); // 통합 검색 결과 리스트
 
 await categoryStore.fetchCategories();
+await categoryStore.fetchSimilarAttrCategories(); // 좌측 카테고리 메뉴 하단 "유사 속성 카테고리" 폴더
 
 onMounted(async () => {
   // 메타타입 기본값 조회
@@ -689,6 +706,31 @@ onMounted(async () => {
 
       // 추가속성 필터
       initSubFilter()
+    } else if (fromPath.includes('/search/attr-category')) {
+      word.value = searchParams.value.query || ""
+      const ac = searchParams.value.attrCategory
+      if (ac?.id) {
+        // 유사 속성 카테고리 폴더 열기, 일반 카테고리 폴더 닫기
+        categoryStore.setToggleTargets({ all: false, similarAttrAll: true })
+        categoryStore.setSelectedItemId(ac.id)
+
+        attr_category_name.value = ac.name
+        if (detailFilters.value['ATTR_CATEGORY']) {
+          detailFilters.value['ATTR_CATEGORY'].content.forEach((el) => {
+            el.checked = el.name === ac.name
+          })
+          detailFilters.value['ATTR_CATEGORY'].allChecked = false
+          detailFilters.value['ATTR_CATEGORY'].checkedCount = 1
+        }
+        classification.value = { id: "", name: "", description: "" }
+        if (detailFilters.value['CATEGORY']) {
+          detailFilters.value['CATEGORY'].content.forEach((el) => { el.checked = false })
+          detailFilters.value['CATEGORY'].allChecked = true
+          detailFilters.value['CATEGORY'].checkedCount = 0
+        }
+        await searchStore.setSearchParamsDetailFilters(detailFilters.value)
+      }
+      initSubFilter()
     } else { // 그 외 검색조건 초기화
       searchStore.setSearchParams(searchParams.value)
       initSubFilter() // 추가속성 필터
@@ -797,6 +839,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     system_type: system_type.value ? system_type.value : "",
     meta_type: meta_type.value ? meta_type.value : default_meta_type_list.value,
     file_format: file_format.value ? file_format.value : "",
+    attr_category_name: attr_category_name.value ? attr_category_name.value : "",
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
@@ -825,6 +868,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
           el.classifications.sort((a, b) => a.c_id - b.c_id);
         }
       });
+
     } else {
       // 페이징
       pagingObj.value = {
@@ -1098,11 +1142,13 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
   if (detailFilters.value['CATEGORY']
     && detailFilters.value['SYSTEMTYPE']
     && detailFilters.value['METATYPE']
+    && detailFilters.value['ATTR_CATEGORY']
     && detailFilters.value['ORDER']
   ) {
     if (!detailFilters.value['CATEGORY'].allChecked
       || !detailFilters.value['SYSTEMTYPE'].allChecked
       || !detailFilters.value['METATYPE'].allChecked
+      || !detailFilters.value['ATTR_CATEGORY'].allChecked
       || !detailFilters.value['ORDER'].allChecked) {
       return true
     }
@@ -1143,6 +1189,8 @@ const clearFilter = (key) => {
       description: ""
     };
     leftMenuToggleAndBold("") // 왼쪽메뉴 연동
+  } else if (key == 'ATTR_CATEGORY') {
+    attr_category_name.value = ""
   } else if (key == 'SYSTEMTYPE') {
     system_type.value = ""
   } else if (key == 'METATYPE') {
@@ -1185,10 +1233,33 @@ const onClickMenuItem = (item: any): void => {
   if (!item) {
     clearFilter("CATEGORY")
 
-  } else if (item.id == "_NOT_CLASSIFIED") { // 2. 카테고리 미분류
+  } else if (item.id == "__SIMILAR_ATTR_ALL__") { // 2. 유사 속성 카테고리 전체
+    clearFilter("ATTR_CATEGORY")
+    leftMenuToggleAndBold("")
+
+  } else if (item.id == "_NOT_CLASSIFIED") { // 3. 카테고리 미분류
     clearFilter("_NOT_CLASSIFIED")
 
-  } else { // 3. 카테고리들
+  } else if (item.isSimilarAttrCategory) { // 4. 유사 속성 카테고리 개별 항목
+    leftMenuToggleAndBold(item.id)
+    attr_category_name.value = item.name
+
+    // 상세필터 ATTR_CATEGORY 체크 설정
+    if (detailFilters.value['ATTR_CATEGORY']) {
+      detailFilters.value['ATTR_CATEGORY'].content.forEach((el) => {
+        el.checked = el.name === item.name
+      })
+      detailFilters.value['ATTR_CATEGORY'].allChecked = false
+      detailFilters.value['ATTR_CATEGORY'].checkedCount = 1
+    }
+
+    // 일반 카테고리 필터 초기화 (leftMenuToggleAndBold는 이미 위에서 호출)
+    classification.value = { id: "", name: "", description: "" }
+    detailFilters.value['CATEGORY'].content.forEach((el) => { el.checked = false })
+    detailFilters.value['CATEGORY'].allChecked = true
+    detailFilters.value['CATEGORY'].checkedCount = 0
+
+  } else { // 5. 일반 카테고리
     leftMenuToggleAndBold(item.id)
     classification.value = item;
 
@@ -1203,6 +1274,9 @@ const onClickMenuItem = (item: any): void => {
         el.checked = false;
       }
     })
+
+    // 유사 속성 카테고리 필터 초기화
+    clearFilter("ATTR_CATEGORY")
   }
 
   getSearch(0);
@@ -1335,6 +1409,7 @@ const deleteCategoryTag = async (): void => {
 
 const getRootDescription = (key) => {
   if (key == 'CATEGORY') return "카테고리"
+  else if (key == 'ATTR_CATEGORY') return "유사 속성"
   else if (key == 'SYSTEMTYPE') return "시스템 타입"
   else if (key == 'METATYPE') return "메타 타입"
   else if (key == 'FILE_FORMAT') return "확장자"
@@ -1377,6 +1452,7 @@ const onChangeCheckBox = async (key, event: any) => {
           };
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
+        if (key == 'ATTR_CATEGORY') attr_category_name.value = el.name
         if (key == 'SYSTEMTYPE') system_type.value = el.name
         if (key == 'METATYPE') {
           meta_type.value = el.name
@@ -1534,3 +1610,13 @@ const getMetaIcon = (type) => {
 }
 
 </script>
+
+<style scoped>
+.similar-attr-tag {
+  background-color: #fef9c3;
+}
+
+.similar-attr-tag :deep(.category-label) {
+  color: #713f12;
+}
+</style>

@@ -8,7 +8,14 @@
       <!-- inner-data : 데이터내용 -->
       <div class="inner-data">
         <!-- category-group : 해당된 모든 카테고리 출력 -->
-        <div v-if="entityCategories.length > 0 || props.isAdmin" class="category-group">
+        <div v-if="entityCategories.length > 0 || similarAttrCategories.length > 0 || props.isAdmin" class="category-group">
+          <category-label
+            v-for="(name, i) in similarAttrCategories"
+            :key="`sa-${i}`"
+            :name="name"
+            :readOnly="true"
+            class="similar-attr-tag"
+          />
           <div v-if="entityCategories.length > 0" v-for="(item, index) in entityCategories" :key="index"
             class="category">
             <em class="category-label">{{ item.c_description }}</em>
@@ -66,6 +73,7 @@
 import ObjectUtils from "@/utils/ObjectUtils";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import DataRecommendStatusTop from "@molecules/searchDetail/data-recommend-status-top";
+import CategoryLabel from "@functional/categoryLabel/category-label";
 
 const { $ofetch } = useNuxtApp();
 
@@ -82,6 +90,12 @@ const props = defineProps([
   "onOpenEliminateModal",
   "typeName",
 ]);
+
+const similarAttrCategories = computed(() => {
+  const val = props.entity?.attr_category_name;
+  if (!val || typeof val !== "string") return [];
+  return val.split(",").filter(Boolean);
+});
 
 const entityCategories = computed(() => {
   let categories = ObjectUtils.getPropertyValue(props.entity, "classifications", "")
@@ -183,3 +197,13 @@ const getMetaIcon = (type) => {
   return 'ico-data data-06'
 }
 </script>
+
+<style scoped>
+.similar-attr-tag {
+  background-color: #fef9c3;
+}
+
+.similar-attr-tag :deep(.category-label) {
+  color: #713f12;
+}
+</style>

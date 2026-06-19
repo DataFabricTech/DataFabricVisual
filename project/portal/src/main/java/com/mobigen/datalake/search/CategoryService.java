@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.mobigen.datalake.attrcategory.AttrCategoryMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryMapper categoryMapper;
+    private final AttrCategoryMapper attrCategoryMapper;
 
     @Value("${properties.ESSync.base_url}")
     private String esSyncBaseUrl;
@@ -308,9 +310,32 @@ public class CategoryService {
         orderInfo.put("checkedCount", 0);
         orderInfo.put("visible", true);
 
+        // 유사 속성 카테고리 필터
+        Map<String, Object> attrCategoryInfo = new HashMap<>();
+        attrCategoryInfo.put("allChecked", true);
+        attrCategoryInfo.put("ord", 4);
+        attrCategoryInfo.put("name", "유사 속성");
+        attrCategoryInfo.put("content", new ArrayList<>());
+        attrCategoryInfo.put("checkedCount", 0);
+        attrCategoryInfo.put("visible", true);
+
+        List<Map<String, Object>> attrCategories = attrCategoryMapper.getCategoryList();
+        for (Map<String, Object> cat : attrCategories) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("root", "ATTR_CATEGORY");
+            item.put("rootDescription", "유사 속성 카테고리");
+            item.put("id", cat.get("id"));
+            item.put("name", cat.get("name"));
+            item.put("description", cat.get("name"));
+            item.put("count", cat.get("table_count"));
+            item.put("checked", false);
+            ((List<Map<String, Object>>) attrCategoryInfo.get("content")).add(item);
+        }
+
         detailFilters.put("CATEGORY", categoryInfo);
         detailFilters.put("SYSTEMTYPE", systemInfo);
         detailFilters.put("METATYPE", metaInfo);
+        detailFilters.put("ATTR_CATEGORY", attrCategoryInfo);
         detailFilters.put("FILE_FORMAT", fileFormatInfo);
         detailFilters.put("ORDER", orderInfo);
 

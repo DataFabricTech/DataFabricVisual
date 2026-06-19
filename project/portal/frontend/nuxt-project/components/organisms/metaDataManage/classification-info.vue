@@ -4,8 +4,14 @@
     <div class="inner-data">
       <!-- title-group -->
       <div class="title-group">
-        <strong class="category-title">{{ props.selectedCategory.description }}</strong>
-        <b class="category-title-en">{{ props.selectedCategory.name }}</b>
+        <template v-if="props.isSimilarAttrCategory">
+          <strong class="category-title">{{ props.selectedCategory.name }}</strong>
+          <b class="category-title-en" v-if="props.selectedCategory.description">{{ props.selectedCategory.description.length > 20 ? props.selectedCategory.description.slice(0, 20) + '…' : props.selectedCategory.description }}</b>
+        </template>
+        <template v-else>
+          <strong class="category-title">{{ props.selectedCategory.description }}</strong>
+          <b class="category-title-en" v-if="props.selectedCategory.name">{{ props.selectedCategory.name }}</b>
+        </template>
       </div>
       <!-- //title-group -->
       <!-- //connect-info -->
@@ -34,6 +40,10 @@ const props = defineProps({
       },
       file_id: ''
     }),
+  },
+  isSimilarAttrCategory: {
+    type: Boolean,
+    default: false,
   },
 });
 

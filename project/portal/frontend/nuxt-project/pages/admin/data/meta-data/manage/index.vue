@@ -16,7 +16,7 @@
         <!-- page-content : R 서브내용 -->
         <div class="page-content">
           <div class="board-list-wrap">
-            <classification-info :selected-category="selectedCategory" @onClickUpdate="onClickCategoryManageMenu" />
+            <classification-info :selected-category="selectedCategory" :is-similar-attr-category="!!currentAttrCategoryName" @onClickUpdate="onClickCategoryManageMenu" />
 
             <!-- 메타 테이블 헤더  -->
             <div class="mu-heading" style="display: block;">
@@ -190,7 +190,12 @@
 
       <!-- 카테고리 추가/수정/매핑 처리 모달 -->
       <manage-classification-modal ref="refManageModal" :manage-modal="manageModalObj"
-        @onCloseModal="onToggleManageModal" @onSubmit="onSubmitCategory" />
+        @onCloseModal="onToggleManageModal" @onSubmit="onSubmitCategory"
+        @onSubmitSimilarAttr="onSubmitSimilarAttrAdd" />
+
+      <!-- 유사 카테고리 수정 모달 -->
+      <similar-attr-category-modal ref="refSimilarAttrModal" :similar-attr-modal="similarAttrModalObj"
+        @onCloseModal="onCloseSimilarAttrModal" @onSubmit="onSubmitSimilarAttrUpdate" />
 
       <!-- 메타추출 처리 모달 -->
       <manage-extract-meta-modal ref="refManageExtractModal" :extract-modal="extractModalObj"
@@ -209,6 +214,7 @@ import PageSize from "@/pages/admin/manager/system/user/page-size";
 import { isEmpties } from "@composables/ramda";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
+import SimilarAttrCategoryModal from "@functional/classificationModal/similar-attr-category-modal.vue";
 import portalConfirm from "@functional/confirm/portal-confirm";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
 import ManageExtractMetaModal from "@functional/metaExtractModal/manage-extract-meta-modal.vue";
@@ -440,6 +446,7 @@ const filterSystemTypeList = ref<Array<FilterSystemType>>([
 const currentMetaType = ref<string>("");
 const currentFileFormat = ref<string>("");
 const currentSystemType = ref<string>("");
+const currentAttrCategoryName = ref<string>("");
 
 // 선택된 카테고리 정보
 const selectedCategory = ref<SelectedCategory>({
@@ -463,6 +470,10 @@ const tooltipObj = ref<TooltipObj>({
   e: {},
   targets: null
 });
+
+// 유사 카테고리 수정 모달 제어
+const similarAttrModalObj = ref({ toggle: false, target: null as any });
+const refSimilarAttrModal = ref<any>(null);
 
 // 카테고리 관리 모달 제어
 const manageModalObj = ref<ManageModalObj>({
@@ -496,6 +507,7 @@ const isTotalChecked = ref(false)
 const totalMetaIds = ref([])
 
 await categoryStore.fetchCategories();
+await categoryStore.fetchSimilarAttrCategories(); // 좌측 카테고리 메뉴 "유사 속성 카테고리 전체" 폴더
 await categoryTreeStore.fetchCategories()
 
 onMounted(() => {
@@ -552,8 +564,11 @@ onUnmounted(() => {
   // 확장자(전체) 필터 정보 저장
   const file_format = currentMetaType.value && currentMetaType.value.toUpperCase() === 'FILE' && currentFileFormat.value ? currentFileFormat.value : null;
 
+  // 유사 속성 카테고리 필터 정보 저장
+  const attr_category_name = currentAttrCategoryName.value ? currentAttrCategoryName.value : null;
+
   // 검색에 사용된 파라미터 중 default 값과 상이한 값이 없으면 path를 empty string으로 저장하여 저장된 파라미터 초기화
-  const path = paging || condition || category || release ? "/admin/data/meta-data/manage" : "";
+  const path = paging || condition || category || release || attr_category_name ? "/admin/data/meta-data/manage" : "";
 
   const params = {
     path,
@@ -564,6 +579,7 @@ onUnmounted(() => {
     file_format,
     system_type,
     release,
+    attr_category_name,
   };
 
   setParams(params);
@@ -595,6 +611,7 @@ const getFilterOptions = () => {
 
 const fetchCategories = async (payload: any) => {
   await categoryStore.fetchCategories(payload);
+  await categoryStore.fetchSimilarAttrCategories(); // 좌측 카테고리 메뉴 "유사 속성 카테고리 전체" 폴더
 
   return categoryStore.getCategoryList;
 };
@@ -677,6 +694,7 @@ const onFetchPageDataByPrevCondition = () => {
   const system_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "system_type", "");
   const meta_type = ObjectUtils.getDeepCopiedPropertyValue(userParams, "meta_type", "");
   const file_format = ObjectUtils.getDeepCopiedPropertyValue(userParams, "file_format", "");
+  const attr_category_name = ObjectUtils.getDeepCopiedPropertyValue(userParams, "attr_category_name", "");
 
   let offset = 0;
   const item: any = {};
@@ -710,6 +728,10 @@ const onFetchPageDataByPrevCondition = () => {
 
   if (file_format) {
     currentFileFormat.value = file_format
+  }
+
+  if (attr_category_name) {
+    currentAttrCategoryName.value = attr_category_name
   }
 
   onSearchDataList(offset, item);
@@ -1045,6 +1067,63 @@ const onSubmitCategory = async (params: any) => {
   refManageModal.value.onClose();
 };
 
+// 유사속성 카테고리 추가 (manage-classification-modal Tab 2)
+const onSubmitSimilarAttrAdd = async (params: any) => {
+  try {
+    const dupRes = await $ofetch(
+      `/api/attr-category/name-check?name=${encodeURIComponent(params.name)}`
+    );
+    if (dupRes?.data?.duplicated) {
+      errorAlert("이미 존재하는 카테고리명입니다.");
+      return;
+    }
+    await $ofetch("/api/attr-category", { method: "POST", body: params });
+    await categoryStore.fetchSimilarAttrCategories();
+    refManageModal.value.onClose();
+  } catch (e) {
+    errorAlert("등록에 실패했습니다.");
+  }
+};
+
+// 유사 카테고리 수정/삭제 (좌측 메뉴 버튼 → eventStore)
+const onSimilarAttrMenuAction = async (item: any, action: string) => {
+  if (action === "update") {
+    similarAttrModalObj.value = { toggle: true, target: item };
+  } else if (action === "delete") {
+    confirmAlert(
+      { content: `'${item.description}' 카테고리를 삭제하시겠습니까?` },
+      {
+        confirm: async () => {
+          try {
+            await $ofetch(`/api/attr-category/${item.id}`, { method: "DELETE" });
+            if (categoryStore._selectedItemId === item.id) categoryStore.setSelectedItemId("");
+            await categoryStore.fetchSimilarAttrCategories();
+          } catch (e) {
+            errorAlert("삭제에 실패했습니다.");
+          }
+        }
+      }
+    );
+  }
+};
+
+// 유사 카테고리 수정 모달 닫기
+const onCloseSimilarAttrModal = () => {
+  similarAttrModalObj.value = { toggle: false, target: null };
+};
+
+// 유사 카테고리 수정 제출 (similar-attr-category-modal)
+const onSubmitSimilarAttrUpdate = async (params: any) => {
+  try {
+    await $ofetch(`/api/attr-category/${params.id}`, { method: "PUT", body: params });
+    await categoryStore.fetchSimilarAttrCategories();
+    refSimilarAttrModal.value.onClose();
+    onCloseSimilarAttrModal();
+  } catch (e) {
+    errorAlert("수정에 실패했습니다.");
+  }
+};
+
 // 카테고리명 중복 체크
 const checkBeforeInsert = async (name) => {
   let isDup = false;
@@ -1064,6 +1143,19 @@ const checkBeforeInsert = async (name) => {
 
 // 카테고리 세팅 툴팁 내 추가/삭제/수정 버튼 클릭 이벤트 핸들러
 const onClickCategoryManageMenu = (type) => {
+  // 유사 속성 카테고리 설정 툴팁 액션 (툴팁에서 호출된 경우)
+  if (tooltipObj.value.targets?.isSimilarAttrCategory) {
+    onSimilarAttrMenuAction(tooltipObj.value.targets, type);
+    return;
+  }
+  // 유사 속성 카테고리가 선택된 상태에서 ClassificationInfo 수정/삭제 버튼 클릭
+  if (currentAttrCategoryName.value) {
+    const target = categoryStore.getSimilarAttrCategoryList.find((c) => c.name === currentAttrCategoryName.value);
+    if (target) {
+      onSimilarAttrMenuAction(target, type);
+      return;
+    }
+  }
   if (type === "delete") {
     onDeleteCategory(selectedCategory.value); // 카테고리 삭제 실행
   } else {
@@ -1176,8 +1268,16 @@ const onSearchDataList = async (offset = 0, item = {}) => {
     limit: pagingObj.value.limit
   }; // 데이터 조회 파라미터 객체
 
-  // 카테고리 검색
-  params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "");
+  // 카테고리 필터와 유사 속성 카테고리 필터는 완전히 별개로 처리
+  if (currentAttrCategoryName.value) {
+    // 유사 속성 카테고리 선택 시: attrCategoryName 필터만 사용
+    params.searchClassification = ""
+    params.attrCategoryName = currentAttrCategoryName.value
+  } else {
+    // 일반 카테고리 선택 시: searchClassification 필터만 사용
+    params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "")
+    params.attrCategoryName = ""
+  }
 
   const { word } = filterSearchObj.value;
   params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;
@@ -1197,7 +1297,8 @@ const onSearchDataList = async (offset = 0, item = {}) => {
     dataList.value = list.map((el: { [key: string]: any }) => {
       return {
         ...el,
-        attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
+        attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {},
+        attr_category_name: el.attr_category_name
       };
     });
 
@@ -1273,10 +1374,46 @@ const onSearchDept = async (item = {}) => {
 // 좌측 카테고리 리스트 내 노드 클릭 이벤트 핸들러
 const onClickMenuItem = async (item: any = null) => {
   if (!item) {
+    // 카테고리 전체
+    currentAttrCategoryName.value = ""
     await onSearchDept();
     onSearchDataList();
+  } else if (item.id === "__SIMILAR_ATTR_ALL__") {
+    // 유사 속성 카테고리 전체
+    currentAttrCategoryName.value = ""
+    await onSearchDept();
+    onSearchDataList();
+  } else if (item.isSimilarAttrCategory) {
+    // 유사 속성 카테고리 개별 항목
+    currentAttrCategoryName.value = item.name
+    selectedCategory.value = {
+      id: item.id,
+      parent_id: "",
+      level: "",
+      name: item.name,
+      description: item.categoryDescription || "",
+      dept: { dept_cd: "", dept_nm: "" },
+      file_id: "",
+      ord_no: item.ord_no || 0
+    }
+    onSearchDataList();
   } else {
-    await onSearchDept(item);
+    // 일반 카테고리
+    currentAttrCategoryName.value = ""
+    try {
+      await onSearchDept(item);
+    } catch (e) {
+      selectedCategory.value = {
+        id: item.id || "",
+        parent_id: item.parent_id || "",
+        level: item.level || "",
+        name: item.name || null,
+        description: item.description || "",
+        dept: { dept_cd: "", dept_nm: "" },
+        file_id: item.file_id || "",
+        ord_no: item.ord_no || 0
+      };
+    }
     onSearchDataList(0, item);
   }
 };
@@ -1438,8 +1575,14 @@ const downloadMetadata = async (param) => {
     queue_name: queueName
   }; // 데이터 조회 파라미터 객체
 
-  // 카테고리 검색
-  params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "");
+  // 카테고리 필터와 유사 속성 카테고리 필터는 완전히 별개로 처리
+  if (currentAttrCategoryName.value) {
+    params.searchClassification = ""
+    params.attrCategoryName = currentAttrCategoryName.value
+  } else {
+    params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "")
+    params.attrCategoryName = ""
+  }
 
   const { word } = filterSearchObj.value;
   params.searchType = filterSearchObj.value.searchType === "" ? "all" : filterSearchObj.value.searchType;

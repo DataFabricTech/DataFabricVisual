@@ -1,6 +1,6 @@
 <template>
   <div class="category">
-    <em class="category-label" :title="getKrName(category)">{{ getKrName(category) }}</em>
+    <em class="category-label" :title="name || getKrName(category)">{{ name || getKrName(category) }}</em>
     <button type="button" class="mu-btn mu-btn-delete" @click.stop="onClickDelete" v-if="!readOnly">
       <i class="mu-icon-svg item-delete"></i><span>삭제</span>
     </button>
@@ -24,6 +24,10 @@ const props = defineProps({
     type: Object
   },
   category: {
+    type: String,
+    default: ""
+  },
+  name: {
     type: String,
     default: ""
   },

@@ -20,6 +20,20 @@
         </li>
       </ul>
 
+      <!-- 유사 속성 카테고리 설정 버튼 클릭 시 -->
+      <ul class="item-add-list" v-if="props.tooltipObj.display && props.tooltipObj.type === 'similarAttrSetup'">
+        <li>
+          <a href="javascript:void(0);" @click="onClick('update')">
+            카테고리수정
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0);" @click="onClick('delete')">
+            카테고리삭제
+          </a>
+        </li>
+      </ul>
+
       <!-- 테이블 내에서 카테고리 더보기 버튼 클릭 시 -->
       <div class="category-group slim-scroll" v-if="props.tooltipObj.display && props.tooltipObj.type === 'more'">
         <category-more-label v-for="(category, cIndex) in categories" :category="category"
@@ -52,7 +66,8 @@ const tooltipLocation = computed(() => {
     const offsetY = ObjectUtils.getPropertyValue(props.tooltipObj, 'e/offsetY', 0);
     const pageY = ObjectUtils.getPropertyValue(props.tooltipObj, 'e/pageY', 0);
 
-    const guid = ObjectUtils.getPropertyValue(props.tooltipObj, 'targets/guid', '');
+    const guid = ObjectUtils.getPropertyValue(props.tooltipObj, 'targets/guid', '')
+             || ObjectUtils.getPropertyValue(props.tooltipObj, 'targets/id', '');
     const targetBtn = document.querySelector(`#setup_${guid}`); // 사용자가 클릭한 설정버튼
 
     if (props.tooltipObj.type === 'more') {
