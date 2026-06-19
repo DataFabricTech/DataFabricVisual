@@ -1,5 +1,6 @@
 package com.mobigen.datalake.attrcategory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -25,7 +26,8 @@ public class AttrCategoryService {
 
     private final AttrCategoryMapper attrCategoryMapper;
 
-    /** 카테고리 목록 + 카테고리별 테이블 수 */
+    // ── 차트 조회 ──────────────────────────────────────────────────────────────
+
     public List<Map<String, Object>> getCategoryList() {
         return attrCategoryMapper.getCategoryList();
     }

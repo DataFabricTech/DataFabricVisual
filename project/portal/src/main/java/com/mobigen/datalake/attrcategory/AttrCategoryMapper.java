@@ -14,6 +14,7 @@ public interface AttrCategoryMapper {
 
     /** 특정 카테고리의 테이블 목록 (sort: similarity | name) */
     List<Map<String, Object>> getTables(@Param("categoryId") String categoryId, @Param("sort") String sort);
+    int getTablesCount(@Param("categoryId") String categoryId);
 
     // CRUD
     List<Map<String, Object>> getList(Map<String, Object> params) throws Exception;
