@@ -61,7 +61,6 @@ export const useCategoryStore = defineStore("categoryStore", () => {
       name: category.name,
       description: category.name,
       categoryDescription: category.description,
-      keyword: category.keyword,
       ord_no: category.ord_no,
       use_yn: category.use_yn,
       level: 1,

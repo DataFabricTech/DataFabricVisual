@@ -133,20 +133,6 @@
                 </td>
               </tr>
               <tr>
-                <th scope="row">키워드</th>
-                <td>
-                  <div class="tag-input-wrap">
-                    <span v-for="(tag, i) in saKeywords" :key="i" class="tag-item">
-                      {{ tag }}
-                      <button type="button" @click="removeSaKeyword(i)">×</button>
-                    </span>
-                    <input type="text" v-model="saKeywordInput"
-                      placeholder="입력 후 Enter 또는 Space"
-                      @keydown="onSaKeywordKeydown" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
                 <th scope="row">정렬 순서</th>
                 <td>
                   <input type="number" class="mu-input" v-model.number="saForm.ord_no"
@@ -237,8 +223,6 @@ const toggleSelectCategoryModal = ref(false);
 // ── 유사속성 카테고리 추가 상태 ────────────────────────────────────────────────
 const similarAttrTotal = ref(0); // 현재 등록 수 (Tab 2 진입 시 조회)
 const saForm = ref({ name: "", description: "", ord_no: null as number | null });
-const saKeywords = ref<string[]>([]);
-const saKeywordInput = ref("");
 
 // ── Computed ──────────────────────────────────────────────────────────────────
 const modalTypeText = computed(() => {
@@ -507,24 +491,7 @@ const onClickCategoryInfoSearchCloseButton = () => {
 // ── 유사속성 카테고리 추가 메서드 ──────────────────────────────────────────────
 const resetSaForm = () => {
   saForm.value = { name: "", description: "", ord_no: null };
-  saKeywords.value = [];
-  saKeywordInput.value = "";
   similarAttrTotal.value = 0;
-};
-
-const onSaKeywordKeydown = (e: KeyboardEvent) => {
-  if ((e.key === " " || e.key === "Enter") && saKeywordInput.value.trim()) {
-    e.preventDefault();
-    const word = saKeywordInput.value.trim();
-    if (!saKeywords.value.includes(word)) saKeywords.value.push(word);
-    saKeywordInput.value = "";
-  } else if (e.key === "Backspace" && !saKeywordInput.value && saKeywords.value.length > 0) {
-    saKeywords.value.pop();
-  }
-};
-
-const removeSaKeyword = (index: number) => {
-  saKeywords.value.splice(index, 1);
 };
 
 const onClickSimilarAttrTab = async () => {
@@ -542,14 +509,9 @@ const onClickSimilarAttrTab = async () => {
 const onConfirmSimilarAttr = () => {
   const name = saForm.value.name.trim();
   if (!name || similarAttrTotal.value >= SIMILAR_ATTR_MAX) return;
-  // 입력 중인 키워드가 있으면 마저 추가
-  const pending = saKeywordInput.value.trim();
-  if (pending && !saKeywords.value.includes(pending)) saKeywords.value.push(pending);
-  saKeywordInput.value = "";
   emit("onSubmitSimilarAttr", {
     name,
     description: saForm.value.description,
-    keyword: saKeywords.value.join(" "),
     ord_no: saForm.value.ord_no,
     use_yn: "Y"
   });
@@ -585,48 +547,5 @@ defineExpose({ onClose });
   color: #6b7280;
   font-size: 13px;
 }
-.tag-input-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 4px 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  min-height: 36px;
-  align-items: center;
-  background: #fff;
-  cursor: text;
-}
-.tag-input-wrap input {
-  border: none;
-  outline: none;
-  flex: 1;
-  min-width: 120px;
-  font-size: 13px;
-  padding: 2px 4px;
-  background: transparent;
-}
-.tag-item {
-  display: inline-flex;
-  align-items: center;
-  background: #e8edf5;
-  color: #0d2254;
-  border-radius: 3px;
-  padding: 2px 6px;
-  font-size: 12px;
-  white-space: nowrap;
-}
-.tag-item button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin-left: 4px;
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1;
-  padding: 0;
-}
-.tag-item button:hover {
-  color: #374151;
-}
+
 </style>
