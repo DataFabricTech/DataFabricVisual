@@ -15,6 +15,9 @@ public interface StandardMappingMapper {
     /** 시스템별 표준화율. */
     List<Map<String, Object>> getQualityBySystem();
 
+    /** 테이블별 표준화율 목록 (systemName: null=전체). */
+    List<Map<String, Object>> getTableList(@Param("systemName") String systemName);
+
     /** 특정 테이블의 컬럼별 판정 목록. standardized: null=전체 / true=준수 / false=미준수 */
     List<Map<String, Object>> getColumns(@Param("metaId") String metaId,
                                          @Param("standardized") Boolean standardized);

@@ -24,6 +24,11 @@ public class StandardMappingService {
         return result;
     }
 
+    /** 테이블별 표준화율 목록. */
+    public List<Map<String, Object>> getTables(String systemName) {
+        return standardMappingMapper.getTableList(systemName);
+    }
+
     /** 특정 테이블의 컬럼별 판정 목록. */
     public List<Map<String, Object>> getColumns(String metaId, Boolean standardized) {
         return standardMappingMapper.getColumns(metaId, standardized);

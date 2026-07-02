@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 표준화매핑 - FE용 조회 API.
  * - quality : 표준화율 현황(전체 + 시스템별)
+ * - tables  : 테이블별 표준화율 목록(좌측 목록)
  * - list    : 특정 테이블의 컬럼별 표준 준수 판정 목록
  * (판정/적재는 standard_mapping 배치가 수행, 본 API는 조회만)
  */
@@ -29,6 +30,16 @@ public class StandardMappingController {
     @GetMapping("/quality")
     public Object getQuality() {
         return standardMappingService.getQuality();
+    }
+
+    /**
+     * 테이블별 표준화율 목록 (좌측 목록용).
+     * @param systemName 필터: null=전체 시스템
+     */
+    @ResponseJsonResult
+    @GetMapping("/tables")
+    public Object getTables(@RequestParam(name = "systemName", required = false) String systemName) {
+        return standardMappingService.getTables(systemName);
     }
 
     /**
