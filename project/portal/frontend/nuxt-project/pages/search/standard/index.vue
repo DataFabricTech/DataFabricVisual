@@ -4,7 +4,9 @@
       <div class="inner">
         <select-tab :tabs="tabs" :activeTab="currentTab" @onSelectTab="onSelectCurrentTab" />
         <div class="board-list-wrap">
-          <div class="mu-heading">
+          <!-- 표준화율 탭: 표준화매핑 진단 패널 -->
+          <standard-mapping-panel v-if="selectType === 'mapping'" />
+          <div class="mu-heading" v-if="selectType !== 'mapping'">
             <!-- board-list-search -->
             <standard-border-list-search :searchObj="searchObj" @searchMethod="getMetaDataStandardList"
               :searchList="searchList" />
@@ -163,7 +165,7 @@
             </table>
           </div>
           <!-- mu-pagination -->
-          <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+          <pagination v-if="selectType !== 'mapping'" :paging="pagingObj" @onClickPage="onClickPage" />
           <!-- //mu-pagination -->
         </div>
       </div>
@@ -179,6 +181,7 @@ import { useStandardStore } from '@/store/standard';
 import { useUserStore } from '@/store/user';
 import Pagination from "@functional/pagination/pagination";
 import StandardBorderListSearch from "@organisms/standard/standard-border-list-search.vue";
+import StandardMappingPanel from "@organisms/standard/standard-mapping-panel.vue";
 import { useRouter } from 'vue-router';
 
 definePageMeta({
@@ -197,6 +200,7 @@ const tabs = ref([
   { idx: 0, key: "표준 용어", type: "term" },
   { idx: 1, key: "표준 단어", type: "word" },
   { idx: 2, key: "표준 도메인", type: "domain" },
+  { idx: 3, key: "표준화율", type: "mapping" },
 ])
 
 // 엑셀 다운로드시 검색하지 않고 입력만 해도 바인딩되지 않도록 하기 위해 생성
@@ -360,6 +364,9 @@ const onSelectCurrentTab = (curTabObj) => {
     currentTab.value = 0
     selectType.value = "term"
   }
+
+  // 표준화율 탭은 별도 패널(표준화매핑)이라 표준사전 목록 조회를 타지 않는다.
+  if (selectType.value === 'mapping') return;
 
   initListData()
   initSearchOption()
