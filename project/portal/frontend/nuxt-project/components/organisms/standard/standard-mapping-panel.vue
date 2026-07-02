@@ -166,15 +166,15 @@ const moveTip = (e) => {
 };
 const hideTip = () => { tip.show = false; };
 
-// 매칭 셀: 용어 전체일치 → 용어명만 / 단어 조합 → 단어를 언더바로(컬럼 순서 유지)
+// 매칭 셀: 표준용어 전체일치 → 용어명 / 단어 조합 → 단어를 ','로 구분(컬럼 순서 유지)
 const matchLabel = (c) => {
   if (c.standard_term_name) return c.standard_term_name;
   if (c.standard_word_names) {
     if (c.token_words && c.token_words.length) {
       const ws = c.token_words.map((tw) => tw[1]).filter(Boolean);
-      if (ws.length) return ws.join("_");
+      if (ws.length) return ws.join(", ");
     }
-    return c.standard_word_names.split(",").join("_");
+    return c.standard_word_names;
   }
   return "-";
 };
