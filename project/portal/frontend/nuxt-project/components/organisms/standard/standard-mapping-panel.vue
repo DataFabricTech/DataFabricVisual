@@ -77,11 +77,7 @@
                     <span v-else-if="c.not_standardized_reason === 'TYPE_MISMATCH'" class="sm-bad">타입 불일치</span>
                     <span v-else class="sm-bad">불일치</span>
                   </td>
-                  <td class="sm-match">
-                    <template v-if="c.standard_term_name">{{ c.standard_term_name }}</template>
-                    <template v-else-if="c.standard_word_names">{{ c.standard_word_names }}</template>
-                    <template v-else>-</template>
-                  </td>
+                  <td class="sm-match">{{ matchLabel(c) }}</td>
                   <td class="sm-reco">{{ c.recommended_term_names || '-' }}</td>
                 </tr>
               </tbody>
@@ -169,6 +165,19 @@ const moveTip = (e) => {
   tip.y = y > window.innerHeight - 160 ? e.clientY - 140 : y;
 };
 const hideTip = () => { tip.show = false; };
+
+// 매칭 셀: 용어 전체일치 → 용어명만 / 단어 조합 → 단어를 언더바로(컬럼 순서 유지)
+const matchLabel = (c) => {
+  if (c.standard_term_name) return c.standard_term_name;
+  if (c.standard_word_names) {
+    if (c.token_words && c.token_words.length) {
+      const ws = c.token_words.map((tw) => tw[1]).filter(Boolean);
+      if (ws.length) return ws.join("_");
+    }
+    return c.standard_word_names.split(",").join("_");
+  }
+  return "-";
+};
 
 const judgeTip = (c) => {
   const L = [];
