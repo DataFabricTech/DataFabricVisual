@@ -246,6 +246,9 @@
                         <dd>{{ comman(fusionSampleTotal) }} 건</dd>
                       </dl>
                     </div>
+                    <p v-if="executeQueryStatus == 2 && executeErrorMessage" class="fusion-error-message">
+                      {{ executeErrorMessage }}
+                    </p>
                     <div class="table-scroll max-h300 h300">
                       <table class="mu-grid mu-grid-data">
                         <colgroup>
@@ -952,6 +955,7 @@ const currentMetaDataInfo = ref({});
 const currentMetaColumns = ref([]);
 
 const executeQueryStatus = ref(0); // 실행 결과 1: 성공, 2: 실패
+const executeErrorMessage = ref("");
 const execute_duration = ref("-");
 const execute_start_time = ref("-");
 const fusionSampleColumnNames = ref([]);
@@ -1462,10 +1466,12 @@ const executeQuery = async () => {
           if (res.data.errorMessage && res.data.errorMessage != "") {
             defaultAlert(res.data.errorMessage);
             executeQueryStatus.value = 2;
+            executeErrorMessage.value = res.data.errorDetail || res.data.errorMessage;
             fusionSampleList.value = [];
             fusionSampleTotal.value = 0;
           } else {
             executeQueryStatus.value = 1;
+            executeErrorMessage.value = "";
             isExecuteQuery.value = true;
           }
 
@@ -1482,12 +1488,14 @@ const executeQuery = async () => {
         } else {
           errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
           executeQueryStatus.value = 2;
+          executeErrorMessage.value = "관리자에게 문의해 주시기 바랍니다.";
         }
       })
       .catch((err) => {
         console.log(err);
         errorAlert("데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
         executeQueryStatus.value = 2;
+        executeErrorMessage.value = "관리자에게 문의해 주시기 바랍니다.";
       });
   } else {
     defaultAlert("쿼리를 입력해 주세요.");
@@ -1499,6 +1507,7 @@ const resetQuery = async () => {
   selectedColumnIndex.value = null;
   isExecuteQuery.value = false;
   executeQueryStatus.value = 0;
+  executeErrorMessage.value = "";
   fusionSampleList.value = [];
   fusionSampleTotal.value = "-";
   execute_duration.value = "-";

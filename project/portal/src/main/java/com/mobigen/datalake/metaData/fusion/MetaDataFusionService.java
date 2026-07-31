@@ -151,8 +151,10 @@ public class MetaDataFusionService {
                         }
                     }
                 } else {
-                    log.error("Fail to execute query !!");
-                    result.put("errorMessage", "쿼리가 잘못되었습니다.");
+                    String detail = extractQueryExecuteErrorDetail(queryExecuteResult);
+                    log.error("Fail to execute query !! detail={}", detail);
+                    result.put("errorMessage", buildQueryExecuteErrorMessage(detail));
+                    result.put("errorDetail", extractInnerErrorMessage(detail));
                 }
             }
         } catch (Exception e) {
@@ -622,6 +624,40 @@ public class MetaDataFusionService {
         resultMap.put("status_code", status_code);
         resultMap.put("result", result);
         return resultMap;
+    }
+
+    // DataIntegration 실패 응답(result.message)에서 원본 예외 메시지 추출
+    @SuppressWarnings("unchecked")
+    private String extractQueryExecuteErrorDetail(Map<String, Object> queryExecuteResult) {
+        try {
+            Map<String, Object> res = (Map<String, Object>) queryExecuteResult.get("result");
+            if (res != null && res.get("message") instanceof List) {
+                List<?> messages = (List<?>) res.get("message");
+                if (!messages.isEmpty()) {
+                    return messages.get(0).toString();
+                }
+            }
+        } catch (Exception ignore) {
+        }
+        return "";
+    }
+
+    // Trino 예외의 type(USER_ERROR/INTERNAL_ERROR/EXTERNAL 등)에 따라 사용자 안내 메시지 분기
+    private String buildQueryExecuteErrorMessage(String detail) {
+        Matcher m = Pattern.compile("type=([A-Z_]+)").matcher(detail);
+        if (m.find() && "USER_ERROR".equals(m.group(1))) {
+            return "쿼리가 잘못되었습니다.";
+        }
+        return "관리자에게 문의해 주시기 바랍니다.";
+    }
+
+    // 중첩된 예외 문자열에서 실제 Trino message="..." 부분만 추출 (없으면 원문 그대로)
+    private String extractInnerErrorMessage(String detail) {
+        Matcher m = Pattern.compile("message=\"([^\"]*)\"").matcher(detail);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return detail;
     }
 
     // 융합 데이터 생성 POST
