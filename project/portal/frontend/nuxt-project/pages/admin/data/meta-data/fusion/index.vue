@@ -1568,7 +1568,8 @@ const getMissingAliasUdfs = (): string[] => {
     .map((u: any) => u.udf_name as string)
     .filter((name) => {
       if (!new RegExp(`\\b${name}\\s*\\(`, "i").test(selectClause)) return false;
-      return !new RegExp(`\\b${name}\\s*\\(.*?\\)\\s+AS\\s+\\w+`, "is").test(selectClause);
+      // alias는 인용 식별자("고용밀집도등급")와 일반 식별자 모두 허용
+      return !new RegExp(`\\b${name}\\s*\\(.*?\\)\\s+AS\\s+("[^"]+"|[A-Za-z_]\\w*)`, "is").test(selectClause);
     });
 };
 
