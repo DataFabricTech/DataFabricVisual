@@ -20,8 +20,9 @@
                   <em class="datatype-label">{{ item.classifications[0] && item.classifications[0].c_description ? item.classifications[0].c_description : '카테고리 미지정' }}</em>
                 </div>
                 <a v-on:click="onClickDataName(item)">
-                  <span class="datatype-desc" v-if="item.description">{{ item.description }} &nbsp;&nbsp;&nbsp;</span>
-                  <span>{{ item.meta_name }}</span>
+                  <span class="datatype-desc" v-if="item.description" :title="item.description">{{
+                    truncateDescription(item.description, 80, '') }}</span>
+                  <span class="datatype-name">{{ item.meta_name }}</span>
                 </a>
               </li>
             </ul>
@@ -175,7 +176,7 @@ const drawChart = (raw) => {
     tooltip: {
       headerFormat: '',
       pointFormat: `
-        <b>{point.name}</b><br/>
+        <b>{point.fullName}</b><br/>
         {point.meta_name}
       `
     },
@@ -190,8 +191,12 @@ const createSeries = (raw) => {
       ? row.similarity
       : 0.1
 
+    const fullName = row.description || row.meta_name || '-'
+
     return {
-      name: row.description || row.meta_name || '-',
+      // 차트 라벨은 길면 레이아웃이 깨지므로 짧게 자르고, 전문은 tooltip(fullName)으로 노출
+      name: truncateDescription(fullName, 25, '-'),
+      fullName,
       y: similarity * 100,   // 각도 비율
       z: similarity,         // 크기 반영
       meta_name: row.meta_name || '-'
@@ -208,3 +213,11 @@ const deleteSeries = (chart) => {
 }
 
 </script>
+
+<style scoped>
+/* 설명과 데이터명을 한 줄로 잇지 않고 줄바꿈하여 구분 표시 */
+.datatype-desc,
+.datatype-name {
+  display: block;
+}
+</style>

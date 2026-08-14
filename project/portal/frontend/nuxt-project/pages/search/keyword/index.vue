@@ -145,9 +145,11 @@
                     </div>
                     <div class="title-group">
                       <a @click="onSelectDetailPage(data)">
-                        <strong class="data-title">{{ data && data.description ? data.description : '' }}</strong>
+                        <strong class="data-title" :title="data && data.description ? data.description : ''">{{
+                          truncateDescription(data && data.description, 80, '') }}</strong>
                         <p class="data-name"> {{ data && data.meta_name ? data.meta_name : '' }} </p>
-                        <p class="data-desc">{{ data && data.user_description ? data.user_description : '' }}</p>
+                        <p class="data-desc" :title="data && data.user_description ? data.user_description : ''">{{
+                          truncateDescription(data && data.user_description, 80, '') }}</p>
                       </a>
                     </div>
                     <!-- TAGS -->

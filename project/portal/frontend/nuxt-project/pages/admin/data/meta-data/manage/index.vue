@@ -142,7 +142,7 @@
                     <td>
                       <!-- 데이터설명 -->
                       <a :title="item.description ? item.description : '-'" @click="onClickDataName(item)">{{
-                        item.description ? item.description : "-"
+                        truncateDescription(item.description)
                         }}</a>
                     </td>
                     <td>
