@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -296,7 +298,10 @@ public class DetailEliminateService {
 
             try (FileInputStream fis = new FileInputStream(file)) {
                 response.setContentType("application/octet-stream");
-                response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
+                String encodedFileName = URLEncoder.encode(fileName + ".csv", StandardCharsets.UTF_8)
+                        .replaceAll("\\+", "%20");
+                response.setHeader("Content-Disposition",
+                        "attachment; filename=\"" + encodedFileName + "\"; filename*=UTF-8''" + encodedFileName);
                 response.setContentLength((int) fileSize);
 
                 // 파일 내용을 클라이언트에 직접 출력
