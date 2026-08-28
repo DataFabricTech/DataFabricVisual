@@ -57,7 +57,30 @@
                     <span>1000 건</span>
                   </td>
                 </tr>
-                <tr v-if="currentExtractTab == 1">
+                <tr v-if="currentExtractTab == 0 || currentExtractTab == 1">
+                  <th scope="row">정렬 방식</th>
+                  <td>
+                    <div class="mu-item-group">
+                      <div class="mu-selectbox w160">
+                        <select title="정렬 컬럼 선택" v-model="sortColumn">
+                          <option value="">선택없음</option>
+                          <option v-for="(item, index) in sampleDataHeader" :value="item">
+                            {{ item }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="mu-radio" v-if="sortColumn">
+                        <input type="radio" id="sortDirectionDesc" name="sortDirectionSelect" value="DESC" v-model="sortDirection" />
+                        <label for="sortDirectionDesc"><span>최신순(내림차순)</span></label>
+                      </div>
+                      <div class="mu-radio" v-if="sortColumn">
+                        <input type="radio" id="sortDirectionAsc" name="sortDirectionSelect" value="ASC" v-model="sortDirection" />
+                        <label for="sortDirectionAsc"><span>오래된순(오름차순)</span></label>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr v-if="currentExtractTab == 2">
                   <th scope="row">추출 건수</th>
                   <td>
                     <div class="mu-item-group">
@@ -222,6 +245,9 @@ const currentTab = ref(0); // API 현재 탭
 const extractLimitTypeList = ref(["all", "custom"])
 const extractLimitType = ref("all")
 const extractLimit = ref(1000);
+
+const sortColumn = ref(""); // 대용량 데이터 추출 정렬 컬럼
+const sortDirection = ref("DESC"); // 정렬 방향 (DESC: 최신순, ASC: 오래된순)
 
 const filterLogic = ref("");
 const filter = ref([
@@ -869,6 +895,13 @@ const onClickFileEliminateButton = async () => {
   else paramQueryWhere = " " + queryWhere.value;
   paramQueryWhere = paramQueryWhere; // 모든 문자 인코딩
 
+  // 일반 데이터 추출은 백엔드가 querySelect/queryWhere를 그대로 이어붙여 쿼리를 조립하므로,
+  // queryWhere 뒤에 ORDER BY절을 붙여서 함께 전달한다.
+  const orderByClauseTab0 = (currentExtractTab.value == 0 && sortColumn.value)
+    ? ` ORDER BY "${sortColumn.value}" ${sortDirection.value}`
+    : "";
+  paramQueryWhere += orderByClauseTab0;
+
   // const userDescriptionListParam = userDescriptionList.join(",");
   // const commentListParam = commentList.join(",");
 
@@ -894,7 +927,7 @@ const onClickFileEliminateButton = async () => {
       meta_name: meta_name,
       meta_type: typeName,
       qualified_name: qualified_name,
-      query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${paramQueryWhere}${params.limit ? 'limit ' + params.limit : ''}`,
       download_type: 0, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
       description: description,
     };
@@ -936,6 +969,9 @@ const onClickFileEliminateButton = async () => {
       params.limit = extractLimit.value
     }
 
+    const orderByClause = sortColumn.value ? ` ORDER BY "${sortColumn.value}" ${sortDirection.value}` : "";
+    const bigExtractQuery = `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${orderByClause}${params.limit ? ' limit ' + params.limit : ''}`;
+
     let historyParams = {
       meta_id: meta_id,
       system_id: system_id,
@@ -944,7 +980,7 @@ const onClickFileEliminateButton = async () => {
       meta_name: meta_name,
       meta_type: "table",
       qualified_name: qualified_name,
-      query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      query: bigExtractQuery,
       download_type: 2, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
       description: description,
     };
@@ -952,7 +988,7 @@ const onClickFileEliminateButton = async () => {
 
     let big_params = {
       meta_id,
-      query: `SELECT ${querySelect.value} FROM "${catalog}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      query: bigExtractQuery,
     }
 
     await $ofetch("/api/search/detail/eliminate/file/downloadRequest", {
@@ -996,6 +1032,8 @@ const validateInput = () => {
 // 모달 닫기
 const close = () => {
   columnUpdateIndex.value = [];
+  sortColumn.value = "";
+  sortDirection.value = "DESC";
   emit("onCloseModal");
 };
 
