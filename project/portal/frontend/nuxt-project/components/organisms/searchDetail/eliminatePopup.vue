@@ -424,6 +424,27 @@ const typeEllipsis = (val, entity) => {
   }
 };
 
+const isStringLiteralType = (columnType: any) => {
+  const stringTypeKeywords = [
+    "string",
+    "char",
+    "text",
+    "clob",
+    "uuid",
+    "json",
+    "xml",
+    "enum",
+    "inet",
+    "cidr",
+    "macaddr",
+  ];
+
+  const normalizedColumnType = String(columnType || "");
+  return stringTypeKeywords.some((keyword) => normalizedColumnType.includes(keyword));
+};
+
+const escapeSqlStringLiteral = (value) => String(value).replaceAll("'", "''");
+
 const onSelectDate = (item, event) => {
   selectDate.value = new Date(event).getTime()
   selectDateText.value = $yyyyMMdd(event)
@@ -541,17 +562,7 @@ const fnWhereQueryMake = () => {
           }
         }
         queryWhere.value += inputQuery;
-      } else if (
-        typeEllipsis(element.filterHeader, props.eliminateModal.entity).includes(
-          "string"
-        ) ||
-        typeEllipsis(element.filterHeader, props.eliminateModal.entity).includes(
-          "char"
-        ) ||
-        typeEllipsis(element.filterHeader, props.eliminateModal.entity).includes(
-          "varchar"
-        )
-      ) {
+      } else if (isStringLiteralType(typeEllipsis(element.filterHeader, props.eliminateModal.entity))) {
         if (!firstElementProcessed) {
           if (element.filterOperator == 'isNull') {
             inputQuery =
@@ -571,7 +582,7 @@ const fnWhereQueryMake = () => {
               " " +
               element.filterOperator +
               " '" +
-              element.filterInput +
+              escapeSqlStringLiteral(element.filterInput) +
               "' ";
           }
           firstElementProcessed = true;
@@ -600,7 +611,7 @@ const fnWhereQueryMake = () => {
               " " +
               element.filterOperator +
               " '" +
-              element.filterInput +
+              escapeSqlStringLiteral(element.filterInput) +
               "' ";
           }
         }
