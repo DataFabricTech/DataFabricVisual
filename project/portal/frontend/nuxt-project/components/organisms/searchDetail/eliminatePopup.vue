@@ -400,13 +400,14 @@ const resetFilter = () => {
 
 const typeEllipsis = (val, entity) => {
   const attributes = entity.attributes
+  const columnName = String(val || "").replace(/^"|"$/g, "").replaceAll('""', '"');
 
   let dataType;
   if (attributes) {
     const columns = attributes.columns
     if (columns) {
       columns.filter((item) => {
-        if (item.meta_name === val) {
+        if (item.meta_name === columnName) {
           if (item.column_type !== "") {
             dataType = item.column_type;
           }
@@ -444,6 +445,7 @@ const isStringLiteralType = (columnType: any) => {
 };
 
 const escapeSqlStringLiteral = (value) => String(value).replaceAll("'", "''");
+const quoteSqlIdentifier = (value) => `"${String(value).replaceAll('"', '""')}"`;
 
 const onSelectDate = (item, event) => {
   selectDate.value = new Date(event).getTime()
@@ -497,10 +499,13 @@ const fnWhereQueryMake = () => {
   let firstElementProcessed = false;
 
   for (let i = 0; i < filter.value.length; i++) {
-    const element = filter.value[i];
     let inputQuery = "";
 
-    if (element.filterHeader !== "") {
+    if (filter.value[i].filterHeader !== "") {
+      const element = {
+        ...filter.value[i],
+        filterHeader: quoteSqlIdentifier(filter.value[i].filterHeader),
+      };
       if (
         typeEllipsis(element.filterHeader, props.eliminateModal.entity).includes(
           "timestamp"
