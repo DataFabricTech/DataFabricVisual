@@ -234,7 +234,7 @@ const searchParams = ref({
     name: "",
     description: ""
   },
-  sortBy: "create_time",
+  sortBy: "meta_sync_time",
   sortOrder: "desc",
   entityFilters: {}
 });
@@ -365,7 +365,7 @@ const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system
 const file_format = ref<string>(""); // 메타데이터 타입이 File일 때 파일 포맷
 const attr_category_name = ref<string>(""); // 유사 속성 카테고리
 const default_meta_type_list = ref<Array<string>>([]); // 메타타입 기본값 목록
-const sortBy = ref<string>("create_time") // 정렬 필드
+const sortBy = ref<string>("meta_sync_time") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
   id: "",
