@@ -897,7 +897,7 @@ public class SearchDetailService {
 
                 // MetaData 테이블에 해당 데이터로 user_description 업데이트
                 Map<String, Object> newParams = new HashMap<>();
-                newParams.put("meta_id", params.get("guid"));
+                newParams.put("guid", params.get("guid"));
                 newParams.put("user_description", favoriteData.get("user_description"));
                 updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
             } else {
@@ -987,7 +987,7 @@ public class SearchDetailService {
                 if (favoriteData.get("id").toString().equals(params.get("id").toString())) {
                     // 2. MetaData 테이블에 user_description 업데이트
                     Map<String, Object> newParams = new HashMap<>();
-                    newParams.put("guid", favoriteData.get("meta_id"));
+                    newParams.put("guid", params.get("guid"));
                     newParams.put("user_description", favoriteData.get("user_description"));
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
@@ -1058,7 +1058,7 @@ public class SearchDetailService {
                 if (!favoriteData.get("id").toString().equals(params.get("id").toString())) {
                     // MetaData 테이블에 해당 데이터로 user_description 업데이트
                     Map<String, Object> newParams = new HashMap<>();
-                    newParams.put("guid", favoriteData.get("meta_id"));
+                    newParams.put("guid", params.get("guid"));
                     newParams.put("user_description", favoriteData.get("user_description"));
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
