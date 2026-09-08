@@ -103,8 +103,10 @@ public class MetaDataManageController {
     @ResponseJsonResult
     @PostMapping("/saveFileMetaData")
     public Object saveFileMetaData(@RequestBody Map<String, Object> metadata, HttpServletRequest request) throws Exception {
-        Map<String, Object> user = sessionManager.getUserByAccessToken(request);       
-        return metaDataManageService.saveFileMetaData(metadata, user);
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        Object uploadToken = metadata.remove("uploadToken");
+        return metaDataManageService.saveFileMetaData(metadata, user,
+                uploadToken == null ? null : uploadToken.toString());
     }
 
     /**

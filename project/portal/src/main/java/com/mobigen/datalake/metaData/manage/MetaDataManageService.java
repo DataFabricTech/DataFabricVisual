@@ -24,7 +24,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,10 +39,16 @@ import com.mobigen.framework.utility.MinioFactory;
 import com.mobigen.framework.utility.RabbitmqProducer;
 
 import io.minio.BucketExistsArgs;
+import io.minio.CopyObjectArgs;
+import io.minio.CopySource;
+import io.minio.ListObjectsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.Result;
 import io.minio.errors.MinioException;
+import io.minio.messages.Item;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,9 +57,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class MetaDataManageService {
+    static final String PENDING_OBJECT_PREFIX = "pending/";
+
     private final ObjectMapper objectMapper;
     private final CollectorService collectorService;
     private final MetaDataManageMapper metaDataManageMapper;
+
+    @Autowired
+    @Lazy
+    private MetaDataManageService self;
 
     @Value("${properties.ESSync.base_url}")
     private String esSyncBaseUrl;
@@ -225,136 +239,197 @@ public class MetaDataManageService {
         }
     }
 
-    public Map<String, Object> saveFileMetaData(Map<String, Object> metadata, Map<String, Object> user) throws Exception {
+    public Map<String, Object> saveFileMetaData(Map<String, Object> metadata, Map<String, Object> user,
+            String uploadToken) throws Exception {
+        String pendingObject = resolvePendingObject(uploadToken);
+        if (pendingObject == null) {
+            throw new IllegalStateException("업로드된 파일을 찾을 수 없습니다. 파일을 다시 업로드해 주세요.");
+        }
+
+        Map<String, Object> result = self.saveFileMetaDataInTx(metadata, user, pendingObject);
+
+        removePendingObject(pendingObject);
+
+        Map<String, Object> essyncParams = new HashMap<>();
+        essyncParams.put("metaid", result.remove("essyncMetaId"));
+        essyncParams.put("event_status", 2);
+        essyncParams.put("event_name", "데이터 권한설정 변경");
+        essyncUpdate(essyncParams);
+
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> saveFileMetaDataInTx(Map<String, Object> metadata, Map<String, Object> user,
+            String pendingObject) throws Exception {
         Map<String, Object> result = new HashMap<>();
         Integer saveEventResult = 0; // event log 저장 성공 여부
         Integer saveMetadataResult = 0; // 메타데이터 테이블 저장 성공 여부
         boolean isUpdate = false; // 비정형 데이터 파일 중복 등록 여부
-        
-        try {
-            // 1. event_log 저장
-            Map<String, Object> eventParam = new HashMap<>();
-            eventParam.put("event_type", 0); // 메타데이터 이벤트: 0 | 시스템 이벤트: 1
 
-            // qualified_name이 같은 meta_id 조회
-            String meta_id = metaDataManageMapper.getMetaIdFromQualifiedName(metadata.get("qualified_name").toString());
-            if (meta_id != null) isUpdate = true;
-            
-            // 이벤트 상태값 설정
-            int event_status = 1;
-            if (isUpdate) {
-                event_status = 2;
-            }
-            eventParam.put("event_status", event_status); // 0 해지 | 1:발생(생성) | 2: 변경 | 3: 삭제
-            eventParam.put("event_name", "비정형 메타 데이터 등록[발생]");
-            eventParam.put("event_user_id", user.get("user_id"));
-            eventParam.put("meta_id", metadata.get("meta_id"));
-            eventParam.put("meta_name", metadata.get("meta_name"));
-            eventParam.put("qualified_name", metadata.get("qualified_name"));
-            saveEventResult = metaDataManageMapper.saveEvent(eventParam);
-            if (saveEventResult != null && saveEventResult > 0) {
-                log.info("event log saved !!");
-            } else {
-                log.error("event log not saved !!");
-            }
+        Map<String, Object> eventParam = new HashMap<>();
+        eventParam.put("event_type", 0); // 메타데이터 이벤트: 0 | 시스템 이벤트: 1
 
-            String dateString = metadata.get("create_time") != null ? metadata.get("create_time").toString() : "";
-            // LocalDateTime 변환
-            LocalDateTime ldt = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            // Timestamp 변환
-            Timestamp ts = Timestamp.valueOf(ldt);
-
-            // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
-            List<String> classificationList = (List<String>) metadata.get("classifications");
-            String[] classifications = null;
-            if (classificationList != null) {
-
-                classifications = classificationList.toArray(new String[0]);
-            }
-            metadata.put("classifications", classifications);
-
-            // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
-            List<String> tagList = (List<String>) metadata.get("tags");
-            String[] tags = null;
-            if (tagList != null) {
-                tags = tagList.toArray(new String[0]);
-            }
-            metadata.put("tags", tags);
-            
-            // jsonb 타입은 Map -> JSON형태의 String값으로 변환 필요 넣어줘야함.
-            metadata.put("attributes", objectMapper.writeValueAsString(metadata.get("attributes")));
-            metadata.put("business_attributes", objectMapper.writeValueAsString(metadata.get("business_attributes")));
-            
-            // 2. 메타데이터 테이블에 저장
-            if (isUpdate) {
-                metadata.put("meta_id", meta_id);
-                metadata.put("update_by", user.get("user_id").toString());
-                metadata.put("update_time", ts);
-
-                saveMetadataResult = metaDataManageMapper.updateMetadata(metadata);
-            } else {
-                metadata.put("create_by", user.get("user_id").toString());
-                metadata.put("create_time", ts);
-
-                saveMetadataResult = metaDataManageMapper.saveMetadata(metadata);
-            }
-                
-            if (saveMetadataResult != null && saveMetadataResult > 0) {
-                log.info("metadata saved !! !!");
-                // ESSync release 갱신
-                Map<String, Object> essyncParams = new HashMap<>();
-                essyncParams.put("metaid", meta_id);
-                essyncParams.put("event_status", 2);
-                essyncParams.put("event_name", "데이터 권한설정 변경");
-                essyncUpdate(essyncParams);
-            } else {
-                log.error("metadata not saved !!");
-            }
-
-            result.put("saveEventCount", saveEventResult);
-            result.put("saveMetadataCount", saveMetadataResult);
-            
-        } catch (Exception e) {
-            log.error("save file metadata Exception");
-            e.printStackTrace();
-            result.put("saveEventCount", saveEventResult);
-            result.put("saveMetadataCount", saveMetadataResult);
+        String meta_id = metaDataManageMapper.getMetaIdFromQualifiedName(metadata.get("qualified_name").toString());
+        if (meta_id != null) {
+            isUpdate = true;
         }
-        
+
+        int event_status = 1;
+        if (isUpdate) {
+            event_status = 2;
+        }
+        eventParam.put("event_status", event_status); // 0 해지 | 1:발생(생성) | 2: 변경 | 3: 삭제
+        eventParam.put("event_name", "비정형 메타 데이터 등록[발생]");
+        eventParam.put("event_user_id", user.get("user_id"));
+        eventParam.put("meta_id", isUpdate ? meta_id : metadata.get("meta_id"));
+        eventParam.put("meta_name", metadata.get("meta_name"));
+        eventParam.put("qualified_name", metadata.get("qualified_name"));
+        saveEventResult = metaDataManageMapper.saveEvent(eventParam);
+        if (saveEventResult == null || saveEventResult < 1) {
+            throw new IllegalStateException("이벤트 로그 저장에 실패했습니다.");
+        }
+        log.info("event log saved !!");
+
+        String dateString = metadata.get("create_time") != null ? metadata.get("create_time").toString() : "";
+        // LocalDateTime 변환
+        LocalDateTime ldt = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        // Timestamp 변환
+        Timestamp ts = Timestamp.valueOf(ldt);
+
+        // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
+        List<String> classificationList = (List<String>) metadata.get("classifications");
+        String[] classifications = null;
+        if (classificationList != null) {
+
+            classifications = classificationList.toArray(new String[0]);
+        }
+        metadata.put("classifications", classifications);
+
+        // _varchar 타입은 ArrayList가 아닌 String[] 값을 넣어줘야함.
+        List<String> tagList = (List<String>) metadata.get("tags");
+        String[] tags = null;
+        if (tagList != null) {
+            tags = tagList.toArray(new String[0]);
+        }
+        metadata.put("tags", tags);
+
+        // jsonb 타입은 Map -> JSON형태의 String값으로 변환 필요 넣어줘야함.
+        metadata.put("attributes", objectMapper.writeValueAsString(metadata.get("attributes")));
+        metadata.put("business_attributes", objectMapper.writeValueAsString(metadata.get("business_attributes")));
+
+        // 2. 메타데이터 테이블에 저장
+        if (isUpdate) {
+            metadata.put("meta_id", meta_id);
+            metadata.put("update_by", user.get("user_id").toString());
+            metadata.put("update_time", ts);
+
+            saveMetadataResult = metaDataManageMapper.updateMetadata(metadata);
+        } else {
+            metadata.put("create_by", user.get("user_id").toString());
+            metadata.put("create_time", ts);
+
+            saveMetadataResult = metaDataManageMapper.saveMetadata(metadata);
+        }
+
+        if (saveMetadataResult == null || saveMetadataResult < 1) {
+            throw new IllegalStateException("메타데이터 저장에 실패했습니다.");
+        }
+        log.info("metadata saved !! !!");
+
+        promotePendingObject(pendingObject);
+
+        result.put("saveEventCount", saveEventResult);
+        result.put("saveMetadataCount", saveMetadataResult);
+        result.put("essyncMetaId", meta_id);
+
         return result;
     }
 
     public Object uploadFile(UploadMinioFileForm file) throws Exception {
         Map<String, Object> result = new HashMap<>();
         boolean uploadResult = false; // 파일 minio 저장 성공 여부
-        
+
         MultipartFile uploadFile = file.getFile();
-        try (InputStream is = uploadFile.getInputStream()){
-            
-            boolean res = this.uploadMultipart(
-                    uploadFile.getOriginalFilename(),
+        String uploadToken = UUID.randomUUID().toString();
+        String pendingObject = PENDING_OBJECT_PREFIX + uploadToken + "/" + uploadFile.getOriginalFilename();
+
+        try (InputStream is = uploadFile.getInputStream()) {
+            uploadResult = this.uploadMultipart(
+                    pendingObject,
                     is,
                     uploadFile.getContentType(),
                     uploadFile.getSize()
             );
-            
-            if (res) {
-                uploadResult = true;        
+
+            if (uploadResult) {
+                result.put("uploadToken", uploadToken);
             }
-        
-            result.put("uploadResult", uploadResult);
-            
         } catch (Exception e) {
-            log.error("upload file metadata Exception");
+            log.error("upload file to minio Exception");
             e.printStackTrace();
-            result.put("uploadResult", uploadResult);
         }
-        
+
+        result.put("uploadResult", uploadResult);
+
         return result;
     }
 
+    // 임시 업로드 객체 조회. 토큰이 유효하지 않거나 객체가 없으면 null.
+    private String resolvePendingObject(String uploadToken) throws Exception {
+        if (uploadToken == null || uploadToken.isBlank()) {
+            return null;
+        }
+        try {
+            UUID.fromString(uploadToken);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
+        String prefix = PENDING_OBJECT_PREFIX + uploadToken + "/";
+        Iterator<Result<Item>> objects = MinioFactory.create(endpoint, accessKey, secretKey)
+                .listObjects(ListObjectsArgs.builder()
+                        .bucket(unstructuredBucket)
+                        .prefix(prefix)
+                        .maxKeys(1)
+                        .build())
+                .iterator();
+
+        return objects.hasNext() ? objects.next().get().objectName() : null;
+    }
+
+    private void promotePendingObject(String pendingObject) throws Exception {
+        String finalObject = pendingObject.substring(pendingObject.indexOf('/', PENDING_OBJECT_PREFIX.length()) + 1);
+
+        MinioFactory.create(endpoint, accessKey, secretKey).copyObject(
+                CopyObjectArgs.builder()
+                        .bucket(unstructuredBucket)
+                        .object(finalObject)
+                        .source(CopySource.builder()
+                                .bucket(unstructuredBucket)
+                                .object(pendingObject)
+                                .build())
+                        .build()
+        );
+
+        log.info("{} promoted to {}", pendingObject, finalObject);
+    }
+
+    private void removePendingObject(String pendingObject) {
+        try {
+            MinioFactory.create(endpoint, accessKey, secretKey).removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(unstructuredBucket)
+                            .object(pendingObject)
+                            .build()
+            );
+        } catch (Exception e) {
+            log.warn("임시 업로드 객체 삭제 실패: {}", pendingObject, e);
+        }
+    }
+
     // Minio Upload Multipart API 호출
-    public boolean uploadMultipart(String fileName, InputStream inputStream, String contentType, long size) throws Exception {
+    public boolean uploadMultipart(String objectName, InputStream inputStream, String contentType, long size) throws Exception {
         boolean result = false;
 
         try {
@@ -376,13 +451,13 @@ public class MetaDataManageService {
             minioClient.putObject(
                 PutObjectArgs.builder()
                         .bucket(unstructuredBucket)
-                        .object(fileName)
+                        .object(objectName)
                         .stream(inputStream, size, -1)  // (stream, size, partSize)
                         .contentType(contentType)
                         .build()
             );
 
-            System.out.println(fileName + " success to upload file to minio !!");
+            System.out.println(objectName + " success to upload file to minio !!");
             result = true;
         } catch (MinioException e) {
             e.printStackTrace();

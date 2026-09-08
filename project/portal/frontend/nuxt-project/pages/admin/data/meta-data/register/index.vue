@@ -600,43 +600,45 @@ const onClickSaveButton = async () => {
     if (!await confirmAlert("등록하시겠습니까?")) return
   }
 
-  // 1. event log, 초기 metadata 저장
-  await $ofetch(`/api/metadata/manage/saveFileMetaData`, { method: 'POST', body: body}).then(async (saveRes) => {
-    // event, metadata 저장 성공 시 파일 minio upload
-    if (saveRes && saveRes.data && saveRes.data.saveEventCount && saveRes.data.saveMetadataCount) {
-      const formData = new FormData()
-      formData.append("bucketName", file_location.value)
-      formData.append("file", selected_file.value)
+  // 1. 비정형 파일을 임시 키로 minio 업로드
+  const formData = new FormData()
+  formData.append("bucketName", file_location.value)
+  formData.append("file", selected_file.value)
 
-      // 2. 비정형 파일 minio 업로드
-      await $ofetch(`/api/metadata/manage/uploadFileToMinio`, { method: 'POST', body: formData}).then(async (uploadRes) => {
-        if (uploadRes && uploadRes.data && uploadRes.data.uploadResult) {
-          // 3. MinIO FabricStorage 시스템 수동수집 실행 요청
-          const executeBody = {
-            system_id: system_id.value,
-            qualified_name: system_id.value + "." + file_location.value + "." + meta_name.value,
-          }
-          await $ofetch(`/api/metadata/manage/executeCollect`, { method: 'POST', body: executeBody}).then(async (res) => {
-            if (res && res.data && res.data.executeResult) {
-              await successAlert("비정형 데이터가 등록되었습니다.");
-              goToMetaDataManage()
-            } else {
-              await errorAlert("Fabric Storage 수동 수집에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-            }
-          })
-        } else {
-          errorAlert("파일 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-        }
-      }).catch((err) => {
-        errorAlert("파일 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-        console.log(err)
-      })
-    } else {
-      errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-    }
-  }).catch((err) => {
+  const uploadRes = await $ofetch(`/api/metadata/manage/uploadFileToMinio`, { method: 'POST', body: formData})
+    .catch((err) => {
+      return null
+    })
+
+  if (!uploadRes || !uploadRes.data || !uploadRes.data.uploadResult || !uploadRes.data.uploadToken) {
+    errorAlert("파일 업로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    return
+  }
+
+  body.uploadToken = uploadRes.data.uploadToken
+
+  const saveRes = await $ofetch(`/api/metadata/manage/saveFileMetaData`, { method: 'POST', body: body})
+    .catch((err) => {
+      return null
+    })
+
+  if (!saveRes || !saveRes.data || !saveRes.data.saveEventCount || !saveRes.data.saveMetadataCount) {
     errorAlert("메타데이터 저장에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
-    console.log(err)
+    return
+  }
+
+  // 3. MinIO FabricStorage 시스템 수동수집 실행 요청
+  const executeBody = {
+    system_id: system_id.value,
+    qualified_name: system_id.value + "." + file_location.value + "." + meta_name.value,
+  }
+  await $ofetch(`/api/metadata/manage/executeCollect`, { method: 'POST', body: executeBody}).then(async (res) => {
+    if (res && res.data && res.data.executeResult) {
+      await successAlert("비정형 데이터가 등록되었습니다.");
+      goToMetaDataManage()
+    } else {
+      await errorAlert("Fabric Storage 수동 수집에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    }
   })
 }
 
