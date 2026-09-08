@@ -22,7 +22,7 @@
           </colgroup>
           <tbody>
             <tr>
-              <th>시스템 ID</th>
+              <th>시스템 ID<strong class="required">필수</strong></th>
               <td style="display: flex; align-items: center;">
                 <input type="text" maxlength="36" v-model="currentCollector.system_id"
                   :title="currentCollector.system_id" placeholder="" class="mu-input" :readonly="isDetail || isUpdate">
@@ -37,15 +37,15 @@
                 </button>
               </td>
 
-              <th>Host</th>
+              <th>Host<strong class="required">필수</strong></th>
               <td><input type="text" maxlength="15" v-model="currentCollector.host" :title="currentCollector.host"
                   class="mu-input" :readonly="isDetail"></td>
-              <th>Port</th>
+              <th>Port<strong class="required">필수</strong></th>
               <td><input type="number" min="0" max="65535" maxlength="5" v-model="currentCollector.port"
                   :title="currentCollector.port" class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr>
-              <th>시스템 타입</th>
+              <th>시스템 타입<strong class="required">필수</strong></th>
               <td>
                 <div class="mu-selectbox">
                   <select v-model="currentCollector.system_type" :disabled="isDetail || isUpdate">
@@ -54,9 +54,9 @@
                   </select>
                 </div>
               </td>
-              <th v-if="currentCollector.system_type.toUpperCase().includes('TRINO')">Catalog</th>
+              <th v-if="currentCollector.system_type.toUpperCase().includes('TRINO')">Catalog<strong class="required">필수</strong></th>
               <th v-else-if="currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH')">Protocol</th>
-              <th v-else>Database</th>
+              <th v-else>Database<strong v-if="isDatabaseRequired()" class="required">필수</strong></th>
               <td v-if="currentCollector.system_type.toUpperCase().includes('TRINO')" colspan="3"><input type="text" v-model="currentCollector.catalog" :title="currentCollector.catalog"
                   class="mu-input" :readonly="isDetail">
               </td>
@@ -76,10 +76,10 @@
               </td>
             </tr>
             <tr>
-              <th>시스템 명</th>
+              <th>시스템 명<strong class="required">필수</strong></th>
               <td><input type="text" v-model="currentCollector.system_name" :title="currentCollector.system_name"
                   placeholder="" class="mu-input" :readonly="isDetail"></td>
-              <th>Schema</th>
+              <th>Schema<strong v-if="isSchemaRequired()" class="required">필수</strong></th>
               <td colspan="3"><input type="text" v-model="currentCollector.schema" :title="currentCollector.schema"
                   class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('HIVE')
                   || currentCollector.system_type.toUpperCase().includes('MYSQL')
@@ -93,10 +93,10 @@
                   || currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH')"></td>
             </tr>
             <tr>
-              <th>수집 주기</th>
+              <th>수집 주기<strong class="required">필수</strong></th>
               <td><input type="text" v-model="currentCollector.interval" :title="currentCollector.interval"
                   placeholder="ex) * * * * *" class="mu-input" :readonly="isDetail"></td>
-              <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Access Key' : 'Login' }}</th>
+              <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Access Key' : 'Login' }}<strong v-if="isLoginRequired()" class="required">필수</strong></th>
               <td colspan="3"><input type="text" v-model="currentCollector.login" :title="currentCollector.login"
                   class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')
                     || (currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH') && currentCollector.es_protocol=='http')
@@ -112,7 +112,7 @@
                   </select>
                 </div>
               </td>
-              <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Secret Key' : 'Password' }}</th>
+              <th>{{ currentCollector.system_type.toUpperCase().includes('S3') || currentCollector.system_type.toUpperCase().includes('MINIO') ? 'Secret Key' : 'Password' }}<strong v-if="isPasswordRequired()" class="required">필수</strong></th>
               <td colspan="3"><input type="text" v-model="currentCollector.password" :title="currentCollector.password"
                   class="mu-input" :readonly="isDetail || currentCollector.system_type.toUpperCase().includes('DRUID')
                     || (currentCollector.system_type.toUpperCase().includes('ELASTICSEARCH') && currentCollector.es_protocol=='http')
@@ -396,7 +396,7 @@ watch(() => currentCollector.value.hive_thrift_port, (newVal, oldVal) => {
 
 // 시스템 타입 변동에 따른 처리
 watch(() => currentCollector.value.system_type, (newVal, oldVal) => {
-  
+
   if(currentCollector.value.flag != 'add') return;
 
   // 아무것도 입력하지 않은 경우만 기본값 입력되도록 설정
@@ -524,6 +524,34 @@ const onConfirm = async () => {
   }
 };
 
+const getSystemType = () => currentCollector.value.system_type?.toUpperCase() || '';
+
+const isDatabaseRequired = () => {
+  const type = getSystemType();
+  return !['HIVE', 'MSSQL', 'S3', 'MINIO', 'DRUID', 'TRINO', 'ELASTICSEARCH']
+    .some(item => type.includes(item));
+};
+
+const isSchemaRequired = () => {
+  const type = getSystemType();
+  return !['HIVE', 'MYSQL', 'MARIADB', 'DRUID', 'ORACLE', 'TIBERO', 'S3', 'MINIO', 'TRINO',
+    'ELASTICSEARCH', 'POSTGRES', 'MSSQL'].some(item => type.includes(item));
+};
+
+const isLoginRequired = () => {
+  const type = getSystemType();
+  return !type.includes('DRUID')
+    && !type.includes('TRINO')
+    && !(type.includes('ELASTICSEARCH') && (currentCollector.value.es_protocol === 'http'
+      || currentCollector.value.es_protocol === ''));
+};
+
+const isPasswordRequired = () => {
+  const type = getSystemType();
+  if (props.isUpdate || type.includes('DRUID') || type.includes('TRINO')) return false;
+  return !type.includes('S3') && !type.includes('MINIO');
+};
+
 // 유효성 검사
 const isValidInput = () => {
   // 1. input 입력 여부
@@ -637,7 +665,7 @@ const isValidInput = () => {
   }
 
   // ES의 경우 SSL 파일 업로드 확인
-  if (currentCollector.value.system_type.toUpperCase().includes('ELASTICSEARCH') 
+  if (currentCollector.value.system_type.toUpperCase().includes('ELASTICSEARCH')
     && currentCollector.value.es_protocol == 'https'){
     if(!currentCollector.value.es_ssl_file || currentCollector.value.es_ssl_file == ''){
       errorAlert("SSL 파일을 추가해 주세요.")
