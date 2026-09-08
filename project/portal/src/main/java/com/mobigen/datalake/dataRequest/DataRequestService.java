@@ -32,6 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DataRequestService {
 
+    private static final int DATA_NAME_MAX_LENGTH = 200;
+    private static final int CONTENTS_MAX_LENGTH = 1000;
+    private static final int BENEFIT_CONTENT_MAX_LENGTH = 500;
+
     private final DataRequestMapper dataRequestMapper;
     private final FileMapper fileMapper;
     private final UserMapper userMapper;
@@ -106,6 +110,7 @@ public class DataRequestService {
 
     // 데이터 요청 등록
     public Integer createDataRequest(Map<String, Object> params, HttpServletRequest request) throws Exception {
+        validateDataRequestLengths(params);
         Integer result = 0;
 
         try {
@@ -529,6 +534,7 @@ public class DataRequestService {
 
     // 데이터요청 수정
     public Object updateDataRequest(Map<String, Object> params, List<String> delete_files) throws Exception {
+        validateDataRequestLengths(params);
         if (params.get("contents") != null) {
             params.put("contents", sanitizeCustomHtml(params.get("contents").toString()));
         }
@@ -541,6 +547,19 @@ public class DataRequestService {
             }
         }
         return result;
+    }
+
+    private void validateDataRequestLengths(Map<String, Object> params) {
+        validateMaxLength(params, "data_name", DATA_NAME_MAX_LENGTH, "신청 데이터명");
+        validateMaxLength(params, "contents", CONTENTS_MAX_LENGTH, "신청 내용");
+        validateMaxLength(params, "benefit_content", BENEFIT_CONTENT_MAX_LENGTH, "활용 목적 및 기대효과");
+    }
+
+    private void validateMaxLength(Map<String, Object> params, String key, int maxLength, String fieldName) {
+        Object value = params.get(key);
+        if (value != null && value.toString().length() > maxLength) {
+            throw new IllegalArgumentException(fieldName + "은(는) " + maxLength + "자 이내로 입력해야 합니다.");
+        }
     }
 
     // 활용사례 썸네일 삭제
