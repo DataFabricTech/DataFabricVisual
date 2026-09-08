@@ -2,7 +2,7 @@
   <div>
     <Picker v-model="dateValue" :type="props.type" :range="props.range" :format="dateFormat" value-type="format"
       :confirm="props.confirm" :confirm-text="props.confirmText" :disabled="props.disabled"
-      :placeholder="props.placeholder" :disabledDates="{ predicate: disabledDate }" :lang="props.lang"
+      :placeholder="props.placeholder" :disabledDates="{ predicate: disabledDate }" :locale="ko"
       :minimumView="props.minimumView" @change="emit('change', $event)" />
   </div>
 </template>
@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import Picker from "vue3-datepicker";
 import moment from "moment";
+import { ko } from "date-fns/locale/index.js";
 import { onMounted, computed, ComputedRef, ref, watch } from "vue";
 
 const props = defineProps({

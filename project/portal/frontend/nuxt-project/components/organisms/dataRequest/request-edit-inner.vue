@@ -41,10 +41,11 @@
             <tr>
               <th scope="row">신청데이터명<strong class="required">필수</strong></th>
               <td>
-                <input type="text" placeholder="" v-bind:class="[!dataNameValid ? 'error' : '', 'mu-input']"
-                  title="신청데이터명 입력" v-model="dataRequest.data_name" maxlength="100" :disabled="dataNameDisabled" />
+                <input type="text" placeholder="신청 데이터명은 200자 이내로 입력 가능합니다."
+                  v-bind:class="[!dataNameValid ? 'error' : '', 'mu-input']" title="신청데이터명 입력"
+                  v-model="dataRequest.data_name" maxlength="200" :disabled="dataNameDisabled" />
                 <p v-if="!dataNameValid" class="complete-msg error">
-                  내용을 입력해주세요.
+                  신청 데이터명을 입력해 주세요. (최대 200자)
                 </p>
               </td>
             </tr>
@@ -52,9 +53,10 @@
               <th scope="row">신청 내용<strong class="required">필수</strong></th>
               <td>
                 <textarea rows="5" v-bind:class="[!dataRequestContentValid ? 'error' : '', 'mu-area']"
-                  placeholder="내용을 입력하세요" title="신청 내용 입력 필수" v-model="dataRequest.contents"></textarea>
+                  placeholder="신청 내용은 1,000자 이내로 입력 가능합니다." title="신청 내용 입력 필수"
+                  v-model="dataRequest.contents" maxlength="1000"></textarea>
                 <p v-if="!dataRequestContentValid" class="complete-msg error">
-                  내용을 입력해주세요.
+                  신청 내용을 입력해 주세요. (최대 1,000자)
                 </p>
               </td>
             </tr>
@@ -64,11 +66,11 @@
                 <!-- period-set : 기간 -->
                 <div class="period-set">
                   <date-picker v-model:date="request_start" :disabledMaxDate="request_end" type="datetime"
-                    :clearable="false" :confirm="false" placeholder="시작일" :lang="lang"></date-picker>
+                    :clearable="false" :confirm="false" placeholder="시작일"></date-picker>
                   <span>~</span>
                   <date-picker v-model:date="request_end" :disabledMinDate="request_start" type="datetime"
-                    :clearable="false" :confirm="false" placeholder="종료일" :time-picker-options="timePickerOptions"
-                    :lang="lang"></date-picker>
+                    :clearable="false" :confirm="false" placeholder="종료일"
+                    :time-picker-options="timePickerOptions"></date-picker>
                 </div>
                 <!-- //period-set -->
               </td>
@@ -77,9 +79,10 @@
               <th scope="row">활용 목적 및 기대효과<strong class="required">필수</strong></th>
               <td>
                 <textarea rows="10" v-bind:class="[!benefitContentValid ? 'error' : '', 'mu-area h80']"
-                  placeholder="내용을 입력하세요" title="활용 목적 및 기대효과 입력 필수" v-model="dataRequest.benefit_content"></textarea>
+                  placeholder="활용 목적 및 기대효과는 500자 이내로 입력 가능합니다."
+                  title="활용 목적 및 기대효과 입력 필수" v-model="dataRequest.benefit_content" maxlength="500"></textarea>
                 <p v-if="!benefitContentValid" class="complete-msg error">
-                  내용을 입력해주세요.
+                  활용 목적 및 기대효과를 입력해 주세요. (최대 500자)
                 </p>
               </td>
             </tr>
@@ -118,17 +121,6 @@ import { ref, onMounted, computed, ComputedRef } from "vue";
 
 const emit = defineEmits(["cancelMethod", "saveMethod", "update:dataRequest"]);
 const props = defineProps(["dataRequest", "isUpdate"]);
-
-const lang = {
-  yearFormat: "YYYY",
-  monthFormat: ".MM",
-  days: ["sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-  pickers: ["next 7 days", "next 30 days", "previous 7 days", "previous 30 days"],
-  placeholder: {
-    date: "Select Date",
-    dateRange: "Select Date Range"
-  }
-}
 
 const timePickerOptions = {
   start: "00:00",
@@ -214,19 +206,19 @@ const titleValid: ComputedRef<boolean> = computed(() => {
 const dataNameValid: ComputedRef<boolean> = computed(() => {
   //필수체크
   if (!required_flag.value) return true;
-  else return props.dataRequest.data_name.length > 0 ? true : false;
+  else return props.dataRequest.data_name.length > 0 && props.dataRequest.data_name.length <= 200;
 });
 
 const dataRequestContentValid: ComputedRef<boolean> = computed(() => {
   //필수체크
   if (!required_flag.value) return true;
-  else return props.dataRequest.contents.length > 0 ? true : false;
+  else return props.dataRequest.contents.length > 0 && props.dataRequest.contents.length <= 1000;
 });
 
 const benefitContentValid: ComputedRef<boolean> = computed(() => {
   //필수체크
   if (!required_flag.value) return true;
-  else return props.dataRequest.benefit_content.length > 0 ? true : false;
+  else return props.dataRequest.benefit_content.length > 0 && props.dataRequest.benefit_content.length <= 500;
 });
 
 onMounted(() => {
