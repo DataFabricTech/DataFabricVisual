@@ -35,6 +35,7 @@
     "d3": "^7.4.4",
     "d3-dag": "0.11.3",
     "d3-fetch": "^3.0.1",
+    "date-fns": "^2.30.0",
     "highcharts": "^11.4.3",
     "highcharts-vue": "^2.0.1",
     "jwt-decode": "^4.0.0",
