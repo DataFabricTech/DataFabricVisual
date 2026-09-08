@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -252,7 +253,7 @@ public class MetaDataManageService {
 
         Map<String, Object> essyncParams = new HashMap<>();
         essyncParams.put("metaid", result.remove("essyncMetaId"));
-        essyncParams.put("event_status", 2);
+        essyncParams.put("event_status", result.remove("essyncEventStatus"));
         essyncParams.put("event_name", "데이터 권한설정 변경");
         essyncUpdate(essyncParams);
 
@@ -273,6 +274,12 @@ public class MetaDataManageService {
         String meta_id = metaDataManageMapper.getMetaIdFromQualifiedName(metadata.get("qualified_name").toString());
         if (meta_id != null) {
             isUpdate = true;
+        } else {
+            Object requestedMetaId = metadata.get("meta_id");
+            if (requestedMetaId == null || requestedMetaId.toString().isBlank()) {
+                throw new IllegalArgumentException("신규 파일 메타데이터의 meta_id는 필수입니다.");
+            }
+            meta_id = requestedMetaId.toString();
         }
 
         int event_status = 1;
@@ -282,7 +289,7 @@ public class MetaDataManageService {
         eventParam.put("event_status", event_status); // 0 해지 | 1:발생(생성) | 2: 변경 | 3: 삭제
         eventParam.put("event_name", "비정형 메타 데이터 등록[발생]");
         eventParam.put("event_user_id", user.get("user_id"));
-        eventParam.put("meta_id", isUpdate ? meta_id : metadata.get("meta_id"));
+        eventParam.put("meta_id", meta_id);
         eventParam.put("meta_name", metadata.get("meta_name"));
         eventParam.put("qualified_name", metadata.get("qualified_name"));
         saveEventResult = metaDataManageMapper.saveEvent(eventParam);
@@ -342,6 +349,7 @@ public class MetaDataManageService {
         result.put("saveEventCount", saveEventResult);
         result.put("saveMetadataCount", saveMetadataResult);
         result.put("essyncMetaId", meta_id);
+        result.put("essyncEventStatus", event_status);
 
         return result;
     }
@@ -591,6 +599,7 @@ public class MetaDataManageService {
 
     public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
         Map<String, Object> restResponse = new HashMap<>();
+        String url = esSyncBaseUrl + esSyncUrlUpdate;
 
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -600,10 +609,14 @@ public class MetaDataManageService {
             requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
             requestBody.put("event_name", params.get("event_name"));
 
-            String url = esSyncBaseUrl + esSyncUrlUpdate;
             restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
+        } catch (HttpStatusCodeException e) {
+            log.error("essyncUpdate API 호출 오류 (응답 오류): url={}, metaid={}, event_status={}, event_name={}, status={}, body={}",
+                    url, params.get("metaid"), params.get("event_status"), params.get("event_name"),
+                    e.getStatusCode(), e.getResponseBodyAsString(), e);
         } catch (Exception e) {
-            log.error("essyncUpdate API 호출 오류");
+            log.error("essyncUpdate API 호출 오류: url={}, metaid={}, event_status={}, event_name={}",
+                    url, params.get("metaid"), params.get("event_status"), params.get("event_name"), e);
         }
 
         return restResponse;
