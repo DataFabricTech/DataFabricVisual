@@ -55,25 +55,7 @@
                   <th scope="row">추출 건수</th>
                   <td>
                     <div class="mu-item-group">
-                      <div class="mu-radio">
-                        <input id="fileExtractLimitDefault" type="radio" value="default" v-model="fileExtractLimitType" />
-                        <label for="fileExtractLimitDefault"><span>1,000건</span></label>
-                      </div>
-                      <div class="mu-radio">
-                        <input id="fileExtractLimitCustom" type="radio" value="custom" v-model="fileExtractLimitType" />
-                        <label for="fileExtractLimitCustom"><span>직접 입력</span></label>
-                      </div>
-                      <div class="w200" v-if="fileExtractLimitType == 'custom'">
-                        <input
-                          type="number"
-                          min="1"
-                          max="1000"
-                          class="mu-input"
-                          placeholder="1~1,000건을 입력하세요."
-                          title="일반 파일 추출 건수 입력"
-                          @input="validateFileExtractLimit"
-                          v-model="fileExtractLimit" />
-                      </div>
+                      <span>1,000건</span>
                     </div>
                   </td>
                 </tr>
@@ -100,7 +82,7 @@
                     </div>
                   </td>
                 </tr>
-                <tr v-if="currentExtractTab == 2">
+                <tr v-if="currentExtractTab == 1">
                   <th scope="row">추출 건수</th>
                   <td>
                     <div class="mu-item-group">
@@ -265,8 +247,6 @@ const currentTab = ref(0); // API 현재 탭
 const extractLimitTypeList = ref(["all", "custom"])
 const extractLimitType = ref("all")
 const extractLimit = ref(1000);
-const fileExtractLimitType = ref("default");
-const fileExtractLimit = ref(1000);
 
 const sortColumn = ref(""); // 대용량 데이터 추출 정렬 컬럼
 const sortDirection = ref("DESC"); // 정렬 방향 (DESC: 최신순, ASC: 오래된순)
@@ -955,7 +935,7 @@ const onClickFileEliminateButton = async () => {
   }
 
   if (currentExtractTab.value == 0) { // 일반 데이터 추출
-    params.limit = fileExtractLimitType.value == 'custom' ? Number(fileExtractLimit.value) : 1000
+    params.limit = 1000
 
     let historyParams = {
       meta_id: meta_id,
@@ -1067,23 +1047,11 @@ const validateInput = () => {
   }
 }
 
-const validateFileExtractLimit = () => {
-  const limit = Number(fileExtractLimit.value);
-
-  if (!limit || limit < 1) {
-    fileExtractLimit.value = 1;
-  } else if (limit > 1000) {
-    fileExtractLimit.value = 1000;
-  }
-}
-
 // 모달 닫기
 const close = () => {
   columnUpdateIndex.value = [];
   sortColumn.value = "";
   sortDirection.value = "DESC";
-  fileExtractLimitType.value = "default";
-  fileExtractLimit.value = 1000;
   emit("onCloseModal");
 };
 
