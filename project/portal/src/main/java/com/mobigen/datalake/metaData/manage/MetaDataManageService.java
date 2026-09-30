@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -232,12 +233,17 @@ public class MetaDataManageService {
 
     // 수집 파일 중복확인
     public Object metaQualifiedNameDupCheck(String qualified_name) throws Exception {
-        Integer cnt = metaDataManageMapper.metaQualifiedNameDupCheck(qualified_name);
+        Integer cnt = metaDataManageMapper.metaQualifiedNameDupCheck(normalizeToNfc(qualified_name));
         if (cnt == 0) {
             return true;
         } else {
             return false;
         }
+    }
+
+    // macOS 등 클라이언트가 NFD(자모 분해형)로 넘기는 파일명을 metadata_collector와 동일한 NFC로 통일
+    private static String normalizeToNfc(String value) {
+        return value == null ? null : Normalizer.normalize(value, Normalizer.Form.NFC);
     }
 
     public Map<String, Object> saveFileMetaData(Map<String, Object> metadata, Map<String, Object> user,
@@ -267,6 +273,10 @@ public class MetaDataManageService {
         Integer saveEventResult = 0; // event log 저장 성공 여부
         Integer saveMetadataResult = 0; // 메타데이터 테이블 저장 성공 여부
         boolean isUpdate = false; // 비정형 데이터 파일 중복 등록 여부
+
+        // metadata_collector(NFC 정규화)와 동일한 기준으로 맞춰야 같은 파일이 중복 등록되지 않음
+        metadata.put("meta_name", normalizeToNfc((String) metadata.get("meta_name")));
+        metadata.put("qualified_name", normalizeToNfc((String) metadata.get("qualified_name")));
 
         Map<String, Object> eventParam = new HashMap<>();
         eventParam.put("event_type", 0); // 메타데이터 이벤트: 0 | 시스템 이벤트: 1
@@ -360,7 +370,8 @@ public class MetaDataManageService {
 
         MultipartFile uploadFile = file.getFile();
         String uploadToken = UUID.randomUUID().toString();
-        String pendingObject = PENDING_OBJECT_PREFIX + uploadToken + "/" + uploadFile.getOriginalFilename();
+        String originalFilename = normalizeToNfc(uploadFile.getOriginalFilename());
+        String pendingObject = PENDING_OBJECT_PREFIX + uploadToken + "/" + originalFilename;
 
         try (InputStream is = uploadFile.getInputStream()) {
             uploadResult = this.uploadMultipart(
