@@ -41,6 +41,20 @@ public class MetaDataFusionController {
     }
 
     /**
+     * 데이터 융합 관리 > 융합 추천 테이블 조회
+     *
+     * @params Object 기준 테이블 meta_id, topN
+     * @return Object 추천 테이블 목록(조인 키 포함) 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/recommend")
+    public Object getFusionRecommend(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        param.put("userId", user.get("user_id"));
+        return metaDataFusionService.getFusionRecommend(param);
+    }
+
+    /**
      * 데이터 융합 관리 > 생성된 융합 뷰 목록 조회
      *
      * @params Object 검색 조건, 페이징 정보

@@ -13,6 +13,9 @@ public interface MetaDataFusionMapper {
     // 메타 데이터 목록 count
     int getMetaDataFusionListTotCnt(Map<String, Object> params) throws Exception;
 
+    // 융합 추천 결과의 메타 상세 보강 (권한 필터 승계). params: userId, metaIds(String[])
+    List<Map<String, Object>> getMetaDataFusionByIds(Map<String, Object> params) throws Exception;
+
     // 데이터 융합 관리 > 생성된 융합 뷰 목록
     List<Map<String, Object>> getFusionViewList(Map<String, Object> params) throws Exception;
 
