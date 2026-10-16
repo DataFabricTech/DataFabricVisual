@@ -28,10 +28,11 @@
                   <div class="table-scroll max-h300">
                     <table class="mu-grid mu-grid-data mu-grid-narrow">
                       <colgroup>
-                        <col style="width: 10%" />
-                        <col style="width: 35%" />
+                        <col style="width: 8%" />
+                        <col style="width: 27%" />
                         <col style="width: 25%" />
                         <col style="width: 10%" />
+                        <col style="width: 15%" />
                         <col style="width: 15%" />
                       </colgroup>
                       <thead>
@@ -48,10 +49,15 @@
                           <th scope="col">데이터 명</th>
                           <th scope="col">상세</th>
                           <th scope="col">선택</th>
+                          <th scope="col">쿼리</th>
                         </tr>
                       </thead>
                       <tbody v-if="currentFusionList && currentFusionList.length > 0">
-                        <tr v-for="(fusion, index) in currentFusionList" :key="index">
+                        <tr
+                          v-for="(fusion, index) in currentFusionList"
+                          :key="index"
+                          :class="{ 'fusion-row-base': currentMetaDataInfo.meta_id === fusion.meta_id }"
+                        >
                           <td>
                             <div class="mu-checkbox">
                               <input
@@ -129,15 +135,30 @@
                             </div>
                           </td>
                           <td>
-                            <button type="button" class="mu-btn mu-btn-sm" @click="selectFusion(fusion)">
+                            <button
+                              type="button"
+                              class="mu-btn mu-btn-sm"
+                              title="기준 데이터로 지정 — 컬럼 정보와 융합 추천을 조회합니다"
+                              @click="selectFusion(fusion)"
+                            >
                               <span>선택</span>
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              class="mu-btn mu-btn-sm"
+                              title="쿼리 편집기에 이 데이터의 ID 를 넣습니다"
+                              @click="onInsertQuery(fusion)"
+                            >
+                              <span>쿼리</span>
                             </button>
                           </td>
                         </tr>
                       </tbody>
                       <tbody v-else>
                         <tr>
-                          <td colspan="5">
+                          <td colspan="6">
                             <p class="fusion-nodata">데이터를 선택해 주세요</p>
                           </td>
                         </tr>
@@ -162,7 +183,13 @@
                   </div>
                 </div>
                 <div class="code-box" style="height: 300px">
-                  <MonacoEditor v-model="query" lang="sql" :options="editorOptions" style="height: 100%" />
+                  <MonacoEditor
+                    v-model="query"
+                    lang="sql"
+                    :options="editorOptions"
+                    style="height: 100%"
+                    @load="onQueryEditorLoad"
+                  />
                 </div>
               </div>
             </div>
@@ -210,6 +237,153 @@
                   </table>
                 </div>
               </div>
+              <div class="mu-col mu-col">
+                <div class="mu-heading" style="display: flex; justify-content: space-between">
+                  <h4>융합 추천</h4>
+                  <div class="mu-item-group">
+                    <div class="mu-selectbox w120">
+                      <select v-model="recommendTopN" @change="onChangeRecommendTopN()">
+                        <option :value="5">Top 5</option>
+                        <option :value="10">Top 10</option>
+                        <option :value="20">Top 20</option>
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      class="mu-btn mu-btn-sm"
+                      :disabled="!recommendBase.meta_id"
+                      @click="refreshRecommend()"
+                    >
+                      <span>새로고침</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="mu-btn mu-btn-sm mu-btn-primary"
+                      :disabled="recommendCheckedCount === 0"
+                      @click="onAddRecommended()"
+                    >
+                      <span>선택 추가{{ recommendCheckedCount > 0 ? ` (${recommendCheckedCount})` : "" }}</span>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <b style="font-size: 17px">
+                    기준: {{ recommendBase.meta_name ? recommendBase.meta_name : "-" }}
+                  </b>
+                </div>
+                <div class="table-scroll max-h300">
+                  <table class="mu-grid mu-grid-data mu-grid-narrow">
+                    <colgroup>
+                      <col style="width: 8%" />
+                      <col style="width: 7%" />
+                      <col style="width: 34%" />
+                      <col style="width: 27%" />
+                      <col style="width: 12%" />
+                      <col style="width: 12%" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col"><span class="blind">선택</span></th>
+                        <th scope="col">순위</th>
+                        <th scope="col">데이터 명</th>
+                        <th scope="col">조인 키</th>
+                        <th scope="col">점수</th>
+                        <th scope="col">근거</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="recommendState === 'ok' && recommendList.length > 0">
+                      <tr v-for="(rec, recIdx) in recommendList" :key="rec.meta_id">
+                        <td>
+                          <div class="mu-checkbox" v-if="!isRecommendApplied(rec)">
+                            <input
+                              :id="'rec-' + rec.meta_id"
+                              type="checkbox"
+                              :checked="recommendChecked.has(rec.meta_id)"
+                              @change="toggleRecommendCheck(rec)"
+                            />
+                            <label :for="'rec-' + rec.meta_id"><span class="blind">행선택</span></label>
+                          </div>
+                          <em v-else class="fusion-rec-applied">담김</em>
+                        </td>
+                        <td>{{ rec.rank }}</td>
+                        <td :title="rec.description ? rec.description : rec.meta_name">{{ rec.meta_name }}</td>
+                        <td :title="joinKeyTitle(rec)">
+                          <span>{{ joinKeyText(rec) }}</span>
+                          <em v-if="rec.join_keys && rec.join_keys.length > 1" class="fusion-rec-more">
+                            +{{ rec.join_keys.length - 1 }}
+                          </em>
+                          <em v-if="hasKnownJoinKey(rec)" class="fusion-rec-known">실사용</em>
+                        </td>
+                        <td>{{ rec.score != null ? Number(rec.score).toFixed(2) : "-" }}</td>
+                        <td>
+                          <div class="mu-tooltip-icon">
+                            <i
+                              class="mu-icon-svg view"
+                              @mouseover="showRecTooltip(recIdx)"
+                              @mouseleave="hideRecTooltip()"
+                            ></i>
+                            <div
+                              class="mu-tooltip arrow-ct w400"
+                              v-if="recTooltipIndex === recIdx"
+                              :style="{
+                                position: 'fixed',
+                                left: mouseX - 325 + 'px',
+                                top: mouseY + 'px',
+                                'z-index': 9999
+                              }"
+                            >
+                              <div class="mu-tooltip-inner">
+                                <div class="data-info2">
+                                  <dl>
+                                    <dt>추천 근거</dt>
+                                    <dd>{{ dash(rec.reason) }}</dd>
+                                  </dl>
+                                  <dl>
+                                    <dt>시스템</dt>
+                                    <dd>{{ dash(rec.system_name) }}</dd>
+                                  </dl>
+                                  <dl v-for="(key, keyIdx) in rec.join_keys" :key="keyIdx">
+                                    <dt>{{ key.left }} = {{ key.right }}</dt>
+                                    <dd>
+                                      신뢰도 {{ num(key.confidence) }} · 타입일치 {{ key.type_match ? "O" : "X" }} ·
+                                      값겹침 {{ num(key.value_overlap) }} · 카디널리티 {{ dash(key.cardinality) }}
+                                      <template v-if="key.known"> · 실사용 이력</template>
+                                    </dd>
+                                  </dl>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="6">
+                          <p class="fusion-nodata" v-if="recommendState === 'idle'">
+                            융합 데이터 정보에서 기준 데이터를 [선택] 해 주세요.
+                          </p>
+                          <div class="fusion-rec-loading" v-else-if="recommendState === 'loading'">
+                            <span class="loader"></span>
+                            <p>추천을 불러오는 중입니다.</p>
+                          </div>
+                          <p class="fusion-nodata" v-else-if="recommendState === 'empty'">
+                            융합 가능한 데이터를 찾지 못했습니다.
+                          </p>
+                          <p class="fusion-nodata" v-else>
+                            {{ recommendReason ? recommendReason : "추천을 가져오지 못했습니다." }}
+                            <button type="button" class="mu-btn mu-btn-sm" @click="refreshRecommend()">
+                              <span>다시 시도</span>
+                            </button>
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="mu-row gap">
               <div class="mu-col mu-col">
                 <div class="mu-heading" style="display: flex; justify-content: space-between">
                   <h4>실행 결과</h4>
@@ -951,8 +1125,37 @@ const editorOptions = {
   wordWrap: "on" // 자동 줄바꿈
 };
 
+// 쿼리 편집기 인스턴스. [쿼리] 버튼이 커서 위치에 넣기 위해 필요하다.
+// nuxt-monaco-editor 가 @load 로 monaco editor 를 넘겨준다.
+const queryEditor = shallowRef(null);
+
 const currentMetaDataInfo = ref({});
 const currentMetaColumns = ref([]);
+
+// ── 융합 추천 ──
+// 기준 테이블은 항상 1개다. 목록의 체크박스(selectedFusionList)는 삭제용이고,
+// 추천 기준은 행의 [선택] 버튼(selectFusion)이 정한다.
+const recommendBase = ref({}); // 추천 기준 테이블
+const recommendList = ref([]); // 추천 결과 (서버가 준 순서를 바꾸지 않는다)
+const recommendChecked = ref(new Set()); // 체크된 meta_id — 모달의 staged 와 같은 역할
+// 화면 기본값은 5다. 패널이 둘째 행에 들어가 높이가 제한적이고, 실사용에서 상위 몇 건만
+// 보면 충분하다. 성능평가는 화면 설정과 무관하게 항상 topN=10 으로 호출한다(계획서 §4.2).
+const recommendTopN = ref(5);
+const recommendState = ref("idle"); // idle | loading | ok | empty | error
+const recommendReason = ref("");
+const recTooltipIndex = ref(null);
+const recommendCheckedCount = computed(() => recommendChecked.value.size);
+
+// [선택] 은 컬럼 정보를 보려고 자주 누르는 버튼이다. 그때마다 5~10초짜리 추천을 다시
+// 호출하면 쓰기 어려우므로 기준별로 캐시한다. 키에 topN 을 넣는 이유는 Top-N 을 바꾸면
+// 결과가 달라지기 때문이다. 데이터가 바뀐 경우는 [새로고침] 이 캐시를 우회한다.
+const recommendCache = new Map();
+// 늦게 도착한 응답이 현재 기준의 결과를 덮어쓰지 않게 한다
+// (A 선택 5초 → B 선택 3초 → B 표시 후 A 응답 도착 → 기준 B 에 A 의 추천이 뜨는 문제).
+let recommendSeq = 0;
+// 목록을 빠르게 훑을 때 중간 호출을 내보내지 않는다.
+let recommendTimer = null;
+const RECOMMEND_DEBOUNCE_MS = 300;
 
 const executeQueryStatus = ref(0); // 실행 결과 1: 성공, 2: 실패
 const executeErrorMessage = ref("");
@@ -1130,7 +1333,6 @@ const allTagList = ref([]);
 const tags = ref([]);
 
 // 융합 데이터 선택 시 말풍선
-const selectedIndex = ref(null);
 const selectedColumnIndex = ref(null);
 
 // 메타데이터 ID 값 변동에 따라 중복확인 다시 하도록 설정
@@ -1402,8 +1604,10 @@ const deleteFusion = () => {
   // 모달 항목
   checkedList.value = currentFusionList.value.map((item) => item.meta_id);
   // 컬럼 정보
-  if (!currentFusionList.value.some((el) => el.meta_id === currentMetaDataInfo.value.meta_id))
+  if (!currentFusionList.value.some((el) => el.meta_id === currentMetaDataInfo.value.meta_id)) {
     currentMetaDataInfo.value = {};
+    resetRecommend();
+  }
 };
 
 const refreshFusion = () => {
@@ -1412,7 +1616,7 @@ const refreshFusion = () => {
   selectedFusionList.value = [];
   checkedList.value = [];
   currentMetaDataInfo.value = {};
-  selectedIndex.value = null;
+  resetRecommend();
 };
 
 const selectFusion = (item) => {
@@ -1424,11 +1628,220 @@ const selectFusion = (item) => {
     currentMetaColumns.value = [];
   }
 
-  const meta_id = item.meta_id ? item.meta_id : "-";
-  let codeContent = `"${meta_id}"`;
-
-  query.value += codeContent;
+  // 쿼리 삽입은 여기서 하지 않는다. [선택] 은 컬럼 정보를 보려고 자주 누르는 버튼이라
+  // 누를 때마다 편집기에 ID 가 쌓였다. 삽입은 의도가 분명한 [쿼리] 버튼으로 분리했다(§3.3.8).
+  // 추천 조회는 비동기로 붙인다. 응답이 5~10초라 기다리게 하면 안 된다 —
+  // 컬럼 정보는 위에서 이미 끝났다.
+  getFusionRecommend(item);
 };
+
+const onQueryEditorLoad = (editor) => {
+  queryEditor.value = editor;
+};
+
+/**
+ * 쿼리 편집기의 **커서 위치**에 텍스트를 넣는다.
+ * 끝에 붙이면 쿼리를 쓰다가 중간에 표나 UDF 를 끼워넣을 수 없어 불편하다.
+ * [쿼리] 버튼과 UDF 적용이 공유한다 — 삽입 규칙이 두 곳으로 갈라지지 않게.
+ *
+ * @param padLeft 커서 바로 앞이 글자면 한 칸 띄운다 (UDF 스니펫용)
+ */
+const insertIntoQuery = (text: string, padLeft = false) => {
+  const editor = queryEditor.value;
+
+  // 에디터가 아직 준비되지 않았으면 기존처럼 끝에 붙인다.
+  if (!editor) {
+    query.value += (padLeft && query.value && !query.value.endsWith(" ") ? " " : "") + text;
+    return;
+  }
+
+  // 선택 영역이 있으면 그 자리를 대체한다(붙여넣기와 같은 동작).
+  const selection = editor.getSelection();
+  const range = selection || { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 };
+
+  let payload = text;
+  if (padLeft) {
+    const model = editor.getModel();
+    const before = model
+      ? model.getValueInRange({
+          startLineNumber: range.startLineNumber,
+          startColumn: 1,
+          endLineNumber: range.startLineNumber,
+          endColumn: range.startColumn
+        })
+      : "";
+    // 커서 앞이 글자일 때만 띄운다. 줄 시작이나 공백 뒤면 그대로 넣는다.
+    if (before && !/\s$/.test(before)) payload = " " + text;
+  }
+
+  // pushUndoStop 으로 감싸서 Ctrl+Z 한 번에 되돌려지게 한다.
+  editor.pushUndoStop();
+  editor.executeEdits("fusion-insert", [{ range, text: payload, forceMoveMarkers: true }]);
+  editor.pushUndoStop();
+  editor.focus();
+};
+
+// 쿼리 편집기에 데이터 ID 를 넣는다. 기준 지정([선택])과 분리된 별개 동작이다(§3.3.8).
+const onInsertQuery = (item) => {
+  const meta_id = item && item.meta_id ? item.meta_id : "-";
+  insertIntoQuery(`"${meta_id}"`);
+};
+
+// ── 융합 추천 ──
+
+const resetRecommend = () => {
+  if (recommendTimer) {
+    clearTimeout(recommendTimer);
+    recommendTimer = null;
+  }
+  recommendSeq++; // 진행 중 응답이 빈 화면을 덮어쓰지 않게
+  recommendBase.value = {};
+  recommendList.value = [];
+  recommendChecked.value = new Set();
+  recommendState.value = "idle";
+  recommendReason.value = "";
+  recTooltipIndex.value = null;
+};
+
+const recommendCacheKey = (metaId) => `${metaId}|${recommendTopN.value}`;
+
+const getFusionRecommend = (base, force = false) => {
+  if (recommendTimer) {
+    clearTimeout(recommendTimer);
+    recommendTimer = null;
+  }
+  if (!base || !base.meta_id) {
+    resetRecommend();
+    return;
+  }
+
+  // 기준이 바뀌면 이전 기준의 체크는 버린다. 섞이면 무엇을 담는지 알 수 없다.
+  recommendBase.value = base;
+  recommendChecked.value = new Set();
+  recTooltipIndex.value = null;
+
+  // 진행 중인 요청을 무효화한다 (아래 mySeq 비교).
+  const mySeq = ++recommendSeq;
+
+  const cached = force ? null : recommendCache.get(recommendCacheKey(base.meta_id));
+  if (cached) {
+    recommendList.value = cached.list;
+    recommendReason.value = cached.reason;
+    recommendState.value = cached.state;
+    return;
+  }
+
+  recommendList.value = [];
+  recommendReason.value = "";
+  recommendState.value = "loading";
+
+  recommendTimer = setTimeout(() => {
+    recommendTimer = null;
+    fetchFusionRecommend(base, mySeq);
+  }, RECOMMEND_DEBOUNCE_MS);
+};
+
+const fetchFusionRecommend = async (base, mySeq) => {
+  const key = recommendCacheKey(base.meta_id);
+  let next = { list: [], state: "error", reason: "" };
+
+  try {
+    const res = await $ofetch(`/api/metadata/fusion/recommend`, {
+      method: "POST",
+      body: { meta_id: base.meta_id, topN: recommendTopN.value }
+    });
+    const data = res && !res.errorMessage ? res.data : null;
+    if (!data || data.status === "error") {
+      next.reason = data && data.reason ? data.reason : "";
+    } else {
+      const list = ObjectUtils.getPropertyValue(data, "list", []);
+      // attributes 는 JSON 문자열로 온다. 모달 목록(onSearchMetaList)과 동일하게 파싱해야
+      // [선택 추가] 후 selectFusion 의 attributes.columns 가 동작한다.
+      next.list = list.map((el: { [key: string]: any }) => {
+        return {
+          ...el,
+          attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
+        };
+      });
+      // 결과 0건과 호출 실패는 다른 상태다. 평가에서 "빈 결과 반환 여부"를 따로 보고한다.
+      next.state = next.list.length > 0 ? "ok" : "empty";
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  // 실패도 캐시한다. 실패한 기준을 다시 누를 때마다 15초 타임아웃을 또 기다릴 이유가 없다.
+  // 다시 시도하려면 [새로고침] / [다시 시도] 를 쓴다(force).
+  recommendCache.set(key, next);
+
+  // 그 사이에 기준이 바뀌었으면 화면에 반영하지 않는다. 캐시에만 남긴다.
+  if (mySeq !== recommendSeq) return;
+
+  recommendList.value = next.list;
+  recommendReason.value = next.reason;
+  recommendState.value = next.state;
+};
+
+// Top-N 변경 — 캐시 키가 달라지므로 우회할 필요가 없다. 되돌리면 캐시가 다시 쓰인다.
+const onChangeRecommendTopN = () => {
+  if (recommendBase.value && recommendBase.value.meta_id) getFusionRecommend(recommendBase.value);
+};
+
+// [새로고침] / [다시 시도] — 캐시를 우회한다.
+const refreshRecommend = () => {
+  if (recommendBase.value && recommendBase.value.meta_id) getFusionRecommend(recommendBase.value, true);
+};
+
+const isRecommendApplied = (rec) => currentFusionList.value.some((el) => el.meta_id === rec.meta_id);
+
+const toggleRecommendCheck = (rec) => {
+  const next = new Set(recommendChecked.value);
+  if (next.has(rec.meta_id)) next.delete(rec.meta_id);
+  else next.add(rec.meta_id);
+  recommendChecked.value = next;
+};
+
+// 체크 즉시 반영이 아니다. 모달의 [확인] 과 같은 "모아 두고 확정" 방식을 따른다.
+const onAddRecommended = () => {
+  const applied = new Set(currentFusionList.value.map((el) => el.meta_id));
+  const added = recommendList.value.filter(
+    (rec) => recommendChecked.value.has(rec.meta_id) && !applied.has(rec.meta_id)
+  );
+  if (added.length === 0) return;
+
+  // 추천 행은 이미 융합 목록 행과 같은 필드를 갖고 있다(백엔드가 보강해 준다).
+  // 쿼리 편집기는 건드리지 않는다 — 쿼리는 사용자가 직접 작성한다.
+  currentFusionList.value = [...currentFusionList.value, ...added.map((rec) => ({ ...rec }))];
+  checkedList.value = currentFusionList.value.map((item) => item.meta_id);
+
+  // 체크를 풀면 해당 행은 [담김] 으로 바뀐다. 목록에서 지우지 않는 이유는
+  // 쿼리를 직접 쓸 때 조인 키를 계속 봐야 하기 때문이다.
+  recommendChecked.value = new Set();
+};
+
+const showRecTooltip = (index) => {
+  recTooltipIndex.value = index;
+};
+
+const hideRecTooltip = () => {
+  recTooltipIndex.value = null;
+};
+
+const dash = (v) => (v === null || v === undefined || v === "" ? "-" : v);
+const num = (v) => (v === null || v === undefined ? "-" : Number(v).toFixed(2));
+
+const joinKeyText = (rec) => {
+  if (!rec.join_keys || rec.join_keys.length === 0) return "-";
+  const k = rec.join_keys[0];
+  return `${k.left} = ${k.right}`;
+};
+
+const joinKeyTitle = (rec) => {
+  if (!rec.join_keys || rec.join_keys.length === 0) return "";
+  return rec.join_keys.map((k) => `${k.left} = ${k.right} (${num(k.confidence)})`).join("\n");
+};
+
+const hasKnownJoinKey = (rec) => !!(rec.join_keys && rec.join_keys.some((k) => k.known));
 
 const showTooltip = (index) => {
   show.value = true;
@@ -1514,9 +1927,12 @@ const resetQuery = async () => {
   execute_start_time.value = "-";
 };
 
-const onUdfInsert = (snippet: string) => {
-  query.value += (query.value && !query.value.endsWith(" ") ? " " : "") + snippet;
+const onUdfInsert = async (snippet: string) => {
+  // 모달을 먼저 닫고 DOM 이 정리된 뒤에 넣는다. 그래야 editor.focus() 가
+  // 모달 쪽으로 다시 빼앗기지 않는다.
   visibleUdfModal.value = false;
+  await nextTick();
+  insertIntoQuery(snippet, true);
 };
 
 const onRightButton = (column_name: string, e: MouseEvent) => {
@@ -1917,6 +2333,58 @@ const comman = (val) => {
 };
 </script>
 <style scoped>
+/* ── 융합 추천 ── */
+/* 기준 행 강조 — 추천 10건이 어느 테이블 기준인지 목록에서도 알 수 있어야 한다 */
+.fusion-row-base {
+  background-color: #eef4ff !important;
+  box-shadow: inset 3px 0 0 #2f6fed;
+}
+
+.fusion-rec-applied {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 3px;
+  background-color: #e8e9ee;
+  color: #5c5e66;
+  font-size: 11px;
+  font-style: normal;
+}
+
+.fusion-rec-more,
+.fusion-rec-known {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 5px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-style: normal;
+}
+
+.fusion-rec-more {
+  background-color: #e8e9ee;
+  color: #5c5e66;
+}
+
+/* 과거 융합 뷰에서 실제로 쓰인 조인 키 (join_keys[].known) */
+.fusion-rec-known {
+  background-color: #064;
+  color: #fff;
+}
+
+.fusion-rec-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.fusion-rec-loading p {
+  margin-top: 24px;
+  color: #95969c;
+  font-size: 16px;
+}
+
 .scroll-box {
   max-height: 400px; /* 스크롤 높이 제한 */
   overflow-y: auto; /* 세로 스크롤 활성화 */
