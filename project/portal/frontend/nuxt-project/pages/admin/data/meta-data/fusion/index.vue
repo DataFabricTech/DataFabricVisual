@@ -71,7 +71,7 @@
                               </label>
                             </div>
                           </td>
-                          <td :title="fusion.description ? fusion.description : '-'">
+                          <td class="fusion-cell-ellipsis" :title="fusion.description ? fusion.description : '-'">
                             {{ fusion.description ? fusion.description : "-" }}
                           </td>
                           <td :title="fusion.meta_name ? fusion.meta_name : '-'">
@@ -2333,6 +2333,17 @@ const comman = (val) => {
 };
 </script>
 <style scoped>
+/* 긴 데이터 설명이 여러 줄로 늘어나 행 높이를 키우는 것을 막는다.
+   잘라내는 게 아니라 표시만 줄이는 것이라 전체 내용은 그대로 남아 있다 —
+   셀의 title 툴팁과 [상세] ⓘ 툴팁에서 전문을 볼 수 있다.
+   (table 에 table-layout:fixed + colgroup 폭이 지정돼 있어 ellipsis 가 동작한다) */
+.fusion-cell-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left; /* 생략부호가 오른쪽 끝에 붙도록. 가운데 정렬이면 양끝이 잘려 읽기 나쁘다 */
+}
+
 /* ── 융합 추천 ── */
 /* 기준 행 강조 — 추천 10건이 어느 테이블 기준인지 목록에서도 알 수 있어야 한다 */
 .fusion-row-base {
