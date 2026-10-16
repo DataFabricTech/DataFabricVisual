@@ -689,7 +689,9 @@
                               <label :for="'check_' + item.meta_id"><span class="blind">행선택</span></label>
                             </div>
                           </td>
-                          <td>{{ item.description }}</td>
+                          <td class="fusion-cell-ellipsis" :title="item.description ? item.description : '-'">
+                            {{ item.description }}
+                          </td>
                           <td>{{ item.meta_name }}</td>
                           <td>{{ item.system_name }}</td>
                           <td>{{ item.meta_type }}</td>
