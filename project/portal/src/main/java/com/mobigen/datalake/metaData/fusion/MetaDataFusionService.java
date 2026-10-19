@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -56,6 +57,24 @@ public class MetaDataFusionService {
     @Value("${properties.dataintegration.url.udf.drop}")
     private String dataIntegrationUrlUdfDrop;
 
+    @Value("${properties.recommender.base_url}")
+    private String recommenderBaseUrl;
+
+    @Value("${properties.recommender.url.fusion}")
+    private String recommenderFusionUrl;
+
+    @Value("${properties.recommender.url.viewLineage}")
+    private String recommenderViewLineageUrl;
+
+    /** 추천 엔진에 요청할 여유분. 융합 뷰가 섞여 와도 topN 을 채우기 위해 더 받는다(계획서 §3.7).
+     *  응답 시간은 topN 과 무관해서(실측: topN=30 ≈ topN=10) 과요청 비용이 없다. */
+    private static final int RECOMMEND_OVERFETCH = 10;
+    private static final int RECOMMEND_CONNECT_TIMEOUT_MS = 3000;
+    /** 실측 응답이 4.8~10.6초다(계획서 §3.6). 10s 로 두면 느린 기준 테이블에서 실패한다. */
+    private static final int RECOMMEND_READ_TIMEOUT_MS = 15000;
+    /** 계보 파싱은 뷰 한 건이라 짧지만, 조회 테이블 적재(_load_lookups)가 함께 돈다. */
+    private static final int VIEW_LINEAGE_READ_TIMEOUT_MS = 30000;
+
 
     // 데이터 융합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataFusionList(Map<String, Object> params) throws Exception {
@@ -83,6 +102,174 @@ public class MetaDataFusionService {
         result.put("list", resultList);
 
         return result;
+    }
+
+    // 데이터 융합 관리 > 융합 추천 테이블 조회
+    public Map<String, Object> getFusionRecommend(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        result.put("status", "ok");
+        result.put("list", list);
+        result.put("totalCount", 0);
+
+        String metaId = params.get("meta_id") == null ? null : params.get("meta_id").toString();
+        if (metaId == null || metaId.trim().isEmpty()) {
+            result.put("status", "error");
+            result.put("reason", "기준 데이터가 지정되지 않았습니다.");
+            return result;
+        }
+        int topN = params.get("topN") == null ? 10 : Integer.parseInt(params.get("topN").toString());
+
+        // 1. 추천 엔진 호출
+        List<Map<String, Object>> recs = null;
+        try {
+            recs = callFusionRecommend(metaId, topN + RECOMMEND_OVERFETCH);
+        } catch (Exception e) {
+            // 추천은 보조 기능이다. 실패해도 융합 관리 본 기능은 계속 쓸 수 있어야 하므로
+            // 예외를 올리지 않고 사유만 돌려준다.
+            log.error("fail to get fusion recommend - base={} {}", metaId, e.getMessage());
+            result.put("status", "error");
+            result.put("reason", "추천을 가져오지 못했습니다.");
+            return result;
+        }
+
+        // 2. 융합 뷰 제외 — 융합 결과물을 다시 융합 후보로 내보내지 않는다(계획서 §3.7).
+        //    융합 시스템 id 는 코드 테이블에서 런타임에 결정된다. 환경마다 달라서 하드코딩하지 않는다.
+        String fusionSystemId = null;
+        try {
+            fusionSystemId = getFusionCatalog();
+        } catch (Exception e) {
+            log.warn("fusion system info not found - 융합 뷰 제외를 건너뜁니다. {}", e.getMessage());
+        }
+
+        int fusionViewFiltered = 0;
+        List<Map<String, Object>> candidates = new ArrayList<Map<String, Object>>();
+        List<String> candidateIds = new ArrayList<String>();
+        for (int i = 0; i < recs.size(); i++) {
+            Map<String, Object> rec = recs.get(i);
+            String systemId = rec.get("system_id") == null ? "" : rec.get("system_id").toString();
+            if (fusionSystemId != null && fusionSystemId.equals(systemId)) {
+                fusionViewFiltered++;
+                continue;
+            }
+            candidates.add(rec);
+            candidateIds.add(rec.get("meta_id") == null ? "" : rec.get("meta_id").toString());
+        }
+
+        // 3. 메타 상세 보강 — 융합 데이터 정보 목록 행과 같은 필드 모양을 얻고, 권한 필터를 승계한다.
+        //    추천 엔진은 PG 를 직접 조회해 포털 권한을 모른다. 볼 수 없는 데이터는 여기서 떨어진다.
+        Map<String, Map<String, Object>> metaById = new HashMap<String, Map<String, Object>>();
+        if (candidateIds.size() > 0) {
+            Map<String, Object> metaParams = new HashMap<String, Object>();
+            metaParams.put("userId", params.get("userId"));
+            metaParams.put("metaIds", candidateIds.toArray(new String[0]));
+            List<Map<String, Object>> metaList = metaDataFusionMapper.getMetaDataFusionByIds(metaParams);
+            for (int i = 0; i < metaList.size(); i++) {
+                Map<String, Object> meta = metaList.get(i);
+                metaById.put(meta.get("meta_id").toString(), meta);
+            }
+        }
+
+        // 4. 추천 순위를 보존한 채 1..N 으로 재번호하고 topN 으로 자른다.
+        int notVisible = 0;
+        for (int i = 0; i < candidates.size(); i++) {
+            Map<String, Object> rec = candidates.get(i);
+            String candMetaId = rec.get("meta_id") == null ? "" : rec.get("meta_id").toString();
+            Map<String, Object> meta = metaById.get(candMetaId);
+            if (meta == null) {
+                // 권한 없음 / status != ACTIVE / meta_type != table
+                notVisible++;
+                continue;
+            }
+            if (list.size() >= topN) {
+                break;
+            }
+            Map<String, Object> row = new HashMap<String, Object>(meta);
+            row.put("rank", list.size() + 1);
+            row.put("score", rec.get("score"));
+            row.put("reason", rec.get("reason"));
+            row.put("join_keys", rec.get("join_keys"));
+            list.add(row);
+        }
+
+        result.put("totalCount", list.size());
+        log.info("fusion recommend: base={} topN={} engine={} fusionViewFiltered={} notVisible={} returned={}",
+                metaId, topN, recs.size(), fusionViewFiltered, notVisible, list.size());
+
+        return result;
+    }
+
+    /**
+     * 융합 뷰 한 건의 계보를 즉시 반영한다 (뷰 정의문 파싱 → 계보·조인 키·데이터 흐름조회).
+     *
+     * 실패해도 저장은 성공으로 둔다. 계보는 부가 정보이고, 전수 파싱 배치가 스케줄로
+     * 돌면서 나중에 채운다. 저장을 되돌리면 뷰는 이미 만들어진 상태라 더 나쁘다.
+     *
+     * ⚠ 이 호출은 <table> 도 채운다. 그 테이블은 추천 점수의 근거(use_known=true)
+     * 이면서 추천 점수의 근거이기도 하다. 즉 융합 뷰를 저장하면 그 조인 키가
+     * '실사용 이력'으로 등록되어 이후 추천 점수에 되먹임된다. 성능평가는 use_known=false
+     * 로 호출하므로 측정값에는 영향이 없다.
+     */
+    private void buildViewLineage(String metaId) {
+        try {
+            String url = recommenderBaseUrl + recommenderViewLineageUrl + "?meta_id=" + metaId;
+
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout(RECOMMEND_CONNECT_TIMEOUT_MS);
+            factory.setReadTimeout(VIEW_LINEAGE_READ_TIMEOUT_MS);
+            RestTemplate restTemplate = new RestTemplate(factory);
+
+            ResponseEntity<HashMap> response = restTemplate.getForEntity(url, HashMap.class);
+            Map<String, Object> body = response == null ? null : response.getBody();
+            Object statusCode = body == null ? null : body.get("status_code");
+            if (!(statusCode instanceof Integer) || ((Integer) statusCode).intValue() != 200) {
+                log.warn("view lineage build failed - meta_id={} status_code={} result={}",
+                        metaId, statusCode, body == null ? null : body.get("result"));
+                return;
+            }
+            log.info("view lineage build: meta_id={} result={}", metaId, body.get("result"));
+        } catch (Exception e) {
+            log.warn("view lineage build error - meta_id={} {}", metaId, e.getMessage());
+        }
+    }
+
+    /**
+     * 추천 엔진(FastAPI) 호출.
+     *
+     * 이 API 는 오류도 HTTP 200 으로 돌려주고, 그때 result 가 리스트가 아니라 message 를 담은
+     * 객체로 온다(없는 meta_id -> status_code 404). 그래서 status_code 와 result 타입을 둘 다 본다.
+     * 바로 List 로 캐스팅하면 ClassCastException 이 난다.
+     */
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> callFusionRecommend(String metaId, int topN) throws Exception {
+        String url = recommenderBaseUrl + recommenderFusionUrl + "?meta_id=" + metaId + "&topN=" + topN;
+
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(RECOMMEND_CONNECT_TIMEOUT_MS);
+        factory.setReadTimeout(RECOMMEND_READ_TIMEOUT_MS);
+        RestTemplate restTemplate = new RestTemplate(factory);
+
+        ResponseEntity<HashMap> response = restTemplate.getForEntity(url, HashMap.class);
+        if (response == null || response.getBody() == null) {
+            throw new Exception("empty response from recommender");
+        }
+
+        Map<String, Object> body = response.getBody();
+        Object statusCode = body.get("status_code");
+        Object payload = body.get("result");
+
+        if (!(statusCode instanceof Integer) || ((Integer) statusCode).intValue() != 200) {
+            String message = String.valueOf(payload);
+            if (payload instanceof Map) {
+                message = String.valueOf(((Map<String, Object>) payload).get("message"));
+            }
+            throw new Exception("recommender status_code=" + statusCode + " message=" + message);
+        }
+        if (!(payload instanceof List)) {
+            throw new Exception("unexpected result type: "
+                    + (payload == null ? "null" : payload.getClass().getSimpleName()));
+        }
+        return (List<Map<String, Object>>) payload;
     }
 
     // 데이터 융합 관리 > 생성된 융합 뷰 목록 조회
@@ -241,6 +428,9 @@ public class MetaDataFusionService {
                 // 4. UDF 의존성 기록 (원본 쿼리 기준)
                 String metaId = metadata.get("meta_id").toString();
                 saveViewUdfDependencies(metaId, query);
+                // 5. 계보(리니지) 즉시 반영 — 이 뷰 한 건만 파싱한다.
+                //    전수 파싱은 스케줄 배치가 계속 돌므로 생성 시점에 전체를 다시 볼 이유가 없다.
+                buildViewLineage(metaId);
             } else {
                 log.error("Fail to execute query !!");
                 result.put("errorMessage", "쿼리가 잘못되었습니다.");
