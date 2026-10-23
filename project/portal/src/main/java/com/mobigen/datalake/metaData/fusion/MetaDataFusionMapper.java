@@ -22,6 +22,9 @@ public interface MetaDataFusionMapper {
     // 데이터 융합 관리 > 생성된 융합 뷰 목록 count
     int getFusionViewListTotCnt(Map<String, Object> params) throws Exception;
 
+    // 데이터 융합 관리 > 같은 이름의 융합 뷰 수
+    int countFusionViewByName(Map<String, Object> params) throws Exception;
+
     // 메타데이터 이벤트 저장
     Integer saveEvent(Map<String, Object> eventParams) throws Exception;
 

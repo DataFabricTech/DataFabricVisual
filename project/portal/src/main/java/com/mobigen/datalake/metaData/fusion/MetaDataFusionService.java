@@ -378,6 +378,18 @@ public class MetaDataFusionService {
                 }
             }
 
+            // 중복확인은 meta_id 만 보므로, 뷰 이름(meta_name)이 겹치면 Trino CREATE VIEW 에서야 실패한다.
+            // 이벤트 로그를 남기기 전에 먼저 막는다.
+            Map<String, Object> dupParam = new HashMap<>();
+            dupParam.put("systemId", getFusionCatalog());
+            dupParam.put("schema", trinoUdfSchema);
+            dupParam.put("metaName", metadata.get("meta_name"));
+            if (metaDataFusionMapper.countFusionViewByName(dupParam) > 0) {
+                result.put("duplicatedName", true);
+                result.put("createViewResult", false);
+                return result;
+            }
+
             // 1. event_log 저장
             Map<String, Object> eventParam = new HashMap<>();
             eventParam.put("event_type", 0); // 메타데이터 이벤트: 0 | 시스템 이벤트: 1
@@ -434,6 +446,10 @@ public class MetaDataFusionService {
             } else {
                 log.error("Fail to execute query !!");
                 result.put("errorMessage", "쿼리가 잘못되었습니다.");
+                // 메타에는 없고 Trino 에만 남은 뷰(생성 후 메타 저장 실패 등)와 이름이 겹친 경우
+                if (String.valueOf(confirmIntegrationResult.get("result")).contains("TABLE_ALREADY_EXISTS")) {
+                    result.put("duplicatedName", true);
+                }
             }
 
             result.put("createViewResult", createViewResult);

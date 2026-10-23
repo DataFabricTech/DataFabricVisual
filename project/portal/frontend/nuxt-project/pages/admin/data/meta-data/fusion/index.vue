@@ -2049,7 +2049,9 @@ const onClickSaveButton = async () => {
         console.log(saveRes);
         // event, metadata 저장 성공
         if (saveRes && saveRes.data) {
-          if (!saveRes.data.createViewResult) {
+          if (saveRes.data.duplicatedName) {
+            await errorAlert("같은 이름의 융합 데이터가 이미 있습니다. 다른 이름을 사용해 주세요.");
+          } else if (!saveRes.data.createViewResult) {
             await errorAlert("융합 데이터 생성에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
           } else {
             await successAlert("융합 데이터가 저장되었습니다.");
