@@ -331,7 +331,7 @@ public class MetaDataFusionService {
                             result.put("query", res.get("query").toString());
                         }
                         if (res.get("params") != null) {
-                            result.put("params", res.get("params").toString());
+                            result.put("params", res.get("params"));
                         }
                         if (res.get("query_result_sample") != null) {
                             list = (List<Map>) res.get("query_result_sample");
