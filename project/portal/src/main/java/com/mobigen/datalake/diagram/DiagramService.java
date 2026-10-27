@@ -189,7 +189,7 @@ public class DiagramService {
                 deleteNodeInfoCnt = diagramMapper.deleteNodeInfos(deleteInfos);
             }
 
-            if (deleteNodeLinkCnt + deleteNodeInfoCnt > 1) {
+            if (deleteNodeLinkCnt + deleteNodeInfoCnt > 0) {
                 result.put("result", true);
             } else {
                 result.put("result", false);

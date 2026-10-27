@@ -435,9 +435,9 @@ const getNodeLinks = async () => {
         body: params,
       });
 
-      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "data", []); // 테이블 데이터
+      const tooltip = ObjectUtils.getPropertyValue(tooltipList, "data", null); // 메타데이터 (없으면 리니지 노드 정보)
 
-      element.tooltip = tooltiplist[0];
+      element.tooltip = tooltip;
 
       if (!element.tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
@@ -459,9 +459,9 @@ const getNodeLinks = async () => {
         body: params,
       });
 
-      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "data", []); // 테이블 데이터
+      const tooltip = ObjectUtils.getPropertyValue(tooltipList, "data", null); // 메타데이터 (없으면 리니지 노드 정보)
 
-      element.tooltip = tooltiplist[0];
+      element.tooltip = tooltip;
 
       if (!element.tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);

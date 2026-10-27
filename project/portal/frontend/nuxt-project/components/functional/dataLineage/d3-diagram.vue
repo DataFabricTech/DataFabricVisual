@@ -86,8 +86,8 @@ const redraw = async () => {
   // 렌더에 활용되는 state 초기화
   data.value = {};
 
-  // 이미 그려진 노드 포함 svg 모두 제거
-  d3.selectAll("svg").remove();
+  // 이미 그려진 노드 포함 흐름도 svg 제거 (페이지 내 다른 svg는 유지)
+  d3.select("#diagram").selectAll("svg").remove();
 
   initDiagram();
   await draw();
@@ -315,6 +315,26 @@ const hasNode = (nodeMap, node_id) => {
   return nodeMap[node_id] ? true : false;
 };
 
+// [from, to] 링크 목록에 순환이 있는지 여부 (DFS)
+const hasCycle = (links) => {
+  const graph = {};
+  links.forEach(([from, to]) => {
+    (graph[from] = graph[from] || []).push(to);
+  });
+
+  const state = {}; // 1: 탐색 중, 2: 탐색 완료
+  const visit = (nodeId) => {
+    if (state[nodeId] === 1) return true;
+    if (state[nodeId] === 2) return false;
+    state[nodeId] = 1;
+    const found = (graph[nodeId] || []).some(visit);
+    state[nodeId] = 2;
+    return found;
+  };
+
+  return Object.keys(graph).some(visit);
+};
+
 // 노드 클릭 이벤트
 const rectClickHandler = (event, node) => {
   const nodes = dag.value.descendants();
@@ -327,9 +347,6 @@ const rectClickHandler = (event, node) => {
 
 // 노드 확장 버튼 (+ 모양) 클릭 이벤트 핸들러
 const expandClick = async (event, node) => {
-  const leftExpandClick = node.data.children.length > 0; // 왼쪽 확장 버튼 (+ 모양)
-  const rightExpandClick = node.data.partner.length > 0; // 오른쪽 확장 버튼 (+ 모양)
-
   // const gd = this;
   const {
     id,
@@ -341,41 +358,19 @@ const expandClick = async (event, node) => {
   const linkList = ObjectUtils.getPropertyValue(res.data, "linkInfo", []);
   const nodeList = ObjectUtils.getPropertyValue(res.data, "nodeInfo", []);
 
-  // 순환 여부
-  let notCircle = true;
+  // 순환 여부 : 확장 후 그려질 노드 사이의 링크로 판단 (같은 노드로 모이는 링크는 순환이 아님)
+  const drawnIds = new Set([...Object.keys(data.value.unions), ...nodeList.map((v) => v.node_id)]);
+  const nextLinks = linkList
+    .filter((link) => drawnIds.has(link.from_node_id) && drawnIds.has(link.to_node_id))
+    .map((link) => [link.from_node_id, link.to_node_id]);
+  const notCircle = !hasCycle([...data.value.links, ...nextLinks]);
 
-  linkList.forEach(async (element) => {
-    if (leftExpandClick) {
-      // 왼쪽 확장 버튼
-      for (let key in data.value.unions) {
-        if (element.from_node_id == key) {
-          await errorAlert("데이터가 순환되어 오류가 발생합니다.");
-          notCircle = false;
-          break;
-        }
-        if (!notCircle) {
-          break;
-        }
-      }
-    } else if (rightExpandClick) {
-      // 오른쪽 확장 버튼
-      for (let key in data.value.unions) {
-        if (element.to_node_id == key) {
-          await errorAlert("데이터가 순환되어 오류가 발생합니다.");
-          notCircle = false;
-          break;
-        }
-        if (!notCircle) {
-          break;
-        }
-      }
-    }
-  });
-
-  if (notCircle) {
+  if (!notCircle) {
+    await errorAlert("데이터가 순환되어 오류가 발생합니다.");
+  } else {
     let guidList = []; // 툴팁 렌더용 데이터 조회 시 사용할 파라미터 가공
     nodeList.forEach((element) => {
-      const { node_id, childcnt, parentcnt, node_type, children = [] } = element;
+      const { node_id, childcnt, parentcnt, node_type } = element;
 
       // 노드 추가
       element.id = node_id;
@@ -402,16 +397,17 @@ const expandClick = async (event, node) => {
         )
         .map((v) => v.from_node_id);
 
+      // 아직 그려지지 않은 하위(상위) 노드가 남아 있을 때만 (+) 버튼 유지
       if (direction === "child") {
         element.direction =
-          childcnt !== 0 && childcnt !== children.length ? direction : "";
+          childcnt !== 0 && childcnt !== element.children.length ? direction : "";
         element.partner.forEach((pid) => {
           data.value.unions[pid].direction = "";
         });
         // 파트너쪽에 차일드 추가
       } else {
         element.direction =
-          parentcnt !== 0 && parentcnt !== parentcnt.length ? direction : "";
+          parentcnt !== 0 && parentcnt !== element.partner.length ? direction : "";
         element.children.forEach((cid) => {
           data.value.unions[cid].direction = "";
         });
