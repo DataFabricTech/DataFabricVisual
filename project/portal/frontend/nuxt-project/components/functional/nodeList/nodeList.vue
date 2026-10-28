@@ -32,9 +32,9 @@
           <tr>
             <th scope="col">
               <div class="mu-checkbox">
-                <input type="checkbox" :id="'ckb-' + props.nodeField" title="전체선택" :checked="props.NodeLinks.length > 0 &&
-                  selectedData.length === props.NodeLinks.length
-                  " @click.stop="(e) => onToggleCheckbox(e, true)" />
+                <input type="checkbox" :id="'ckb-' + props.nodeField" title="전체선택" :checked="manualNodeLinks.length > 0 &&
+                  selectedData.length === manualNodeLinks.length
+                  " :disabled="manualNodeLinks.length == 0" @click.stop="(e) => onToggleCheckbox(e, true)" />
                 <label :for="'ckb-' + props.nodeField">
                   <span class="blind">전체선택</span>
                 </label>
@@ -50,8 +50,8 @@
           <tr v-for="(node, index) in props.NodeLinks" :key="index">
             <td>
               <div class="mu-checkbox">
-                <input type="checkbox" title="행선택" :id="props.nodeField + '-checkbox-' + index"
-                  :checked="isChecked(node)" @click.stop="(e) => onToggleCheckbox(e, false, node)" />
+                <input type="checkbox" :title="isAutoLink(node) ? AUTO_LINK_TITLE : '행선택'" :id="props.nodeField + '-checkbox-' + index"
+                  :checked="isChecked(node)" :disabled="isAutoLink(node)" @click.stop="(e) => onToggleCheckbox(e, false, node)" />
                 <label :for="props.nodeField + '-checkbox-' + index">
                   <span class="blind">행선택</span>
                 </label>
@@ -62,9 +62,17 @@
                 {{ node[props.nodeField + "_node_id"] ? node[props.nodeField + "_node_id"] : "-" }}</span>
             </td>
             <td>
-              <span class="mu-ellipsis" :title="node[props.nodeField + '_node_name']">
-                {{ node[props.nodeField + "_node_name"] ? node[props.nodeField + "_node_name"] : "-" }}
-              </span>
+              <div style="display: flex; align-items: center; gap: 4px; min-width: 0">
+                <!-- 뷰 계보 자동 적재 링크 : 포털에서 삭제 불가 -->
+                <span v-if="isAutoLink(node)" class="tag tag-sm tag-round" :title="AUTO_LINK_TITLE"
+                  style="flex-shrink: 0; height: 20px; padding: 0 6px; font-size: 11px">자동 연결</span>
+                <!-- 뷰 계보 자동 적재 노드 : 노드 정보는 배치가 갱신 (링크 삭제는 가능) -->
+                <span v-if="isAutoNode(node)" class="tag tag-sm tag-round" :title="AUTO_NODE_TITLE"
+                  style="flex-shrink: 0; height: 20px; padding: 0 6px; font-size: 11px; border-style: dashed; color: #888">자동 노드</span>
+                <span class="mu-ellipsis" :title="node[props.nodeField + '_node_name']">
+                  {{ node[props.nodeField + "_node_name"] ? node[props.nodeField + "_node_name"] : "-" }}
+                </span>
+              </div>
             </td>
             <td>
               <div class="mu-tooltip-icon">
@@ -102,6 +110,14 @@
                         <dd v-if="node.tooltip && node.tooltip.type_name">{{ node.tooltip.type_name }}</dd>
                         <dd v-else-if="node.tooltip && node.tooltip.system_type">{{ node.tooltip.system_type }}</dd>
                         <dd v-else>-</dd>
+                      </dl>
+                      <dl>
+                        <dt>연결 출처</dt>
+                        <dd>{{ isAutoLink(node) ? "자동 (뷰 계보, 포털에서 삭제 불가)" : "수동 (포털 입력)" }}</dd>
+                      </dl>
+                      <dl>
+                        <dt>노드 출처</dt>
+                        <dd>{{ isAutoNode(node) ? "자동 (배치가 메타 정보로 갱신)" : "수동 (포털 입력)" }}</dd>
                       </dl>
                       <dl>
                         <dt>시스템 ID</dt>
@@ -162,6 +178,21 @@ const handleMousemove = (event) => {
   mouseY.value = event.clientY + 10;
 };
 
+const AUTO_LINK_TITLE = "뷰 계보에서 자동 생성된 연결입니다. 포털에서 삭제할 수 없습니다.";
+const AUTO_NODE_TITLE = "뷰 계보에서 자동 관리되는 노드입니다. 노드 정보는 배치가 메타데이터 기준으로 갱신합니다.";
+
+// 자동 적재(AUTO_VIEW 등) 여부. 포털에서 새로 추가해 아직 저장 전인 항목은 origin 이 없으므로 수동으로 본다
+const isAutoOrigin = (origin) => !!origin && origin !== "MANUAL";
+
+// 링크 출처
+const isAutoLink = (node) => isAutoOrigin(node.origin);
+
+// 목록에 표시되는 상대 노드(이전 목록은 from, 이후 목록은 to)의 출처
+const isAutoNode = (node) => isAutoOrigin(node[props.nodeField + "_node_origin"]);
+
+// 삭제 가능한(수동 입력) 링크 목록
+const manualNodeLinks = computed(() => props.NodeLinks.filter((node) => !isAutoLink(node)));
+
 const isChecked = (node) => {
   const matched = selectedData.value.find(
     (el) => el[props.nodeField + "_node_id"] === node[props.nodeField + "_node_id"]
@@ -197,7 +228,7 @@ const onToggleCheckbox = (e, isAll, node) => {
   let newItems = [...selectedData.value];
   if (isAll) {
     // 테이블 최상단 체크박스 클릭 시 전체 선택/해제
-    newItems = checked ? props.NodeLinks : [];
+    newItems = checked ? manualNodeLinks.value : [];
   } else {
     // 각 행별 체크박스 클릭 시
     if (checked) {
