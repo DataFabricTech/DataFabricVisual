@@ -1,0 +1,26 @@
+<svg id="Icon_Search_Content" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #151721;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <rect id="area" class="cls-1" width="24" height="24"/>
+  <g id="cloud-upload" transform="translate(-0.021)">
+    <g id="그룹_1211" data-name="그룹 1211">
+      <line id="선_322" data-name="선 322" class="cls-2" y1="9" transform="translate(12 12)"/>
+      <path id="패스_5090" data-name="패스 5090" class="cls-2" d="M8,16l4-4,4,4"/>
+      <path id="패스_5091" data-name="패스 5091" class="cls-2" d="M16,20.777A9,9,0,1,0,5.046,11.1,5,5,0,0,0,6,21H8"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>통합검색 < 카탈로그 검색 < 데이터 카탈로그</title>
+		<!-- HTLM5shiv ie6~8 -->
+		<!--[if lt IE 9]> 
+			<script src="../js/html5shiv.min.js"></script>
+			<script src="../js/respond.min.js"></script>
+			<script type="text/javascript">
+				alert("현재 당신이 보는 브라우저는 지원하지 않습니다. 최신 브라우저로 업데이트해주세요!");
+			</script>
+		<![endif]-->
+		<link href="../css/common.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="__nuxt">
+			<div id="__layout">
+				<div>
+					<!-- DEV nuxt common layout ADD -->
+                    <div id="app"><!-- 실제 PUB layout -->
+                        <!-- main-sub -->
+                        <main id="main" class="main-sub"><!-- sub page : main-sub class 추가 -->
+                            <div class="main-contents">
+                                <h2 class="blind">카탈로그 검색</h2><!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                                <div class="contents-wrap">
+                                    <div class="contents">                                            
+                                        <!-- 필터 구조 확인용 페이지 -->
+                                        <div class="attribute-filter-item slim-scroll">
+                                            <!-- filter-item-group : 그룹핑추가 -->
+                                            <dl class="filter-item-group">
+                                                <dt>							
+                                                    <div class="btn-switch">                  
+                                                        <div class="mu-radio">
+                                                            <input type="radio" id="radio1" name="switch1" checked="checked">
+                                                            <label for="radio1"><span>AND</span></label>
+                                                        </div>               
+                                                        <div class="mu-radio">
+                                                            <input type="radio" id="radio2" name="switch1">
+                                                            <label for="radio2"><span>OR</span></label>
+                                                        </div>   
+                                                    </div>
+                                                    <div class="button-group">														
+                                                        <button type="button" class="mu-btn mu-btn-primary"><span>그룹추가</span></button><!-- 그룹추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                        <button type="button" class="mu-btn mu-btn-primary-line"><span>그룹삭제</span></button><!-- 그룹삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                    </div>
+                                                </dt>
+                                                <dd>
+                                                    <!-- filter-item : row1 -->
+                                                    <div class="filter-item">	
+                                                        <div class="form-group">																			
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>																			
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">=</option>
+                                                                    <option value="">!=</option>
+                                                                    <option value="">></option>
+                                                                    <option value=""><</option>
+                                                                    <option value="">>=</option>
+                                                                    <option value=""><=</option>
+                                                                    <option value="">begins with</option>
+                                                                    <option value="">is not null</option>
+                                                                </select>
+                                                            </div>																				
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>	
+                                                        <div class="button-group">															
+                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- filter-item : row1 -->
+                                                    <div class="filter-item">	
+                                                        <div class="form-group">																
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>																			
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">=</option>
+                                                                    <option value="">!=</option>
+                                                                    <option value="">></option>
+                                                                    <option value=""><</option>
+                                                                    <option value="">>=</option>
+                                                                    <option value=""><=</option>
+                                                                </select>
+                                                            </div>																				
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>	
+                                                        <div class="button-group">															
+                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- filter-item : row1 -->
+                                                    <div class="filter-item">	
+                                                        <div class="form-group">																		
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>																			
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">=</option>
+                                                                    <option value="">!=</option>
+                                                                    <option value="">></option>
+                                                                    <option value=""><</option>
+                                                                    <option value="">>=</option>
+                                                                    <option value=""><=</option>
+                                                                </select>
+                                                            </div>																				
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="button-group">															
+                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- filter-item : row1 -->
+                                                    <div class="filter-item">	
+                                                        <div class="form-group">																
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>					
+                                                        </div>	
+                                                        <div class="button-group">															
+                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- filter-item-group : 그룹핑추가 -->
+                                                    <dl class="filter-item-group">
+                                                        <dt>							
+                                                            <div class="btn-switch">                  
+                                                                <div class="mu-radio">
+                                                                    <input type="radio" id="radio3" name="switch2" checked="checked">
+                                                                    <label for="radio3"><span>AND</span></label>
+                                                                </div>               
+                                                                <div class="mu-radio">
+                                                                    <input type="radio" id="radio4" name="switch2">
+                                                                    <label for="radio4"><span>OR</span></label>
+                                                                </div>   
+                                                            </div>
+                                                            <div class="button-group">															
+                                                                <button type="button" class="mu-btn mu-btn-primary"><span>그룹추가</span></button><!-- 그룹추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                <button type="button" class="mu-btn mu-btn-primary-line"><span>그룹삭제</span></button><!-- 그룹삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                            </div>
+                                                        </dt>
+                                                        <dd>
+                                                            <!-- filter-item : row1 -->
+                                                            <div class="filter-item">	
+                                                                <div class="form-group">																	
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">속성을 선택하세요.</option>
+                                                                            <option value="">속성1</option>
+                                                                            <option value="">속성2</option>
+                                                                            <option value="">속성속성속성3</option>
+                                                                            <option value="">속성속성속성속성4</option>
+                                                                            <option value="">속성속성5</option>
+                                                                        </select>
+                                                                    </div>					
+                                                                </div>	
+                                                                <div class="button-group">
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                </div>
+                                                            </div>
+                                                            <!-- filter-item : row1 -->
+                                                            <div class="filter-item">
+                                                                <div class="form-group">																	
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">속성을 선택하세요.</option>
+                                                                            <option value="">속성1</option>
+                                                                            <option value="">속성2</option>
+                                                                            <option value="">속성속성속성3</option>
+                                                                            <option value="">속성속성속성속성4</option>
+                                                                            <option value="">속성속성5</option>
+                                                                        </select>
+                                                                    </div>						
+                                                                </div>	
+                                                                <div class="button-group">
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                </div>
+                                                            </div>
+                                                            <!-- filter-item : row1 -->
+                                                            <div class="filter-item">
+                                                                <div class="form-group">																
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">속성을 선택하세요.</option>
+                                                                            <option value="">속성1</option>
+                                                                            <option value="">속성2</option>
+                                                                            <option value="">속성속성속성3</option>
+                                                                            <option value="">속성속성속성속성4</option>
+                                                                            <option value="">속성속성5</option>
+                                                                        </select>
+                                                                    </div>	
+                                                                </div>			
+                                                                <div class="button-group">
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                </div>
+                                                            </div>
+                                                            <!-- filter-item-group -->
+                                                            <dl class="filter-item-group">
+                                                                <dt>							
+                                                                    <div class="btn-switch">                  
+                                                                        <div class="mu-radio">
+                                                                            <input type="radio" id="radio7" name="switch4" checked="checked">
+                                                                            <label for="radio7"><span>AND</span></label>
+                                                                        </div>               
+                                                                        <div class="mu-radio">
+                                                                            <input type="radio" id="radio6" name="switch4">
+                                                                            <label for="radio6"><span>OR</span></label>
+                                                                        </div>   
+                                                                    </div>
+                                                                    <div class="button-group">																
+                                                                        <button type="button" class="mu-btn mu-btn-primary"><span>그룹추가</span></button><!-- 그룹추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                        <button type="button" class="mu-btn mu-btn-primary-line"><span>그룹삭제</span></button><!-- 그룹삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                    </div>
+                                                                </dt>
+                                                                <dd>
+                                                                    <!-- filter-item : row1 -->
+                                                                    <div class="filter-item">
+                                                                        <div class="form-group">																	
+                                                                            <!-- mu-selectbox -->
+                                                                            <div class="mu-selectbox">
+                                                                                <select>
+                                                                                    <option value="">속성을 선택하세요.</option>
+                                                                                    <option value="">속성1</option>
+                                                                                    <option value="">속성2</option>
+                                                                                    <option value="">속성속성속성3</option>
+                                                                                    <option value="">속성속성속성속성4</option>
+                                                                                    <option value="">속성속성5</option>
+                                                                                </select>
+                                                                            </div>					
+                                                                        </div>	
+                                                                        <div class="button-group">
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- filter-item : row1 -->
+                                                                    <div class="filter-item">	
+                                                                        <div class="form-group">																	
+                                                                            <!-- mu-selectbox -->
+                                                                            <div class="mu-selectbox">
+                                                                                <select>
+                                                                                    <option value="">속성을 선택하세요.</option>
+                                                                                    <option value="">속성1</option>
+                                                                                    <option value="">속성2</option>
+                                                                                    <option value="">속성속성속성3</option>
+                                                                                    <option value="">속성속성속성속성4</option>
+                                                                                    <option value="">속성속성5</option>
+                                                                                </select>
+                                                                            </div>			
+                                                                        </div>		
+                                                                        <div class="button-group">
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                        </div>
+                                                                    </div>
+                                                                </dd>
+                                                            </dl>
+                                                        </dd>
+                                                    </dl>
+                                                    <!-- filter-item-group : 그룹핑추가 -->
+                                                    <dl class="filter-item-group">
+                                                        <dt>							
+                                                            <div class="btn-switch">                  
+                                                                <div class="mu-radio">
+                                                                    <input type="radio" id="radio9" name="switch5" checked="checked">
+                                                                    <label for="radio9"><span>AND</span></label>
+                                                                </div>               
+                                                                <div class="mu-radio">
+                                                                    <input type="radio" id="radio10" name="switch5">
+                                                                    <label for="radio10"><span>OR</span></label>
+                                                                </div>   
+                                                            </div>
+                                                            <div class="button-group">															
+                                                                <button type="button" class="mu-btn mu-btn-primary"><span>그룹추가</span></button><!-- 그룹추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                <button type="button" class="mu-btn mu-btn-primary-line"><span>그룹삭제</span></button><!-- 그룹삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                            </div>
+                                                        </dt>
+                                                        <dd>
+                                                            <!-- filter-item : row1 -->
+                                                            <div class="filter-item">	
+                                                                <div class="form-group">																		
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">속성을 선택하세요.</option>
+                                                                            <option value="">속성1</option>
+                                                                            <option value="">속성2</option>
+                                                                            <option value="">속성속성속성3</option>
+                                                                            <option value="">속성속성속성속성4</option>
+                                                                            <option value="">속성속성5</option>
+                                                                        </select>
+                                                                    </div>	
+                                                                </div>	
+                                                                <div class="button-group">
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                </div>
+                                                            </div>
+                                                            <!-- filter-item : row1 -->
+                                                            <div class="filter-item">
+                                                                <div class="form-group">																
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">속성을 선택하세요.</option>
+                                                                            <option value="">속성1</option>
+                                                                            <option value="">속성2</option>
+                                                                            <option value="">속성속성속성3</option>
+                                                                            <option value="">속성속성속성속성4</option>
+                                                                            <option value="">속성속성5</option>
+                                                                        </select>
+                                                                    </div>																			
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">=</option>
+                                                                            <option value="">!=</option>
+                                                                            <option value="">></option>
+                                                                            <option value=""><</option>
+                                                                            <option value="">>=</option>
+                                                                            <option value=""><=</option>
+                                                                        </select>
+                                                                    </div>																				
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">속성을 선택하세요.</option>
+                                                                            <option value="">속성1</option>
+                                                                            <option value="">속성2</option>
+                                                                            <option value="">속성속성속성3</option>
+                                                                            <option value="">속성속성속성속성4</option>
+                                                                            <option value="">속성속성5</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>	
+                                                                <div class="button-group">
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                </div>
+                                                            </div>
+                                                            <!-- filter-item : row1 -->
+                                                            <div class="filter-item">
+                                                                <div class="form-group">																
+                                                                    <!-- mu-selectbox -->
+                                                                    <div class="mu-selectbox">
+                                                                        <select>
+                                                                            <option value="">속성을 선택하세요.</option>
+                                                                            <option value="">속성1</option>
+                                                                            <option value="">속성2</option>
+                                                                            <option value="">속성속성속성3</option>
+                                                                            <option value="">속성속성속성속성4</option>
+                                                                            <option value="">속성속성5</option>
+                                                                        </select>
+                                                                    </div>	
+                                                                </div>			
+                                                                <div class="button-group">
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                </div>
+                                                            </div>
+                                                            <!-- filter-item-group : 그룹핑추가 -->
+                                                            <dl class="filter-item-group">
+                                                                <dt>							
+                                                                    <div class="btn-switch">                  
+                                                                        <div class="mu-radio">
+                                                                            <input type="radio" id="radio5" name="switch3" checked="checked">
+                                                                            <label for="radio5"><span>AND</span></label>
+                                                                        </div>               
+                                                                        <div class="mu-radio">
+                                                                            <input type="radio" id="radio6" name="switch3">
+                                                                            <label for="radio6"><span>OR</span></label>
+                                                                        </div>   
+                                                                    </div>
+                                                                    <div class="button-group">																
+                                                                        <button type="button" class="mu-btn mu-btn-primary"><span>그룹추가</span></button><!-- 그룹추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                        <button type="button" class="mu-btn mu-btn-primary-line"><span>그룹삭제</span></button><!-- 그룹삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                    </div>
+                                                                </dt>
+                                                                <dd>
+                                                                    <!-- filter-item : row1 -->
+                                                                    <div class="filter-item">
+                                                                        <div class="form-group">																
+                                                                            <!-- mu-selectbox -->
+                                                                            <div class="mu-selectbox">
+                                                                                <select>
+                                                                                    <option value="">속성을 선택하세요.</option>
+                                                                                    <option value="">속성1</option>
+                                                                                    <option value="">속성2</option>
+                                                                                    <option value="">속성속성속성3</option>
+                                                                                    <option value="">속성속성속성속성4</option>
+                                                                                    <option value="">속성속성5</option>
+                                                                                </select>
+                                                                            </div>																			
+                                                                            <!-- mu-selectbox -->
+                                                                            <div class="mu-selectbox">
+                                                                                <select>
+                                                                                    <option value="">=</option>
+                                                                                    <option value="">!=</option>
+                                                                                    <option value="">></option>
+                                                                                    <option value=""><</option>
+                                                                                    <option value="">>=</option>
+                                                                                    <option value=""><=</option>
+                                                                                </select>
+                                                                            </div>	
+                                                                        </div>	
+                                                                        <div class="button-group">
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- filter-item : row1 -->
+                                                                    <div class="filter-item">	
+                                                                        <div class="form-group">																	
+                                                                            <!-- mu-selectbox -->
+                                                                            <div class="mu-selectbox">
+                                                                                <select>
+                                                                                    <option value="">속성을 선택하세요.</option>
+                                                                                    <option value="">속성1</option>
+                                                                                    <option value="">속성2</option>
+                                                                                    <option value="">속성속성속성3</option>
+                                                                                    <option value="">속성속성속성속성4</option>
+                                                                                    <option value="">속성속성5</option>
+                                                                                </select>
+                                                                            </div>																			
+                                                                            <!-- mu-selectbox -->
+                                                                            <div class="mu-selectbox">
+                                                                                <select>
+                                                                                    <option value="">=</option>
+                                                                                    <option value="">!=</option>
+                                                                                    <option value="">></option>
+                                                                                    <option value=""><</option>
+                                                                                    <option value="">>=</option>
+                                                                                    <option value=""><=</option>
+                                                                                </select>
+                                                                            </div>	
+                                                                        </div>		
+                                                                        <div class="button-group">
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                                        </div>
+                                                                    </div>
+                                                                </dd>
+                                                            </dl>
+                                                        </dd>
+                                                    </dl>
+                                                    <!-- filter-item : row1 -->
+                                                    <div class="filter-item">
+                                                        <div class="form-group">																
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>																			
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">=</option>
+                                                                    <option value="">!=</option>
+                                                                    <option value="">></option>
+                                                                    <option value=""><</option>
+                                                                    <option value="">>=</option>
+                                                                    <option value=""><=</option>
+                                                                </select>
+                                                            </div>																				
+                                                            <!-- mu-selectbox -->
+                                                            <div class="mu-selectbox">
+                                                                <select>
+                                                                    <option value="">속성을 선택하세요.</option>
+                                                                    <option value="">속성1</option>
+                                                                    <option value="">속성2</option>
+                                                                    <option value="">속성속성속성3</option>
+                                                                    <option value="">속성속성속성속성4</option>
+                                                                    <option value="">속성속성5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>	
+                                                        <div class="button-group">															
+                                                            <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+                                                            <button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+                                                        </div>
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <!-- //filter-item-group -->
+                                        </div> 
+                                        <div class="inner">	   
+                                            
+
+
+                                        </div>
+                                        
+                                    </div>
+                                    <!-- //contents -->
+                                </div>
+                            </div>				
+                        </main>
+                        <!-- //main-sub -->
+                    </div>
+					<!-- //DEV nuxt common layout ADD -->
+				</div>
+			</div>
+		</div>
+		<script src="../lib/vue/vue.min.js"></script>
+		<script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script><!-- vue2-datepicker ver up -->
+		<script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script><!-- vue2-datepicker kor ver -->
+		<script src="../js/jquery-3.5.1.min.js"></script>
+		<script src="../js/jquery-ui.min.js"></script>
+		<script src="../js/common.js"></script><!-- 동작 확인용 임시 -->
+	</body>
+</html>

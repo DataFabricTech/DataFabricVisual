@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <path d="M8 5.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M5.5 6a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M8 12.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M5.5 13a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M8 19.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M5.5 20a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M8 26.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M5.5 27a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M15 5.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M12.5 6a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M15 12.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M12.5 13a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M15 19.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M12.5 20a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M15 26.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M12.5 27a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M22 5.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M19.5 6a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M22 12.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M19.5 13a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM19.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm0 1a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M22 26.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M19.5 27a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M29 5.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M26.5 6a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M29 12.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M26.5 13a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M29 19.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M26.5 20a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+  <path d="M29 26.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+  <path fill-rule="evenodd" d="M26.5 27a.5.5 0 100-1 .5.5 0 000 1zm0 2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+</svg>

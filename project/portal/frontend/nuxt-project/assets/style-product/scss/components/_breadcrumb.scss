@@ -1,0 +1,42 @@
+// -------------------------
+// Breadcrumb
+// -------------------------
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.breadcrumb__text {
+  @include font-size("13");
+  position: relative;
+  padding-right: $spacing-lg + $spacing-2xs;
+  color: $breadcrumb-text;
+  user-select: none;
+  letter-spacing: rem(-0.2px);
+  white-space: nowrap;
+
+  &:after {
+    content: "";
+    width: rem(6px);
+    height: rem(6px);
+    border-top: 2px solid darken($breadcrumb-text, 10%); /* 선 두께 */
+    border-right: 2px solid darken($breadcrumb-text, 10%); /* 선 두께 */
+    display: inline-block;
+    transform: rotate(45deg); /* 각도 */
+    position: absolute;
+    top: 50%;
+    margin-top: -$spacing-2xs;
+    right: rem(13px);
+    border-radius: 2px;
+  }
+
+  &:last-child {
+    padding-right: 0;
+    color: darken($breadcrumb-text, 20%);
+
+    &:after {
+      content: none;
+    }
+  }
+}

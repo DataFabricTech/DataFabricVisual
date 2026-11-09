@@ -1,0 +1,31 @@
+@startuml
+
+autoactivate on
+
+title 데이터 요청
+
+actor 사용자 as user
+
+box "데이터 요청 등록"
+participant Client as client
+participant DataRequestController as dataRequestController
+participant DataRequestService as dataRequestService
+end box
+
+box "SMTP"
+participant SMTP as smtpServer
+end box
+
+client -> dataRequestController : 데이터 요청 등록 요청
+dataRequestController -> dataRequestService : 데이터 요청 등록 요청
+note right
+    1. 등록 성공 시 이메일 처리
+    2. properties.activeSendMail.data-request: true 인 경우 이메일 발송
+    3. 요청자 참조처리, 데이터 요청 관리 메뉴의 권한이 있는 관리자에게만 이메일 발송
+end note
+dataRequestService -> smtpServer : SMTP로 이메일 전송 요청
+smtpServer -> dataRequestService : SMTP로 이메일 전송 결과 반환
+dataRequestService -> dataRequestController : 데이터 요청 등록 결과 반환
+dataRequestController -> client : 데이터 요청 등록 결과 반환
+
+@enduml

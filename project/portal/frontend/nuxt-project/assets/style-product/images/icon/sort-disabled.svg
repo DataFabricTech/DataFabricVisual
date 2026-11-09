@@ -1,0 +1,17 @@
+<svg id="icon_input" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: red;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        fill: #666;
+      }
+    </style>
+  </defs>
+  <rect id="area" class="cls-1" width="18" height="18"/>
+  <path id="다각형_5" data-name="다각형 5" class="cls-2" d="M3.8.443a.5.5,0,0,1,.759,0l3.088,3.6a.5.5,0,0,1-.38.825H1.087a.5.5,0,0,1-.38-.825Z" transform="translate(4.825 2.354)"/>
+  <path id="다각형_17" data-name="다각형 17" class="cls-2" d="M3.8.443a.5.5,0,0,1,.759,0l3.088,3.6a.5.5,0,0,1-.38.825H1.087a.5.5,0,0,1-.38-.825Z" transform="translate(13.175 15.588) rotate(180)"/>
+</svg>

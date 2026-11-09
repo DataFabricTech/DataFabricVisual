@@ -1,0 +1,247 @@
+// -------------------------
+// balham Theme Customizing
+// -------------------------
+.ag-theme-balham {
+  @include font-family("sans");
+
+  /* This CSS is to not apply the border for the column having 'no-border' class */
+  .no-border.ag-cell:focus {
+    border: none;
+    outline: none;
+  }
+
+  .ag-root-wrapper {
+    background-color: $dark;
+    border-color: transparent;
+  }
+
+  // header
+  .ag-header {
+    height: rem(40px) !important;
+    min-height: rem(40px) !important;
+    background-color: $white;
+    border-bottom: 1px solid $border-light;
+  }
+
+  .ag-header-row {
+    height: 100% !important;
+  }
+
+  .ag-header-cell .ag-header-cell-label {
+    justify-content: center;
+  }
+
+  .ag-header-cell-text {
+    @include font-size("14");
+    color: $text-dark;
+  }
+
+  .ag-header-cell::after {
+    content: none;
+  }
+
+  .ag-header-cell:not(.ag-right-aligned-header) .ag-header-label-icon {
+    margin-left: 0;
+  }
+
+  // body
+  .ag-cell {
+    @include font-size("14");
+    line-height: rem(38px);
+    color: $text-dark;
+    border: none;
+    border-right-width: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    border-top: 0;
+    border-bottom: 0;
+
+    &:not(:last-of-type) {
+      border: none;
+    }
+  }
+
+  & > span {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .checkbox {
+    width: rem(20px);
+    height: rem(24px);
+  }
+
+  .ag-icon:before {
+    content: "";
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='24' fill='none' viewBox='0 0 25 24'%3E%3Cpath fill='%2377889A' fill-rule='evenodd' d='M12.545 5.346a.75.75 0 011.06 0l3.375 3.375a.75.75 0 01-1.06 1.061l-2.845-2.845-2.845 2.845a.75.75 0 11-1.06-1.06l3.375-3.376zM12.545 18.032a.75.75 0 001.06 0l3.375-3.375a.75.75 0 00-1.06-1.06l-2.845 2.844-2.845-2.845a.75.75 0 10-1.06 1.061l3.375 3.375z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    height: rem(24px);
+    opacity: 1;
+    width: rem(24px);
+    display: inline-block;
+  }
+
+  // body-viewport
+  .ag-row {
+    height: rem(40px) !important;
+    background-color: $odd-row;
+    border: none !important;
+    cursor: pointer;
+
+    &:hover {
+      .ag-cell {
+        background-color: $hover-row;
+      }
+
+      .ag-cell--emphasis-odd,
+      .ag-cell--emphasis-even {
+        background-color: #d5e3f8 !important;
+      }
+    }
+  }
+
+  .ag-row-odd {
+    background-color: $white;
+  }
+
+  .ag-row-selected {
+    .ag-cell {
+      background-color: $dark;
+      color: $primary;
+    }
+
+    &:hover {
+      .ag-cell {
+        background-color: $dark;
+        color: $primary;
+      }
+    }
+  }
+
+  .ag-ltr .ag-cell {
+    border: none;
+  }
+
+  .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected) {
+    border: transparent;
+  }
+
+  .ag-ltr [col-id="description"].ag-cell,
+  .ag-ltr [col-id="query"].ag-cell,
+  .ag-ltr [col-id="name"].ag-cell {
+    text-align: left;
+  }
+
+  .ag-ltr [col-id="query"].ag-cell {
+    display: block;
+    display: -webkit-box;
+    overflow: hidden;
+    max-height: rem(114px);
+    line-height: rem(38px);
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
+  }
+
+  .ag-header-cell-resize::after {
+    background-color: transparent;
+  }
+
+  .ag-checkbox-input-wrapper:focus-within,
+  .ag-checkbox-input-wrapper:active {
+    box-shadow: none;
+  }
+
+  .ag-header-group-cell-label,
+  .ag-header-cell-label {
+    @include font-size("14");
+    font-weight: 500;
+  }
+
+  .ag-header-cell::after,
+  .ag-header-group-cell::after {
+    background-color: transparent;
+  }
+
+  // 결과 없는 경우
+  .ag-overlay-no-rows-center {
+    width: 100%;
+    height: 100%;
+    background-color: $dark !important;
+    border: none !important;
+  }
+
+  // 복사 버튼
+  .ag-cell__group {
+    @include text-overflow;
+    position: relative;
+    padding-right: $spacing-sm * 3;
+  }
+
+  .button.ag-cell__group-button {
+    position: absolute;
+    top: 50%;
+    margin-top: -$spacing-md;
+    right: 0;
+    width: rem(32px);
+    height: rem(32px);
+  }
+
+  // cell 강조인 경우, '--emphasis' suffix 추가
+  .ag-header-cell.ag-header-cell--emphasis {
+    background-color: #d5e3f8;
+  }
+
+  // 홀수 cell
+  .ag-cell--emphasis-odd {
+    background-color: #eff4fc;
+  }
+
+  // 짝수 cell
+  .ag-cell--emphasis-even {
+    background-color: #e6eefa;
+  }
+}
+
+// IMA, ISS, ITS - 검색한 보고서가 없는 경우
+.search-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.search-result__title {
+  @include font-weight("medium");
+  @include font-size("24");
+  margin-top: $spacing-lg;
+  color: $text-basic;
+  letter-spacing: rem(-0.3px);
+
+  em {
+    color: $primary;
+  }
+}
+
+.search-result__text {
+  @include text-overflow;
+  @include font-size("20");
+  margin-top: $spacing-xs;
+  color: $text-basic;
+}
+
+.svg-icon.search-result__icon {
+  width: rem(72px);
+  height: rem(72px);
+}
+
+
+

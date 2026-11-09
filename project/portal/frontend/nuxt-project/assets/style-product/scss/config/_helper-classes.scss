@@ -1,0 +1,345 @@
+// colors classes
+@each $ele, $color in $theme-colors {
+  .color--#{$ele} {
+    color: $color !important;
+  }
+}
+
+.color-emphasis {
+  color: $primary;
+}
+
+// utility classes
+@each $key, $utility in $utilities {
+  @if type-of($utility) == "map" {
+    @include generate-utility($utility);
+  }
+}
+
+// Grid Row
+@if $enable-grid-classes {
+  .row {
+    @include make-row();
+
+    > * {
+      @include make-col-ready();
+    }
+  }
+}
+
+// Grid Columns
+@if $enable-grid-classes {
+  @include make-grid-columns();
+}
+
+// width, height
+@if $sizes-classes {
+  @include generate-size();
+}
+
+.w-auto {
+  width: auto !important;
+}
+
+.h-auto {
+  height: auto !important;
+}
+
+// spacing
+@if $spacers-classes {
+  @include generate-spacer();
+}
+
+.m-auto,
+.mt-auto,
+.my-auto {
+  margin-top: auto !important;
+}
+
+.m-auto,
+.mr-auto,
+.mx-auto {
+  margin-right: auto !important;
+}
+
+.m-auto,
+.mb-auto,
+.my-auto {
+  margin-bottom: auto !important;
+}
+
+.m-auto,
+.ml-auto,
+.mx-auto {
+  margin-left: auto !important;
+}
+
+//-------------------------------------------
+//  common classes
+// ------------------------------------------
+
+.hidden {
+  @include hidden;
+}
+
+.ir-pm,
+.blind {
+  @include ir-pm;
+}
+
+.img-g {
+  @include img-g;
+}
+
+.caption-out {
+  @include caption-out;
+}
+
+.not-scroll {
+  @include not-scroll;
+}
+
+.screen-out {
+  overflow: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+  line-height: 0;
+  text-indent: -9999px;
+}
+
+.text-image-replacement {
+  display: block;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999px;
+}
+
+.right-position {
+  @include right-position;
+}
+
+.img-icon {
+  display: flex;
+  flex-shrink: 0;
+  width: rem(32px);
+  height: rem(32px);
+  content: "";
+}
+
+//-------------------------------------------
+//  Typography
+// ------------------------------------------
+
+// 필수입력
+.required {
+  display: inline-block;
+  margin-left: $spacing-2xs;
+  font-size: 0;
+  vertical-align: top;
+
+  &::before {
+    @include font-size("16");
+    content: "*";
+    color: $negative;
+    padding-right: rem(6px);
+  }
+}
+
+// 강조
+.text-emphasis {
+  @include font-weight("bold");
+}
+
+// highlight
+.text-highlight {
+  padding: 0 1px;
+  background-color: #00d5d5;
+  color: #fff;
+}
+
+// 참조
+.text-small {
+  @include font-size("14");
+  color: $text-basic;
+}
+
+// 말줄임
+.ellipsis-end {
+  @include text-overflow;
+}
+
+// 폼 안내 메시지
+.complete-message {
+  @include font-size("14");
+  color: $text-light;
+
+  &--danger {
+    color: $danger;
+
+    &::before {
+      content: url("#{$img-path}/icon/warning.svg");
+      display: inline-block;
+      margin: $spacing-2xs $spacing-2xs 0 0;
+      vertical-align: middle;
+    }
+  }
+
+  &--warning {
+    color: $negative;
+  }
+
+  &--success {
+    color: $primary-dark;
+  }
+}
+
+//-------------------------------------------
+//  elements align
+// ------------------------------------------
+.item-group {
+  display: flex;
+  align-items: center;
+
+  & ~ & {
+    margin-top: $spacing-2xs;
+  }
+
+  &--between {
+    justify-content: space-between;
+
+    & > *:only-child {
+      margin-left: auto;
+    }
+  }
+
+  .bullet:not(:first-child) {
+    margin-left: $spacing-2xl;
+    color: $light;
+  }
+
+  .label {
+    @include font-weight("medium");
+  }
+
+  .label ~ .label {
+    margin-left: $spacing-lg;
+  }
+
+  .guide-message {
+    margin-top: 0;
+  }
+}
+
+.item-group > *:not(:last-child) {
+  margin-right: $spacing-sm;
+}
+
+.item-group-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  * + * {
+    margin-top: rem(4px);
+  }
+}
+
+.form-item {
+  &:not(:only-child):not(:first-child) {
+    margin-top: $spacing-lg;
+  }
+}
+
+.form-item__label {
+  display: block;
+  margin-bottom: rem(6px);
+  color: $primary;
+  font-size: rem(15px);
+  @include font-weight("bold");
+}
+
+// element 사이 구분선
+.division-element {
+  position: relative;
+  margin-left: $spacing-md + $spacing-2xs !important;
+  &:after {
+    content: "";
+    position: absolute;
+    left: rem(-11px);
+    top: 50%;
+    margin-top: -$spacing-xs;
+    width: rem(1px);
+    height: rem(17px);
+    background-color: $bg-dark;
+  }
+
+  &.division-element--lg {
+    margin-left: $spacing-lg !important;
+
+    &:after {
+      margin-top: rem(-11px);
+      height: rem(22px);
+      left: rem(-13px);
+    }
+  }
+}
+
+//----------------------------------------------
+// background
+// ---------------------------------------------
+
+.filter-highlight {
+  background-color: #fff09c;
+}
+
+.disabled-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($dark, 0.5);
+  z-index: z("layer");
+}
+
+.overlay {
+  @include overlay-blur;
+}
+
+//----------------------------------------------
+// bullet
+// ---------------------------------------------
+// @bullet(이름, 좌측 여백, 블릿 상단 위치값, 블릿 좌측 위치값)
+
+.bullet {
+  &:not(ul),
+  & > li {
+    position: relative;
+    padding-left: 1rem;
+    text-align: left;
+    word-break: keep-all;
+  }
+  
+  & + &,
+  & > li + li {
+    margin-top: 0.25em;
+  }
+
+  &--refer {
+    @include bullet("refer", 12px, 0, 0);
+  }
+  
+  &--rect {
+    @include bullet("rect", 12px, 0, 2px);
+  }
+  
+  &--hyphen {
+    @include bullet("hyphen", 12px, 0, 1px);
+  }
+  
+  &--ast {
+    @include bullet("ast", 12px, 2px, 0);
+  }
+}

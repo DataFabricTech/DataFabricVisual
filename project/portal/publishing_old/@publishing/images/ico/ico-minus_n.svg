@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+    <g transform="translate(2 8)" style="fill:#fff;stroke:#666666">
+        <rect width="14" height="2" rx="1" style="stroke:none"/>
+        <rect x=".5" y=".5" width="13" height="1" rx=".5" style="fill:none"/>
+    </g>
+    <rect data-name="Rectangle 46" width="14" height="2" rx="1" transform="translate(2 8)" style="fill:#666666"/>
+</svg>

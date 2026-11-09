@@ -1,0 +1,105 @@
+package com.mobigen.datalake.search;
+
+import java.sql.SQLException;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mobigen.framework.result.annotation.ResponseJsonResult;
+import com.mobigen.framework.security.SessionManager;
+import com.mobigen.framework.utility.IpAddressUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RequestMapping("/api/search/detail/eliminate")
+@RestController
+@RequiredArgsConstructor
+public class DetailEliminateController {
+    private final SessionManager sessionManager;
+    private final DetailEliminateService detailEliminateService;
+
+    @Value("${properties.csvFileUploadPath}")
+    private String fileUploadPath;
+
+    /**
+     * 데이터추출 : 파일 이력 저장
+     * 
+     * @param param 파일 이력 정보
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/history/add")
+    public Object insertDownloadHistory(@RequestBody Map<String, String> param, HttpServletRequest request)
+            throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        param.put("user_id", user.get("user_id").toString());
+        param.put("user_name", user.get("username").toString());
+        param.put("dept_id", user.get("dept_id") != null ? user.get("dept_id").toString() : "-");
+        param.put("dept_name", user.get("dept_nm").toString());
+        param.put("user_ip_addr", IpAddressUtil.getClientIp(request));
+
+        return detailEliminateService.insertDownloadHistory(param);
+    }
+
+    /**
+     * 데이터 추출 : 파일
+     * 
+     * @param typeName       메타 타입 (hive_table, hive_column)
+     * @param qualified_name 메타 고유명
+     * @param querySelect    데이터 추출 Trino 쿼리
+     * @param queryWhere     데이터 추출 Trino
+     * @param fileName       파일명
+     * @return
+     * @throws SQLException
+     */
+    @PostMapping(value = "/file/download")
+    public void downloadCsv(@RequestBody Map<String, Object> params, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("user_id", user.get("user_id").toString());
+
+        if (params.get("querySelect") == null) {
+            params.put("querySelect", "*");
+        }
+
+        detailEliminateService.getCSVFile(params, request, response);
+    }
+
+    /**
+     * 대용량 데이터 추출 요청
+     * 
+     * @return
+     * @throws SQLException
+     */
+    @ResponseJsonResult
+    @PostMapping(value = "/file/downloadRequest")
+    public Object downloadRequest(@RequestBody Map<String, Object> params, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("user_id", user.get("user_id").toString());
+        params.put("user_ip", IpAddressUtil.getClientIp(request));
+        return detailEliminateService.downloadRequest(params);
+    }
+
+    /**
+     * SSL 사용 여부
+     * 
+     * @return
+     * @throws SQLException
+     */
+    @ResponseJsonResult
+    @GetMapping(value = "/isSslEnabled")
+    public Object isSslEnabled() throws Exception {
+        return detailEliminateService.getIsSslEnabled();
+    }
+}

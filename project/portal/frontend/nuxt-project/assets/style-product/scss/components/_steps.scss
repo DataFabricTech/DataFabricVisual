@@ -1,0 +1,115 @@
+// -------------------------
+// Steps
+// -------------------------
+.steps {
+	margin-bottom: 3.75rem;
+}
+
+.step-list {
+	display: flex;
+}
+
+.step-list__item {
+	@include font-weight("medium");
+	@include font-size("20");
+	flex: 1;
+	position: relative;
+	line-height: rem(50px);
+	text-align: center;
+	background-color: $bg-dark;
+
+	&:first-child {
+		border-radius: 0.5rem 0 0 0.5rem;
+	}
+
+	&:last-child {
+		border-radius: 0 0.5rem 0.5rem 0;
+
+		&::after {
+			display: none;
+		}
+	}
+
+	&::after {		
+		content: "";
+		position: absolute;
+		top: -1px;
+		right: 0;
+		z-index: 2;
+		width: 1.25rem;
+		height: calc(100% + 2px);
+		background-color: $bg-dark;
+		clip-path: polygon(0 0, 0% 100%, 100% 50%);
+		transform: translateX(100%);
+	}
+
+	&--selected {
+		z-index: 1;
+		background-color: $dark;
+		color: #fff;
+
+		&::after {
+			background-color: $dark;
+		}
+	}
+}
+
+.process-step {
+	display: flex;
+	gap: 2.5rem;
+}
+
+.process-step__item {
+	@include font-weight("medium");
+	@include font-size("20");
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	position: relative;
+	height: rem(50px);
+	padding: 0 1.25rem;
+	border-radius: calc(rem(50px) / 2);
+	background-color: #ccc;
+	color: $white;
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: 50%;
+		left: 0.75rem;
+		width: 2rem;
+		height: 2rem;
+		background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgY2xhc3M9ImJpIGJpLWNoZWNrIiBmaWxsPSJjdXJyZW50Q29sb3IiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMC45NyA0Ljk3YS43NS43NSAwIDAgMSAxLjA3IDEuMDVsLTMuOTkgNC45OWEuNzUuNzUgMCAwIDEtMS4wOC4wMkw0LjMyNCA4LjM4NGEuNzUuNzUgMCAxIDEgMS4wNi0xLjA2bDIuMDk0IDIuMDkzIDMuNDczLTQuNDI1YS4yNjcuMjY3IDAgMCAxIC4wMi0uMDIyeiIvPjwvc3ZnPg==") center center no-repeat;
+		background-size: 100%;
+		transform: translateY(-50%);
+		filter: invert(1);
+	}
+
+	&:not(:last-child)::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		left: 100%;
+		width: 2.5rem;
+		height: rem(2px);
+		margin-top: rem(-1px);
+		background-color: #ccc;
+	}
+
+	&--selected {
+		background-color: $dark;
+		color: $white;
+
+		&::before,
+		& ~ .process-step__item::before {
+			left: 1.25rem;
+			width: 0.75rem;
+			height: 0.75rem;
+			border-radius: 100%;
+			background: #fff;
+			transform: translateY(-50%);
+			filter: invert(0);
+		}
+	}
+}

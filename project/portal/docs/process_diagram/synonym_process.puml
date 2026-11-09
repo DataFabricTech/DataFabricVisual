@@ -1,0 +1,37 @@
+@startuml
+
+autoactivate on
+
+title 카탈로그 동의어
+
+actor 사용자 as user
+
+box "카탈로그 동의어 등록/삭제요청"
+participant Client as client
+participant SynonymController as synonymController
+participant SynonymService as synonymService
+end box
+
+box "SMTP"
+participant SMTP as SMTP
+end box
+
+box "Elasticsearch 작업수행 서버"
+participant FastApi as fastApi
+end box
+
+client -> synonymController : 동의어 등록/삭제요청
+synonymController -> synonymService : 동의어 등록/삭제요청
+synonymService -> fastApi : Elasticsearch Index의 동의어를 Postgres DB 기반으로 갱신
+synonymService -> SMTP : 동의어 삭제요청 이메일 발송 요청
+note right
+    1. 삭제요청 성공 시 이메일 처리
+    2. properties.activeSendMail.synonym: true 인 경우 이메일 발송
+    3. 동의어 삭제요청 관리 메뉴의 권한이 있는 관리자에게 이메일 발송
+end note
+SMTP -> synonymService : 동의어 삭제요청 이메일 발송 결과 반환
+fastApi -> synonymService : 갱신 결과 반환
+synonymService -> synonymController : 동의어 등록/삭제요청 결과 반환
+synonymController -> client : 동의어 등록/삭제요청 결과 반환
+
+@enduml

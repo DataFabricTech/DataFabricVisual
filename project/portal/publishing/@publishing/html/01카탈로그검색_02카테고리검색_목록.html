@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>카탈로그 히트맵 < 카탈로그 검색 < 데이터 카탈로그</title>
+    <link href="../css/common.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="__nuxt">
+      <div id="__layout">
+        <div>
+          <!-- DEV nuxt common layout ADD -->
+          <div id="app" class="wrapper wrapper-sub">
+            <!-- 실제 PUB layout / sub화면은 wrapper-sub / admin시 .admin-wrapper 추가됨 -->
+            <!-- skip -->
+            <div class="skiptoContent">
+              <a href="#main">본문 바로가기</a>
+            </div>
+            <!-- //skip -->
+            <!-- header -->
+            <header class="header-sub">
+              <!-- hover시 .open 추가됨 nav 펼침 -->
+              <div class="header">
+                <div class="inner">
+                  <h1 class="logo">
+                    <a href="#" target="_self"><span>데이터 카탈로그</span></a>
+                  </h1>
+                  <div class="gnb-area">
+                    <!-- nav -->
+                    <nav class="nav">
+                      <ul>
+                        <li class="current">
+                          <a href="#"><span>카탈로그 검색</span></a>
+                          <ul>
+                            <li><a href="#">통합검색</a></li>
+                            <li class="current"><a href="#">카테고리 히트맵</a></li>
+                            <li><a href="#">카탈로그 동의어</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#"><span>데이터 요청</span></a>
+                        </li>
+                        <li>
+                          <a href="#"><span>My Catalog</span></a>
+                          <ul>
+                            <li><a href="#">카탈로그 대시보드</a></li>
+                            <li><a href="#">데이터 요청 내역</a></li>
+                            <li><a href="#">동의어 삭제 요청 내역</a></li>
+                            <li><a href="#">추출 데이터</a></li>
+                            <li><a href="#">찜 데이터</a></li>
+                            <li><a href="#">리뷰 데이터</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#"><span>활용사례</span></a>
+                          <ul>
+                            <li><a href="#">분석 활용사례</a></li>
+                            <li><a href="#">통계 활용사례</a></li>
+                            <li><a href="#">외부 데이터</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#"><span>고객지원</span></a>
+                          <ul>
+                            <li><a href="#">공지사항</a></li>
+                            <li><a href="#">FAQ</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </nav>
+                    <!-- //nav -->
+                    <ul class="top-menu">
+                      <li>
+                        <a href="/member/join/indexJoinInit.do" class="mu-btn mu-btn-round"><span>Admin</span></a>
+                      </li>
+                      <li>
+                        <button type="button" title="My Catelog" class="mu-btn mu-btn-round mu-btn-icon-only"><i class="mu-icon-svg user"></i></button>
+                      </li>
+                      <li>
+                        <button type="button" title="로그아웃" class="mu-btn mu-btn-round mu-btn-icon-only"><i class="mu-icon-svg logout"></i></button>
+                      </li>
+                      <li>
+                        <button type="button" title="사이트맵" class="mu-btn mu-btn-round mu-btn-icon-only">
+                          <i class="mu-icon-svg menu"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </header>
+            <!-- //header -->
+            <!-- main-sub -->
+            <main id="main" class="main-sub">
+              <!-- sub page : main-sub class 추가 -->
+              <div class="main-contents">
+                <h2 class="blind">카탈로그 히트맵</h2>
+                <!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                <div class="contents-wrap">
+                  <!-- contents-top -->
+                  <div class="contents-top">
+                    <div class="breadcrumbs-wrap">
+                      <div class="breadcrumbs">
+                        <ol class="mu-path">
+                          <li class="home"><a href="">HOME</a></li>
+                          <li><a href="">카탈로그 히트맵</a></li>
+                          <li><a href="">카테고리 히트맵</a></li>
+                        </ol>
+                      </div>
+                    </div>
+                    <div class="subject-wrap">
+                      <div class="subject">
+                        <div class="subject-title">
+                          <h3>카테고리 히트맵</h3>
+                          <!-- 실제 해당 페이지명 -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- contents -->
+                  <div class="contents">
+                    <div>
+                      <div class="mu-tab-box sub-tab">
+                        <ul class="mu-tab">
+                          <li class="active"><a href="" title="선택됨">카테고리</a></li>
+                          <li><a href="">시스템</a></li>
+                        </ul>
+                      </div>
+                      <!-- visual-map-wrap : 맵영역 -->
+                      <div class="visual-map-wrap">
+                        <div class="inner">
+                          <!-- colors: #2c4ca1, #ebc959, #e27f6b, #ef9f95, #5378d9, #88a9ff, #23d1de, #77e1e6, #16e1b0, #92ecd4 -->
+                          <div id="treemap"></div>
+                        </div>
+                      </div>
+                      <!-- //visual-map-wrap -->
+                    </div>
+                  </div>
+                  <!-- //contents -->
+                </div>
+              </div>
+            </main>
+            <!-- //main-sub -->
+
+            <!-- footer -->
+            <footer>
+              <div class="inner">
+                <!-- footer-info -->
+                <div class="footer-info">
+                  <address>
+                    <p>대표번호 <strong class="tel">02-2018-5114</strong></p>
+                  </address>
+                  <p class="copyright">ⓒ 2024. MOBIGEN COMPANY.</p>
+                </div>
+                <!-- footer-logo -->
+                <div class="footer-logo"><span>MOBIGEN</span></div>
+              </div>
+              <!-- floating-button -->
+              <div class="floating-button">
+                <a href="#" title="맨 위로 가기" class="mu-btn btn-go-top">상단가기</a>
+              </div>
+            </footer>
+            <!-- //footer -->
+          </div>
+          <!-- //DEV nuxt common layout ADD -->
+        </div>
+      </div>
+    </div>
+    <script src="../lib/vue/vue.min.js"></script>
+    <script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script>
+    <!-- vue2-datepicker ver up -->
+    <script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script>
+    <!-- vue2-datepicker kor ver -->
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="../js/common.js"></script>
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script>
+    <!-- 동작 확인용 임시 -->
+    <script>
+      Highcharts.setOptions({
+        lang: {
+          thousandsSep: ",",
+        },
+        colors: ['#2c4ca1', '#ebc959', '#e27f6b', '#ef9f95', '#5378d9', '#88a9ff', '#23d1de', '#77e1e6', '#16e1b0', '#92ecd4']
+      });
+      
+      // 히트맵 디자인 예시
+      Highcharts.chart('treemap', {
+        chart: {
+          type: 'treemap',
+          height: 800,
+          spacing: [0,0,0,0],
+          backgroundColor: 'transparent'
+        },
+        title: {
+          text: ""
+        },
+        credits: {
+          enabled: false
+        },
+        legend: {
+          enabled: false
+        },
+        plotOptions: {
+          series: {
+            type: 'treemap',
+            borderColor: '#f0f2f7',
+            borderRadius: '15px',
+            borderWidth: 4,
+            clip: false,
+            dataLabels: {
+              align: 'center',
+              enabled: true,
+              formatter: function() {
+                return this.point.name + '<br><span style="font-size:24px">' + this.point.value + '</span>';
+              },
+              style: {
+                fontWeight: '600',
+                fontSize: '20px',
+                color: '#fff',
+                textAlign: 'center',
+                textOutline: 'none'
+              }
+            }
+          }
+        },
+        series: [{
+          type: 'treemap',
+          layoutAlgorithm: 'squarified',
+          allowDrillToNode: true,
+          states: {
+            hover: {
+              borderColor: '#f0f2f7'
+            }
+          },
+          data: [{
+            name: '카테고리 1',
+            value: 35468,
+            color: '#2c4ca1',
+          }, {
+            name: '카테고리 2',
+            value: 20171,
+            color: '#ebc959',
+          }, {
+            name: '카테고리 3',
+            value: 12193,
+            color: '#e27f6b',
+          }, {
+            name: '카테고리 4',
+            value: 10687,
+            color: '#ef9f95',
+          }, {
+            name: '카테고리 5',
+            value: 10213,
+            color: '#5378d9',
+          }, {
+            name: '카테고리 6',
+            value: 3427,
+            color: '#88a9ff',
+          }, {
+            name: '카테고리 7',
+            value: 9483,
+            color: '#23d1de',
+          }, {
+            name: '카테고리 8',
+            value: 6495,
+            color: '#77e1e6',
+          }, {
+            name: '카테고리 9',
+            value: 3012,
+            color: '#16e1b0',
+          }, {
+            name: '카테고리 10',
+            value: 1896,
+            color: '#92ecd4'
+          }]
+        }],
+        tooltip: {
+          enabled: true,
+          shared: true,
+          useHTML: true,
+          formatter: function() {
+            return `<div id="tooltip" class="mu-tooltip-info w360">
+                    <div class="mu-tooltip-head">
+                      <p>카테고리 정보</p>
+                    </div>
+                    <div class="mu-tooltip-body">
+                      <div class="data-info2">
+                        <dl>
+                          <dt>이름</dt>
+                          <dd>연구소</dd>
+                        </dl>
+                        <dl>
+                          <dt>테이블 개수</dt>
+                          <dd>12 개</dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>`
+          },
+          hideDelay: 100, // 사라지는 속도
+          followPointer: true, // 포인터 위치에 tooltip 생성
+          shadow: false, // tooltip 선 그림자
+          borderWidth: 0, // tooltip 선 크기
+          backgroundColor: 'none', // tooltip 선이 도달하는 배경표시 색상 제거,
+          style: {
+            fontSize: '1em'
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+	<title>HTML Work List | 데이터 카탈로그 플랫폼 - 사용자/관리자</title>	
+	<link rel="stylesheet" type="text/css" href="guide/css/guide.css"><!-- 가이드용 -->
+</head>
+<body>
+
+  <div id="guide-wrap">
+    <header id="header">
+        <hgroup class="h-group">
+            <h1><img src="guide/images/comm/logo.gif" alt="mobigen"></h1>
+            <h2>데이터 카탈로그 플랫폼 - 사용자/관리자</h2>
+        </hgroup>
+    </header>
+
+    <div id="container">
+        <div class="status-board">
+            <div class="work-info">
+              <h3>작업 안내</h3>
+                <ul class="mu-bul-disc">
+                  <li><strong>크로스브라우징 범위 : </strong> Chrome, Edge만 고려 (IE11 X)				
+                  <li><strong>퍼블 작업용 CSS : </strong>  common / style</li>
+                  <li><strong>기본폰트 : </strong> NanumSquare(한글 2022-08-10 변경) / Roboto (영문/숫자)</li>
+                  <li><strong>개발상 CSS수정 발생시 : </strong>[css] 임의 적용하지 마세요(dev)</li>
+                  <li><strong>접근성 : </strong>접근성은 이슈없음(아주 기본만 고려해서 작업)</li>
+                  <li><strong>중요공지 : </strong>[2022-08-25 기획공지] : 사용자 목록이 들어간 UI(기획서 상 77, 79, 86, 87, 108, 109 등)는 수정 가능성 있음</li>
+                </ul> 
+            </div>
+            <button type="button" class="btn-view">작업 안내 접기</button>
+        </div>
+  
+        <div class="top-area">	
+          <div class="view-group">						        
+            <button type="button" onclick="jQuery('html,body').animate({scrollTop:0});">TOP</button>         
+          </div>				
+        </div>
+        <div class="tab-area">
+            <div class="mu-tab-box">
+                <ul class="mu-tab">
+                    <li class="active"><a href="#none">퍼블리싱 현황판 - 사용자</a></li>
+                    <li class=""><a href="#none">퍼블리싱 현황판 - 관리자</a></li>
+                </ul>
+            </div>
+            <div class="tab-content on">
+                <div class="status-info">
+                    <h3>퍼블리싱 현황판 - 사용자</h3>
+                    <div class="keyword">
+                        <p>작업메뉴별 바로가기 :</p>
+                        <select id="keyword">
+                            <option value="전체">전체</option>
+                            <option value="guide">guide</option>
+                            <option value="main">메인</option>
+                            <option value="카탈로그 검색">카탈로그 검색</option>
+                            <option value="고객지원">고객지원</option>
+                            <option value="My Catalog">My Catalog</option>
+                        </select> 
+                    </div>
+                </div>	
+                <table class="status-tbl">
+                <caption>코딩리스트 목록</caption>
+                <colgroup>
+                    <col style="width:40px">
+                    <col style="width:130px">
+                    <col style="width:480px">
+                    <col style="width:450px">
+                    <col style="width:90px">
+                    <col style="width:auto">
+                </colgroup>
+                <thead>
+                    <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">화면ID/디자인파일</th>
+                    <th scope="col">화면경로</th>
+                    <th scope="col">파일명</th>
+                    <th scope="col">작업일</th>
+                    <th scope="col">화면설명</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="path tit" colspan="6">확인용 샘플 & guide</td>
+                        </tr>
+                        <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/total_guide.html" target="_blank">total_guide</a> 
+                        </td>
+                        <td class="date">-</td>
+                        <td>        
+                            <P class="info">코딩가이드 </P>      
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/sub_layout.html" target="_blank">sub_layout</a> 
+                        </td>
+                        <td class="date">-</td>
+                        <td>
+                            <p class="mod">[2022-08-18] footer 기획/디자인 수정 공통반영 (footer-menu / family-site DEL) </p>  
+                            <p class="mod">[2022-08-19] nav 대메뉴 3개로 확정 </p>  
+                            <p class="mod">[2022-08-19] contents-wrap 분리 예시 </p>   
+                            <p class="add">[2022-09-13] 상단으로 이동 버튼 공통추가(메인은 해당없음) </p>        
+                        </td>
+                    </tr>    
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/공통_loading.html" target="_blank">공통_loading</a>  <br>
+                            <a href="html/공통_loading_dim.html" target="_blank">공통_loading_dim</a> 
+                        </td>
+                        <td class="date">2022-09-22</td>
+                        <td> 
+                            <P class="info">1) 공통_loading : contents 영역에 올때  <br>2) 공통_loading_dim : 전체 dim</P>     
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/공통_dialog.html" target="_blank">공통_dialog</a> 
+                        </td>
+                        <td class="date">2022-08-01</td>
+                        <td>
+                            <P class="info">팝업예시 </P>
+                            
+                        </td>
+                    </tr>  
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/메인_dialog.html" target="_blank">메인_dialog</a> 
+                        </td>
+                        <td class="date">2022-10-21</td>
+                        <td>
+                            <P class="info">메인에 뜨는 공지용 팝업 </P>
+                            - mu-dialog.notice-dialog.w500
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/공통_alert.html" target="_blank">공통_alert</a> 
+                        </td>
+                        <td class="date">2022-09-03</td>
+                        <td>
+                            <P class="info">사용자,관리자 알럿창 예시 </P>
+                            
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/공통_목록_결과없음.html" target="_blank">공통_목록_결과없음</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            <p class="info">결과없음 목록게시판 예시</p>
+                            - board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">login</td>
+                        <td class="file-name">
+                            <a href="html/공통_로그인.html" target="_blank">공통_로그인</a> 
+                            
+                        </td>
+                        <td class="date">2022-09-02</td>
+                        <td> 
+                            <p class="info">전체레이아웃 디자인 왼쪽정렬</p>
+                        </td>
+                    </tr>  
+                    <tr>
+                        <td class="path tit" colspan="6">메인</td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">main</td>
+                        <td class="file-name">
+                            <a href="html/00메인.html" target="_blank">00메인</a> 
+                            
+                        </td>
+                        
+                        <td class="date">2022-08-16</td>
+                        <td> 
+                            <p class="add">[2022-08-16] 구조만 완료</p> 
+                            <p class="add">[2022-09-01] 디자인 ico-category (.active 추가) / ico-data</p>
+                            <p class="mod">[2022-09-06] v1.1.0 MOD : 새로 들어온 데이터 => 오늘의 접속자 수(당일 00:00:00 ~ 23:59:59 이내에서 기록하되, 반영 시간/실시간 반영 여부는 개발에서 논의 필요) </p>
+                            <p class="add">[2022-09-08] 데이터 도넛챠트 예시 추가(pie)</p>
+                            <p class="mod">[2022-09-14] 최신데이터/추천데이터 - [더보기] 버튼은 삭제됨</p>
+                            <p class="mod">[2022-09-16] PIE/트리맵 디자인색상 변경 <br>
+                                맵영역 각 카테고리별 색상값<br>
+                                IT : #de4029 <br>
+                                경영지원관리 : #a93732<br>
+                                공통 : #e35b30<br>
+                                구매 : #f9ab25<br>
+                                생산 : #893736<br>
+                                서비스부품 : #42454a<br>
+                                연구 : #b9bfc7<br>
+                                영업 : #54575f<br>
+                                품질 : #dcdfe3</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="path tit" colspan="6">카탈로그 검색</td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 통합검색</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_01통합검색_목록.html" target="_blank">01카탈로그검색_01통합검색_목록</a> 
+                            
+                        </td>
+                        <td class="date"></td>
+                        <td>
+                            <p class="add">[2022-08-04] 필터검색영역추가 + 추가속성필터도 추가 (동작예시 common.js확인)</p>  
+                            <p class="mod">[2022-08-08] 기존 조회수, 다운로드 수 data-info 삭제하고 구조 변경 있음(tags-group 공통수정)</p>     
+                            <p class="mod">[2022-08-09] class명 공통 수정 (mu-item-group)  </p>  
+                            <p class="add">[2022-09-02] ico-data 디자인 아이콘 예시로 구성 총6개  </p>  
+                            <p class="add">[2022-09-16] 상세검색에 고급필터 예시 추가(탭동작 참고)</p> 
+                            <p class="add">[2022-11-09] 상세검색에 [표준어 검색] attribute-filter-item : 추가속성필터영역으로 이동(구조추가함)</p> 
+                            - data-result-wrap > data-result > data-box-list (data-box + data-box)    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 통합검색</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_01통합검색_목록_필터.html" target="_blank">01카탈로그검색_01통합검색_목록_필터</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-04</td>
+                        <td>
+                        <p class="info">추가속성필터 리스트 예시</p>          
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 통합검색</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_01통합검색_목록_결과없음.html" target="_blank">01카탈로그검색_01통합검색_목록_결과없음</a>              
+                        </td>
+                        <td class="date">2022-08-04</td>
+                        <td>
+                            <p class="info">검색결과가 없을때 </p> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 통합검색</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_01통합검색_상세.html" target="_blank">01카탈로그검색_01통합검색_상세</a>                     
+                        </td>
+                        <td class="date">2022-08-04</td>
+                        <td>
+                            <p class="add">[2022-08-08] 데이터 담당자 (데이터 문의하기 대체)  추가 </p>
+                            <p class="add">[2022-08-08] 페이지 하단에 목록버튼(mu-button-wrap) 중앙정렬로 공통 수정 </p>
+                            <p class="mod">[2022-08-08] 기존 조회수, 다운로드 수 data-info 삭제하고 구조 변경 있음(tags-group 공통수정)</p> 
+                            <p class="mod">[2022-08-09] 데이터 담당자 공통추가</p>
+                            <p class="add">[2022-08-09] 샘플 데이터 출력 불가 시 공통문구 추가</p>   
+                            <p class="mod">[2022-08-18] 각각의 맵핑 카테고리의 데이터 담당자가 상이하게 지정될 경우, 복수의 데이터 담당자 정보가 기입될 수 있음 / 하단으로 이동함 구조 변경있음 </p>
+                            <p class="add">[2022-08-18] recommend-section : 데이터 추천 영역</p>
+                            <p class="add">[2022-08-18] 데이터정보 >  메타속성에 Value값 항목은 class명은 동일 (필요시에 따라서 활용가능)<br> 1)textarea.mu-area(readonly) <br> 2) div.mu-area </p>
+                            <p class="mod">[2022-08-23] 연관 데이터 : [수정일] 삭제</p>
+                            <p class="add">[2022-09-05] 데이터흐름도 svg 예시 / 툴팁 추가</p>
+                            <p class="add">[2022-09-06] 데이터흐름도 svg 개발적용 테스트</p>
+                            <p class="mod">[2022-09-06] v1.0.9 MOD : [연관데이터]리스트에서 카테고리 ==> 데이터 타입 으로 변경</p>
+                            <p class="mod">[2022-09-06] v1.0.9 DEL : 데이터 비추천 버튼 삭제</p>
+                            <p class="mod">[2022-09-14] 사용자 리뷰에 리뷰입력 0/200자 로 수정 / 버튼문구 수정 [완료] </p>
+                            <p class="mod">[2022-09-23] 데이터흐름도 svg width 수정(css) / 한줄말줄임, 타이틀은 개발팀 작업있음 </p>
+                            <p class="mod">[2022-11-18] 데이터 담당자 (1.담당 부서가 1개인 경우 / 2.담당부서가 1개 이상) </p>
+                            <p class="mod">[2022-11-18] 연관 데이터 (a tag 내부에 datatype-desc 추가 구조변경 / 기존 datatype-label은 무조건 hive_table 이란 문구만 들어감) </p>
+                            
+                            
+                            - data-detail-wrap > data-detail-head(data-box) + data-detail-body(mu-formbox + mu-grid.mu-grid-data)
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 통합검색</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_01통합검색_상세_데이터추출_dialog.html" target="_blank">01카탈로그검색_01통합검색_상세_데이터추출_dialog</a>                     
+                        </td>
+                        <td class="date">2022-08-04</td>
+                        <td>
+                            <p class="mod">[2022-08-09] 추출조건 +  추출방식 한 테이블 구조로 </p>
+                            <p class="add">[2022-08-30] 추출방식영역 한테이블로 통합함 / 버튼영역 사이즈 디자인반영 </p>
+                            <p class="add">[2022-08-30] .error 공통 반영 </p>
+                            <p class="mod">[2022-08-30] mu-formbox th col : 150px ===> 190px 디자인 반영 </p>
+                            - mu-formbox + mu-grid.mu-grid-data + tab
+                        </td>
+                    </tr>
+                    <tr class="type-badge del">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 통합검색</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_01통합검색_상세_데이터문의하기_dialog.html" target="_blank">01카탈로그검색_01통합검색_상세_데이터문의하기_dialog</a>                     
+                        </td>
+                        <td class="date">2022-08-01</td>
+                        <td><p class="info">[2022-08-02]데이터 문의하기 팝업 삭제 ==> 데이터 담당자 정보 명시로 상세 페이지에 들어감 </p>
+                            - formbox + formbox
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 카테고리검색</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_02카테고리검색_목록.html" target="_blank">01카탈로그검색_02카테고리검색_목록</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-11</td>
+                        <td>
+                        <p class="info">svg 해당 색상은 임시입니다.(디자인팀에서 색상 차후 지정) </p>  
+                        - treemap        
+                        </td>
+                    </tr>  
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 실데이터 위치 조회</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_03실데이터위치조회_목록.html" target="_blank">01카탈로그검색_03실데이터위치조회_목록</a> 
+                            
+                        </td>
+                        <td class="date">2022-09-13</td>
+                        <td>  
+                            - mu-formbox + mu-grid.mu-grid-data      
+                        </td>
+                    </tr> 
+                    
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 카탈로그 용어사전</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_04카탈로그용어사전_목록_표준단어.html" target="_blank">01카탈로그검색_04카탈로그용어사전_목록_표준단어</a> 
+                        </td>
+                        <td class="date">2022-08-17</td>
+                        <td>
+                            <p class="info">카탈로그 용어사전 > 카탈로그 용어사전 페이지는 카탈로그 검색의2depth로 이동함 </p>
+                            <p class="info">FE카탈로그 용어사전은 상세가 없음 / 표준용어, 표준도메인, 표준용어 목록 동일구조</p>
+                            <p class="mod">[2022-09-14] 용어사전은 목록테이블에 [ No. ]항목 공통삭제함</p> 
+                            - content-floating-wrap(standard-count-box) + tab + board-list-wrap > board-list(mu-grid)  
+                        </td>
+                    </tr>  
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 카탈로그 용어사전</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_04카탈로그용어사전_목록_표준도메인.html" target="_blank">01카탈로그검색_04카탈로그용어사전_목록_표준도메인</a> 
+                        </td>
+                        <td class="date">2022-09-06</td>
+                        <td>
+                            <p class="info">확인용 산출물 페이지로 추가함</p>
+                            <p class="info">FE카탈로그 용어사전은 상세가 없음 / 표준용어, 표준도메인, 표준용어 목록 동일구조</p>
+                            <p class="mod">[2022-09-14] 용어사전은 목록테이블에 [ No. ]항목 공통삭제함</p> 
+                            - content-floating-wrap(standard-count-box) + tab + board-list-wrap > board-list(mu-grid)  
+                        </td>
+                    </tr>  
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">카탈로그 검색 > 카탈로그 용어사전</td>
+                        <td class="file-name">
+                            <a href="html/01카탈로그검색_04카탈로그용어사전_목록_표준용어.html" target="_blank">01카탈로그검색_04카탈로그용어사전_목록_표준용어</a> 
+                        </td>
+                        <td class="date">2022-09-06</td>
+                        <td>
+                            <p class="info">확인용 산출물 페이지로 추가함</p>
+                            <p class="info">FE카탈로그 용어사전은 상세가 없음 / 표준용어, 표준도메인, 표준용어 목록 동일구조</p>
+                            <p class="mod">[2022-09-14] 용어사전은 목록테이블에 [ No. ]항목 공통삭제함</p> 
+                            - content-floating-wrap(standard-count-box) + tab + board-list-wrap > board-list(mu-grid)  
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="path tit" colspan="6">고객지원</td>
+                    </tr>    
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > 데이터레이크/포털 소개</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_데이터레이크포털_소개.html" target="_blank">03고객지원_데이터레이크포털_소개</a> 
+                        </td>
+                        <td class="date">2022-11-10</td>
+                        <td>
+                            - system-guide-wrap > guide-box(mu-heading + guide-img)
+                        </td>
+                    </tr>  
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > 공지사항</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_01공지사항_목록.html" target="_blank">03고객지원_01공지사항_목록</a> 
+                        </td>
+                        <td class="date">2022-08-17</td>
+                        <td>
+                            - board-list-wrap > board-list(mu-grid)  
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > 공지사항</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_01공지사항_상세.html" target="_blank">03고객지원_01공지사항_상세</a> 
+                        </td>
+                        <td class="date">2022-08-17</td>
+                        <td>
+                            - board-wrap > board-head + board-body  
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > FAQ</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_02FAQ.html" target="_blank">03고객지원_02FAQ</a> 
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            - board-list-wrap > mu-accordion > mu-accordion-item > mu-accordion-head(question) + mu-accordion-body(answer)
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > 데이터요청</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_03데이터요청_목록.html" target="_blank">03고객지원_03데이터요청_목록</a> 
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td>1) 신청 : step-process apply <br> 2) 검토중 : step-process review <br> 3) 진행중 : step-process ing <br> 4) 제공 : step-process supply <br> 4) 미제공 : step-process unsupply<br><br>
+                            - step-box(step-list) + board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > 데이터요청</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_03데이터요청_상세_신청step.html" target="_blank">03고객지원_03데이터요청_상세_신청step</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                           <p class="info">신청 Step - 신청 상태일 경우에만 수정가능(수정 버튼 생성)</p>
+                           <p class="mod">[2022-09-01] v1.0.9 DEL : 개인정보때문에 신청자에서는 이메일정보는 삭제</p>
+                           -board-wrap > board-head + board-body(mu-formbox) 
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > 데이터요청</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_03데이터요청_상세_검토중진행중제공미제공step.html" target="_blank">03고객지원_03데이터요청_상세_검토중진행중제공미제공step</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                           <p class="info">검토중/진행중/제공/미제공 Step - 삭제만 가능(수정 버튼 미생성) / 처리내용 답글 </p>
+                           <p class="mod">[2022-09-01] v1.0.9 DEL : 개인정보때문에 신청자/처리내용에서는 이메일정보는 삭제</p>
+                           -board-wrap > board-head + board-body(mu-formbox + reply-box) 
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">고객지원 > 데이터요청</td>
+                        <td class="file-name">
+                            <a href="html/03고객지원_03데이터요청_등록.html" target="_blank">03고객지원_03데이터요청_등록</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            -board-wrap > mu-heading + board-body(mu-formbox)
+                        </td>
+                    </tr>                    
+                    
+                    <tr>
+                        <td class="path tit" colspan="6">My Catalog</td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">My Catalog > 카탈로그 대시보드</td>
+                        <td class="file-name">
+                            <a href="html/04MyCatalog_카탈로그대시보드.html" target="_blank">04MyCatalog_카탈로그대시보드</a> 
+                        </td>
+                        <td class="date">2022-08-29</td>
+                        <td>
+                            <p class="mod">[2022-09-02] v1.0.9 [MY 검색어] ==> [MY조회데이터]로 변경(가장 최근 에 조회한 데이터로 변경)</p>
+                            <p class="mod">[2022-09-06] v1.0.9 DEL : 추천 로그 보여주지 않기 (My 리뷰/추천 데이터 ==> My 리뷰 데이터)</p>
+                            - board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">My Catalog > 카탈로그 대시보드 > My 데이터 요청내역</td>
+                        <td class="file-name">
+                            <a href="html/04MyCatalog_01MY데이터요청내역_목록.html" target="_blank">04MyCatalog_01MY데이터요청내역_목록</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            <p class="info">[제목] 클릭시 본 데이터 요청 상세 게시글로 이동</p>
+                            <p class="add">[2022-08-29] 신청자 정보 추가</p>
+                            - board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">My Catalog > 카탈로그 대시보드 > 내가 추출한 데이터</td>
+                        <td class="file-name">
+                            <a href="html/04MyCatalog_02MY추출데이터_목록.html" target="_blank">04MyCatalog_02MY추출데이터_목록</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            <p class="info">[데이터명] 클릭 시, 해당 데이터 상세조회 페이지로 이동</p>
+                            - board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">My Catalog > 카탈로그 대시보드 > 내가 찜한 데이터</td>
+                        <td class="file-name">
+                            <a href="html/04MyCatalog_03MY찜데이터_목록.html" target="_blank">04MyCatalog_03MY찜데이터_목록</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            <p class="info">[데이터명] 클릭 시, 해당 데이터 상세조회 페이지로 이동</p>
+                            - board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">My Catalog > 카탈로그 대시보드 > 내가 리뷰한 데이터</td>
+                        <td class="file-name">
+                            <a href="html/04MyCatalog_04MY리뷰추천데이터_목록.html" target="_blank">04MyCatalog_04MY리뷰추천데이터_목록</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            <p class="info">[데이터명], [리뷰내용] 클릭 시, 해당 데이터 상세조회 페이지로 이동</p>
+                            <p class="mod">[2022-09-06] v1.0.9 DEL : 추천 로그 보여주지 않기 (추천날짜 항목 삭제)</p>
+                            - board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+
+            <div class="tab-content">
+                <div class="status-info">
+                    <h3>퍼블리싱 현황판 - 관리자</h3>
+                    <div class="keyword">
+                        <p>작업메뉴별 바로가기 :</p>
+                        <select id="keyword">
+                            <option value="전체">전체</option>
+                            <option value="guide">guide</option>
+                            <option value="main">메인</option>
+                            <option value="데이터활용현황관리">데이터 활용 현황 관리</option>
+                            <option value="메타데이터관리">메타 데이터 관리</option>
+                            <option value="고객지원관리">고객 지원 관리</option>
+                            <option value="시스템 관리">시스템 관리</option>
+                            <option value="Footer">Footer</option>
+                        </select> 
+                    </div>
+                </div>	
+                <table class="status-tbl">
+                    <caption>코딩리스트 목록</caption>
+                    <colgroup>
+                    <col style="width:40px">
+                    <col style="width:130px">
+                    <col style="width:480px">
+                    <col style="width:450px">
+                    <col style="width:90px">
+                    <col style="width:auto">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">화면ID/디자인파일</th>
+                        <th scope="col">화면경로</th>
+                        <th scope="col">파일명</th>
+                        <th scope="col">작업일</th>
+                        <th scope="col">화면설명</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr>
+                        <td class="path tit" colspan="6">확인용 샘플 & guide</td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                        <a href="html/total_guide.html" target="_blank">total_guide</a> 
+                        </td>
+                        <td class="date">작업중</td>
+                        <td>              
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                        <a href="html/sub_layout.html" target="_blank">sub_layout</a> 
+                        </td>
+                        <td class="date">작업중</td>
+                        <td>
+                        
+
+                                
+                        </td>
+                    </tr>    
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/공통_dialog.html" target="_blank">공통_dialog</a> 
+                        </td>
+                        <td class="date">2022-08-01</td>
+                        <td>
+                            <P class="info">팝업예시 </P>
+                            
+                        </td>
+                    </tr>   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">guide</td>
+                        <td class="file-name">
+                            <a href="html/공통_alert.html" target="_blank">공통_alert</a> 
+                        </td>
+                        <td class="date">2022-09-03</td>
+                        <td>
+                            <P class="info">사용자,관리자 알럿창 예시 </P>
+                            
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td class="path tit" colspan="6">데이터 활용 현황 관리</td>
+                    </tr>                   
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">데이터활용현황관리</td>
+                        <td class="file-name">
+                            <a href="html/관리자_01데이터활용현황관리.html" target="_blank">관리자_01데이터활용현황관리</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-23</td>
+                        <td>
+                            <p class="info">[2022-08-23] 챠트 제외 완료</p>  
+                            <p class="add">[2022-09-08] 챠트 예시추가(spline)</p>   
+                            <p class="mod">[2022-09-08] 탭 문구변경 : 접속자 수 => (명) / 나머지는 => (건) </p> 
+                            <p class="add">[2022-09-08] 데이터 현황챠트 예시 추가(spline)</p> 
+                            - dashboard-tab + dashboard-chart + mu-formbox
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="path tit" colspan="6">메타 데이터 관리</td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">메타데이터관리 > 메타데이터통합관리</td>
+                        <td class="file-name">
+                            <a href="html/관리자_02메타데이터관리_01메타데이터통합관리.html" target="_blank">관리자_02메타데이터관리_01메타데이터통합관리</a> 
+                            
+                        </td>
+                        <td class="date">2022-07-29</td>
+                        <td><p class="mod">[2022-08-03] 용어사전TAB 삭제됨(기획확인) </p>
+                            <p class="mod">[2022-08-03] [csv 파일 업로드]버튼은 삭제됨, 단어/도메인 사전에서만 csv 파일 업로드 기능 존재</p>
+                            <p class="mod">[2022-08-03] 카테고리/표준어 더보기 툴팁유형 추가 (기획확인) </p>
+                            <p class="add">[2022-08-09] 데이터 담당자 공통추가</p>
+                            <p class="mod">[2022-08-10] 카테고리 Description 영역과, 이와 관련된 Description 입력/수정 영역 모두 삭제</p>
+                            <p class="mod">[2022-08-17] 각각의 맵핑 카테고리의 데이터 담당자가 상이하게 지정될 경우, 복수의 데이터 담당자 정보가 기입될 수 있음 </p>
+                            <p class="add">[2022-08-23] 카테고리 영문명 추가 </p>
+                            <p class="mod">[2022-08-23] data-box ==> board-list-wrap 내부로 이동</p>
+                            <p class="mod">[2022-09-01] mu-grid + mu-grid-data ==> 테이블명 추가 / 데이터명 간격 / 카테고리 미분류 active색상 설정</p>
+                            <p class="mod">[2022-10-19] 데이터 담당자 (구조 추가)</p>
+                                - category-wrap + board-list-wrap > data-box + board-list(mu-grid.mu-grid-data)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_02메타데이터관리_01메타데이터통합관리_상세.html" target="_blank">관리자_02메타데이터관리_01메타데이터통합관리_상세</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-23</td>
+                        <td>
+                            <p class="add">[2022-08-19] 비지니스속성 Key, Value 값 추가 삭제 추가</p>
+                            <p class="mod">[2022-08-23] 연관 데이터 : [수정일] 삭제</p>
+                            <p class="mod">[2022-09-06] v1.0.9 MOD : [연관데이터]리스트에서 카테고리 ==> 데이터 타입 으로 변경</p>
+
+                            - data-detail-wrap > data-detail-head(data-box) + data-detail-body(mu-formbox + mu-grid.mu-grid-data)
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            공통 > 사용자 정보확인/수정
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_사용자정보확인수정_dialog.html" target="_blank">관리자_사용자정보확인수정_dialog</a>
+                        </td>
+                        <td class="date">2022-08-17</td>
+                        <td>- mu-formbox</td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            공통 > csv 파일 업로드
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_파일업로드_dialog.html" target="_blank">관리자_파일업로드_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-23</td>
+                        <td>
+                             <p class="info">csv파일 사전만 업로드 가능하고 공통_alert.html 확인</p>           
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리 > 하위카테고리 추가 / 수정<br>
+                            메타데이터관리 > 메타데이터통합관리 > 카테고리 맵핑
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_카테고리_추가수정맵핑_dialog.html" target="_blank">관리자_카테고리_추가수정맵핑_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-07-29</td>
+                        <td>
+                            <p class="mod">[2022-08-11] 테이블 항목중에 카테고리 설명 영역 삭제로 확정됨</p>
+                            <p class="add">[2022-08-11] 테이블 항목중에 데이터 담당자 영역 추가</p>
+                            <p class="mod">[2022-08-31 v1.0.8 변경안] <br> 카테고리 수정에 항목 활성/비활성 재정리</p>    
+                            - mu-formbox        
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리 > 데이터담당자 선택
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_데이터담당자선택_dialog.html" target="_blank">관리자_데이터담당자선택_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-11</td>
+                        <td>
+                            <p class="noti">[2022-08-25 기획공지] : 사용자 목록이 들어간 UI(기획서 상 77, 79, 86, 87, 108, 109 등)는 수정 가능성 있음</p>
+                            <p class="info">관리자_접근권한설정_dialog 는 같은 filter-wrap구조 (데이터담당자는 단일선택)</p>
+                            <p class="mod">[2022-08-25 기획공지 변경안 ==> 08-30~09-01] <br> 1) 그룹 미지정 명칭: 일반 그룹 <br> 2) 그룹 클릭 시, 하단에 그룹원 리스트가 노출되는 트리 구조</p>
+                            <p class="mod">[2022-08-31 v1.0.8 변경안] <br> 사용자 리스트 불러오기 로딩 문제로
+                                데이터 담당자로 지정할 사용자를 필터로 검색하여 직접 지정해주는 형태로 변경
+                                </p>
+                            - filter-wrap > mu-search-group +  filter-list (radio)              
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리 > 데이터담당자 선택
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_데이터담당자선택_결과없음_dialog.html" target="_blank">관리자_데이터담당자선택_결과없음_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-09-01</td>
+                        <td>
+                            <p class="noti">[2022-08-25 기획공지] : 사용자 목록이 들어간 UI(기획서 상 77, 79, 86, 87, 108, 109 등)는 수정 가능성 있음</p>
+                            <p class="info">결과없음</p>
+                            - filter-wrap > mu-search-group +  filter-list (nodata)              
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리 > 접근권한 설정
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_접근권한설정_dialog.html" target="_blank">관리자_접근권한설정_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-05</td>
+                        <td>
+                            <p class="noti">[2022-08-25 기획공지] : 사용자 목록이 들어간 UI(기획서 상 77, 79, 86, 87, 108, 109 등)는 수정 가능성 있음</p>
+                            <p class="info">관리자_데이터담당자선택_dialog 와 같은 filter-wrap구조 (접근권한설정은 다중선택)</p>
+                            <p class="mod">[2022-08-25 기획공지 변경안 ==> 08-30~09-01]<br> 1) 정렬기준 그룹단위로 고정 <br> 2) 그룹 미지정 명칭: 일반 그룹 <br> 3) 그룹 클릭 시, 하단에 그룹원 리스트가 노출되는 트리 구조 </p>
+                            
+                            <p class="mod">[2022-09-14] : filter-list -  사용자명 앞 체크박스 공통 삭제(구조확인)</p>
+                            
+                            - filter-wrap > filter-list (checkbox)          
+                        </td>
+                    </tr>
+                    <tr class="type-badge del">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리 > 용어사전 추가 / 수정
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_용어사전_추가수정_dialog.html" target="_blank">관리자_용어사전_추가수정_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-07-29</td>
+                        <td>
+                            <p class="mod">[2022-08-03] 용어사전 관련 내용 모두 삭제됨</p>    
+                            - mu-frombox       
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리 > 표준용어 맵핑
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_표준용어맵핑_dialog.html" target="_blank">관리자_표준용어맵핑_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td>
+                            <p class="info">행선택(tr) 클래스 : active</p>
+                            <p class="mod">[2022-09-14] 용어사전은 목록테이블에 [ No. ]항목 공통삭제함</p> 
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 메타데이터통합관리 _데이터 흐름 수정
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_데이터흐름리니지수정_dialog.html" target="_blank">관리자_데이터흐름리니지수정_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td>
+                            <p class="info">최대 20개까지 입력 가능</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 데이터 접근 권한 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_02메타데이터관리_02데이터접근권한관리.html" target="_blank">관리자_02메타데이터관리_02데이터접근권한관리</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            <p class="noti">[2022-08-25 기획공지] : 사용자 목록이 들어간 UI(기획서 상 77, 79, 86, 87, 108, 109 등)는 수정 가능성 있음</p>
+                            <p class="mod">[2022-08-25 기획공지 변경안 ==> 08-30~09-01] <br> 1) 정렬기준 그룹단위로 고정 <br> 2) 그룹 미지정 명칭: 일반 그룹 <br> 3) 그룹 클릭 시, 하단에 그룹원 리스트가 노출되는 트리 구조 <br>4) 대상사용자 ==> 대상그룹으로 변경하고 트리형태로 변경</p>
+                            
+                            <p class="mod">[2022-09-14] : filter-list -  사용자명 앞 체크박스 공통 삭제(구조확인)</p>
+                            
+                            - mu-section-area > filter-wrap.sortable-type + page-content > mu-swap-wrap     
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 용어사전관리 > 표준단어
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_02메타데이터관리_03용어사전관리_표준단어.html" target="_blank">관리자_02메타데이터관리_03용어사전관리_표준단어</a>                              
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            <p class="info">표준도메인, 표준용어 탭은 표준단어와 동일구조로 컬럼만 다름 / 표준용어만 [수정] 기능 없음</p>      
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 용어사전관리 > 표준도메인
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_02메타데이터관리_03용어사전관리_표준도메인.html" target="_blank">관리자_02메타데이터관리_03용어사전관리_표준도메인</a>                              
+                        </td>
+                        <td class="date">2022-09-06</td>
+                        <td>
+                            <p class="info">확인용 페이지로 추가함</p> 
+                            <p class="info">표준도메인, 표준용어 탭은 표준단어와 동일구조로 컬럼만 다름 / 표준용어만 [수정] 기능 없음</p>       
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 용어사전관리 > 표준용어
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_02메타데이터관리_03용어사전관리_표준용어.html" target="_blank">관리자_02메타데이터관리_03용어사전관리_표준용어</a>                                 
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            <p class="info">확인용 페이지로 추가함</p> 
+                            <p class="info">표준도메인, 표준용어 탭은 표준단어와 동일구조로 컬럼만 다름 / 표준용어만 [수정] 기능 없음</p>       
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            메타데이터관리 > 용어사전관리 > 표준 단어/도메인/용어 추가/수정</td>
+                        <td class="file-name">
+                            <a href="html/관리자_표준단어도메인용어_추가수정_dialog.html" target="_blank">관리자_표준단어도메인용어_추가수정_dialog</a> 
+                            
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td>
+                            <p class="info">표준용어, 표준도메인, 표준용어 추가/수정 모두 동일구조</p>
+                            <p class="mod">[2022-09-06] v1.0.9 확인 : 표준용어 수정팝업에서는 프로파일링항목만 수정가능</p>
+                            <p class="mod">[2022-09-06] html파일명 수정</p>
+                            - mu-frombox
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="path tit" colspan="6">고객지원관리</td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > 공지사항 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_01공지사항_목록.html" target="_blank">관리자_03고객지원관리_01공지사항_목록</a>   
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            - board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > 공지사항 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_01공지사항_상세.html" target="_blank">관리자_03고객지원관리_01공지사항_상세</a>   
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            <p class="add">[2022-08-30] [목록] 버튼 추가</p>
+                            - board-wrap > board-head + board-body(inner-cms + file-sch-box)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > 공지사항 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_01공지사항_등록.html" target="_blank">관리자_03고객지원관리_01공지사항_등록</a>   
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            - board-wrap > board-head + board-body(mu-formbox)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > FAQ 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_02FAQ.html" target="_blank">관리자_03고객지원관리_02FAQ</a>
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td>
+                            - board-list-wrap > mu-accordion
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > FAQ 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_02FAQ_등록.html" target="_blank">관리자_03고객지원관리_02FAQ_등록</a>
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            - board-wrap > board-head + board-body(mu-formbox)
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > FAQ 관리 > 순서변경
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_02FAQ_순서변경_dialog.html" target="_blank">관리자_03고객지원관리_02FAQ_순서변경_dialog</a>
+                        </td>
+                        <td class="date">2022-08-18</td>
+                        <td>
+                            - mu-swap-wrap.faq-move > mu-swap-inner + mu-swap-btn
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > 데이터 요청 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_03데이터요청관리_목록.html" target="_blank">관리자_03고객지원관리_03데이터요청관리_목록</a> 
+                        </td>
+                        <td class="date">2022-08-22</td>
+                        <td>
+                            - step-box + board-list-wrap > board-list(mu-grid)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > 데이터 요청 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_03데이터요청관리_상세_등록.html" target="_blank">관리자_03고객지원관리_03데이터요청관리_상세_등록</a> 
+                        </td>
+                        <td class="date">2022-08-23</td>
+                        <td>
+                            <p class="mod">[2022-09-01] v1.0.9 DEL : 개인정보때문에 신청자에서는 이메일정보는 삭제(FE와 동일한 수정)</p>
+                            - board-wrap > board-head + board-body(mu-formbox)        
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            고객지원관리 > 데이터 요청 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_03고객지원관리_03데이터요청관리_상세_수정.html" target="_blank">관리자_03고객지원관리_03데이터요청관리_상세_수정</a> 
+                        </td>
+                        <td class="date">2022-08-23</td>
+                        <td>
+                            <p class="mod">[2022-09-01] v1.0.9 DEL : 개인정보때문에 신청자에서는 이메일정보는 삭제(FE와 동일한 수정)</p>
+                            - board-wrap > board-head + board-body(mu-formbox)           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="path tit" colspan="6">시스템 관리</td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            시스템관리 > 사용자/그룹 관리 > 사용자
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_04시스템관리_01사용자그룹관리_01사용자.html" target="_blank">관리자_04시스템관리_01사용자그룹관리_01사용자</a>
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td>
+                            <p class="info">이름 클릭 시, 사용자 정보 확인 팝업창 출력 </p>
+                            <p class="add">[2022-09-06] v1.0.9 ADD : 리스트 내 그룹 텍스트 클릭 시, 그룹 정보 확인 팝업창 출력(링크 추가)</p>
+                            - content-tab-wrap + inner > board-list-wrap
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            시스템관리 > 사용자/그룹 관리 > 그룹
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_04시스템관리_01사용자그룹관리_02그룹.html" target="_blank">관리자_04시스템관리_01사용자그룹관리_02그룹</a>
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td><p class="info">그룹 클릭 시, 그룹 정보 확인 팝업창 출력  </p>
+                            - content-tab-wrap + inner > board-list-wrap
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            시스템관리 > 사용자/그룹 관리 > 그룹연결/추가
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_그룹연결_dialog.html" target="_blank">관리자_그룹연결_dialog</a>
+                        </td>
+                        <td class="date">2022-08-19</td>
+                        <td>
+                            <p class="noti">[2022-08-25 기획공지] : 사용자 목록이 들어간 UI(기획서 상 77, 79, 86, 87, 108, 109 등)는 수정 가능성 있음</p>
+                            <p class="info">그룹연결과 그룹추가 동일 구조이나 일부 항목 다름</p>
+                            <p class="mod">[2022-08-25 기획공지 변경안 ==> 08-30~09-01] 그룹원 정보는 팝업에서 추가 불가 조회/삭제만 될 수 있도록 변경</p>
+                            <p class="mod">[2022-09-01] v1.0.9 MOD :<br>  1) 테이블 분리적용 <br> 2) [신규/기존 선택]을 [선택된 사용자 테이블] 하단으로 이동 <br> 3) 검색단 삭제</p>
+                            - mu-frombox + mu-frombox
+                        </td>
+                    </tr>
+                    <tr class="type-badge">
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            시스템관리 > 사용자/그룹 관리 > 그룹 정보 확인
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_그룹정보확인_dialog.html" target="_blank">관리자_그룹정보확인_dialog</a>
+                        </td>
+                        <td class="date">2022-08-25</td>
+                        <td>
+                            <p class="info">그룹연결과 그룹추가 동일 구조이나 일부 항목 다름</p>
+                            <p class="noti">[2022-08-25 기획공지] : 사용자 목록이 들어간 UI(기획서 상 77, 79, 86, 87, 108, 109 등)는 수정 가능성 있음</p>
+                            <p class="mod">[2022-08-25 기획공지 변경안 ==> 08-30~09-01] 그룹원 정보는 팝업에서 추가 불가 조회/삭제만 될 수 있도록 변경</p>
+                            <p class="add">[2022-08-29] : [그룹추가] / [그룹정보수정] 팝업 추가함 </p>
+                            <p class="mod">[2022-09-07] v1.0.6 DEL : [그룹정보수정] 팝업 : 검색영역삭제 </p>
+                            - mu-frombox
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no"></td>
+                        <td></td>
+                        <td class="path">
+                            시스템관리 > 메인 관리
+                        </td>
+                        <td class="file-name">
+                            <a href="html/관리자_04시스템관리_02메인관리.html" target="_blank">관리자_04시스템관리_02메인관리</a>
+                        </td>
+                        <td class="date">작업중</td>
+                        <td>
+                            <p class="info">오른쪽 하단 리스트는 1,2,3 고정영역 + 우측만 Drag&Drop</p>
+                            <p class="mod">[2022-09-16] v1.1.1 : [데이터검색단] 추가 / 기존 [목록게시물board-list-search] 삭제 / [선택된 추천데이터] Drag&Drop 기능은 삭제로 최종 결정 <br>
+                                1) 데이터 목록에서 선택된 순서대로 ‘선택된 추천 데이터’ 리스트에 정렬 <br>  2) 선택된 추천 데이터 삭제 시, 데이터 목록에서 선택 취소 (체크해제) 선택된 추천 데이터 목록에서 제외(다음 순번이 위로 올라감) </p>
+
+                            - mu-section > main-system > inner-column + inner-column
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <p class="copy">Copyright &copy; 2022 Mobigen UX Development. All rights reserved.</p>
+    </footer>
+	</div>
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+
+
+	<script type="text/javascript">
+
+        jQuery(function($) {
+            $("#keyword").on('change', function() {
+                var val = $(this).val();
+                var $tr = $(".status-tbl > tbody > tr");
+                $tr.hide();
+                var go;
+                if (val === '전체') {
+                    go = $tr.find('td'); 
+                } else {
+                    go = $tr.find("td.path:contains('" + val + "')");
+                }
+                $(go).parent().show();
+            });
+        });
+
+        var $tabTitle = $(".tab-area .mu-tab li a");
+            $tabTitle.on("click", function(){
+            // index
+            const num = $tabTitle.index($(this));
+            // class 삭제
+            $(".tab-area .mu-tab li").removeClass("active");
+            $(".tab-area .tab-content").removeClass("on");
+        
+            // class 추가
+            $('.tab-area .mu-tab li:eq(' + num + ')').addClass("active");
+            $('.tab-area .tab-content:eq(' + num + ')').addClass("on");
+        
+        });
+
+		$('.btn-view').click(function(){
+		if ($('.work-info').is(':hidden')) {
+					$('.work-info').slideDown('fast');
+					$(this).text("작업 안내 접기");
+					
+				} else{
+					$('.work-info').slideUp('fast');
+					$(this).text("작업 안내 보기");
+					
+				}
+				return false;
+		});
+	</script>
+</body>
+</html>

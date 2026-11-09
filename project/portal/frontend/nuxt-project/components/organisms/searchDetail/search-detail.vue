@@ -1,0 +1,1291 @@
+<template>
+  <div>
+    <data-detail-head :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :entity="entity" :typeName="typeName"
+      @onOpenModal="onToggleCategoryModal" @reload="getDetailDataByGuid" @onOpenEliminateModal="onToggleEliminateModal"
+      :data="recommendStatus" :params="userDataParam" @reloadRecommendStatus="getRecommendStatus" />
+    <div class="inner">
+      <scroll-to-tab :tabs="tabs" :isAdmin="props.isAdmin" :isSticky="isSticky" :sectionRefs="sectionRefs"
+        @scrollToSection="scrollToSection" :resetTab="resetTab"/>
+      <!-- data-detail-wrap : 통합검색리스트 > 상세 -->
+      <div class="data-detail-wrap">
+        <div :ref="el => sectionRefs['unstructured-meta-update-area'] = el" class="content-block">
+          <unstructured-meta-update-area
+            :isAdmin="props.isAdmin"
+            :isDetail="true"
+            :entity="entity"
+            :typeName="typeName"
+            @updateUnstructuredMetaUpdate="updateUnstructuredMetaUpdate" />
+        </div>
+        <div :ref="el => sectionRefs['data-info-area'] = el" class="content-block">
+          <data-info-area :entity="entity" :referredEntitiesAttributes="referredEntitiesAttributes"
+            :isEdited="isEdited" :isDetail="true"
+            @onClickData="getAllDataByGuid" :isAdmin="props.isAdmin" :attributes="businessAttributes"
+            @onClickAddRow="onClickAddBusinessAttributes" @onClickDelRow="onClickDelBusinessAttributes"
+            @onClickBusinessAttributesConfirm="onClickBusinessAttributesConfirm" />
+        </div>
+        <!-- tag-box : 태그/키워드 관리 -->
+        <div :ref="el => sectionRefs['tag-keyword-area'] = el" class="content-block">
+          <tag-keyword-area ref="tag-keyword-area" :list="labelList" :allTagList="allTagList" :entity="entity"
+            @onClickAddTag="onClickAddTag" :isAdmin="props.isAdmin" @reload="getDetailDataByGuid" />
+        </div>
+        <!-- detail-section : 사용자 데이터 설명 -->
+        <div v-if="typeName && typeName.toUpperCase() != 'FILE'" :ref="el => sectionRefs['user-description-area'] = el" class="content-block">
+          <user-description-area :isAdmin="props.isAdmin" :isUserDescriptionMenuAuth="isUserDescriptionMenuAuth"
+            :list="userDescriptionList" :params="userDataParam" :initUserDescription="initUserDescription"
+            @reloadUserDescriptionList="getUserDescriptionList" @reload="getAllDataByGuid" />
+        </div>
+        <!-- detail-section : 데이터 프로파일링 -->
+        <div v-if="isProfileArea" :ref="el => sectionRefs['data-profile-area'] = el" class="content-block">
+          <data-profile-area :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :data-profile="dataProfile"
+            :columnCommentMap="columnCommentMap" :meta-id="currentGuid" />
+        </div>
+        <!-- detail-section : 샘플 데이터 -->
+        <div v-if="typeName && showSampleData(typeName)" :ref="el => sectionRefs['sample-data-area'] = el"
+          class="content-block">
+          <sample-data-area :isAdmin="props.isAdmin"
+            :sampleData="sampleData"
+            :sampleCaptureData="sampleCaptureData"
+            :entity="entity" :userDataAuth="userDataAuth" :typeName="typeName"
+            :referredEntitiesAttributes="referredEntitiesAttributes"
+            :fileFormat="fileFormat"/>
+        </div>
+        <!-- detail-section : 데이터 흐름조회 -->
+        <div v-if="isActiveLineage">
+          <div :ref="el => sectionRefs['data-lineage-area'] = el" class="content-block">
+            <data-lineage-area v-if="typeName && typeName.toUpperCase() != 'FILE'" :isAdmin="props.isAdmin" :startNode="startNode" :entity="entity"
+              :userDataParam="userDataParam" />
+          </div>
+        </div>
+        <!-- detail-section : 연관 데이터 -->
+        <div :ref="el => sectionRefs['related-data'] = el" class="content-block">
+          <related-data :isAdmin="props.isAdmin" :relatedDataList="relatedDataList" :entity="entity"
+            @onClickData="getAllDataByGuid" />
+        </div>
+        <!-- detail-section : 사용자 리뷰 -->
+        <div :ref="el => sectionRefs['user-review-area'] = el" class="content-block">
+          <user-review-area :isAdmin="props.isAdmin" :list="reviewDatalist" :params="userDataParam"
+            :initUserReview="initUserReview" @reload="getReviewDataList" />
+        </div>
+        <!-- recommend-section  -->
+        <data-recommend-status :isAdmin=props.isAdmin :data="recommendStatus" :params="userDataParam"
+          @reload="getRecommendStatus" />
+        <!-- //recommend-section  -->
+        <!-- mu-button-wrap -->
+        <div class="mu-button-wrap">
+          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" @click="onClickListButton">
+            <span>목록</span>
+          </button>
+        </div>
+        <!-- //mu-button-wrap -->
+      </div>
+      <!-- //data-detail-wrap -->
+      <!-- 카테고리 맵핑 추가 모달 -->
+      <manage-classification-modal :manage-modal="manageModalObj" @onCloseModal="onToggleCategoryModal"
+        @onSubmit="onAddCategoryMapping" />
+      <!-- 데이터추출 모달 -->
+      <eliminate-modal :eliminate-modal="eliminateModalObj" @onCloseModal="onToggleEliminateModal" />
+    </div>
+
+    <scroll-to-top />
+    <scroll-to-bottom />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { defaultAlert } from "@/components/functional/alert/alert-default";
+import unstructuredMetaUpdateArea from "@/components/molecules/searchDetail/unstructured-meta-update-area.vue";
+import ObjectUtils from "@/utils/ObjectUtils";
+import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
+import ScrollToBottom from "@functional/scroll/scroll-to-bottom";
+import ScrollToTab from "@functional/scroll/scroll-to-tab";
+import ScrollToTop from "@functional/scroll/scroll-to-top";
+import DataDetailHead from "@molecules/searchDetail/data-detail-head";
+import DataInfoArea from "@molecules/searchDetail/data-info-area";
+import DataLineageArea from "@molecules/searchDetail/data-lineage-area";
+import DataProfileArea from "@molecules/searchDetail/data-profile-area";
+import DataRecommendStatus from "@molecules/searchDetail/data-recommend-status";
+import RelatedData from "@molecules/searchDetail/related-data";
+import SampleDataArea from "@molecules/searchDetail/sample-data-area";
+import TagKeywordArea from "@molecules/searchDetail/tag-keyword-area";
+import UserDescriptionArea from "@molecules/searchDetail/user-description-area";
+import UserReviewArea from "@molecules/searchDetail/user-review-area";
+import EliminateModal from "@organisms/searchDetail/eliminatePopup";
+import { ref } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
+import { useCategoryStore } from "~/store/category.ts";
+import { useCategoryTreeStore } from "~/store/categoryTree.ts";
+import { useUserStore } from "~/store/user.ts";
+
+const { $ofetch } = useNuxtApp();
+
+const route = useRoute();
+const router = useRouter();
+
+const props = defineProps(["isAdmin"]);
+
+const userStore = useUserStore();
+const categoryStore = useCategoryStore();
+const categoryTreeStore = useCategoryTreeStore();
+
+const resetTab = ref(false)
+const tabs = ref(['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'related-data', 'user-review-area'])
+const sectionRefs = ref({}); // 탭 클릭 시 이동할 DOM
+const isSticky = ref(false) // 탭이 보이지 않는 곳으로 스크롤이 되었는지 여부
+
+const entity = ref({}); // 데이터 상세 정보
+const isActiveLineage = ref(false); // 리니지 활성화 여부
+const referredEntitiesAttributes = ref([]);
+const businessAttributes = ref([]);
+const currentGuid = ref("");
+const labelList = ref([]);
+const allTagList = ref([]);
+const columnCommentMap = ref({}); //컬럼 영-한 매핑
+
+const initUserDescription = ref(false);
+const initUserReview = ref(false);
+
+// 데이터 프로파일링
+const dataProfile = ref({
+  table: {},
+  db: {},
+  column: [],
+});
+const sampleData = ref([]); // 샘플 데이터 텍스트, 정형
+const sampleCaptureData = ref(""); // 이미지 캡쳐
+const sampleTotal = ref(null);
+const sampleFileFormat = ref(null);
+
+const startNode = ref(""); // 데이터 흐름도 렌더 시 시작 노드 guid
+const relatedDataList = ref([]); // 연관 데이터 목록
+const userDescriptionList = ref([]); // 사용자 데이터 설명 목록
+const reviewDatalist = ref({}); // 사용자 리뷰 목록
+const recommendStatus = ref({}); // 데이터 추천, 찜하기 관련 제어
+const manageModalObj = ref({
+  // 카테고리 맵핑 추가 모달 제어
+  type: "map",
+  target: {},
+  toggle: false,
+});
+
+// 데이터추출 모달 제어
+const eliminateModalObj = ref({
+  toggle: false,
+  sampleData: [],
+  entity: {},
+  typeName: "",
+  fileFormat: "",
+  num_rows: 0,
+  referredEntitiesAttributes: [],
+  userDataAuth: 0,
+});
+
+const dataManagerInfoList = ref([]); // 데이터 담당 부서 목록
+const isConfirmDisabled = ref(true); // 적용 버튼 활성화 여부 제어 flag
+
+const userDataParam = ref({}); // 사용자 데이터 파라미터
+
+const userDataAuth = ref(0) // 데이터 접근 권한
+const isUserDescriptionMenuAuth = ref(false) // 사용자 데이터 설명 권한
+
+onBeforeRouteLeave((to, from, next) => {
+  userStore.setFromPath(from.path) // 상세페이지에서 검색화면으로 이동했는지 확인용
+  next()
+})
+
+onMounted(async () => {
+  // 테이블에 데이터가 있는지 확인
+  await checkExistMetaData().then(async (checkRes) => {
+    if (checkRes) {
+      // 권한 체크
+      await getUserDataAuth().then(async (res) => {
+        if (res && res == true) {
+          window.addEventListener('scroll', handleScroll);
+          userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
+          categoryStore.fetchCategories(); // 카테고리 정보 조회
+          categoryTreeStore.fetchCategories(); // 카테고리 정보 조회
+          await getAllDataByGuid()
+          await searchTagList();
+        } else {
+          if (route.query.guid == ""
+            || route.query.guid == null
+            || route.query.guid == undefined
+            || route.query.guid == 'undefined'
+            || route.query.guid == 'null') {
+              await defaultAlert("조회에 실패하였습니다.")
+          } else {
+            await defaultAlert("데이터 접근 권한이 없습니다.")
+          }
+          history.go(-1)
+        }
+      }).catch(async (err) => {
+        await errorAlert("조회에 실패하였습니다.")
+        history.go(-1)
+      });
+    } else {
+      await defaultAlert("조회된 데이터가 없습니다.")
+      history.go(-1)
+    }
+  }).catch(async (err) => {
+    await defaultAlert("조회에 실패하였습니다.")
+    history.go(-1)
+  })
+});
+
+// 엔티티 유형
+const typeName = computed(() =>
+  ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+);
+
+// 샘플데이터 파일 형식
+const fileFormat = computed(() =>
+  ObjectUtils.getPropertyValue(entity.value, "attributes/file_format", "")
+);
+
+// 데이터 프로파일링 보여줄지 여부
+const isProfileArea = computed(() => {
+  const currentTypeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+  const currentFileFormat = ObjectUtils.getPropertyValue(entity.value, "attributes/file_format", "")
+  if (currentTypeName.toUpperCase() === 'FILE' && currentFileFormat.toUpperCase() != 'CSV') {
+    return false
+  }
+
+  return true
+})
+
+// entity 값이 변동되면 파라미터도 동기화
+watch(
+  () => entity.value,
+  (newVal, oldVal) => {
+    userDataParam.value = getUserDataParam();
+  }
+);
+
+watch(
+  () => route.query.guid,
+  (newVal, oldVal) => {
+    getAllDataByGuid();
+  }
+);
+
+const navTopOffset = ref(0)
+
+// 스크롤 위치 계산
+const handleScroll = () => {
+  const scrollY = window.scrollY;
+
+  // nav의 원래 위치 (nav가 화면에 처음 나오는 위치)
+  if (navTopOffset.value === 0) {
+    const navElement = document.querySelector('.nav');
+    if (navElement) {
+      navTopOffset.value = navElement.getBoundingClientRect().top + scrollY;
+    }
+  }
+
+  // nav가 고정되어야 할 위치
+  if (scrollY > 580) {
+    isSticky.value = true; // 화면 상단에 고정
+  } else {
+    isSticky.value = false; // 원래 위치로 돌아감
+  }
+}
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+// 특정 섹션으로 스크롤
+const scrollToSection = (params) => {
+  let { key } = params
+  const target = sectionRefs.value[key];
+  if (target) {
+    window.scrollTo({
+      top: target.offsetTop,
+      behavior: 'smooth',
+    });
+  }
+};
+
+// 사용자 리뷰 등록/수정, 데이터 추천, 데이터 찜하기 처리 시 필요 파라미터 계산
+const getUserDataParam = () => {
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
+  const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+  const qualified_name = ObjectUtils.getPropertyValue(
+    entity.value,
+    "qualified_name",
+    ""
+  );
+  const comment = ObjectUtils.getPropertyValue(
+    entity.value,
+    "description",
+    ""
+  );
+  const type = ObjectUtils.getPropertyValue(entity.value, "system_type", "");
+  const tableGuid = ObjectUtils.getPropertyValue(
+    entity.value,
+    "meta_id",
+    ""
+  );
+  const tableTypeName = ObjectUtils.getPropertyValue(
+    entity.value,
+    "attributes/table_type",
+    ""
+  );
+
+  const params = {
+    guid,
+    userID: userStore.getUser.user_id,
+    userName: userStore.getUser.username,
+    meta_name,
+    typeName,
+    qualified_name,
+    comment,
+    type,
+    tableGuid,
+    tableTypeName,
+  };
+
+  return params;
+};
+
+// 수정 여부 체크
+const isEdited = () => {
+  // 비지니스 속성을 제외한 나머지 항목은 바로 서버에 반영하게 되는 구조이므로 비지니스 속성만 수정 여부 판별
+  const targets = Object.assign([], businessAttributes.value);
+  const originals = Object.entries(
+    ObjectUtils.getPropertyValue(entity.value, "business_attributes", {})
+  ).map(([key, value]) => ({ key, value }));
+
+  // 목록 길이 다를 경우 무조건 true 반환
+  if (originals.length !== targets.length) {
+    return true;
+  }
+
+  let isEdited = false; // 목록 불일치 여부
+
+  for (let i = 0; i < originals.length; i++) {
+    const item = originals[i];
+
+    // 비교 대상 목록에서 일치하는 값 탐색
+    const matched = targets.find((el) => el.key === item.key);
+
+    if (!matched) {
+      // 일치하는 값 없으면 flag 변경 후 반복문 종료
+      isEdited = true;
+      break;
+    } else {
+      // 같은 키를 가진 원소가 있으면 값까지 비교
+      if (item.value !== matched.value) {
+        // 일치하는 값 없으면 flag 변경 후 반복문 종료
+        isEdited = true;
+        break;
+      }
+    }
+  }
+
+  return isEdited;
+};
+
+watch(
+  () => businessAttributes.value,
+  (newVal, oldVal) => {
+    // 비지니스 속성 변경 시 적용 버튼 활성화 여부 계산
+    let isDisabled = true;
+    let isValid = false;
+
+    if (isEdited) {
+      isValid = newVal.every((el) => el.key !== "" && el.value !== "");
+
+      if (isValid) {
+        isDisabled = false;
+      }
+    }
+
+    isConfirmDisabled.value = isDisabled;
+  }
+);
+
+// 상세 화면 구성에 필요한 모든 API 호출
+const getAllDataByGuid = async (newGuid, favoriteEvent) => {
+  resetTab.value = !resetTab.value
+  // GUID 기준 데이터 상세 조회 API 호출 이벤트 종료 후 나머지 API 호출하도록 동기화 처리
+  const guid = newGuid ? newGuid : route.query.guid;
+
+  getDetailDataByGuid(guid).then(() => {
+    // getDetailMetadatainfo(guid);
+    setBusinessAttributes();
+    setDataLineageStartNode();
+
+    // 상세 조회 페이지에 들어갈 데이터들 종류
+    let promises = [];
+    const favorite = favoriteEvent ? favoriteEvent : false;
+
+    // 사용자 데이터 설명 추천 버튼 클릭을 한 경우가 아닌 경우
+    if (!favorite) {
+      promises = [
+        Promise.resolve(getDetailDataProfile()),
+        Promise.resolve(getSampleData()),
+        Promise.resolve(getRelatedData()),
+        Promise.resolve(getDataManagerInfoList()),
+        Promise.resolve(getUserDescriptionList("favorite")),
+        Promise.resolve(getReviewDataList()),
+        Promise.resolve(getRecommendStatus()),
+      ];
+    } else {
+      promises = [
+        Promise.resolve(getDetailDataProfile()),
+        Promise.resolve(getSampleData()),
+        Promise.resolve(getRelatedData()),
+        Promise.resolve(getDataManagerInfoList()),
+        Promise.resolve(getReviewDataList()),
+        Promise.resolve(getRecommendStatus()),
+      ];
+    }
+
+    Promise.allSettled([...promises]).then(() => {
+      // 강제 loader 유지 flag 변경
+      userStore.setForceRenderLoader(false);
+    });
+
+    initUserDescription.value = !initUserDescription.value;
+    initUserReview.value = !initUserReview.value;
+  });
+};
+
+const settingTabOption = (entity) => {
+  tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'related-data', 'user-review-area']
+
+  // -----------------------------
+  // 🔥 리니지 탭 위치 제어 (sample-data-area ↔ related-data 사이)
+  // -----------------------------
+  const LINEAGE_TAB = 'data-lineage-area'
+
+  // lineage 활성 ON
+  if (isActiveLineage.value) {
+    // 기존에 있으면 제거 후 새로 삽입 (중복 방지)
+    tabs.value = tabs.value.filter(tab => tab !== LINEAGE_TAB)
+
+    // sample-data-area와 related-data 사이 위치 찾기
+    const sampleIdx = tabs.value.indexOf('sample-data-area')
+    const relatedIdx = tabs.value.indexOf('related-data')
+
+    // sample과 related가 둘 다 존재할 때 → 지정 위치 삽입
+    if (sampleIdx !== -1 && relatedIdx !== -1 && relatedIdx > sampleIdx) {
+      tabs.value.splice(relatedIdx, 0, LINEAGE_TAB)
+    } else {
+      // 기본 fallback: related-data 앞에 삽입
+      const insertPos = relatedIdx !== -1 ? relatedIdx : tabs.value.length
+      tabs.value.splice(insertPos, 0, LINEAGE_TAB)
+    }
+  }
+  
+  if (!showSampleData(entity.meta_type)) {
+    tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
+  } else {
+    // File의 경우 사용자 데이터 설명, 데이터 흐름 탭 제거
+    // 확장자가 CSV인 경우 프로파일링 제거
+    if (entity.meta_type.toUpperCase() == 'FILE') {
+      if (entity.attributes.file_format.toUpperCase() != 'CSV') {
+        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area' && el != 'data-profile-area')
+      } else {
+        tabs.value = tabs.value.filter((el) => el != 'user-description-area' && el != 'data-lineage-area')
+      }
+    }
+  }
+}
+
+const showSampleData = (metaType : string) =>{
+  return ['TABLE','FILE','SEARCHINDEX'].includes(metaType.toUpperCase())
+}
+
+// 객체 키 유무 확인
+const isEmptyObject = (obj) => {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+// GUID 기준 데이터 상세 조회
+const getDetailDataByGuid = async (newGuid) => {
+  const guid = newGuid ? newGuid : route.query.guid;
+  currentGuid.value = guid;
+
+  if (currentGuid.value) {
+    // 리니지 활성화 여부 조회
+    await $ofetch(`/api/search/detail/isActiveLineage`).then((res) => {
+      if (res && res.data && res.data.activeLineage && res.data.activeLineage == true) {
+        isActiveLineage.value = true
+      } else {
+        isActiveLineage.value = false
+      }
+    }).catch((err) => {
+      console.log('리니지 활성화 여부 조회 실패 !!')
+      console.log(err)
+      isActiveLineage.value = false
+    });
+
+    const result = await $ofetch(`/api/search/detail/${currentGuid.value}`);
+
+    if (result && result.errorMessage) {
+      await errorAlert(result.errorMessage);
+      return;
+    }
+
+    entity.value = result.data;
+
+    // 조회된 데이터가 없는 경우 뒤로가기
+    if (entity.value == null || isEmptyObject(entity.value)) {
+      await errorAlert("조회된 데이터가 없습니다.")
+      history.go(-1)
+    }
+
+    // 탭 유무 처리
+    settingTabOption(entity.value)
+
+    labelList.value = ObjectUtils.getPropertyValue(
+      entity.value,
+      "tags",
+      []
+    );
+
+    const relationColumnsDataList = ObjectUtils.getPropertyValue(
+      entity.value,
+      "entity/relationshipAttributes/columns",
+      []
+    );
+    const relationPartitionKeysDataList = ObjectUtils.getPropertyValue(
+      entity.value,
+      "entity/relationshipAttributes/partitionKeys",
+      []
+    );
+    const referredEntitiesDataList = ObjectUtils.getPropertyValue(
+      entity.value,
+      "referredEntities",
+      []
+    );
+    if (relationColumnsDataList.length > 0) {
+      let dataCnt = 0;
+      for (const relationColumnsData of relationColumnsDataList) {
+        Object.keys(referredEntitiesDataList).filter((item) => {
+          if (relationColumnsData.guid === item) {
+            dataCnt++;
+            referredEntitiesAttributes.value.push(
+              referredEntitiesDataList[item].attributes
+            );
+          }
+        });
+      }
+      if (relationPartitionKeysDataList.length > 0) {
+        for (const relationPartitionKeysData of relationPartitionKeysDataList) {
+          Object.keys(referredEntitiesDataList).filter((item) => {
+            if (relationPartitionKeysData.guid === item) {
+              dataCnt++;
+              referredEntitiesDataList[item].attributes.position = dataCnt;
+              referredEntitiesAttributes.value.push(
+                referredEntitiesDataList[item].attributes
+              );
+            }
+          });
+        }
+      }
+    }
+
+    referredEntitiesAttributes.value.sort((a, b) => a.position - b.position);
+  } else {
+    errorAlert("조회할 guid가 없습니다.").then(() => {
+      return Promise.resolve(false);
+    });
+  }
+};
+
+// 비지니스 속성 제어를 위해 조회 결과 추가 가공
+const setBusinessAttributes = () => {
+  const tempAttributes = ObjectUtils.getPropertyValue(
+    entity.value,
+    "business_attributes",
+    []
+  );
+  businessAttributes.value = Object.entries(tempAttributes).map(([key, value]) => ({
+    key,
+    value,
+  }));
+};
+
+// 데이터 프로파일링 영역 내 표시 데이터 조회
+const getDetailDataProfile = () => {
+  const params = {};
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
+
+  params.guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+  params.typeName = typeName;
+
+  const columnData = ObjectUtils.getPropertyValue(
+    entity.value,
+    "attributes/columns",
+    ""
+  );
+  const partitionKeysDataList = ObjectUtils.getPropertyValue(
+    entity.value,
+    "attributes/table_partition",
+    ""
+  );
+  if (partitionKeysDataList.length > 0) {
+    for (const partitionKeysData of partitionKeysDataList) {
+      columnData.push(partitionKeysData);
+    }
+  }
+
+  if (columnData && Array.isArray(columnData)) {
+    if (typeName.toUpperCase() === 'FILE') {
+      let table_qualified_name = entity.value.qualified_name
+      params.columnData = columnData.map((item) => {
+        return table_qualified_name + "." + item.meta_name
+      })
+    } else if (typeName.toUpperCase() === 'TABLE') {
+      params.columnData = columnData.map((item) => {
+        return item.qualified_name
+      });
+    }
+  }
+
+  $ofetch("/api/search/detail/dataprofile", {
+    method: "POST",
+    body: params,
+  }).then((res) => {
+    const resDataProfile = {
+      table: {},
+      db: {},
+      column: [],
+    };
+
+    if (res && res.data.hasOwnProperty("tableData")) {
+      resDataProfile.table = res.data.tableData;
+    }
+
+    if (res.data.hasOwnProperty("columnData")) {
+      // 프로파일링 정보에 description, posotion 값 추가
+      let tmpList = res.data.columnData ? res.data.columnData : []
+      tmpList.forEach((colData) => {
+        columnData.forEach((col) => {
+          if (colData.qualified_name == col.qualified_name) {
+            colData.position = col.position
+            colData.column_type = col.column_type
+            colData.description = col.description
+            colData.user_description = col.user_description
+          }
+        })
+      })
+
+      resDataProfile.column = res.data.columnData;
+      resDataProfile.column.sort((a, b) => a.position - b.position);
+    }
+
+    dataProfile.value = resDataProfile;
+  });
+};
+
+// 샘플 데이터 목록 조회
+const getSampleData = () => {
+  const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+  const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "")
+  const system_name = ObjectUtils.getPropertyValue(entity.value, "system_name", "")
+  const system_type = ObjectUtils.getPropertyValue(entity.value, "system_type", "")
+
+  // TABLE, SEARCHINDEX 일때
+  if (meta_type && ['TABLE','SEARCHINDEX'].includes(meta_type.toUpperCase())) {
+    let trinoColumns = "";
+    for (
+      let columnNum = 0;
+      columnNum < referredEntitiesAttributes.value.length;
+      columnNum++
+    ) {
+      if (trinoColumns !== "") {
+        trinoColumns += "," + '"' + referredEntitiesAttributes.value[columnNum].name + '"';
+      } else {
+        trinoColumns += '"' + referredEntitiesAttributes.value[columnNum].name + '"';
+      }
+    }
+
+    const params = {
+      columns: trinoColumns,
+      typeName: meta_type,
+      system_name: system_name,
+      system_type: system_type,
+      qualified_name: qualified_name,
+      limit: 10,
+    };
+
+    try {
+      $ofetch("/api/search/detail/sampledata", {
+        method: "POST",
+        body: params,
+      }).then((res) => {
+        if (res && res.data && res.data.hasOwnProperty("sampleData")) {
+          sampleData.value = ObjectUtils.getPropertyValue(res.data, "sampleData", []);
+        }
+
+        let typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "table")
+
+        // 테이블인 경우 테이블 row 건수 조회
+        if (typeName.toUpperCase() == 'TABLE') {
+          let guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "")
+
+          $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
+            sampleTotal.value = rs.data
+          }).catch((err) => {
+            sampleTotal.value = 0
+          })
+        }
+
+        // 컬럼인 경우 샘플데이터 항목 해당 컬럼만 넣어두기
+        if (typeName == 'column') {
+          let colName = ObjectUtils.getPropertyValue(entity.value, "name", "")
+
+          let tmpSampleData = []
+          sampleData.value.forEach((el) => {
+            let tmpSampleDataRow = {}
+            let keyList = Object.keys(el)
+            keyList.forEach((k) => {
+              if (k == colName) {
+                tmpSampleDataRow[k] = el[k]
+              }
+            })
+            tmpSampleData.push(tmpSampleDataRow)
+            return
+          })
+
+          sampleData.value = tmpSampleData
+        }
+      });
+    } catch (e) {
+      sampleData.value = []
+      sampleTotal.value = 0
+      console.log(e);
+    }
+  } else if (meta_type && meta_type.toUpperCase() == 'FILE') {
+    const meta_id = ObjectUtils.getPropertyValue(entity.value, "meta_id", "")
+    const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "")
+    const full_path = ObjectUtils.getPropertyValue(entity.value, "attributes/full_path", "")
+
+    const params = {
+      meta_id: meta_id,
+      meta_name: meta_name,
+      file_format: fileFormat.value,
+      full_path: full_path
+    };
+
+    try {
+      $ofetch("/api/search/detail/sampledataFile", {
+        method: "POST",
+        body: params,
+      }).then((res) => {
+        if (res && res.data) {
+          sampleData.value = res.data.sampleData ? res.data.sampleData : []
+          sampleTotal.value = res.data.sampleTotal
+          sampleCaptureData.value = res.data.sampleCaptureData ? res.data.sampleCaptureData : ""
+        } else {
+          sampleData.value = []
+          sampleTotal.value = 0
+          sampleCaptureData.value = ""
+        }
+      });
+    } catch (e) {
+      sampleData.value = []
+      sampleTotal.value = 0
+      sampleCaptureData.value = ""
+      console.log(e);
+    }
+  }
+};
+
+// 데이터 흐름도 시작 노드 설정
+const setDataLineageStartNode = () => {
+  let nodeGuid = "";
+
+  if (typeName.value.includes("table")) {
+    nodeGuid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+  }
+
+  if (nodeGuid) {
+    startNode.value = nodeGuid;
+  }
+};
+
+// 연관 데이터 조회
+const getRelatedData = async () => {
+  if (entity.value != null && entity.value != undefined) {
+    let params = {
+      guid: route.query.guid ? route.query.guid : "",
+      system_type: entity.value.system_type ? entity.value.system_type : '',
+      meta_type: entity.value.meta_type ? entity.value.meta_type : '',
+      topN: 5
+    }
+
+    await $ofetch(`/api/search/keywordRef`, {
+      method: 'POST',
+      body: params
+    }).then(async (res) => {
+      if (res && !res.errorMessage) {
+        if (res.data && res.data.results) {
+          relatedDataList.value = res.data.results
+        } else {
+          relatedDataList.value = []
+        }
+      }
+    });
+  }
+};
+
+// 사용자 데이터 설명 조회
+const getUserDescriptionList = (userDescriptionOrderType) => {
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+
+  const params = {
+    guid: guid,
+    orderType: userDescriptionOrderType,
+  };
+
+  if (guid) {
+    $ofetch(`/api/search/detail/userDescriptionList`, {
+      method: "POST",
+      body: params,
+    }).then((res) => {
+      if (res.data && res.data.hasOwnProperty("userDescriptionList")) {
+        userDescriptionList.value = ObjectUtils.getPropertyValue(
+          res.data,
+          "userDescriptionList",
+          []
+        );
+        isUserDescriptionMenuAuth.value = ObjectUtils.getPropertyValue(
+          res.data,
+          "isUserDescriptionMenuAuth",
+          false
+        );
+      }
+    });
+  }
+};
+
+// 사용자 리뷰 목록 조회
+const getReviewDataList = () => {
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+  if (guid) {
+    $ofetch(`/api/search/detail/reviewdatalist`, {
+      method: "POST",
+      body: { guid },
+    }).then((res) => {
+      if (res && res.data.hasOwnProperty("reviewDatalist")) {
+        reviewDatalist.value = ObjectUtils.getPropertyValue(
+          res.data,
+          "reviewDatalist",
+          []
+        );
+      }
+    });
+  }
+};
+
+// 데이터 찜하기 & 추천 여부 조회
+const getRecommendStatus = () => {
+  const params = {
+    guid: ObjectUtils.getPropertyValue(entity.value, "meta_id", ""),
+    userID: userStore.getUser.user_id,
+  };
+
+  $ofetch("/api/search/detail/recommendStatus", {
+    method: "POST",
+    body: params,
+  }).then((res) => {
+    recommendStatus.value = res.data;
+  });
+};
+
+// 목록 버튼 클릭
+const onClickListButton = () => {
+  if (props.isAdmin) {
+    if (userStore.getFromPath === "/admin/data/meta-data/fusion") {
+      router.push("/admin/data/meta-data/fusion");
+    } else {
+      router.push("/admin/data/meta-data/manage");
+    }
+  } else {
+    router.push("/search/keyword");
+  }
+};
+
+// 카테고리 맵핑 모달 toggle 이벤트 핸들러
+const onToggleCategoryModal = () => {
+  const status = manageModalObj.value.toggle;
+  let target = {};
+  if (!status) {
+    target = {
+      ...entity.value
+    };
+  }
+
+  manageModalObj.value = {
+    type: "map",
+    target,
+    toggle: !status,
+  };
+};
+
+// 카테고리 맵핑 추가 이벤트 핸들러
+const onAddCategoryMapping = (params) => {
+  $ofetch("/api/metadata/classification/map", {
+    method: "POST",
+    body: params,
+  }).then(async (res) => {
+    if (res && !res.errorMessage) {
+      if (!res || res.data.isFailed) {
+        const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+        errorAlert(msg);
+      } else {
+        // 카테고리 맵핑 성공 시
+        const syncParams = {
+          meta_ids: [],
+          event_status: 2,
+          event_name: "메타 데이터 카테고리 매핑[변경]"
+        }
+
+        for (const entity of params.entityTargets) {
+          syncParams.meta_ids.push(entity.meta_id)
+        }
+
+        await $ofetch(`/api/metadata/classification/essyncUpdates`, {
+          method: 'POST',
+          body: syncParams
+        }).then((res) => {
+          if (res && res.data) {
+            console.log(res.data)
+          }
+        }).catch((err) => {
+          const msg = "ES SYNC 요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+          console.log(msg);
+        })
+
+        onToggleCategoryModal();
+        getAllDataByGuid();
+      }
+    } else {
+      const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+      errorAlert(msg);
+    }
+
+  });
+};
+
+// 비지니스 속성 추가 버튼 클릭 이벤트 핸들러
+const onClickAddBusinessAttributes = () => {
+  businessAttributes.value.push({ key: "", value: "" });
+};
+
+// 비지니스 속성 삭제 버튼 클릭 이벤트 핸들러
+const onClickDelBusinessAttributes = (index) => {
+  const tempAttributes = JSON.parse(JSON.stringify(businessAttributes.value));
+  tempAttributes.splice(index, 1);
+
+  businessAttributes.value = tempAttributes;
+};
+
+const onClickBusinessAttributesConfirm = (attributes) => {
+  businessAttributes.value = attributes
+  const params = createEditedParams();
+  $ofetch("/api/search/detail/attributes", {
+    method: "POST",
+    body: params,
+  }).then((res) => {
+    if (res.data && res.data > 0) {
+      defaultAlert("비즈니스 속성이 적용되었습니다.").then(() => {});
+      getDetailDataByGuid().then(() => setBusinessAttributes());
+    } else {
+      const msg =
+        "적용에 실패하였습니다. <br> 관리자에게 문의해 주시기 바랍니다.";
+      errorAlert(msg);
+    }
+  });
+}
+
+// 취소 이벤트 핸들러 (관리자 전용 기능)
+const onCancel = async () => {
+  if (
+    (isEdited.value &&
+      (await confirmAlert("수정한 내용이 저장되지 않습니다.<br />취소 하시겠습니까?"))) ||
+    !isEdited.value
+  ) {
+    if (userStore.getFromPath === "/admin/data/meta-data/fusion") {
+      router.push("/admin/data/meta-data/fusion");
+    } else {
+      router.push("/admin/data/meta-data/manage");
+    }
+  }
+};
+
+// 상세 페이지 내 수정/저장 항목 저장 위한 파라미터 가공
+const createEditedParams = () => {
+  const qualified_name = ObjectUtils.getPropertyValue(
+    entity.value,
+    "qualified_name",
+    ""
+  );
+  const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+
+  const business_attributes = {};
+  const tempAttributeList = Object.assign([], businessAttributes.value).filter(
+    (el) => el.key && el.value
+  );
+
+  tempAttributeList.forEach((el) => {
+    business_attributes[el.key] = el.value;
+  });
+
+  return {
+    entity: {
+      attributes: { qualified_name, meta_name },
+      typeName,
+      guid,
+      business_attributes,
+    },
+  };
+};
+
+// 적용 버튼 클릭 이벤트 핸들러
+const onClickConfirm = async () => {
+  const confirm = await confirmAlert(
+    "수정한 내용으로 저장됩니다.<br />적용 하시겠습니까?"
+  );
+  if (isEdited && confirm) {
+    const params = createEditedParams();
+    $ofetch("/api/search/detail/attributes", {
+      method: "POST",
+      body: params,
+    }).then((res) => {
+      if (res.data && res.data > 0) {
+        getDetailDataByGuid().then(() => setBusinessAttributes());
+      } else {
+        const msg =
+          "적용에 실패하였습니다. <br> 관리자에게 문의해 주시기 바랍니다.";
+        errorAlert(msg);
+      }
+    });
+  }
+};
+
+const onToggleEliminateModal = async () => {
+  // 데이터 권한이 없는 경우 추출 불가
+  if (userDataAuth.value == 2) {
+    const metaId = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
+    const metaName = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+    const description = ObjectUtils.getPropertyValue(entity.value, "description", "");
+    const system_id = ObjectUtils.getPropertyValue(entity.value, "system_id", "");
+    const system_name = ObjectUtils.getPropertyValue(entity.value, "system_name", "");
+    const system_type = ObjectUtils.getPropertyValue(entity.value, "system_type", "");
+    const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "");
+    const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
+    const fullPath = ObjectUtils.getPropertyValue(entity.value, "attributes/full_path", "");
+
+    // File의 경우 Minio 등록된 파일 다운로드
+    if (typeName != "" && typeName.toUpperCase() === 'FILE') {
+      if (await confirmAlert("파일을 다운로드하시겠습니까?")) {
+
+        let historyParams = {
+          meta_id: metaId,
+          system_id: system_id,
+          system_name: system_name,
+          system_type: system_type,
+          meta_name: metaName,
+          meta_type: "file",
+          qualified_name: qualified_name,
+          query: ``,
+          download_type: 0, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
+          description: description,
+        };
+
+        await insertDownloadHistory(historyParams);
+
+        const params = {
+          system_id: system_id,
+          full_path: fullPath
+        }
+
+        $ofetch(`/api/search/detail/getFileData`, {
+          method: 'POST',
+          body: params,
+        }).then((res) => {
+          if (res && res.size > 0) {
+            const blob = new Blob([res])
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', metaName) // 저장할 파일명
+            document.body.appendChild(link);
+            link.click()
+            document.body.removeChild(link);
+          } else {
+            errorAlert("파일 다운로드에 실패하였습니다.")
+          }
+        }).catch((err) => {
+          console.log(err)
+          errorAlert("파일 다운로드에 실패하였습니다.")
+        })
+      }
+    } else {
+      // 데이터추출
+      const status = eliminateModalObj.value.toggle;
+      if (status) {
+        eliminateModalObj.value.sampleData = null;
+        eliminateModalObj.value.entity = null;
+        eliminateModalObj.value.toggle = !status;
+        eliminateModalObj.value.userDataAuth = userDataAuth.value;
+        eliminateModalObj.value.typeName = "";
+        eliminateModalObj.value.fileFormat = "";
+        eliminateModalObj.value.num_rows = null
+      } else {
+        eliminateModalObj.value.sampleData = sampleData.value;
+        eliminateModalObj.value.entity = entity.value;
+        eliminateModalObj.value.toggle = !status;
+        eliminateModalObj.value.userDataAuth = userDataAuth.value;
+        eliminateModalObj.value.typeName = typeName;
+        eliminateModalObj.value.fileFormat = fileFormat.value;
+        eliminateModalObj.value.num_rows = sampleTotal.value
+      }
+    }
+  } else {
+    await defaultAlert("데이터 추출 권한이 없습니다.");
+    return
+  }
+};
+
+const insertDownloadHistory = async (historyParams) => {
+  await $ofetch("/api/search/detail/eliminate/history/add", {
+    method: "POST",
+    body: historyParams,
+  }).then((res) => {
+    if (res && res.data && res.data.result) {
+      console.log('이력 저장 성공')
+    } else {
+      console.log('이력 저장 실패')
+    }
+  }).catch((err) => {
+    // 이력 저장 실패
+    console.log('이력 저장 실패')
+  });
+}
+
+// 데이터 담당 부서 조회
+const getDataManagerInfoList = async () => {
+  const classificationsList = ObjectUtils.getPropertyValue(
+    entity.value,
+    "classifications",
+    ""
+  );
+  if (classificationsList !== "") {
+    const param = { classificationsList };
+    const result = await $ofetch("/api/search/detail/getDataManagerInfoList", {
+      method: "POST",
+      body: param,
+    });
+    dataManagerInfoList.value = result.data;
+  }
+};
+
+const onClickAddTag = async (list) => {
+  console.log("onClickAddTag");
+}
+
+//전체 tag 조회
+const searchTagList = async (offset = 1) => {
+  try {
+    // 관리 페이지이기 때문에 페이징 없이 전체 보여지도록 임시로 1000개
+    let limit = 1000;
+    await $ofetch(`/api/admin/system/tagManager/list?pageSize=${limit}&pnum=${offset}`)
+      .then((res) => {
+        if (res && !res.errorMessage) {
+          allTagList.value = res.data.list;
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// 해당 meta_id에 대한 데이터가 존재하는지 여부
+const checkExistMetaData = async () => {
+  let exist = false;
+  if (route.query.guid == ""
+    || route.query.guid == null
+    || route.query.guid == undefined
+    || route.query.guid == 'undefined'
+    || route.query.guid == 'null') {
+      exist = false;
+  } else {
+    await $ofetch(`/api/search/detail/checkExistMetaData?meta_id=${route.query.guid}`).then(async (res) => {
+      if (res && res.data) {
+        if (res.data.result) {
+          exist = true
+        } else {
+          exist = false
+        }
+      }
+    }).catch(async (err) => {
+      exist = false;
+    });
+  }
+
+  return exist
+}
+
+// 사용자의 role
+const getUserDataAuth = async () => {
+  const url = userStore.getTab.currentPath
+  const cleanUrl = url.split("?")[0]
+  let params = {
+    meta_id: route.query.guid,
+    menu_path: cleanUrl,
+    is_admin: props.isAdmin
+  }
+  await $ofetch(`/api/search/detail/getUserDataAuth`, {
+    method: "POST",
+    body: params
+  }).then(async (res) => {
+    if (res && res.data) {
+      userDataAuth.value = res.data.role_auth
+    } else {
+      userDataAuth.value = -1
+    }
+  }).catch(async (err) => {
+    userDataAuth.value = -1
+  });
+
+  // 권한 확인 실패 시
+  if (userDataAuth.value == -1) {
+    return false
+  } else {
+    return true
+  }
+}
+
+const updateUnstructuredMetaUpdate = async (updateMetaInfo) => {
+  await $ofetch(`/api/search/detail/updateUnstructuredMetadata`, {
+    method: "PUT",
+    body: updateMetaInfo
+  }).then(async (res) => {
+    if (res && res.data && res.data.updateResult) {
+      await defaultAlert("비정형 데이터가 수정되었습니다.")
+      getAllDataByGuid(updateMetaInfo.meta_id)
+    } else {
+      await errorAlert("비정형 데이터 수정에 실패하였습니다.")
+    }
+  }).catch(async (err) => {
+      await errorAlert("비정형 데이터 수정에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+  });
+}
+
+</script>
+
+<style scoped></style>

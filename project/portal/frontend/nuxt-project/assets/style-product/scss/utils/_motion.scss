@@ -1,0 +1,84 @@
+//-------------------------------------------
+//  Animation
+// ------------------------------------------
+$iris-easings: (
+  standard: (
+    productive: cubic-bezier(0.2, 0, 0.38, 0.9),
+    expressive: cubic-bezier(0.4, 0.14, 0.3, 1)
+  ),
+  entrance: (
+    productive: cubic-bezier(0, 0, 0.38, 0.9),
+    expressive: cubic-bezier(0, 0, 0.3, 1)
+  ),
+  exit: (
+    productive: cubic-bezier(0.2, 0, 1, 0.9),
+    expressive: cubic-bezier(0.4, 0.14, 1, 1)
+  )
+);
+
+@function iris-motion($name, $mode: productive, $easings: $iris-easings) {
+  @if map-has-key($easings, $name) {
+    $easing: map-get($easings, $name);
+
+    @if map-has-key($easing, $mode) {
+      @return map-get($easing, $mode);
+    }
+  }
+}
+
+// Easing과 Mode에 따라 transition-timing-function을 가져옴
+// Easings: `standard`, `entrance`, `exit`.
+// Modes: `productive` `expressive`.
+@function motion($name, $mode: productive, $easings: $iris-easings) {
+  @return iris-motion($name, $mode, $easings);
+}
+
+@mixin iris-motion($name, $mode) {
+  transition-timing-function: iris-motion($name, $mode);
+}
+
+$iris-ease-in: cubic-bezier(0.25, 0, 1, 1);
+$iris-ease-out: cubic-bezier(0, 0, 0.25, 1);
+$iris-standard-easing: cubic-bezier(0.5, 0, 0.1, 1);
+
+// Base transition duration
+$transition-base: 250ms;
+
+// Expansion duration
+$transition-expansion: 300ms;
+
+// Easing durations
+$duration-fast-01: 70ms;
+$duration-fast-02: 110ms;
+$duration-moderate-01: 150ms;
+$duration-moderate-02: 240ms;
+$duration-slow-01: 400ms;
+$duration-slow-02: 720ms;
+
+// Animation
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -20px, 0);
+    transform: translate3d(0, -20px, 0);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-20%, 0, 0);
+    transform: translate3d(-20%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}

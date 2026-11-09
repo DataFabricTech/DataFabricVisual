@@ -1,0 +1,26 @@
+@startuml
+
+autoactivate on
+
+title 수집 시스템
+
+actor 관리자 as admin
+
+box "수집 시스템 삭제"
+participant Client as client
+participant CollectorController as collectorController
+participant CollectorService as collectorService
+end box
+
+box "Catalog API 작업수행 서버"
+participant FastApi as fastApi
+end box
+
+client -> collectorController : 수집대상 삭제 요청
+collectorController -> collectorService : 수집대상 삭제
+collectorService -> fastApi : Airflow Dag 삭제 요청
+fastApi -> collectorService : Airflow Dag 생성 삭제 결과 반환
+collectorService -> collectorController : 수집대상 삭제 결과 반환
+collectorController -> client : 수집대상 삭제 결과 반환
+
+@enduml

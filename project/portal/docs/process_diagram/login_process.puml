@@ -1,0 +1,35 @@
+@startuml
+
+autoactivate on
+
+title 로그인
+
+actor 사용자 as user
+
+box "로그인"
+participant Client as client
+participant UserController as userController
+participant UserService as userService
+end box
+
+client -> userController : 사용자 로그인 요청
+userController -> userService : 로그인 인증 요청
+userService -> userController : 로그인 인증 및 처리
+userController -> client : 인증 결과 반환
+note right
+    1. 입력값 유효성 검증
+    2. 회원가입 미승인 사용자 확인
+    3. 사용자 확인
+      3-1. 사용자 유무
+      3-2. 로그인 실패 횟수
+    4. 비밀번호 일치여부 확인
+    5. 성공시
+    - 사용자 업데이트 (로그인 시각, 로그인 실패횟수)
+    - x-access-token, x-refresh-token 발급
+    - 로그인 이력 저장
+    6. 실패시
+    - 실패메세지 반환
+    - 로그인 실패 횟수 
+end note
+
+@enduml

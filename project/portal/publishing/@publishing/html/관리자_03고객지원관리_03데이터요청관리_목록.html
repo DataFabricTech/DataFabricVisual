@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>데이터 요청 관리 < 고객 지원 관리 < 데이터 카탈로그</title>
+        <link href="../css/common.css" rel="stylesheet" />
+        <link href="../css/style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="__nuxt">
+            <div id="__layout">
+                <div>
+                    <!-- DEV nuxt common layout ADD -->
+                    <div id="app" class="admin-wrapper">
+                        <!-- 실제 PUB layout + admin -->
+                        <!-- skip -->
+                        <div class="skiptoContent">
+                            <a href="#main">본문 바로가기</a>
+                        </div>
+                        <!-- //skip -->
+                        <!-- header -->
+                        <header class="header-sub">
+                            <!-- hover시 .open 추가됨 nav 펼침 -->
+                            <div class="header">
+                                <div class="inner">
+                                    <h1 class="logo">
+                                        <a href="#" target="_self"><span>데이터 카탈로그</span></a>
+                                    </h1>
+                                    <div class="gnb-area">
+                                        <ul class="top-menu">
+                                            <li><a href="/member/join/indexJoinInit.do"><span>홍길동</span>님</a></li><!-- 2022-08-16 MOD : 디자인적용span추가 -->
+                                            <li><a href="/member/indexLogin.do">로그아웃</a></li>
+                                            <li><a href="/member/join/indexJoinInit.do" class="link-home">사용자홈</a></li><!-- 2022-08-17 ADD : 로그인시 -->
+                                        </ul>
+                                        <!-- nav -->
+                                        <nav class="nav">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">데이터 활용 현황 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">데이터 활용 현황 조회</a></li>
+                                                        <li><a href="#">감사로그</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">메타 데이터 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">메타 데이터 통합 관리</a></li>
+                                                        <li><a href="#">데이터 접근권한 관리</a></li>
+                                                        <li><a href="#">용어사전 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="current">
+                                                    <a href="#">고객 지원 관리</a>
+                                                    <ul>
+                                                        <li class="current"><a href="#">데이터 요청 관리</a></li>
+                                                        <li><a href="#">공지사항 관리</a></li>
+                                                        <li><a href="#">FAQ 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">시스템 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">사용자/그룹 관리</a></li>
+                                                        <li><a href="#">메인 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                        <!-- //nav -->
+                                        <div class="nav-dim"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        <!-- //header -->
+                        <!-- main-sub -->
+                        <main id="main" class="main-sub">
+                            <!-- sub page : main-sub class 추가 -->
+                            <div class="main-contents">
+                                <h2 class="blind">고객 지원 관리</h2>
+                                <!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                                <div class="contents-wrap">
+                                    <!-- contents-top -->
+                                    <div class="contents-top">
+                                        <div class="breadcrumbs-wrap">
+                                            <div class="breadcrumbs">
+                                                <ol class="mu-path">
+                                                    <li class="home"><a href="">HOME</a></li>
+                                                    <li><a href="">고객 지원 관리</a></li>
+                                                    <li><a href="">데이터 요청 관리</a></li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <div class="subject-wrap">
+                                            <div class="subject">
+                                                <div class="subject-title">
+                                                    <h3>데이터 요청 관리</h3>
+                                                    <!-- 실제 해당 페이지명 -->
+                                                    <p class="subject-desc">필요하신 데이터를 요청해주시면 검토 후 해당 데이터를 제공해드립니다.</p>
+                                                </div>
+                                                <!-- 우측 버튼영역 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- contents -->
+                                    <div class="contents">
+                                        <div>
+                                            <!-- content-floating-wrap -->
+                                            <div class="content-floating-wrap">
+                                                <!-- step-box : 데이터 요청 -->
+                                                <div class="step-box">
+                                                    <ol class="step-list">
+                                                        <li class="step-item step-01">
+                                                            <strong>신청</strong>
+                                                            <p>데이터 신청서 작성완료</p>
+                                                        </li>
+                                                        <li class="step-item step-02">
+                                                            <strong>검토중</strong>
+                                                            <p>데이터 제공 적합성 검토</p>
+                                                        </li>
+                                                        <li class="step-item step-03">
+                                                            <strong>진행중</strong>
+                                                            <p>데이터 제공 및 카탈로그 맵핑 처리</p>
+                                                        </li>
+                                                        <li class="step-item step-04">
+                                                            <strong>제공</strong>
+                                                            <strong>미제공</strong>
+                                                            <p>요청 데이터 제공 또는 미제공</p>
+                                                        </li>
+                                                    </ol>
+                                                </div>
+                                                <!-- //step-box -->
+                                            </div>
+                                            <!-- //content-floating-wrap -->
+                                            <div class="inner">
+                                                <div class="board-list-wrap">
+                                                    <div class="mu-heading">
+                                                        <!-- board-list-search -->
+                                                        <div class="board-list-search">
+                                                            <form action="">
+                                                                <fieldset>
+                                                                    <legend>게시물검색</legend>
+                                                                    <div class="inner-search">
+                                                                        <!-- mu-selectbox -->
+                                                                        <div class="mu-selectbox w160">
+                                                                            <select>
+                                                                                <option value="">전체</option>
+                                                                                <option value="">번호</option>
+                                                                                <option value="">제목</option>
+                                                                                <option value="">신청자</option>
+                                                                                <option value="">신청일</option>
+                                                                                <option value="">완료일</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="mu-input-icon">
+                                                                            <input type="text" class="mu-input" placeholder="Search" title="검색어입력" />
+                                                                            <button type="button" class="mu-btn mu-btn-sch"><i class="mu-icon-svg search"></i><span>검색</span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                            </form>
+                                                        </div>
+                                                        <!-- //board-list-search -->
+                                                        <div class="mu-item-group">
+                                                            <!-- mu-selectbox / 10개씩 보기(Default) -->
+                                                            <div class="mu-selectbox w160">
+                                                                <select>
+                                                                    <option value="">10개씩 보기</option>
+                                                                    <option value="">30개씩 보기</option>
+                                                                    <option value="">50개씩 보기</option>
+                                                                    <option value="">100개씩 보기</option>
+                                                                    <option value="">모두 보기</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="board-list">
+                                                        <table class="mu-grid">
+                                                            <colgroup>
+                                                                <col style="width: 40px" />
+                                                                <col style="width: 60px" />
+                                                                <col style="width: auto" />
+                                                                <col style="width: 100px" />
+                                                                <col style="width: 120px" span="5"/>
+                                                            </colgroup>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb1"  />
+                                                                            <label for="ckb1"><span class="blind">전체선택</span></label>
+                                                                        </div>
+                                                                    </th>
+                                                                    <th scope="col">No.</th>
+                                                                    <th scope="col">제목</th>
+                                                                    <th scope="col">첨부파일</th>
+                                                                    <th scope="col">신청자</th>
+                                                                    <th scope="col">신청일</th>
+                                                                    <th scope="col">완료일</th>
+                                                                    <th scope="col">진행상태</th>
+                                                                    <th scope="col">답변상태</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb2" />
+                                                                            <label for="ckb2"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,010</td>
+                                                                    <td class="tl"><a href="#none">미답변 시 : 등록하기 페이지로 이동</a><i class="mu-icon-svg new">새로운글</i></td><!-- 미답변 시 : 등록하기 페이지로 이동 / 답변 등록 완료 시: 수정하기 페이지로 이동 --> 
+                                                                    <td><i class="mu-icon-svg file">첨부파일 있음</i></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process apply">신청</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb3" />
+                                                                            <label for="ckb3"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,009</td>
+                                                                    <td class="tl"><a href="#none">답변 등록 완료 시: 수정하기 페이지로 이동</a></td>
+                                                                    <td><i class="mu-icon-svg file">첨부파일 있음</i></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process review">검토중</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb4" />
+                                                                            <label for="ckb4"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,008</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td><i class="mu-icon-svg file">첨부파일 있음</i></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process ing">진행중</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>수정하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb5" />
+                                                                            <label for="ckb5"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,007</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process supply">제공</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>수정하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb6" />
+                                                                            <label for="ckb6"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,006</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process unsupply">미제공</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb7" />
+                                                                            <label for="ckb7"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,005</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process supply">제공</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb8" />
+                                                                            <label for="ckb8"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,004</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process supply">제공</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb9" />
+                                                                            <label for="ckb9"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,003</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process supply">제공</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb10" />
+                                                                            <label for="ckb10"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,002</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process unsupply">미제공</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="mu-checkbox">
+                                                                            <input type="checkbox" id="ckb11" />
+                                                                            <label for="ckb11"><span class="blind">행선택</span></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>1,001</td>
+                                                                    <td class="tl"><a href="#none">데이터 요청 제목</a></td>
+                                                                    <td></td>
+                                                                    <td>홍길동</td>
+                                                                    <td>2022.07.04</td>
+                                                                    <td>2022.08.18</td>
+                                                                    <td><em class="step-process unsupply">미제공</em></td>
+                                                                    <td>
+                                                                        <button class="mu-btn mu-btn-sm mu-btn-underline"><span>등록하기</span></button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <!-- mu-pagination -->
+                                                    <div class="mu-pagination">
+                                                        <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg first"></i><span>맨 처음으로 이동</span></button>
+                                                        <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg prev"></i><span>이전 페이지로 이동</span></button>
+                                                        <ul>
+                                                            <li class="active"><a href="#none">1</a></li>
+                                                            <li><a href="#none">2</a></li>
+                                                            <li><a href="#none">3</a></li>
+                                                            <li><a href="#none">4</a></li>
+                                                            <li><a href="#none">5</a></li>
+                                                            <li><a href="#none">6</a></li>
+                                                            <li><a href="#none">7</a></li>
+                                                            <li><a href="#none">8</a></li>
+                                                            <li><a href="#none">9</a></li>
+                                                            <li><a href="#none">10</a></li>
+                                                        </ul>
+                                                        <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg next"></i><span>다음 페이지로 이동</span></button>
+                                                        <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg last"></i><span>맨 마지막으로 이동</span></button>
+                                                    </div>
+                                                    <!-- //mu-pagination -->
+                                                </div>
+                                                <!-- mu-button-wrap -->
+                                                <div class="mu-button-wrap">
+                                                    <button type="button" class="mu-btn mu-btn-lg"><span>삭제</span></button>
+                                                </div>
+                                                <!-- //mu-button-wrap -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- //contents -->
+                                </div>
+                            </div>
+                        </main>
+                        <!-- //main-sub -->
+
+						<!-- footer : 2022-08-18 기획/디자인 수정 공통반영 (footer-menu / family-site DEL) -->
+						<footer>
+							<div class="footer-top">
+								<div class="inner">
+									<!-- footer-logo -->
+									<div class="footer-logo"><span>모비젠</span></div>
+								</div>
+							</div>
+							<div class="footer-bottom">
+								<div class="inner">
+									<!-- footer-info -->
+									<div class="footer-info">
+										<address>
+											<p>(13453) 경기도 성남시 수정구 금토로80번길 37, W동 7,8,9층 (금토동, 인피니티타워) </p> 
+											<p><span>대표전화</span>02-2018-5114</p>
+										</address>
+										<p class="copyright">
+											COPYRIGHT (C) MOBIGEN.  ALL RIGHT RESERVED.
+										</p>
+									</div>
+								</div>
+							</div>
+						</footer>
+						<!-- //footer -->
+                    </div>
+                    <!-- //DEV nuxt common layout ADD -->
+                </div>
+            </div>
+        </div>
+        <script src="../lib/vue/vue.min.js"></script>
+        <script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script>
+        <!-- vue2-datepicker ver up -->
+        <script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script>
+        <!-- vue2-datepicker kor ver -->
+        <script src="../js/jquery-3.5.1.min.js"></script>
+        <script src="../js/jquery-ui.min.js"></script>
+        <script src="../js/common.js"></script>
+        <!-- 동작 확인용 임시 -->
+    </body>
+</html>

@@ -1,0 +1,259 @@
+// -------------------------
+// Tag
+// -------------------------
+.tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+
+  & ~ .button {
+    margin-left: $spacing-xs;
+  }
+}
+
+.tag {
+  @include button-normal;
+  display: inline-flex;
+  min-width: 4rem;
+  height: $button-height-md;
+  padding: 0 $spacing-md;
+  border: 1px solid $border-light;
+  border-radius: calc($button-height-md / 2);
+  background-color: #fff;
+
+  &:hover:not(:disabled) {
+    border-color: $border-basic;
+    color: inherit;
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+  }
+
+  &:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+
+  & + & {
+    margin-left: $spacing-sm;
+  }
+}
+
+.tag__remove-button {
+  width: rem(20px);
+  height: rem(20px);
+  margin-left: $spacing-3xs;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: inherit;
+  appearance: none;
+  transform: translate(rem(5px), rem(-1px));
+  cursor: pointer;
+
+  &:hover {
+    background-color: #119891;
+  }
+
+  .svg-icon {
+    color: inherit;
+    fill: currentColor;
+  }
+}
+
+.tag--selected {
+  border: 0;
+  background-color: $primary;
+  color: $white;
+
+  &:hover:not(:disabled) {
+    background-color: $hover-primary;
+    color: $white;
+  }
+
+  &:disabled {
+    .tag__remove-button:hover {
+      fill: $white;
+      background-color: transparent;
+    }
+  }
+
+  .svg-icon {
+    fill: $white;
+  }
+}
+
+.tag--lg {
+  @include font-size("14");
+  height: $button-height-lg;
+  padding: 0 $spacing-lg;
+  border-radius: calc($button-height-lg / 2);
+}
+
+.tag--sm {
+  @include font-size("13");
+  height: $button-height-sm;
+  border-radius: calc($button-height-sm / 2);
+  border-color: $border-light;
+  background-color: $bg-basic;
+
+  & + & {
+    margin-left: $spacing-2xs;
+  }
+}
+
+// -------------------------
+// theme별 mixin
+// -------------------------
+@mixin tag-theme($bg-color, $font-color, $selected-font-color) {
+  background-color: $bg-color;
+  color: $font-color;
+
+  &:hover:not(:disabled) {
+    background-color: darken($bg-color, 4%);
+    color: $font-color;
+  }
+
+  &:disabled {
+    .tag__remove-button:hover {
+      fill: $font-color;
+      background-color: transparent;
+    }
+  }
+
+  .tag__remove-button {
+    fill: $font-color;
+
+    &:hover {
+      background-color: rgba($font-color, 0.15);
+      fill: $font-color;
+    }
+  }
+
+  &.tag--selected {
+    background-color: darken($bg-color, 22%);
+    color: $selected-font-color;
+
+    &:hover:not(:disabled) {
+      background-color: darken($bg-color, 16%);
+      color: $selected-font-color;
+    }
+
+    &:disabled {
+      .tag__remove-button:hover {
+        fill: $selected-font-color;
+        background-color: transparent;
+      }
+    }
+
+    .tag__remove-button {
+      fill: $selected-font-color;
+
+      &:hover {
+        background-color: rgba($selected-font-color, 0.15);
+      }
+    }
+  }
+}
+
+.tag--red {
+  @include tag-theme(#ffd7d9, #da1e28, $white);
+}
+
+.tag--red-deep {
+  @include tag-theme(#ff676e, $white, $white);
+}
+
+.tag--cyan {
+  @include tag-theme(#bae6ff, #0089c9, $white);
+}
+
+.tag--cyan-deep {
+  @include tag-theme(#4abdff, $white, $white);
+}
+
+.tag--green {
+  @include tag-theme(#c4f5d1, #198038, $white);
+}
+
+.tag--green-deep {
+  @include tag-theme(#59d079, $white, $white);
+}
+
+.tag--teal {
+  @include tag-theme(#adf0f0, #007d79, $white);
+}
+
+.tag--teal-deep {
+  @include tag-theme(#3de1e1, $white, $white);
+}
+
+.tag--purple {
+  @include tag-theme(#decff5, #6929c4, $white);
+}
+
+.tag--purple-deep {
+  @include tag-theme(#a26aff, $white, $white);
+}
+
+// 목록화면 쪽에서 사용 중으로 추후 제거
+// -------------------------
+// not clickable
+// -------------------------
+@mixin tag-not-effect($bg-color, $font-color) {
+  &:hover:not(:disabled) {
+    background-color: $bg-color;
+    color: $font-color;
+  }
+}
+
+.tag.tag--not-clickable {
+  cursor: default;
+
+  & {
+    @include tag-not-effect($hover-row, $text-mute);
+  }
+
+  &.tag--red {
+    @include tag-not-effect(#ffd7d9, #da1e28);
+  }
+
+  &.tag--red-deep {
+    @include tag-not-effect(#ff676e, $white);
+  }
+
+  &.tag--cyan {
+    @include tag-not-effect(#bae6ff, #0089c9);
+  }
+
+  &.tag--cyan-deep {
+    @include tag-not-effect(#4abdff, $white);
+  }
+
+  &.tag--green {
+    @include tag-not-effect(#c4f5d1, #198038);
+  }
+
+  &.tag--green-deep {
+    @include tag-not-effect(#59d079, $white);
+  }
+
+  &.tag--teal {
+    @include tag-not-effect(#adf0f0, #007d79);
+  }
+
+  &.tag--teal-deep {
+    @include tag-not-effect(#3de1e1, $white);
+  }
+
+  &.tag--purple {
+    @include tag-not-effect(#decff5, #6929c4);
+  }
+
+  &.tag--purple-deep {
+    @include tag-not-effect(#a26aff, $white);
+  }
+}

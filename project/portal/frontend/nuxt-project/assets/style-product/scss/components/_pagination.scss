@@ -1,0 +1,168 @@
+// -------------------------
+// Pagenation
+// -------------------------
+// @pagination__button              || 버튼4개
+// @pagination__list                || 페이지링크 ul
+// @pagination__item                || 페이지링크 ul li
+// @pagination__link                || 페이지링크 ul li a
+// @pagination__link--selected      || 페이지링크 ul li a 현재페이지
+
+.pagination-wrap {
+  position: relative;
+  text-align: center;
+  margin-top: rem(60px);
+
+  & > .pagination {
+    display: inline-flex;
+    margin-top: 0;
+  }
+
+  & > .button {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  & > .pagination ~ .button {
+    right: 0;
+    left: auto;
+  }
+}
+
+.pagination {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: rem(1px);
+  position: relative;
+  margin-top: rem(60px);
+}
+
+.pagination__button,
+.pagination__link {
+  @include button-normal;
+  width: rem(36px);
+  height: rem(36px);
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.pagination__button {
+  padding: 0;
+  border: 0;
+
+  &:hover,
+  &:focus {
+    border-color: transparent;
+    background-color: transparent;
+
+    .svg-icon {  
+      fill: $icon-hover;
+    }
+  }
+
+  &:focus-visible {
+    outline: 1px solid $border-basic;
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
+    .svg-icon {  
+      fill: $icon-mute;
+    }
+  } 
+
+  .svg-icon {
+    @include svg-icon-size(18px);
+    transform: none !important;
+  }
+}
+
+.pagination__link {
+  @include font-weight("regular");
+  border: 1px solid transparent;
+  color: $basic;
+
+  &:not(&--selected):hover:not(:disabled) {
+    color: $basic;
+    border-color: $border-light;
+  }
+
+  &:not(&--selected):focus,
+  &:not(&--selected):focus:hover {
+    color: $basic;
+    border-color: $border-light;
+
+    .svg-icon {
+      fill: $primary;
+    }
+  }
+
+  &--selected,
+  &--selected:hover,
+  &--selected:focus {
+    @include font-weight("medium");
+    border-color: $primary;
+    background: $primary;
+    color: $white;
+  }
+}
+
+.pagination__list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: rem(1px);
+  margin: 0 $spacing-xs;
+}
+
+.pagination__ellipsis {
+  display: block;
+  padding: 0 $spacing-xs;
+}
+
+.pagination__input {
+  @include font-weight("medium");
+  width: auto;
+  height: rem(28px);
+  padding: $spacing-2xs $spacing-xs;
+  line-height: rem(18px);
+  border-color: transparent;
+}
+
+.pagination__dash {
+  @include line-height("heading");
+  margin-right: $spacing-2xs;
+  margin-left: $spacing-2xs;
+}
+
+.pagination__last-page {
+  @include line-height("heading");
+  margin-right: $spacing-2xs;
+  margin-left: $spacing-2xs;
+}
+
+// ------------------------------------------
+// grid-section : 양쪽으로 나뉜 레이아웃
+// ------------------------------------------
+
+.grid-section__list {
+  .pagination {
+    margin-top: 1px !important;
+    padding: rem(12px) rem(12px) rem(11px) rem(12px) ;
+    border-top: 1px solid $border-light;
+  }
+}
+
+// ------------------------------------------
+// 모달 내에 들어가있는 페이징 간격
+// ------------------------------------------
+
+.modal__body {
+  .pagination {
+    margin: rem(24px) 0 rem(12px) 0;
+  }
+}

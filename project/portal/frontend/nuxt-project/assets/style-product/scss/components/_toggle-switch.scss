@@ -1,0 +1,66 @@
+// -------------------------
+// Toggle switch
+// -------------------------
+.toggle-switch {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-switch__switch {
+  @include button-normal;
+  justify-content: flex-start;
+  width: rem(50px);
+  height: rem(24px);
+  padding: rem(3px);
+  background-color: #ccc;
+  border: none;
+  border-radius: 12px;
+  transition-duration: $duration-fast-02;
+  transition-timing-function: ease-in-out;
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+    opacity: 1;
+  }
+}
+
+.toggle-switch__handle {
+  display: block;
+  width: rem(18px);
+  height: rem(18px);
+  background-color: $white;
+  border-radius: 50%;
+}
+
+.toggle-switch__label {
+  @include font-size("13");
+  margin-right: $spacing-2xs;
+  color: $text-dark;
+}
+
+.toggle-switch__switch--selected {
+  background-color: $secondary;
+  opacity: 1;
+
+  .toggle-switch__handle {
+    margin-left: auto;
+  }
+}
+
+// -------------------------
+// Size overwrite
+// -------------------------
+
+.toggle-switch--sm .toggle-switch__switch {
+  width: rem(36px);
+  height: rem(18px);
+}
+
+.toggle-switch--sm .toggle-switch__handle {
+  width: rem(14px);
+  height: rem(14px);
+}
+
+.toggle-switch--sm .toggle-switch__label {
+  @include font-size("12");
+}

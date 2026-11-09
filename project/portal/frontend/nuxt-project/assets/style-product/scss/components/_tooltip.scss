@@ -1,0 +1,394 @@
+// -------------------------
+// Tooltip - Studio
+// -------------------------
+.tooltip-studio {
+  z-index: z("tooltip");
+  position: absolute;
+  max-width: rem(480px);
+  padding: $spacing-sm;
+  background-color: #8d8f95;
+  border-radius: 4px;
+  box-shadow: 0 rem(4px) rem(8px) 0 rgba(0, 0, 0, 0.07);
+  transition-duration: $duration-fast-02;
+  transition-timing-function: ease-in-out;
+  // white-space: nowrap;
+}
+
+.tooltip-studio__arrow {
+  position: absolute;
+  width: rem(8px);
+  height: rem(8px);
+  background-color: #8d8f95;
+  border: 1px solid #8d8f95;
+  transform: rotate(45deg);
+  content: "";
+}
+
+.tooltip-studio__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.tooltip-studio__title {
+  @include font-size("14");
+  @include font-weight("medium");
+  @include line-height("heading");
+  color: $white;
+}
+
+.tooltip-studio__text {
+  @include font-size("13");
+  @include line-height("body");
+  color: $white;
+  white-space: nowrap;
+}
+
+.tooltip-studio__text a {
+  color: $white;
+}
+
+// Tooltip 위로 위치
+.tooltip-studio--top {
+  .tooltip-studio__arrow {
+    top: calc(100% - 4px);
+    left: 50%;
+    margin-left: -$spacing-2xs;
+    border-width: 0 1px 1px 0;
+  }
+}
+
+// // Tooltip 아래로 위치
+.tooltip-studio--bottom {
+  .tooltip-studio__arrow {
+    top: rem(-4px);
+    left: 50%;
+    margin-left: -$spacing-2xs;
+    border-width: 1px 0 0 1px;
+  }
+}
+
+// Tooltip 왼쪽으로 위치
+.tooltip-studio--left {
+  .tooltip-studio__arrow {
+    top: 50%;
+    right: rem(-4px);
+    margin-top: -$spacing-2xs;
+    border-width: 1px 1px 0 0;
+  }
+}
+
+// Tooltip 오른쪽으로 위치
+.tooltip-studio--right {
+  .tooltip-studio__arrow {
+    top: 50%;
+    left: rem(-4px);
+    margin-top: -$spacing-2xs;
+    border-width: 0 0 1px 1px;
+  }
+}
+
+.tooltip-studio--top-right {
+  .tooltip-studio__arrow {
+    top: calc(100% - 4px);
+    right: rem(12px);
+    border-width: 0 1px 1px 0;
+  }
+}
+
+.tooltip-studio--top-left {
+  .tooltip-studio__arrow {
+    top: calc(100% - 4px);
+    left: rem(12px);
+    border-width: 0 1px 1px 0;
+  }
+}
+
+.tooltip-studio--bottom-right {
+  .tooltip-studio__arrow {
+    top: rem(-4px);
+    right: rem(12px);
+    border-width: 1px 0 0 1px;
+  }
+}
+
+.tooltip-studio--bottom-left {
+  .tooltip-studio__arrow {
+    top: rem(-4px);
+    left: rem(12px);
+    border-width: 1px 0 0 1px;
+  }
+}
+
+.tooltip-studio--right-top {
+  .tooltip-studio__arrow {
+    top: rem(8px);
+    left: rem(-4px);
+    border-width: 0 0 1px 1px;
+  }
+}
+
+.tooltip-studio--right-bottom {
+  .tooltip-studio__arrow {
+    bottom: rem(8px);
+    left: rem(-4px);
+    border-width: 0 0 1px 1px;
+  }
+}
+
+.tooltip-studio--left-top {
+  .tooltip-studio__arrow {
+    top: rem(8px);
+    right: rem(-4px);
+    border-width: 1px 1px 0 0;
+  }
+}
+
+.tooltip-studio--left-bottom {
+  .tooltip-studio__arrow {
+    bottom: rem(8px);
+    right: rem(-4px);
+    border-width: 1px 1px 0 0;
+  }
+}
+
+// -------------------------
+// Theme - tooltip--light
+// ------------------------
+
+.tooltip-studio--light {
+  background-color: $dark;
+  box-shadow: 0 rem(2px) rem(12px) rem(2px) rgba(0, 0, 0, 0.14);
+}
+
+.tooltip-studio--light .tooltip-studio__arrow {
+  background-color: $dark;
+  border-color: darken($dark, 8%);
+}
+
+.tooltip-studio--light .tooltip-studio__title {
+  color: $text-dark;
+}
+
+.tooltip-studio--light .tooltip-studio__text {
+  color: $text-dark;
+}
+
+.tooltip-studio--light .tooltip-studio__text a {
+  color: $text-dark;
+}
+
+// -------------------------
+// Tooltip - popover
+// -------------------------
+.tooltip {
+  position: relative;
+  z-index: z("tooltip");
+
+  &:hover {
+    z-index: z("floating");
+  }
+}
+
+.tooltip__message {
+  @include button-normal;
+  display: inline-flex;
+  padding: 0;
+  background-color: transparent;
+  line-height: initial;
+
+  .svg-icon {
+    fill: $negative;
+  }
+
+  .svg-icon:not(:only-child) {
+    &:first-child {
+      margin-right: rem(5px);
+    }
+
+    &:last-child {
+      margin-left: rem(5px);
+    }
+  }
+}
+
+.popover {
+  position: absolute;
+  z-index: z("tooltip");
+  width: rem(400px);
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $border-basic;
+  border-radius: rem(5px);
+  background-color: #fff;
+  box-shadow: 0 rem(4px) rem(8px) 0 rgba(0, 0, 0, 0.07);
+
+  .tooltip__message:not(button) + & {
+    display: none;
+  }
+
+  .tooltip__message:not(button):hover + & {
+    display: block !important;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: rem(9px);
+    height: rem(9px);
+    border-top: 1px solid $border-basic;
+    border-right: 1px solid $border-basic;
+    background-color: #fff;
+    transform: translate(-50%, 50%) rotate(135deg);
+  }
+
+  &--top {
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: $spacing-sm;
+    transform: translateX(-50%);
+
+    &::before {
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 50%) rotate(135deg);
+    }
+  }
+
+  &--right {
+    top: 50%;
+    left: 100%;
+    margin-left: $spacing-sm;
+    transform: translateY(-50%);
+
+    &::before {
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%) rotate(-135deg);
+    }
+  }
+
+  &--left {
+    top: 50%;
+    right: 100%;
+    margin-right: $spacing-sm;
+    transform: translateY(-50%);
+
+    &::before {
+      top: 50%;
+      right: 0;
+      transform: translate(50%, -50%) rotate(45deg);
+    }
+  }
+
+  &--bottom {
+    top: 100%;
+    left: 50%;
+    margin-top: $spacing-sm;
+    transform: translateX(-50%);
+
+    &::before {
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  &--top-right {
+    right: 0;
+    bottom: 100%;
+    margin-bottom: $spacing-sm;
+
+    &::before {
+      bottom: 0;
+      right: rem(40px);
+      transform: translate(-50%, 50%) rotate(135deg);
+    }
+  }
+
+  &--top-left {
+    bottom: 100%;
+    left: 0;
+    margin-bottom: $spacing-sm;
+
+    &::before {
+      bottom: 0;
+      left: rem(40px);
+      transform: translate(-50%, 50%) rotate(135deg);
+    }
+  }
+
+  &--bottom-right {
+    top: 100%;
+    right: 0;
+    margin-top: $spacing-sm;
+
+    &::before {
+      top: 0;
+      right: rem(40px);
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  &--bottom-left {
+    top: 100%;
+    left: 0;
+    margin-top: $spacing-sm;
+
+    &::before {
+      top: 0;
+      left: rem(40px);
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  &--fill {
+    width: max-content;
+  }
+
+  &--sm {
+    width: 300px;
+    padding: 0;
+    .popover__inner {  
+      @include font-size("14");
+      padding: $spacing-xs;
+    }
+  }
+
+  &--lg {
+    width: 680px;
+  }
+
+  &--xl {
+    width: 920px;
+  }
+
+  &--full {
+    width: 1200px;
+  }
+}
+
+.popover__inner {
+  padding: $spacing-md;
+}
+
+.popover__title {
+  @include font-size("18");
+  margin-bottom: $spacing-sm;
+  color: $text-dark;
+}
+
+.process-list__item {
+  padding-left: rem(12px);
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: rem(5px);
+    height: rem(5px);
+    background: $border-light;
+    border-radius: rem(3px);
+    top: 50%;
+    transform: translateY(-50%);
+    left: rem(-4px);
+  }
+}

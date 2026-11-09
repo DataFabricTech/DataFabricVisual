@@ -1,0 +1,30 @@
+//-------------------------------------------
+//  Z-index
+// ------------------------------------------
+$z-indexes: (
+  tooltip: 7000,
+  alert: 8500,
+  alert-overlay: 8400,
+  dropdown: 7900,
+  modal: 9000,
+  datepicker: 9001,
+  overlay: 7000,
+  header: 8000,
+  footer: 5000,
+  layer: 510,
+  float: 1,
+  hidden: - 1,
+  overflowHidden: - 1,
+  floating: 7500
+);
+
+// Useage: .modal {
+//     z-index: z('modal');
+//   }
+@function z($layer) {
+  @if not map-has-key($z-indexes, $layer) {
+    @warn '$z-indexes 맵에서 `#{$layer}` 에 해당하는 layer를 찾지 못했습니다.';
+  }
+
+  @return map-get($z-indexes, $layer);
+}

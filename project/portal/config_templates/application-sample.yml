@@ -1,0 +1,173 @@
+# 포털 설정 템플릿
+#
+# 사용법
+#   1) 이 파일을 복사해 프로파일 설정으로 사용합니다.
+#        cp config_templates/application-sample.yml src/main/resources/application-local.yml
+#   2) application.yml 의 spring.profiles.active 가 가리키는 프로파일과 파일명을 맞춥니다.
+#   3) <...> 로 표시된 값을 환경에 맞게 채웁니다.
+#
+# 비밀값은 Jasypt 로 암호화해 ENC(...) 형태로 기록합니다.
+# 평문 비밀값을 저장소에 커밋하지 않습니다.
+
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:postgresql://<DB_HOST>:5432/<DB_NAME>
+      username: <DB_USER>
+      password: ENC(<ENCRYPTED_DB_PASSWORD>)
+      driver-class-name: org.postgresql.Driver
+      maximumPoolSize: 3
+      connection-test-query: select 1
+
+  mail:
+    host: <SMTP_HOST>
+    port: 587
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 5000
+          auth: false
+          starttls:
+            enable: false
+          ssl:
+            enable: false
+
+  rabbitmq:
+    host: <RABBITMQ_HOST>
+    port: 5672
+    username: <RABBITMQ_USER>
+    password: ENC(<ENCRYPTED_RABBITMQ_PASSWORD>)
+
+logging:
+  level:
+    root: info
+
+server:
+  port: 38080
+  max-http-request-header-size: 30000
+
+properties:
+  # 설정값 암호화 키
+  cryptKey: <CRYPT_KEY>
+
+  # 대용량 추출 요청 토큰
+  bigExtractToken: <EXTRACT_TOKEN>
+
+  activeSendMail:
+    data-request: false
+    synonym: false
+  activeLineage: true
+
+  # 업로드 제한과 경로
+  maxFileSize: 1GB                      # GB, MB, KB
+  allowedExtension: zip,pptx,pptm,ppt,xls,xlsx,xlsm,csv,pdf,jpg,jpeg,png
+  allowedImgExtension: jpg,jpeg,png
+  fileUploadPath: <FILE_UPLOAD_PATH>
+  csvFileUploadPath: <CSV_UPLOAD_PATH>
+  systemConfigPath: <SYSTEM_CONFIG_PATH>
+
+  # 미접속 계정 비활성 기준(일)
+  loginDeactivationDateThreshold: 90
+
+  iris:
+    security:
+      ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
+      redirect-url: /
+      iframe-option: same-origin   # disable, same-origin, deny
+      csrf: true
+      cors:
+        pattern: /**
+        allowed-origins: <PORTAL_ORIGIN>   # 예: http://localhost:38080
+        allowed-methods: "*"
+        allowed-headers: "*"
+        allow-credentials: true
+      same-site: Lax               # None, Lax, Strict
+    access-token:
+      name: x-access-token
+      secret: <JWT_ACCESS_SECRET>
+      max-age: 60
+    refresh-token:
+      name: x-refresh-token
+      secret: <JWT_REFRESH_SECRET>
+      max-age: 28800
+    route:
+      locales: ko,en,zh,ja
+    auth:
+      rsa-enabled: true
+
+  # 메타데이터 수집 스케줄러
+  airflow:
+    base_url: http://<AIRFLOW_HOST>:28080/
+
+  # 데이터 가상화 질의 엔진
+  trino:
+    hikari:
+      jdbc-url: jdbc:trino://<TRINO_HOST>:8080/
+      user: <TRINO_USER>
+    udf-schema: default
+
+  # 검색 엔진
+  ESSearch:
+    server:
+      scheme: http
+      host: <ES_HOST>
+      port: 28800
+
+  # 검색 색인 동기화
+  ESSync:
+    base_url: http://<ESSYNC_HOST>:8000/v1
+    url:
+      update: /essync/update
+      updates: /essync/updates
+      roleupdates: /essync/roleupdates
+      convertcategory: /essync/convertcategory
+      synonymsync: /essync/synonym
+      categorycount: /essync/getclassificationcount
+
+  # 카탈로그 API — 수집·프로파일링 실행
+  catalog-api:
+    base_url: http://<CATALOG_API_HOST>:8585/api/v1
+    url:
+      execute: /ingestion/execute
+      executeSync: /ingestion/execute/sync
+      profile:
+        default: /profile/execute
+        storage: /profile/execute/storage
+      profileSync:
+        default: /profile/execute/sync
+        storage: /profile/execute/storage/sync
+      dag: /ingestion/dag
+
+  # 대용량 데이터 추출
+  DataExtractAPI:
+    base_url: https://<DATAEXTRACT_HOST>:13200
+    url:
+      largedata: /largedata/requestdata
+
+  # 객체 저장소
+  minio:
+    endpoint: http://<MINIO_HOST>:9000
+    accessKey: <MINIO_ACCESS_KEY>
+    secretKey: ENC(<ENCRYPTED_MINIO_SECRET_KEY>)
+    unstructured_bucket: <UNSTRUCTURED_BUCKET>
+
+  # 추천
+  recommender:
+    base_url: http://<RECOMMENDER_HOST>:18888/v1/recommender
+    url:
+      clustering: /clusteringRecommend
+      embedding: /embeddingdRecommend
+      fusion: /fusionRecommend
+      viewLineage: /viewLineageBuild
+
+  # 논리적 데이터 통합
+  dataintegration:
+    base_url: http://<DATAINTEGRATION_HOST>:8889/v1/dataintegration
+    url:
+      predataintegration: /predataintegration
+      confirmdataintegration: /confirmdataintegration
+      deletedataintegration: /deletedataintegration
+      udf:
+        register: /udf/register
+        update: /udf/update
+        drop: /udf/drop

@@ -1,0 +1,65 @@
+// -------------------------
+// Drawer
+// -------------------------
+.drawer {
+  @include layer("overlay");
+  position: relative;
+  background-color: $white;
+}
+
+.drawer__head {
+  @include stable-padding(0, $spacing-md);
+  display: flex;
+  align-items: center;
+  height: rem(52px);
+  border-bottom: 1px solid $border-light;
+}
+
+.drawer__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.drawer__head-title {
+  @include font-weight("medium");
+  @include text-overflow;
+  @include font-size("18");
+  flex: 1;
+}
+
+.drawer__body {
+  overflow-y: auto;
+  padding: $spacing-md;
+}
+
+.drawer__foot {
+  @include stable-padding($spacing-sm, $spacing-md);
+  display: flex;
+  align-items: center;
+  height: rem(64px);
+  background-color: $dark;
+}
+
+.drawer__foot-main-buttons {
+  margin-left: auto;
+}
+
+// -------------------------
+// overwrite
+// -------------------------
+.drawer__body {
+  .description {
+    padding-top: $spacing-xs;
+
+    & + .description {
+      padding-top: $spacing-xl;
+    }
+  }
+
+  .form {
+    & + .form {
+      padding-top: $spacing-xl;
+    }
+  }
+}
