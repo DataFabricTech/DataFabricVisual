@@ -1,0 +1,59 @@
+.v--modal-overlay.loading-page {
+  background: rgba(255, 255, 255, 0.5);
+  text-align: center;
+
+  .v--modal {
+    background-color: transparent;
+    box-shadow: none;
+
+    .alert {
+      position: static;
+      width: 100%;
+    }
+  }
+}
+
+// -------------------------
+// 신규 테마 - Purple
+// -------------------------
+@keyframes purple-loading-spinner-colors {
+  0% {
+    border-color: #A426BA;
+    border-bottom-color: transparent;
+  }
+  25% {
+    border-color: #A426BA;
+    border-bottom-color: transparent;
+  }
+  50% {
+    border-color: #A426BA;
+    border-bottom-color: transparent;
+  }
+  75% {
+    border-color: #A426BA;
+    border-bottom-color: transparent;
+  }
+  100% {
+    border-color: #A426BA;
+    border-bottom-color: transparent;
+  }
+}
+
+.loader--purple .loader__spinner::after {
+  content: "";
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  border: 5px solid #A426BA;
+  border-bottom-color: transparent;
+  border-radius: 100%;
+  background: transparent;
+  animation: loading-spinner-duration 1s linear infinite,
+  purple-loading-spinner-colors 3s linear infinite;
+}
+
+// .loader--purple .loader__spinner {
+//   width: rem(96px);
+//   height: rem(96px);
+// }

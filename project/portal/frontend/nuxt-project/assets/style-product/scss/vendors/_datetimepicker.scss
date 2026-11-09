@@ -1,0 +1,190 @@
+.mx-datepicker {
+  width: 8.75rem;
+
+  &-range {
+    width: 13.75rem;
+  }
+
+  .mx-input {
+    height: $button-height-md;
+    padding: 0 $spacing-xl 0 $spacing-sm;
+    background-color: $white;
+    border: 1px solid $border-basic;
+    border-radius: $form-border-radius;
+    box-shadow: none;
+    color: inherit;
+  }
+}
+
+.mx-input {
+  @include font-family("sans");
+  @include font-size("16");
+  height: $button-height-md;
+  padding: 0 $spacing-xl 0 $spacing-sm;
+  background-color: $white;
+  border: 1px solid $border-basic;
+  box-sizing: border-box;
+  box-shadow: none;
+  border-radius: 0;
+
+  &:hover,
+  &:focus {
+    border-color: $primary;
+    box-shadow: none;
+    color: $text-dark;
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
+    cursor: not-allowed;
+    border-color: $border-basic;
+    background-color: $disabled;
+    box-shadow: none;
+    color: #999;
+
+    + .mx-icon-calendar {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}
+
+.mx-icon-calendar,
+.mx-icon-clear {
+  right: rem(10px);
+  width: rem(16px);
+  height: rem(16px);
+  color: $text-mute;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: $secondary;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.mx-icon-calendar,
+.mx-icon-clear,
+.mx-btn-text,
+.mx-table-date td,
+.mx-table-date th,
+.mx-table th,
+.mx-time-column .mx-time-item {
+  @include font-size("13");
+}
+
+.mx-btn {
+  font-family: inherit;
+  color: inherit;
+}
+
+.mx-btn:hover,
+.mx-btn:hover {
+  border-color: $primary;
+  color: $primary;
+}
+
+.mx-datepicker-popup.mx-datepicker-main {
+  @include font-family("sans");
+  @include font-size("13");
+  border-color: $border-basic;
+  box-shadow: rem(2px) rem(2px) rem(10px) rgba(0, 0, 0, 0.1);
+  border-radius: $form-border-radius;
+  color: inherit;
+}
+
+.mx-calendar-header-label {
+  @include font-weight("medium");
+  @include font-size("16");
+  color: $text-dark;
+
+  .mx-btn {
+    font-size: inherit;
+  }
+}
+
+.mx-calendar-content .cell {
+  border-radius: 2px;
+
+  &:not(.not-current-month):hover {
+    background-color: #f5f5f5;
+  }
+
+  &.active {
+    color: $white;
+    background-color: $primary;
+
+    &:hover {
+      background-color: darken($primary, 5%);
+    }
+  }
+
+  &.disabled {
+    opacity: 0.3;
+
+    &:hover {
+      background-color: $white;
+      opacity: 0.3;
+    }
+  }
+
+  &.not-current-month {
+    opacity: 0.3;
+  }
+}
+
+.mx-table-date .today {
+  color: $secondary;
+}
+
+.mx-time-header {
+  height: rem(32px);
+  border-color: $border-light;
+  line-height: rem(30px);
+}
+
+.mx-time-header-title {
+  @include font-size("12");
+  color: $text-dark;
+}
+
+.mx-time-content {
+  height: rem(238px);
+}
+
+.mx-time-column {
+  border-color: $border-light;
+}
+
+.mx-time-column .mx-time-item {
+  &.active {
+    @include font-weight("regular");
+    color: $secondary;
+  }
+
+  &:hover {
+    background-color: $dark;
+  }
+
+  &.disabled {
+    background-color: $white;
+    color: rgba($text-light, 0.5);
+  }
+}
+
+.mx-datepicker-sidebar + .mx-datepicker-content {
+  border-color: $border-light;
+}
+
+.mx-datepicker-sidebar {
+  padding: $spacing-sm;
+}
+
+.mx-btn-shortcut {
+  @include font-size("12");
+}

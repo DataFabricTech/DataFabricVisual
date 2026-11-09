@@ -1,0 +1,460 @@
+// -------------------------
+// button 엘리먼트 normalize
+// -------------------------
+@mixin button-normal {
+  @include font-family("sans");
+  @include font-weight("medium");
+  @include font-smoothing;
+  @include letter-spacing;
+  @include line-height("heading");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition-duration: $duration-fast-02;
+  transition-timing-function: ease-in-out;
+  font-size: 100%;
+  color: inherit;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  // Reset intrisic padding in Firefox
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+}
+
+// -------------------------
+// list
+// -------------------------
+@mixin list {
+  &__list + &__list::before {
+    content: "";
+    display: block;
+    border-top: 1px solid $border-light;
+    margin: $spacing-2xs 0;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    &:hover {
+      background-color: $bg-light;
+    }
+  }
+
+  &__button {
+    @include text-overflow;
+    @include button-normal;
+    @include font-weight("regular");
+    @include stable-padding($spacing-2xs, $spacing-xs);
+    // width: 100%;
+    flex: 1;
+    height: $button-height-md;
+    flex-direction: row;
+    justify-content: flex-start;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    text-align: left;
+
+    &:focus-visible:not(:disabled) {
+      border: 2px solid $default-focus;
+    }
+  }
+
+  &__notification {
+    @include stable-padding($spacing-2xs, $spacing-xs);
+    display: flex;
+    flex: 1;
+    height: $button-height-md;
+    cursor: default;
+  }
+
+  &__icon,
+  &__subicon {
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  &__icon + &__text,
+  &__subicon + &__text {
+    margin-left: $spacing-2xs;
+  }
+
+  &__text {
+    @include text-overflow;
+    @include line-height("heading");
+    vertical-align: middle;
+  }
+
+  &__action-buttons {
+    display: flex;
+    margin-right: $spacing-xs;
+    z-index: 1;
+  }
+
+  &__action-button {
+    @include button-normal;
+    padding: 0;
+    border-radius: $field-border-radius;
+    background-color: transparent;
+    color: $text-light;
+
+    .button__text {
+      @include font-size("13");
+      margin-left: $spacing-xs;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: $hover-row;
+    }
+
+    &:active:not(:disabled) {
+      background-color: $hover-row;
+
+      .svg-icon {
+        fill: $primary;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-right: $spacing-3xs;
+    }
+
+    &:focus-visible:not(:disabled) {
+      border: 2px solid $default-focus;
+    }
+  }
+
+  // -------------------------
+  // checkbox, radio overwrite
+  // -------------------------
+  &__item .checkbox {
+    @include text-overflow;
+    @include stable-padding($spacing-2xs, $spacing-xs);
+    // background-color: $white;
+    height: $button-height-md;
+    flex-grow: 1;
+
+    .checkbox__label {
+      width: 100%;
+    }
+
+    .checkbox__input:checked {
+      + .checkbox__label {
+        color: $primary;
+      }
+
+      + .checkbox__label .svg-icon {
+        fill: $primary;
+      }
+
+      + .checkbox__label span {
+        color: $primary;
+      }
+    }
+
+    &.checkbox--disabled,
+    &.checkbox--disabled:hover {
+      cursor: not-allowed;
+      background-color: $white;
+    }
+  }
+
+  &__item .radio {
+    @include text-overflow;
+    @include stable-padding($spacing-2xs, $spacing-xs);
+    // background-color: $white;
+    height: $button-height-md;
+    flex: 1;
+
+    .radio__label {
+      width: 100%;
+    }
+
+    .radio__input:checked {
+      + .radio__label {
+        color: $primary;
+      }
+
+      + .checkbox__label span {
+        color: $primary;
+      }
+    }
+
+    &.radio--disabled,
+    &.radio--disabled:hover {
+      cursor: not-allowed;
+      background-color: $white;
+    }
+  }
+
+  // -------------------------
+  // Modifier: disabled
+  // -------------------------
+  &__item--disabled {
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &__item--disabled &__button,
+  &__item--disabled &__action-button {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &__item--disabled &__action-button:hover,
+  &__item--disabled &__action-button:focus {
+    background-color: transparent;
+  }
+
+  // -------------------------
+  // Modifier: selected
+  // -------------------------
+  &__item--selected {
+    background-color: rgba($primary, 0.05);
+  }
+
+  &__item--selected &__icon,
+  &__item--selected &__subicon,
+  &__item--selected &__action-button .svg-icon {
+    fill: $primary;
+  }
+}
+
+@mixin list--hidable {
+  &--hidable &__action-buttons {
+    display: none;
+  }
+  &--hidable &__item:not(.list__item--disabled):hover &__action-buttons {
+    display: flex;
+  }
+}
+
+@mixin button-list {
+  &__list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: $spacing-xs;
+  }
+
+  &__item {
+    width: calc(33.33% - 8px);
+    margin: $spacing-2xs;
+
+    &:hover {
+      background-color: $dark;
+    }
+  }
+
+  &__button {
+    @include button-normal;
+    @include font-weight("regular");
+    @include stable-padding($spacing-2xs, $spacing-xs);
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #999;
+    border-radius: 2px;
+    color: inherit;
+    text-align: center;
+
+    &:focus-visible:not(:disabled) {
+      border: 2px solid $default-focus;
+    }
+  }
+
+  &__icon {
+    @include svg-icon-size($button-height-md);
+    vertical-align: middle;
+  }
+
+  &__text {
+    @include text-overflow;
+    @include line-height("heading");
+    width: 100%;
+    text-align: center;
+    color: inherit;
+  }
+}
+
+// -------------------------
+// time-picker, date-picker
+// -------------------------
+@mixin picker {
+  position: relative;
+
+  &-selector {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: rem(32px);
+    padding: 0 $spacing-xl 0 $spacing-sm;
+    border: 1px solid $border-light;
+    border-radius: $field-border-radius;
+    background-color: $white;
+    transition: all $duration-fast-01 motion(standard, productive);
+
+    &:hover {
+      border-color: darken($border-light, 15%);
+    }
+
+    &:hover &-selector__input {
+      background-color: rgba($white, 1);
+      border-color: darken($border-light, 15%);
+    }
+
+    &:hover &-selector__button {
+      border-left-color: darken($border-light, 15%);
+      background-color: $dark;
+    }
+  }
+
+  &-selector__input {
+    @include font-family("sans");
+    @include line-height("body");
+    min-width: rem(127px);
+    max-width: rem(148px);
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background-color: $white;
+    color: $text-dark;
+
+    &::placeholder {
+      @include font-weight("light");
+      color: $text-light;
+    }
+
+    &[readonly],
+    &[readonly]:hover,
+    &[readonly]:focus {
+      cursor: default;
+      color: $text-dark;
+    }
+
+    &[disabled],
+    &[disabled]:hover,
+    &[disabled]:focus {
+      cursor: not-allowed;
+      background-color: $white;
+      // border-color: $border-light;
+      // opacity: 0.5;
+      box-shadow: none;
+    }
+  }
+
+  &-selector__button {
+    @include button-normal;
+    @include button--icon(6px, 20px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-color: $border-light;
+    border-width: 0 0 0 1px;
+    background-color: $white;
+    transition: all $duration-fast-01 motion(standard, productive);
+  }
+
+  &-selector__separator {
+    margin: 0 $spacing-xs;
+    color: $text-dark;
+  }
+
+  &-container {
+    @include layer("overlay");
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: $spacing-2xs;
+    background-color: $white;
+    border: 1px solid $border-light;
+  }
+
+  // -------------------------
+  // Modifier: focused, open
+  // -------------------------
+  &--open &-container {
+    display: flex;
+  }
+
+  &--focused:hover,
+  &--open:hover {
+    border-color: $secondary;
+  }
+
+  &--focused:hover &-selector__button,
+  &--open:hover &-selector__button {
+    border-left-color: $secondary;
+    background-color: rgba($secondary, 0.06);
+
+    .svg-icon {
+      fill: $secondary;
+    }
+  }
+
+  &--focused &-selector,
+  &--open &-selector {
+    border-color: $secondary;
+    box-shadow: 0 0 rem(4px) rgba($secondary, 0.65);
+  }
+
+  &--focused &-selector__button,
+  &--open &-selector__button {
+    border-left-color: $secondary;
+    background-color: rgba($secondary, 0.06);
+
+    .svg-icon {
+      fill: $secondary;
+    }
+  }
+
+  // -------------------------
+  // Modifier: disabled
+  // -------------------------
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--disabled:hover {
+    border-color: $border-light;
+  }
+
+  &--disabled:hover &-selector__button {
+    border-left-color: $border-light;
+    background-color: $white;
+  }
+
+  &--disabled:hover &-selector {
+    border-color: $border-light;
+  }
+
+  &--disabled &-selector__button,
+  &--disabled &-selector__input {
+    cursor: not-allowed;
+  }
+}

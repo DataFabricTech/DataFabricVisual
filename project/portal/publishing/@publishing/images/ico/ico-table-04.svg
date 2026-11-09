@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+    <g transform="translate(-20.052 -16)">
+        <rect width="50" height="50" rx="25" transform="translate(20.052 16)" style="fill:#f5f5f6"/>
+        <path d="M20 21v-4h8v4zm-10 0v-4h8v4zM0 21v-4h8v4zm20-6v-4h8v4zm-10 0v-4h8v4zM0 15v-4h8v4zm20-6V5h8v4zM10 9V5h8v4zM0 9V5h8v4zm20-6v-4h8v4zM10 3v-4h8v4zM0 3v-4h8v4z" transform="translate(31.052 31)" style="fill:#656d78"/>
+    </g>
+</svg>

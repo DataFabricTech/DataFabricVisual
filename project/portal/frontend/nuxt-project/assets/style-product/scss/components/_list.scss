@@ -1,0 +1,558 @@
+// -------------------------
+// List
+// -------------------------
+.list {
+  @include list;
+  @include list--hidable;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $border-light;
+  background-color: $white;
+}
+
+.list__list {
+  width: 100%;
+  height: 100%;
+}
+
+.list__head {
+  padding: $spacing-xs;
+  background-color: $dark;
+}
+
+.list__head-title {
+  @include font-weight("medium");
+  @include text-overflow;
+  color: $text-dark;
+  margin-bottom: $spacing-3xs;
+}
+
+.list__head-title-text {
+  flex: 1;
+}
+
+.list__head-toolbar {
+  display: flex;
+}
+
+.list__head--toolbar-hide.list__head--title-hide {
+  padding: 0;
+}
+
+.list__head--toolbar-hide .list__head-toolbar {
+  display: none;
+}
+
+.list__head--title-hide .list__head-title {
+  display: none;
+}
+
+.list__head-toolbar .text-input-group {
+  width: 100%;
+}
+
+.list__head-checkbox {
+  display: inline-flex;
+}
+
+.list__item {
+  border-bottom: 1px solid $hover-row;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.list__item .filter-highlight {
+  @include line-height("body");
+}
+
+.list__item-notification {
+  @include stable-padding($spacing-2xs, $spacing-xs);
+  margin: 0 auto;
+  height: rem(40px);
+}
+
+.list__button .list__icon {
+  width: rem(24px);
+  height: rem(24px);
+}
+
+.list__button .list__subicon {
+  width: rem(20px);
+  height: rem(20px);
+}
+
+.list__subtext {
+  margin-left: $spacing-2xs;
+  color: $text-light;
+}
+
+.list__body {
+  overflow: auto;
+}
+
+.list__summary {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.list__summary-content {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.list__details {
+  display: none;
+  width: 100%;
+  background-color: darken($dark, 1.4%);
+}
+
+.list__details-inner {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: $spacing-md;
+}
+
+.list__details-list {
+  width: 100%;
+}
+
+.list__details-item {
+  display: flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-md;
+}
+
+.list__details-item:not(:last-child) {
+  border-bottom: 1px solid rgba($border-light, 0.75);
+}
+
+.list__details-item-trigger {
+  @include make-col(4);
+  @include font-size("13");
+  display: flex;
+  flex-direction: column;
+  margin-right: $spacing-xs;
+}
+
+.list__details-item-trigger-layer {
+  @include text-overflow(block);
+  @include font-size("12");
+  color: $text-light;
+}
+
+.list__details-item-trigger-text {
+  @include text-overflow(block);
+}
+
+.list__details-item-component {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin-left: $spacing-2xs;
+  overflow: hidden;
+}
+
+.list__details-item-component-text {
+  @include text-overflow(block);
+  margin-left: $spacing-2xs;
+}
+
+.list__details-action-buttons {
+  display: flex;
+  margin-left: $spacing-xs;
+}
+
+.list--expandable .list__head {
+  display: flex;
+  align-items: center;
+  padding-top: $spacing-3xs;
+  padding-bottom: $spacing-3xs;
+  background-color: $white;
+  border-bottom: 1px solid $border-light;
+}
+
+.list--expandable .list__item {
+  flex-direction: column;
+}
+
+.list--expandable .checkbox {
+  flex-grow: 0;
+  padding-right: 0;
+}
+
+.list--expandable .list__button {
+  padding-left: 0;
+}
+
+.list__head-right-box {
+  margin-left: auto;
+}
+
+.list__item--selected .list__details {
+  display: flex;
+}
+
+.list__item--selected .list__expand-icon {
+  transform: rotate(180deg);
+}
+
+.list__item--notification {
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  &:hover {
+    background-color: $white;
+  }
+}
+
+.list--border-reset {
+  border: 0;
+}
+
+.dynamic-list {
+  width: 100%;
+  padding: $spacing-sm;
+
+  .notification-full {
+    height: 100%;
+    justify-content: center;
+  }
+}
+
+.dynamic-list__no-contents {
+  display: flex;
+  height: 100%;
+  background-color: $odd-row;
+  justify-content: center;
+}
+
+.dynamic-list__no-contents .notification-message {
+  height: rem(480px);
+}
+
+.dynamic-list__toolbar {
+  display: flex;
+  margin-bottom: $spacing-sm;
+}
+
+.dynamic-list__items {
+  min-height: rem(480px);
+  max-height: rem(480px);
+  padding-right: $spacing-xs;
+  overflow-y: auto;
+  position: relative;
+}
+
+.dynamic-list__item {
+  border: 1px solid $border-light;
+  background-color: $odd-row;
+}
+
+.dynamic-list__item:not(:last-child) {
+  margin-bottom: $spacing-md;
+}
+
+.dynamic-list__item .dynamic-list__head {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-xs;
+  background-color: $white;
+  border-bottom: 1px solid $border-light;
+}
+
+.dynamic-list__filter {
+  flex: 1;
+}
+
+.dynamic-list__body {
+  padding: $spacing-2xs 0;
+}
+
+.dynamic-list__body-row {
+  padding: $spacing-3xs 0;
+}
+
+.dynamic-list__lang {
+  padding: 0 $spacing-xs 0 $spacing-sm;
+  font-weight: 500;
+}
+
+.dynamic-list__contents {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.dynamic-list__form {
+  flex: 1;
+  position: relative;
+}
+
+.dynamic-list__buttons {
+  .button--link {
+    padding: 0 $spacing-xs 0 $spacing-2xs;
+  }
+
+  .button--icon {
+    padding: 0;
+  }
+}
+
+.dynamic-list__button {
+  margin-top: $spacing-2xs;
+}
+
+.dynamic-list__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 2rem;
+}
+
+.list--lg .list__item {
+  height: rem(40px);
+}
+
+// -------------------------
+// tree
+// -------------------------
+
+.tree__list {
+  width: min-content;
+  min-width: 100%;
+}
+
+.tree__item {
+  display: flex;
+  flex-wrap: wrap;
+	position: relative;
+  padding-left: 1.5rem;
+
+	.radio {
+		position: relative;
+		white-space: nowrap;
+
+    &:last-child {
+      margin-left: rem(-22px);
+    }
+
+		.radio__label {
+			display: flex;
+			width: 100%;
+			padding: 0.25rem ;
+			border-radius: rem(3px);
+      line-height: 1.25rem;
+		
+			&::before,
+      &::after {
+				display: none;
+			}
+
+      &:hover,
+      &:focus {
+        color: $primary;
+      }
+		}
+
+		.radio__input:checked + .radio__label {
+			padding: 0.25rem 0.75rem;
+			background-color: $primary;
+			color: #fff;
+		}
+
+		.radio__input:checked + .radio__label:hover {
+			border-color: $primary;
+		}
+	}
+}
+  
+.tree__toggle {
+  @include button-normal;
+  position: absolute;
+  top: 0.25rem;
+  left: 0;
+  z-index: 2;
+  width: 1rem;
+  height: 1rem;
+  margin: rem(1px);
+  padding: 0;
+  border-radius: rem(2px);
+  transition: all .5s;
+  
+  &:last-child,
+  .hidden ~ & {
+    display: none;
+  }
+  
+  &,
+  &:hover,
+  &:focus {
+    border: 1px solid #d7e6f0;
+    background-color: #f5f8fa;
+    color: #64749c;
+  }
+
+  &::after {
+    content: "";
+    width: rem(10px);
+    height: rem(10px);
+    background-color: #64749c;
+    clip-path: polygon(0% 40%, 40% 40%, 40% 0%, 60% 0%, 60% 40%, 100% 40%, 100% 60%, 60% 60%, 60% 100%, 40% 100%, 40% 60%, 0% 60%);
+  }
+}
+
+.tree__toggle--unfold {
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: rem(7px);
+    height: rem(22px);
+    border-left: 1px dashed $border-basic;
+  }
+
+  &::after {
+    clip-path: polygon(0% 40%, 100% 40%, 100% 60%, 0% 60%);
+  }
+}
+
+.tree__add-child {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.tree__list--child {
+  display: none;
+	opacity: 0;
+  position: relative;
+  width: 100%;
+
+  .tree__toggle--unfold ~ &,
+  .tree__item--open & {
+    display: block;
+		opacity: 1;
+	}
+
+  .tree__item {
+  
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.75rem;
+      left: rem(-15px);
+      bottom: rem(-15px);
+      border-left: 1px dashed $border-basic;
+    }
+  
+    &:last-child::before {
+      display: none;
+    }
+  
+    &::after {
+      content: "";
+      position: absolute;
+      top: rem(13px);
+      left: rem(-15px);
+      width: rem(14px);
+      border-top: 1px dashed $border-basic;
+    }
+
+    &--open:last-child::before {
+      bottom: auto;
+      height: 1.25rem;
+    }
+  }
+}
+
+.tree__check {
+
+  .tree__item {
+    padding-left: 0;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+
+    .radio,.radio:last-child {
+      margin-left: 0;
+      height: rem(36px);
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .tree__list--child {
+    .tree__list--child {
+      background-color: $bg-basic;
+      border-radius: $field-border-radius;
+      padding-left: $spacing-lg;
+    }
+  }
+
+  .tree__toggle {
+    left: unset !important;
+    right:0;
+    top: rem(12px);
+    background-color: none !important;
+    color: transparent !important;
+
+    &::before {
+      content: none;
+    }
+
+    &,
+    &:hover,
+    &:focus {
+      border: none;
+      background-color: none;
+      color: transparent !important;
+    }
+
+    &::after {
+      content: "";
+      width: rem(16px);
+      height: rem(16px);
+      background-color: $white !important;
+      color: transparent !important;
+      clip-path: none;
+      background-image: url(#{$img-path}/icon/plus.svg);
+      background-repeat: no-repeat;
+      transition: all .5s;
+    }
+  }
+
+  .tree__toggle--unfold {
+    background-color: none;
+    color: transparent !important;
+
+    &::before {
+      content: none;
+    }
+  
+    &::after {
+      clip-path: none;
+      background-color: $white !important;
+      color: transparent !important;
+      background-image: url(#{$img-path}/icon/minus.svg);
+      background-repeat: no-repeat;
+      transform: rotate(180deg);
+      transition: all .5s;
+    }
+  }
+
+}
+
+.tree__check > .tree__list > .tree__item > .radio,
+.tree__check > .tree__list > .tree__item > .tree__toggle {
+  display: none;
+}

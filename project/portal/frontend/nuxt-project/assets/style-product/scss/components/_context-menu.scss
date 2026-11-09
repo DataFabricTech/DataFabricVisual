@@ -1,0 +1,182 @@
+// -------------------------
+// Context menu
+// -------------------------
+.context-menu {
+  @include list;
+  @include layer("pop-out");
+  position: absolute;
+  border-radius: $field-border-radius;
+  z-index: z("overlay");
+}
+
+.context-menu__list {
+  min-width: rem(130px);
+  padding: $spacing-2xs 0;
+  background-color: $white;
+}
+
+.context-menu__icon {
+  fill: $text-dark;
+}
+
+.context-menu__text {
+  flex-grow: 1;
+  color: $text-dark;
+}
+
+.context-menu__subtext {
+  @include font-size("12");
+  color: $text-mute;
+  margin-left: $spacing-md;
+}
+
+.context-submenu {
+  @include list;
+  @include layer("pop-out");
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  border-radius: $field-border-radius;
+  z-index: z("overlay");
+}
+
+.context-menu__item:hover .context-submenu {
+  display: block;
+}
+
+.context-submenu__list {
+  min-width: rem(100px);
+  padding: $spacing-2xs 0;
+  background-color: $white;
+}
+
+.context-menu__submenu-icon {
+  display: none;
+  margin-right: $spacing-3xs;
+}
+
+.context-menu__item--submenu .context-menu__submenu-icon {
+  display: block;
+}
+
+.context-menu__head {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  height: $button-height-md;
+  padding: $spacing-2xs $spacing-sm;
+  background-color: $hover-row;
+}
+
+.context-menu__head-title {
+  @include text-overflow;
+  @include font-size("14");
+  @include font-weight("medium");
+  flex: 1;
+  text-align: left;
+  color: $text-dark;
+}
+
+.context-menu__foot {
+  @include stable-padding($spacing-xs, $spacing-sm);
+  display: flex;
+  background-color: $dark;
+}
+
+.context-menu__foot-main-buttons {
+  display: flex;
+  margin-left: auto;
+}
+
+.context-menu__foot .button + .button {
+  margin-left: $spacing-xs;
+}
+// -------------------------
+// Size overwrite
+// -------------------------
+.context-menu--lg {
+  .context-menu__list {
+    min-width: rem(140px);
+  }
+
+  .context-menu__button {
+    @include stable-padding($spacing-2xs, $spacing-sm);
+    height: $button-height-lg;
+  }
+
+  .context-menu__icon,
+  .context-menu__action-button .svg-icon {
+    @include svg-icon-size(20px);
+  }
+
+  .context-submenu__button {
+    @include stable-padding($spacing-2xs, $spacing-sm);
+    height: $button-height-lg;
+  }
+
+  .checkbox {
+    @include stable-padding($spacing-2xs, $spacing-sm);
+    height: $button-height-lg;
+
+    .checkbox__label {
+      height: 100%;
+
+      &::before {
+        top: 50%;
+        margin-top: -$spacing-xs;
+      }
+
+      &::after {
+        top: 50%;
+        margin-top: -$spacing-xs;
+      }
+    }
+  }
+  .checkbox--indeterminate {
+    .checkbox__label {
+      &::after {
+        margin-top: rem(-3px);
+      }
+    }
+  }
+}
+
+.context-menu--sm {
+  .context-menu__list {
+    min-width: rem(110px);
+  }
+
+  .context-menu__button {
+    @include stable-padding($spacing-3xs, $spacing-xs);
+    height: $button-height-sm;
+    line-height: rem(9px);
+  }
+
+  .context-menu__icon,
+  .context-menu__action-button .svg-icon {
+    @include svg-icon-size(16px);
+  }
+
+  .context-menu__text {
+    @include font-size("12");
+  }
+
+  .context-submenu__button {
+    @include stable-padding($spacing-3xs, $spacing-xs);
+    height: $button-height-sm;
+    line-height: rem(9px);
+  }
+
+  .context-submenu__text {
+    @include font-size("12");
+  }
+}
+
+// -------------------------
+// Modifier - division-line
+// -------------------------
+
+.context-menu__item--division-line {
+  border-bottom: 1px solid $border-light;
+}

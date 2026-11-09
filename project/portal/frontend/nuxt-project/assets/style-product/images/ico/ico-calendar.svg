@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <path data-name="선 77" transform="translate(1.571 6.286)" style="fill:none;stroke:#4d4f55;stroke-linejoin:round;stroke-width:1.5px" d="M0 0h12.857"/>
+    <path data-name="패스 5025" d="M12.071 2.5H1.786A1.286 1.286 0 0 0 .5 3.786V11.5a1.286 1.286 0 0 0 1.286 1.286h10.285a1.286 1.286 0 0 0 1.286-1.286V3.786A1.286 1.286 0 0 0 12.071 2.5z" transform="translate(1.071 1.214)" style="fill:none;stroke:#4d4f55;stroke-linejoin:round;stroke-width:1.5px"/>
+    <path data-name="선 78" transform="translate(5 1)" style="fill:none;stroke:#4d4f55;stroke-linejoin:round;stroke-width:1.5px" d="M0 0v2.5"/>
+    <path data-name="선 79" transform="translate(11 1)" style="fill:none;stroke:#4d4f55;stroke-linejoin:round;stroke-width:1.5px" d="M0 0v2.5"/>
+</svg>

@@ -1,0 +1,39 @@
+@startuml
+
+autoactivate on
+
+title 수집 시스템
+
+actor 관리자 as admin
+
+box "수집 시스템 등록/수정"
+participant Client as client
+participant CollectorController as collectorController
+participant CollectorService as collectorService
+end box
+
+box "Catalog API 작업수행 서버"
+participant FastApi as fastApi
+end box
+
+client -> collectorController : 수집대상 등록/수정 요청
+collectorController -> collectorService : 수집대상 등록/수정 요청
+note right
+    수집대상 등록
+    - 대상별 입력 값 상이
+    | system | database | schema |
+    | Oracle | O | O |
+    | Postgres | O | public(기본값, 수정 가능) |
+    | Mssql | O | dbo(기본값, 수정 가능) |
+    | Hive | X | O |
+    | Mysql | X | O |
+    - Hive의 경우 전용 설정파일 2개 (core-site.xml, hdfs-site.xml)
+    - 기본경로 기준으로 /data_catalog_portal/data/hive_system_config 경로에 저장
+    
+end note
+collectorService -> fastApi : Airflow Dag 생성/수정 요청
+fastApi -> collectorService : Airflow Dag 생성/수정 결과 반환
+collectorService -> collectorController : 수집대상 등록/수정 결과 반환
+collectorController -> client : 수집대상 등록/수정 결과 반환
+
+@enduml

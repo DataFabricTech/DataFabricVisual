@@ -1,0 +1,149 @@
+{
+  "_from": "vue2-datepicker@2.13.4",
+  "_id": "vue2-datepicker@2.13.4",
+  "_inBundle": false,
+  "_integrity": "sha512-a2eRLqBSRTFRJ/DVcPArXALpnICj+DTvoJGkvuZTvytO7FD3rmxbGS/DNzK1v+hDbHiOJtHwB7N8pyT1XZtWfw==",
+  "_location": "/vue2-datepicker",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "vue2-datepicker@2.13.4",
+    "name": "vue2-datepicker",
+    "escapedName": "vue2-datepicker",
+    "rawSpec": "2.13.4",
+    "saveSpec": null,
+    "fetchSpec": "2.13.4"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/vue2-datepicker/-/vue2-datepicker-2.13.4.tgz",
+  "_shasum": "063474ecb6196660079e75c04c185a750d65943f",
+  "_spec": "vue2-datepicker@2.13.4",
+  "_where": "D:\\project\\workspace_dhub_portal_tomcat\\dhub_potal_vue\\front",
+  "author": {
+    "name": "xiemengxiong"
+  },
+  "bugs": {
+    "url": "https://github.com/mengxiong10/vue2-datepicker/issues"
+  },
+  "bundleDependencies": false,
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "fecha": "^2.3.3"
+  },
+  "deprecated": false,
+  "description": "A Datepicker Component For Vue2",
+  "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "@commitlint/config-conventional": "^7.1.2",
+    "@vue/test-utils": "^1.0.0-beta.20",
+    "autoprefixer": "^7.2.6",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-helper-vue-jsx-merge-props": "^2.0.3",
+    "babel-jest": "^23.0.1",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-jsx-v-model": "^2.0.3",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "coveralls": "^3.0.1",
+    "cross-env": "^5.1.6",
+    "css-loader": "^0.25.0",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "eslint-plugin-vue": "^4.5.0",
+    "file-loader": "^1.1.11",
+    "highlight.js": "^9.12.0",
+    "husky": "^1.2.0",
+    "jest": "^23.0.1",
+    "lint-staged": "^8.1.0",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.13.0",
+    "optimize-css-assets-webpack-plugin": "^4.0.2",
+    "postcss-loader": "^2.1.5",
+    "sass-loader": "^6.0.7",
+    "vue": "^2.5.16",
+    "vue-jest": "^2.6.0",
+    "vue-loader": "^15.2.1",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.9.1",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.2"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "homepage": "https://github.com/mengxiong10/vue2-datepicker#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -x @commitlint/config-conventional -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
+  },
+  "keywords": [
+    "vue",
+    "datepicker"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "**/*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "main": "lib/index.js",
+  "name": "vue2-datepicker",
+  "peerDependencies": {
+    "vue": ">=2.4.0"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengxiong10/vue2-datepicker.git"
+  },
+  "scripts": {
+    "build": "npm run lint && npm test && cross-env NODE_ENV=production webpack --progress --hide-modules --config build/webpack.deploy.config.js",
+    "demo": "cross-env NODE_ENV=production webpack --progress --hide-modules --config build/webpack.demo.config.js",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --hot --open --config build/webpack.dev.config.js",
+    "lint": "eslint src/**/* test/**/*",
+    "release": "bash build/git.sh && bash build/release.sh",
+    "test": "jest",
+    "test:push": "jest --coverage --coverageReporters=text-lcov | coveralls",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
+  },
+  "version": "2.13.4"
+}

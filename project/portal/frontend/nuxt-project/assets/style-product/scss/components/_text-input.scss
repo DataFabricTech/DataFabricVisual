@@ -1,0 +1,406 @@
+//----------------------------------------------
+// Text input
+// ---------------------------------------------
+// mixins
+@mixin text-input {
+  @include font-weight("regular");
+  position: relative;
+  background-color: $white;
+  width: 100%;
+  height: $button-height-md;
+  padding: 0 $spacing-sm;
+  color: $text-dark;
+  border: 1px solid $border-basic;
+  border-radius: $form-border-radius;
+  font-size: inherit;
+  font-family: inherit;
+  transition: all $duration-fast-01 motion(standard, productive);
+  outline: none;
+
+  //IE에서 input focus 시 생기는 clear button 제거
+  &::-ms-clear {
+    display: none;
+  }
+
+  &:hover,
+  &:focus {
+    border-color: $primary;
+    box-shadow: none;
+    color: $text-dark;
+  }
+
+  // chrom에서 자동저장된 input의 배경컬러를 제어
+  &:-webkit-autofill {
+    -webkit-box-shadow: none;
+  }
+
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    cursor: not-allowed;
+    border-color: $border-basic;
+    background-color: $disabled;
+    box-shadow: none;
+    color: #999;
+
+    & ~ .text-input-group__button {
+      display: none;
+    }
+
+    & + .text-input-group__search-button {
+      background-color: $disabled;
+    }
+  }
+
+  &[readonly],
+  &[readonly]:hover,
+  &[readonly]:focus {
+    cursor: default;
+    border-color: $border-basic;
+    background-color: $disabled;
+    box-shadow: none;
+    color: #999;
+
+    & + .text-input-group__search-button {
+      background-color: $disabled;
+    }
+  }
+
+  &::placeholder {
+    color: #bbb;
+  }
+
+  & + .complete-message {
+    margin-top: $spacing-2xs;
+  }
+}
+
+@mixin text-input--lg {
+  height: $button-height-lg;
+}
+
+@mixin text-input--md {
+  height: $button-height-md;
+}
+
+@mixin text-input--sm {
+  @include font-size("14");
+  height: $button-height-sm;
+  padding: 0 $spacing-sm;
+}
+
+// -------------------------
+// classes
+// -------------------------
+.text-input {
+  @include text-input;
+  background-color: #fff;
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+.text-input--lg {
+  @include text-input--lg;
+}
+
+.text-input--md {
+  @include text-input--md;
+}
+
+.text-input--sm {
+  @include text-input--sm;
+}
+
+// -------------------------
+// input + icon
+// -------------------------
+// TODO: IMA 반영시 주의해야할 점
+// 1. .text-input-group__input -> .text-input 으로 변경
+.text-input-group {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+
+  .text-input {
+    // 뒤에 button이 있는 경우
+    &:not(:last-child):not([class*="w-"]) {
+      flex: 1 1 0%;
+      min-width: 0;
+      padding: 0 0 0 0.75rem;
+      border-radius: $form-border-radius 0 0 $form-border-radius;
+    }
+
+    &:hover + .text-input-group__clear-button,
+    &:focus + .text-input-group__clear-button {
+      border-color: $primary;
+      border-left: 0;
+    }
+
+    &:not(:read-only, :disabled):hover ~ .text-input-group__button.button--icon,
+    &:not(:read-only, :disabled):focus ~ .text-input-group__button.button--icon {
+      border-color: $primary;
+    }
+
+    &:read-only ~ .text-input-group__button.button--icon:hover,
+    &:disabled ~ .text-input-group__button.button--icon:hover,
+    &:read-only ~ .text-input-group__button.button--icon:focus,
+    &:disabled ~ .text-input-group__button.button--icon:focus {
+      background-color: $disabled;
+    }
+  }
+
+  .text-input + .text-input {
+    margin-left: $spacing-xs;
+  }
+}
+
+.text-input-group__icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: $spacing-xs;
+  width: rem(18px);
+  height: rem(18px);
+  border: none;
+  padding: 0;
+  z-index: z("float");
+
+  .svg-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  & ~ .text-input {
+    $icon-spacing: 8px + 18px + 4px;
+    padding-left: $icon-spacing;
+  }
+}
+
+.text-input-group__clear-button {
+  z-index: z("float");
+  width: rem(36px);
+  height: auto;
+  margin-left: -2px;
+  padding: 0;
+  border: 1px solid $border-basic;
+  border-left: 0;
+  border-radius: 0;
+  border-top-right-radius: $form-border-radius;
+  border-bottom-right-radius: $form-border-radius;
+  background-color: $white;
+  color: $basic;
+  cursor: pointer;
+
+  &:last-child {
+    margin-right: $spacing-sm;
+  }
+
+  &:hover,
+  &:focus,
+  &:focus-visible:not(:disabled) {
+    color: inherit;
+    border-color: $border-basic;
+    background-color: $white;
+  }
+}
+
+.text-input-group__search-button {
+  min-width: 5rem;
+  height: auto;
+  margin-left: $spacing-xs;
+  border-radius: $form-border-radius;
+  color: #fff;
+  border-color: $dark;
+  background-color: $dark;
+
+  .svg-icon:only-child {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+  }
+}
+
+.text-input-group__button {
+  min-width: rem(87px);
+  height: auto;
+  margin-left: $spacing-xs;
+
+  &.button--icon {
+    min-width: $button-height-md;
+    margin-left: 0;
+    padding: 0;
+    border-radius: 0;
+    border: 0 solid $border-basic;
+    border-width: 1px 0 1px 0;
+    background-color: $white;
+    transform: translateX(-1px);
+    color: $basic;
+
+    &:hover,
+    &:focus {
+      background-color: $white;
+
+      .svg-icon {
+        fill: $primary;
+
+      }
+    }
+    
+    &:last-child {
+      border-radius: 0 $form-border-radius $form-border-radius 0;
+      border: 1px solid $border-basic;
+      border-left: 0;
+      
+      &:hover,
+      &:focus {
+        border-color: $border-basic;
+      }
+    }
+  }
+}
+
+.text-input-group--lg {
+  .text-input {
+    @include text-input--lg;
+  }
+
+  .text-input-group__icon {
+    left: $spacing-sm;
+
+    & ~ .text-input {
+      $icon-spacing: 12px + 20px + 4px; // left + width + text사이와의 여백
+      padding-left: $icon-spacing;
+    }
+  }
+
+  .text-input-group__clear-button {
+    width: $button-height-lg;
+    border-radius: 0;
+  }
+}
+
+.text-input-group--sm {
+  .text-input {
+    @include text-input--sm;
+
+    &:nth-last-child(3):not(div) {
+      padding-right: $spacing-3xl - $spacing-3xs !important;
+    }
+  }
+
+  .text-input-group__icon {
+    left: $spacing-2xs;
+    width: rem(14px);
+    height: rem(14px);
+
+    & ~ .text-input {
+      $icon-spacing: 4px + 14px + 2px; // left + width + text사이와의 여백
+      padding-left: $icon-spacing;
+    }
+  }
+
+  .text-input-group__clear-button {
+    width: $button-height-sm;
+  }
+}
+
+.text-input-group--disabled {
+  cursor: not-allowed;
+
+  .text-input-group__clear-button,
+  .text-input-group__search-button,
+  .text-input-group__button {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .svg-icon {
+    opacity: 0.6;
+  }
+}
+
+// -------------------------
+// input + suffix
+// -------------------------
+.text-input-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.text-input-wrap__suffix {
+  margin-left: $spacing-2xs;
+  color: $text-dark;
+  flex-shrink: 0;
+}
+
+.text-input-wrap__prefix {
+  padding-right: $spacing-2xs;
+  color: $text-dark;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+}
+
+// -------------------------
+// input with range
+// -------------------------
+input[type="range"] + .text-input-wrap .text-input {
+  width: rem(80px);
+}
+
+// -------------------------
+// text edit + text input
+// -------------------------
+.text-edit {
+  display: flex;
+  align-items: center;
+  padding: $spacing-2xs 0;
+}
+
+.text-edit__title {
+  @include font-weight("regular");
+  @include text-overflow();
+}
+
+.text-edit__button {
+  margin-left: $spacing-2xs;
+}
+
+// -------------------------
+// inpu type = color
+// -------------------------
+.color-input {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: $button-height-sm;
+  height: $button-height-sm;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.color-input:focus {
+  outline: none;
+}
+
+::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+::-webkit-color-swatch{
+  border: 0;
+  border-radius: $button-border-radius;
+}
+
+::-moz-color-swatch,
+::-moz-focus-inner{
+  border: 0;
+}
+
+::-moz-focus-inner{
+  padding: 0;
+}

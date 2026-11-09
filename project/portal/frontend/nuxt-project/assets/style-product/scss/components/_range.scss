@@ -1,0 +1,71 @@
+// -------------------------
+// Range
+// -------------------------
+.range-input {
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: rem(6px);
+  margin: 0;
+  background: $bg-dark;
+  border-radius: 5px;
+  outline: none; /* Remove outline */
+  -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+  transition: opacity 0.2s;
+}
+
+/* Mouse-over effects */
+.range-input:hover {
+  background: #dce1e8;
+  &::-webkit-slider-thumb {
+    background: $hover-primary;
+  }
+}
+
+/* focus effects */
+.range-input:active,
+.range-input:focus {
+  &::-webkit-slider-thumb {
+    background: $active-primary;
+  }
+}
+
+/* focus effects */
+.range-input:disabled {
+  cursor: not-allowed;
+  &::-webkit-slider-thumb {
+    background: $light;
+    cursor: not-allowed;
+  }
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: rem(16px);
+  height: rem(16px);
+  background: $primary;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.range-input::-moz-range-thumb {
+  width: rem(16px);
+  height: rem(16px);
+  background: $primary;
+  cursor: pointer;
+}
+
+.range-input-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  .range-input + .text-input-wrap {
+    .text-input {
+      width: 100%;
+      margin-left: $spacing-2xs;
+    }
+  }
+}

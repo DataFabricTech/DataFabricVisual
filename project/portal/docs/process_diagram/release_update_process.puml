@@ -1,0 +1,26 @@
+@startuml
+
+autoactivate on
+
+title 공개설정
+
+actor 관리자 as admin
+
+box "메타 데이터 공개 설정"
+participant Client as client
+participant MetaDataManageController as metaDataManageController
+participant MetaDataManageService as metaDataManageService
+end box
+
+box "Elasticsearch 작업수행 서버"
+participant FastApi as fastApi
+end box
+
+client -> metaDataManageController : 메타데이터 공개설정 요청
+metaDataManageController -> metaDataManageService : 메타데이터 공개설정 요청
+metaDataManageService -> fastApi : Elasticsearch 동기화 요청
+fastApi -> metaDataManageService : Elasticsearch 동기화 완료
+metaDataManageService -> metaDataManageController : 메타데이터 공개설정 결과 반환
+metaDataManageController -> client : 메타데이터 공개설정 결과 반환
+
+@enduml

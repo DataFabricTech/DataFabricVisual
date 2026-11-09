@@ -1,0 +1,6 @@
+serviceId: "iris-web-development-framework"
+resource: "IWDF"
+routes:
+  - name: "IWDF"
+    resource: "Sample"
+    url: "/iwdf"

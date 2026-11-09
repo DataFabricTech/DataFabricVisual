@@ -1,0 +1,97 @@
+.h-group > .text-input-group {
+  position: relative;
+  min-width: 1px;
+  min-height: 1px;
+}
+
+/* row gap */
+.gap-10 {
+  margin-left: -5px !important;
+  margin-right: -5px !important;
+}
+
+.gap-10 > * {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.gap-20 {
+  margin-left: -10px !important;
+  margin-right: -10px !important;
+}
+
+.gap-20 > * {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.gap-30 {
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+}
+
+.gap-30 > * {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
+.gap-40 {
+  margin-left: -20px !important;
+  margin-right: -20px !important;
+}
+
+.gap-40 > * {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+.gap-60 {
+  margin-left: -30px !important;
+  margin-right: -30px !important;
+}
+
+.gap-60 > * {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+}
+
+/* PC,Mobile 전부 row type */
+.form__detail-item > * + * {
+  margin-left: 10px;
+}
+
+.form__detail-item > .text-input-group {
+  margin-left: 0;
+}
+
+.h-group > :not(:last-child) {
+  margin-right: 0;
+}
+
+/* byte */
+.text-area__byte-group {
+  color: #828282;
+}
+
+.text-area__byte-group > strong {
+  color: #000;
+}
+
+/* 화면 너비 0 ~ 930px */
+@media (max-width: 930px) {
+
+  /* only Mobile column */
+  .mobile-column {
+    flex-direction: column;
+  }
+
+  .mobile-column > * + * {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .mobile-column > * {
+    width: 100% !important;
+  }
+
+}

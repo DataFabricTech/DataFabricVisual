@@ -1,0 +1,151 @@
+// -------------------------
+// Alert
+// -------------------------
+
+// TODO: 임시 vue-final-modal
+// vue-final-modal
+.vue-final-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+// TODO: 임시 alert
+// 기존 .alert에서 position -> relative 처리, transform 제거
+.alert {
+  @include layer("pop-out");
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  border-radius: rem(10px);
+  min-width: rem(280px);
+  max-width: rem(520px);
+  min-height: rem(250px);
+  z-index: z("alert");
+}
+
+// 기존 .alert
+//.alert {
+//  @include layer("pop-out");
+//  display: flex;
+//  position: absolute;
+//  left: 50%;
+//  flex-direction: column;
+//  border-radius: rem(10px);
+//  min-width: rem(280px);
+//  max-width: rem(520px);
+//  min-height: rem(250px);
+//  z-index: z("alert");
+//  transform: translateX(-50%);
+//}
+
+.alert__foot {
+  padding: 0 0 rem(30px) 0;
+  display: flex;
+  background-color: $white;
+  border-radius: 0 0 rem(10px) rem(10px);
+  justify-content: center;
+}
+
+.alert__foot .button,
+.alert__foot div,
+.alert__foot .modal__foot-main-buttons div {
+  min-width: rem(90px);
+  margin: 0 $spacing-2xs;
+}
+
+.alert__foot .alert__foot-main-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+// modal과 디자인이 똑같은 부분 끝
+
+.alert__body {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: rem(50px) $layout-md rem(30px) $layout-md;
+  background-color: $white;
+  border-radius: rem(10px) rem(10px) 0 0;
+}
+
+.alert__close-button {
+  position: absolute;
+  right: rem(10px);
+  top: rem(10px);
+
+  .button--icon {
+    border-radius: rem(10px);
+    border: 0;
+
+    .svg-icon {
+      @include svg-icon-size(24px);
+    }
+  }
+}
+
+.alert__icon {
+  @include svg-icon-size(24px);
+  flex-shrink: 0;
+  margin-right: $spacing-sm;
+  margin-left: -$spacing-xs;
+}
+
+.alert__contents {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.alert__title {
+  @include font-weight("medium");
+  @include font-size("16");
+  color: $text-dark;
+  text-align: center;
+}
+
+.alert__text {
+  @include font-size("16");
+  @include line-height("body");
+  color: $text-dark;
+  word-break: keep-all;
+  word-wrap: break-word;
+  white-space: normal;
+  max-height: rem(150px);
+  overflow-y: auto;
+  text-align: center;
+}
+
+// -------------------------
+// modifiers
+// -------------------------
+.alert--default {
+  .alert__icon {
+    display: none;
+  }
+}
+
+.alert--info {
+  .alert__icon {
+    fill: $info;
+  }
+}
+
+.alert--success {
+  .alert__icon {
+    fill: $success;
+  }
+}
+
+.alert--warning {
+  .alert__icon {
+    fill: $warning;
+  }
+}
+
+.alert--error {
+  .alert__icon {
+    fill: $danger;
+  }
+}

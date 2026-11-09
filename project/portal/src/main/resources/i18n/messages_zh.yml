@@ -1,0 +1,10 @@
+sample: 
+  data: "This is data Test!"
+common:
+  login: "Login"
+"HttpClientConfiguration.idleConnectionMonitor": "Run idleConnectionMonitor, pool counts"
+"AjaxTimeoutRedirectFilter.doFilter.ChainProcessed": "Chain processed normally"
+"AjaxTimeoutRedirectFilter.doFilter.UserSession": "User session expired or not logged in yet"
+"AjaxTimeoutRedirectFilter.doFilter.AjaxCall": "Ajax call detected, send"
+"AjaxTimeoutRedirectFilter.doFilter.ErrorCode": "error code"
+"AjaxTimeoutRedirectFilter.doFilter.RedirectTo": "Redirect to login page"

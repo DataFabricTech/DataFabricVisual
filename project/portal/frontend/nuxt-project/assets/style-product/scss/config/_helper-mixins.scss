@@ -1,0 +1,245 @@
+// @include multi-text-overflow(line-height 값, 줄 수)
+@mixin multi-text-overflow($line-height, $lines) {
+  display: block;
+  display: -webkit-box;
+  overflow: hidden;
+  max-height: $line-height * $lines;
+  line-height: rem($line-height);
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+}
+
+@mixin fontawesome-icon-color($icon-color) {
+  .svg-icon {
+    color: $icon-color;
+  }
+}
+
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// 한줄 말줄임 적용
+@mixin text-overflow($width: false) {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @if ($width) {
+    width: $width;
+  }
+}
+
+// 숨김 처리
+@mixin hidden {
+  position: absolute;
+  width: rem(1px);
+  height: rem(1px);
+  padding: 0;
+  margin: rem(-1px);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  visibility: visible;
+  white-space: nowrap;
+}
+
+// 의미있는 이미지 대체 텍스트 (IR - Image Replacement)
+@mixin ir-pm {
+  /* 레이아웃에 영향을 끼치지 않도록 */
+  position: absolute;
+  /* 스크린 리더가 읽을 수 있도록 */
+  width: rem(1px);
+  height: rem(1px);
+  /* 눈에 보이는 부분을 제거 */
+  clip: rect(0 0 0 0);
+  margin: rem(-1px);
+  overflow: hidden;
+}
+
+// 이미지 가로에 꽉차게 보여지게 적용
+@mixin img-g {
+  display: block;
+  width: 100%;
+}
+
+// table 숨김 처리
+@mixin caption-out {
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  visibility: hidden;
+}
+
+// 요소 우측 중앙 정렬
+@mixin position-right-center($right-spacing) {
+  position: absolute;
+  top: 50%;
+  right: $right-spacing;
+  transform: translateY(-50%);
+}
+
+// 일정한 패딩 적용
+@mixin stable-padding($padding-up-and-down, $padding-both-sides) {
+  padding: $padding-up-and-down $padding-both-sides;
+}
+
+// svg 아이콘 사이즈 적용
+@mixin svg-icon-size($size) {
+  width: $size;
+  height: $size;
+}
+
+// svg 아이콘 stroke 두께 설정
+@mixin svg-icon-stroke($stroke-color) {
+  stroke: $stroke-color;
+  stroke-width: 1;
+  stroke-opacity: 0.4;
+}
+
+// 요소 우측 가운데 정렬
+@mixin right-position {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+// 스크롤 안되도록 처리
+@mixin not-scroll {
+  overflow: hidden;
+  height: unset !important;
+}
+
+// 스크롤바 디자인 적용
+@mixin custom-scrollbar {
+  overflow: auto;
+  scrollbar-color: #a1a1a1 #f2f2f2;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: rem(6px);
+    height: rem(6px);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: rem(6px);
+    border: none;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: rem(6px);
+  }
+}
+
+// 불투명 배경 처리
+@mixin overlay-blur {
+  backdrop-filter: blur(rem(10px));
+}
+
+// utilities style
+@mixin generate-utility($utility) {
+	$values: map-get($utility, values);
+
+	@if type-of($values) == "string" or type-of(nth($values, 1)) != "list" {
+		$values: zip($values, $values);
+	}
+
+	@each $key, $value in $values {
+		$properties: map-get($utility, property);
+
+		@if type-of($properties) == "string" {
+			$properties: append((), $properties);
+		}
+
+		$property-class: map-get($utility, class);
+		$property-class: if($property-class, $property-class, nth($properties, 1));
+
+		$property-class-modifier: if($key, "-" + $key, "");
+
+		.#{$property-class + $property-class-modifier} {
+			@each $property in $properties {
+				#{$property}: $value !important;
+			}
+		}
+	}
+}
+
+// bullet
+@mixin bullet($name, $padding, $top, $left) {
+  &:not(ul),
+  & > li {
+    padding-left: $padding;
+    
+    &::before {
+      @if $name == "refer" {
+        content: "※";
+      } @else if $name == "rect" {
+        content: " \25AA";
+      } @else if $name == "hyphen" {
+        content: "-";
+      } @else if $name == "ast" {
+        content: "*";
+      } @else {
+        content: "";
+      }
+      position: absolute;
+      left: $left;
+      top: if($name == "rect", 2px, 0);
+      font-size: if($name == "rect", 12px, null);
+    }
+  }
+}
+
+// spacer : 간격/여백 클래스 모음
+$spacers-classes: true !default;
+@mixin generate-spacer {
+  @each $prop, $abbrev in (margin: m, padding: p) {
+    @each $size, $length in $spacers {
+      .#{$abbrev}-#{$size} {
+        #{$prop}: $length !important;
+      }
+      .#{$abbrev}t-#{$size},
+      .#{$abbrev}y-#{$size} {
+        #{$prop}-top: $length !important;
+      }
+      .#{$abbrev}r-#{$size},
+      .#{$abbrev}x-#{$size} {
+        #{$prop}-right: $length !important;
+      }
+      .#{$abbrev}b-#{$size},
+      .#{$abbrev}y-#{$size} {
+        #{$prop}-bottom: $length !important;
+      }
+      .#{$abbrev}l-#{$size},
+      .#{$abbrev}x-#{$size} {
+        #{$prop}-left: $length !important;
+      }
+    }
+  }
+}
+
+// width, height Size : 넓이, 높이 클래스 모음
+$sizes-classes: true !default;
+$sizes: 80, 90, 100, 112, 120, 128, 140, 160, 180, 200, 210, 220, 240, 260, 287, 300, 320, 341, 360, 380, 400, 441, 460, 500, 600, 640, 720, 800, 840, 900, 1024, 1062 !default;
+@mixin generate-size {
+  @each $prop, $abbrev in (width: w, height: h) {
+    @each $size in $sizes {
+      .#{$abbrev}-#{$size} {
+        #{$prop}: #{$size} + "px" !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #151721;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g id="Icon_Arrows-same-direction" transform="translate(73 -8)">
+    <rect id="Area" class="cls-1" width="24" height="24" transform="translate(-73 8)"/>
+    <g id="그룹_1201" data-name="그룹 1201" transform="translate(-73 8)">
+      <line id="선_315" data-name="선 315" class="cls-2" x2="21" transform="translate(1 12)"/>
+      <path id="패스_5083" data-name="패스 5083" class="cls-2" d="M19,9l3,3-3,3"/>
+    </g>
+  </g>
+</svg>

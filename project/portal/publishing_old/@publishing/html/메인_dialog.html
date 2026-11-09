@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>데이터 카탈로그</title>
+		<!-- HTLM5shiv ie6~8 -->
+		<!--[if lt IE 9]> 
+			<script src="../js/html5shiv.min.js"></script>
+			<script src="../js/respond.min.js"></script>
+			<script type="text/javascript">
+				alert("현재 당신이 보는 브라우저는 지원하지 않습니다. 최신 브라우저로 업데이트해주세요!");
+			</script>
+		<![endif]-->
+		<link href="../css/common.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="__nuxt">
+			<div id="__layout">
+				<div>
+					<!-- DEV nuxt common layout ADD -->
+					<div id="app">	
+						<!-- skip -->
+						<div class="skiptoContent">
+							<a href="#main">본문 바로가기</a>
+						</div>
+						<!-- //skip -->
+						<!-- header -->
+						<header><!-- hover시 .open 추가됨 nav 펼침 -->
+							<div class="header">
+								<div class="inner">
+									<h1 class="logo"><a href="#" target="_self"><span>데이터 카탈로그</span></a></h1>
+									<div class="gnb-area">
+										<ul class="top-menu">
+											<li><a href="/member/join/indexJoinInit.do"><span>홍길동</span>님</a></li><!-- 2022-08-16 MOD : 디자인적용span추가 -->
+											<li><a href="/member/indexLogin.do">로그아웃</a></li>
+											<li><a href="/member/join/indexJoinInit.do" class="link-home">ADMIN</a></li><!-- 2022-08-17 ADD : 관리자로그인시 -->
+										</ul>
+										<!-- nav -->
+										<nav class="nav">
+											<ul>
+												<li class="current">
+													<a href="#">카탈로그 검색</a>
+													<ul>
+														<li class="current"><a href="#">통합 검색</a></li>
+														<li><a href="#">카테고리 검색</a></li>
+														<li><a href="#">실데이터 위치 조회</a></li>
+														<li><a href="#">카탈로그 용어 사전</a></li>
+													</ul>
+												</li>
+												<li>
+													<a href="#">고객지원</a>
+													<ul>
+														<li><a href="#">공지사항</a></li>
+														<li><a href="#">FAQ</a></li>
+														<li><a href="#">데이터 요청</a></li>
+													</ul>
+												</li>
+												<li>
+													<a href="#">My Catalog</a>
+													<ul>
+														<li><a href="#">카탈로그 대시보드</a></li>
+														<li><a href="#">MY 검색어</a></li>
+														<li><a href="#">MY 데이터</a></li>
+														<li><a href="#">내가 추출한 데이터</a></li>
+														<li><a href="#">내가 찜한 데이터</a></li>
+														<li><a href="#">내가 추천한 데이터</a></li>
+														<li><a href="#">MY 데이터 요청내역</a></li>
+													</ul>
+												</li>
+											</ul>
+										</nav>
+										<!-- //nav -->
+										<div class="nav-dim"></div>
+									</div>
+								</div>
+							</div>
+						</header>
+						<!-- //header -->
+						<!-- main -->
+						<main id="main">
+							<div class="main-container"><!-- main에만  -->
+                                <!-- total-channel -->
+								<div class="total-channel">
+                                    <div class="inner">
+                                        <div class="left-channel">
+                                            <div class="subject">
+                                                <h2><span>MOBIGEN</span><strong>DATA PORTAL</strong></h2>
+                                                <p class="subject-desc">데이터 카탈로그에서 궁금한 내용을 검색해 보세요.</p>
+                                            </div>
+                                            <!-- total-channel-search -->
+                                            <div class="total-channel-search">
+                                                <form action="">
+                                                    <fieldset>
+                                                        <legend>통합검색</legend> 
+                                                        <div class="inner-search">
+                                                            <div class="mu-input-icon">
+                                                                <input type="text" class="mu-input" placeholder="검색어를 입력하세요" title="검색어입력">
+                                                                <button type="button" class="mu-btn mu-btn-delete">
+                                                                    <i class="mu-icon-svg item-delete"></i>
+                                                                    <span>삭제</span>
+                                                                </button>
+                                                                <button type="button" class="mu-btn mu-btn-sch">
+                                                                    <i class="mu-icon-svg search"></i>
+                                                                    <span>검색</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <!-- favorite-keyword 2022-08-29 MOD : class명/구조 -->
+                                            <dl class="favorite-keyword"> 
+                                                <dt>추천 검색어</dt>
+                                                <dd>
+                                                    <div class="keyword-group">                                                        
+                                                        <a href="#none" class="keyword-label">#검색어1</a>       
+                                                        <a href="#none" class="keyword-label">#추천검색어검색어</a>    
+                                                        <a href="#none" class="keyword-label">#검색어검색어3</a>      
+                                                        <a href="#none" class="keyword-label">#검색어4</a>     
+                                                        <a href="#none" class="keyword-label">#검색어검색어검색어검색어5</a>      
+                                                        <a href="#none" class="keyword-label">#검색어검색어6</a>   
+                                                        <a href="#none" class="keyword-label">#검색어검색어검색어검색어7</a>   
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <!-- data-count-box -->
+                                            <div class="data-count-box">
+                                                <dl class="data-count">
+                                                    <dt>등록된 데이터</dt>
+                                                    <dd>150,527</dd>
+                                                </dl>
+                                                <dl class="data-count">
+                                                    <dt>데이터 활용 횟수</dt>
+                                                    <dd>102,541</dd>
+                                                </dl>
+                                                <!-- 2022-09-06 v1.1.0 MOD : 새로 들어온 데이터 => 오늘의 접속자 수(당일 00:00:00 ~ 23:59:59 이내에서 기록하되, 반영 시간/실시간 반영 여부는 개발에서 논의 필요) -->
+                                                <dl class="data-count">
+                                                    <dt>오늘의 접속자 수</dt>
+                                                    <dd>65</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                        <div class="right-channel">
+                                            <div class="chart-wrap">
+                                                <div class="chart-box"><div id="chart_category" class="chart"></div></div><!-- chart는 테스트중 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- category-section : CATEGORY DATA -->
+                                <div class="category-section">
+                                    <div class="inner">
+                                        <!-- category-list-wrap -->
+                                        <div class="category-list-wrap">
+                                            <div class="main-heading">
+                                                <h3>CATEGORY DATA</h3> 
+                                                <p class="heading-desc"><span>카테고리</span>트리맵 시각화로 데이터를 확인해보세요.</p>                                  
+                                            </div>
+                                            <!-- category-list 2022-09-01 ADD : 디자인아이콘 / .active 추가됨 -->
+                                            <ul class="category-list">
+                                                <li class="active"><a href="#none" class="category"><i class="ico-category category-01"></i><em class="category-label">IT</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-02"></i><em class="category-label">경영지원관리</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-03"></i><em class="category-label">공통</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-04"></i><em class="category-label">구매</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-05"></i><em class="category-label">생산</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-06"></i><em class="category-label">서비스부품</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-07"></i><em class="category-label">연구</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-08"></i><em class="category-label">영업</em></a></li>
+                                                <li><a href="#none" class="category"><i class="ico-category category-09"></i><em class="category-label">품질</em></a></li>
+                                            </ul>
+                                        </div>
+                                        <!-- visual-map-wrap -->
+                                        <div class="visual-map-wrap">
+                                            <div class="inner"> 
+                                                맵영역 각 카테고리별 색상값
+                                                IT : #de4029 
+                                                경영지원관리 : #a93732
+                                                공통 : #e35b30
+                                                구매 : #f9ab25
+                                                생산 : #893736
+                                                서비스부품 : #42454a
+                                                연구 : #b9bfc7
+                                                영업 : #54575f
+                                                품질 : #dcdfe3
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //category-section : CATEGORY DATA -->
+                                <!-- data-section : CATALOG NEW DATA 2022-09-01 MOD : 타이틀 문구수정 -->
+                                <div class="data-section">
+                                    <div class="inner">
+                                        <div class="data-list-wrap">
+                                            <div class="main-heading">
+                                                <h3>CATALOG NEW DATA</h3> 
+                                                <p class="heading-desc"><span>카탈로그</span>최신 데이터를 확인해보세요.</p>  
+                                                <!-- <div class="more"><button type="button" class="mu-btn mu-btn-bg-non" title="데이터 더보기"><span>MORE</span><i class="mu-icon-svg arrow-right"></i></button></div> 2022-09-14 DEL : 기획요청(정리된 별도 화면이 없음) -->                               
+                                            </div>
+                                            <ul class="data-box-list">
+                                                <li class="data-box">
+                                                    <p class="nodata">최신데이터가 없습니다.</p>
+                                                </li>
+                                                <li class="data-box">
+                                                    <a href="01카탈로그검색_01통합검색_상세.html"><i class="ico-data data-01"></i><strong class="data-title">상세로 넘어가는 링크는 타이틀 상세로 넘어가는 링크는 타이틀</strong><p class="data-desc">데이터에 대한 Description이 있는 경우에 출력됩니다.데이터에 대한 Description이 있는 경우에 출력됩니다.</p></a>
+                                                </li>
+                                                <li class="data-box">
+                                                    <a href="01카탈로그검색_01통합검색_상세.html"><i class="ico-data data-02"></i><strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong><p class="data-desc">정보를 제공하기 위한 데이터 상세타이틀 입니다.  관련 표준용어 등으로 대체될 수 있습니다.</p></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //data-section -->
+                                <!-- data-section : CATALOG RECOMMENDATION DATA 2022-09-01 MOD : 타이틀 문구수정 -->
+                                <div class="data-section">
+                                    <div class="inner">
+                                        <div class="data-list-wrap">
+                                            <div class="main-heading">
+                                                <h3>CATALOG RECOMMENDATION DATA</h3> 
+                                                <p class="heading-desc"><span>카탈로그</span>추천 데이터를 확인해보세요.</p> 
+                                                <!-- <div class="more"><button type="button" class="mu-btn mu-btn-bg-non" title="데이터 더보기"><span>MORE</span><i class="mu-icon-svg arrow-right"></i></button></div> 2022-09-14 DEL : 기획요청(정리된 별도 화면이 없음) -->                           
+                                            </div>
+                                            <ul class="data-box-list">
+                                                <li class="data-box">
+                                                    <a href="#none"><i class="ico-data data-03"></i><strong class="data-title">어드민에서 직접지정하는 추천데이터</strong><p class="data-desc">어드민에서 직접지정하는 추천데이터</p></a>
+                                                </li>
+                                                <li class="data-box">
+                                                    <a href="#none"><i class="ico-data data-04"></i><strong class="data-title">데이터 타이틀 한줄말줄임</strong><p class="data-desc">정보를 제공하기 위한 데이터 상세타이틀 입니다.  관련 표준용어 등으로 대체될 수 있습니다.</p></a>
+                                                </li>
+                                                <li class="data-box">
+                                                    <a href="#none"><i class="ico-data data-05"></i><strong class="data-title">데이터명</strong><p class="data-desc">데이터에 대한 Description</p></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //data-section -->
+                                <!-- board-section : 공지사항 / FAQ -->
+                                <div class="board-section">
+                                    <div class="inner">
+                                        <!-- section-wrap notice : 공지사항 -->
+                                        <div class="section-wrap">
+                                            <div class="main-heading">   
+                                                <h3>공지사항</h3> 
+                                                <div class="more"><button type="button" class="mu-btn mu-btn-bg-non mu-btn-icon-only" title="공지사항 더보기"><i class="mu-icon-svg view-more-lg"></i><span>MORE</span></button></div>  
+                                            </div>
+                                            <ul class="notice-list">
+                                                <li>
+                                                    <p class="date">2022.08 <b>30</b></p>
+                                                    <a href="03고객지원_01공지사항_상세.html">첫번째 공지사항 제목이 공지사항상세링크예시</a>
+                                                </li>
+                                                <li>
+                                                    <p class="date">2022.08 <b>17</b></p>
+                                                    <a href="#none">공지사항 제목이 공지사항 제목이 출력됩니다.공지사항 제목이 공지사항 제목이 출력됩니다.</a>
+                                                </li>
+                                                <li>
+                                                    <p class="date">2022.07 <b>29</b></p>
+                                                    <a href="#none">공지사항 제목</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- section-wrap notice : FAQ -->
+                                        <div class="section-wrap">
+                                            <div class="main-heading">   
+                                                <h3>FAQ</h3> 
+                                                <div class="more"><button type="button" class="mu-btn mu-btn-bg-non mu-btn-icon-only" title="FAQ 더보기"><i class="mu-icon-svg view-more-lg"></i><span>MORE</span></button></div>  
+                                            </div>
+                                            <ul class="faq-list">
+                                                <li>
+                                                    <a href="03고객지원_02FAQ.html">
+                                                        <div class="question">
+                                                            <em class="data-label">검색</em>
+                                                            <p>등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다. 질문이 길어질수도 있어요 등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다. 질문이 길어질수도 있어요 FAQ의 질문입니다. 질문이 길어질수도 있어요</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#none">
+                                                        <div class="question">
+                                                            <em class="data-label">데이터</em>
+                                                            <p>등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다.</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#none">
+                                                        <div class="question">
+                                                            <em class="data-label">데이터</em>
+                                                            <p>등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다. 질문이 길어질수도 있어요 FAQ의 질문입니다. 질문이 길어질수도 있어요</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //board-section : 공지사항 / FAQ -->
+                                <div class="banner-section">
+                                    <div class="inner">
+                                        <div class="banner-wrap">
+                                            <div class="banner banner-01">
+                                                <div class="inner-box">
+                                                    <strong>카탈로그 용어사전</strong>
+                                                    <p>카탈로그 용어사전에 관한 상세 설명입니다. <br>
+                                                        최대 두줄이 출력될 수 있습니다.최대 두줄이 출력될 수 있습니다최대 두줄이 출력될 수 있습니다최대 두줄이 출력될 수 있습니다</p>
+                                                    <button type="button" class="mu-btn"><span>바로가기</span><i class="mu-icon-svg chevron-right"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="banner banner-02">
+                                                <div class="inner-box">
+                                                    <strong>데이터 요청</strong>
+                                                    <p>데이터 요청에 관한 상세 설명이며, 데이터 요청에 관한 상세 설명입니다.</p>
+                                                    <button type="button" class="mu-btn"><span>바로가기</span><i class="mu-icon-svg chevron-right"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+							</div>				
+						</main>
+						<!-- //main -->
+
+						<!-- footer : 2022-08-18 기획/디자인 수정 공통반영 (footer-menu / family-site DEL) -->
+						<footer>
+							<div class="footer-top">
+								<div class="inner">
+									<!-- footer-logo -->
+									<div class="footer-logo"><span>모비젠</span></div>
+								</div>
+							</div>
+							<div class="footer-bottom">
+								<div class="inner">
+									<!-- footer-info -->
+									<div class="footer-info">
+										<address>
+											<p>(13453) 경기도 성남시 수정구 금토로80번길 37, W동 7,8,9층 (금토동, 인피니티타워) </p> 
+											<p><span>대표전화</span>02-2018-5114</p>
+										</address>
+										<p class="copyright">
+											COPYRIGHT (C) MOBIGEN.  ALL RIGHT RESERVED.
+										</p>
+									</div>
+								</div>
+							</div>
+                            <!-- floating-button 2022-09-13 ADD ** 메인에서는 none처리함 -->
+                            <div class="floating-button">
+                                <a href="#" title="맨 위로 가기" class="mu-btn btn-go-top">상단가기</a>
+                            </div>
+						</footer>
+						<!-- //footer -->
+					</div>
+					<!-- //DEV nuxt common layout ADD -->
+				</div>
+			</div>
+		</div>
+
+        <!-- 모달팝업인데 dim처리 없고 개발에서 고정위치 잡아서 띄우기 -->
+		<div class="mu-dialog notice-dialog w500" style="left:calc(50% - 100px);top:100px">
+			<div class="mu-dialog-head">
+				<p class="title">공지사항</p>
+			</div>
+			<div class="mu-dialog-body">
+				<!-- section-wrap notice 메인에 있는 공지사항 영역 그대로 노출됨 -->
+				<div class="section-wrap">
+					<div class="main-heading">  
+						<div class="more">
+							<button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non"><span>view more</span><i class="mu-icon-svg view-more"></i></button>
+						</div> 
+					</div>
+					<ul class="notice-list">
+						<li>
+							<p class="date">2022.08 <b>30</b></p>
+							<a href="03고객지원_01공지사항_상세.html">첫번째 공지사항 제목이 공지사항상세링크예시</a>
+						</li>
+						<li>
+							<p class="date">2022.08 <b>17</b></p>
+							<a href="#none">공지사항 제목이 공지사항 제목이 출력됩니다.공지사항 제목이 공지사항 제목이 출력됩니다.</a>
+						</li>
+						<li>
+							<p class="date">2022.07 <b>29</b></p>
+							<a href="#none">공지사항 제목</a>
+						</li>
+						<li>
+							<p class="date">2022.07 <b>29</b></p>
+							<a href="#none">공지사항 제목</a>
+						</li>
+						<li>
+							<p class="date">2022.07 <b>29</b></p>
+							<a href="#none">공지사항 제목</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mu-dialog-foot">
+				<div class="dialog-close">
+					<div class="mu-checkbox">
+						<input type="checkbox" id="ckb1">
+						<label for="ckb1"><span>오늘 하루 열지 않기</span></label>
+					</div>
+					<div class="mu-checkbox">
+						<input type="checkbox" id="ckb2">
+						<label for="ckb2"><span>다시 열지 않기</span></label>
+					</div>
+					<button type="button" class="mu-btn mu-btn-secondary"><span>닫기</span></button>   
+				</div>              
+			</div>
+			<!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->  
+			<div class="mu-dialog-close-btn">
+				<button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기"><i class="mu-icon-svg close"></i><span>팝업닫기</span></button>
+			</div>
+		</div>   
+		
+        <!-- 모달팝업인데 dim처리 없고 개발에서 고정위치 잡아서 띄우기 -->
+		<div class="mu-dialog notice-dialog w500" style="left:calc(50% - 650px);top:100px">
+			<div class="mu-dialog-head">
+				<p class="title">FAQ</p>
+			</div>
+			<div class="mu-dialog-body">
+				<!-- section-wrap notice : FAQ 메인에 있는 FAQ 영역 그대로 노출됨 -->
+				<div class="section-wrap">
+					<div class="main-heading">  
+						<div class="more">
+							<button type="button" class="mu-btn mu-btn-sm mu-btn-bg-non"><span>view more</span><i class="mu-icon-svg view-more"></i></button>
+						</div> 
+					</div>
+					<ul class="faq-list">
+						<li>
+							<a href="03고객지원_02FAQ.html">
+								<div class="question">
+									<em class="data-label">검색</em>
+									<p>등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다. 질문이 길어질수도 있어요 등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다. 질문이 길어질수도 있어요 FAQ의 질문입니다. 질문이 길어질수도 있어요</p>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="#none">
+								<div class="question">
+									<em class="data-label">데이터</em>
+									<p>등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다.</p>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="#none">
+								<div class="question">
+									<em class="data-label">데이터</em>
+									<p>등록된 FAQ의 질문입니다.등록된 FAQ의 질문입니다. 질문이 길어질수도 있어요 FAQ의 질문입니다. 질문이 길어질수도 있어요</p>
+								</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mu-dialog-foot">
+				<div class="dialog-close">
+					<div class="mu-checkbox">
+						<input type="checkbox" id="ckb1">
+						<label for="ckb1"><span>오늘 하루 열지 않기</span></label>
+					</div>
+					<div class="mu-checkbox">
+						<input type="checkbox" id="ckb2">
+						<label for="ckb2"><span>다시 열지 않기</span></label>
+					</div>
+					<button type="button" class="mu-btn mu-btn-secondary"><span>닫기</span></button>   
+				</div>              
+			</div>
+			<!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->  
+			<div class="mu-dialog-close-btn">
+				<button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기"><i class="mu-icon-svg close"></i><span>팝업닫기</span></button>
+			</div>
+		</div>  
+		<script src="../lib/vue/vue.min.js"></script>
+		<script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script><!-- vue2-datepicker ver up -->
+		<script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script><!-- vue2-datepicker kor ver -->
+		<script src="../js/jquery-3.5.1.min.js"></script>
+		<script src="../js/jquery-ui.min.js"></script>
+		<script src="../js/common.js"></script><!-- 동작 확인용 임시 -->
+
+		<!-- highchart -->
+		<script src="../highcharts/highcharts-default.js"></script>
+		<script src="../highcharts/highcharts-custom.js"></script>
+		<script src="../highcharts/highcharts-export-clientside.js"></script>
+        <script>
+            // Highcharts 도넛 예시 
+            $(function() {
+                
+                Highcharts.chart('chart_category', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie',
+                        backgroundColor: 'transparent',
+                        
+                    },
+                    title: {
+                        text: '<span>Meta Data <br>Cataloge</span> ',
+                        x: 0,
+                        y: 0,
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        floating: true,
+                        useHTML: true,
+                        style: {
+                            zIndex: 3,
+                            lineHeight: '1',
+                            textAlign: 'center',
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            showInLegend: true,
+                            cursor: 'pointer',
+                            size: '400px',
+                            innerSize: '50%',
+                            borderColor: 'transparent',
+                            borderWidth: 0,
+                            dataLabels: {
+                                enabled: true,
+                                //format: '<span>{point.name}</span><br>{point.y}',
+                                format: '<span>{point.y}</span>',
+                                distance: 20, 
+                                style: {
+                                    fontFamily: 'NanumSquare',
+                                    fontSize: '18px',
+                                    fontWeight: '400',
+                                    color: '#222',
+                                    textShadow: 'none'
+                                },
+                                
+                            },
+                        states: {
+                            hover: {
+                                    enabled: false,
+                                    halo: false
+                                }
+                            },
+                        }
+                    },
+                    
+                    series: [{
+                        name: '',
+                        colorByPoint: true,
+                        data: [{
+                                name: 'IT',
+                                y: 600,
+                                color: '#de4029'                                
+                            }, {
+                                name: '경영지원관리',
+                                y: 160,
+                                color: '#a93732'
+                            }, {
+                                name: '공통',
+                                y: 150,
+                                color: '#e35b30'
+                            }, {
+                                name: '구매',
+                                y: 200,
+                                color: '#f9ab25'
+                            }, {
+                                name: '생산',
+                                y: 100,
+                                color: '#893736'
+                            }, {
+                                name: '서비스부품',
+                                y: 50,
+                                color: '#42454a'
+                            }, {
+                                name: '연구',
+                                y: 120,
+                                color: '#b9bfc7'
+                            }, {
+                                name: '영업',
+                                y: 105,
+                                color: '#54575f'
+                            }, {
+                                name: '품질',
+                                y: 34,
+                                color: '#dcdfe3'
+                            }],
+                    }],
+                    navigation: {
+                        buttonOptions: {
+                            enabled: false,
+                        }
+                    },
+                   
+                    tooltip: { 
+                        backgroundColor: 'rgba(255,255,255,0.8)',
+                        shadow: false,
+                        borderRadius: 0,
+                        shared: false,
+                        useHTML: true,
+                        formatter: function() {
+                                return '<b style="color:' + this.point.color + ';">' + this.point.name +'</b>' +  '데이터수' + '<br/>' + this.point.y + '개';
+                            },
+                        style: {
+                            fontFamily: 'NanumSquare',
+                            fontSize: '14px',
+                            color: '#222'
+                        }
+                    },
+                });
+    
+            });
+    
+            </script>
+	</body>
+</html>

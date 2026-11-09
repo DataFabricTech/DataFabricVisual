@@ -1,0 +1,37 @@
+.screen-out {
+  overflow: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+  line-height: 0;
+  text-indent: -9999px;
+}
+
+.text-image-replacement {
+  display: block;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999px;
+}
+
+.required {
+  @include font-size("14");
+  @include font-weight("bold");
+  display: inline-block;
+  width: rem(10px);
+  height: rem(17px);
+  padding: 0 $spacing-3xs;
+  color: $negative;
+  vertical-align: middle;
+}
+
+.text-emphasis {
+  @include font-weight("bold");
+  display: inline;
+  color: $text-dark;
+}
+
+.color-emphasis {
+  color: $primary;
+}

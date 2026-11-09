@@ -1,0 +1,31 @@
+@startuml
+
+autoactivate on
+
+title 카테고리 매핑
+
+actor 관리자 as admin
+
+box "카테고리 매핑"
+participant Client as client
+participant MetaDataClassificationController as metaDataClassificationController
+participant MetaDataClassificationService as metaDataClassificationService
+end box
+
+box "Elasticsearch 작업수행 서버"
+participant FastApi as fastApi
+end box
+
+client -> metaDataClassificationController : 카테고리 매핑 요청
+metaDataClassificationController -> metaDataClassificationService : 카테고리 매핑 요청
+note right
+    1. 중복된 카테고리 매핑 제거 처리
+    2. 매핑 후 <table> 테이블의 classifications 업데이트
+    3. 업데이트 성공 시 상위 카테고리 내용도 업데이트
+end note
+metaDataClassificationService -> fastApi : Elasticsearch 동기화 처리
+fastApi -> metaDataClassificationService : 동기화 완료
+metaDataClassificationService -> metaDataClassificationController : 매핑결과 반환
+metaDataClassificationController -> client : 매핑결과 반환
+
+@enduml

@@ -1,0 +1,184 @@
+//-------------------------------------------
+//  Template용 미디어쿼리
+//  분기 구간 기준: 1200px / 1024px / 768px / 480px / 360px
+// ------------------------------------------
+$template-breakpoints: (
+  "breakpoint-xl": (
+    max-width: rem(1280px)
+  ),
+  "breakpoint-lg": (
+    max-width: rem(1024px)
+  ),
+  "breakpoint-md": (
+    max-width: rem(768px)
+  ),
+  "breakpoint-sm": (
+    max-width: rem(480px)
+  ),
+  "breakpoint-xs": (
+    max-width: rem(360px)
+  )
+) !default;
+
+@mixin template-respond-to($breakpoint) {
+  @if map-has-key($template-breakpoints, $breakpoint) {
+    @media #{inspect(map-get($template-breakpoints, $breakpoint))} {
+      @content;
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($template-breakpoints)}.";
+  }
+}
+
+// Usage
+// .selector {
+//   color: red;
+
+//   @include template-respond-to('breakpoint-lg') {
+//     color: blue;
+//   }
+// }
+//-------------------------------------------
+//  Breakpoints - 신규 방식
+//  Desktop 우선 순위로 적용
+// ------------------------------------------
+$breakpoints: (
+  "desktop-xl": (
+    max-width: 120rem //1920
+  ),
+  "desktop-lg": (
+    max-width: 112rem //1792
+  ),
+  "desktop": (
+    max-width: 80rem //1280
+  ),
+  "laptop": (
+    max-width: 64rem //1024
+  ),
+  "tablet": (
+    max-width: 48rem //768
+  ),
+  "mobile": (
+    max-width: 30rem //480
+  )
+) !default;
+
+@mixin respond-to($breakpoint) {
+  // If the key exists in the map
+  @if map-has-key($breakpoints, $breakpoint) {
+    // Prints a media query based on the value
+    @media #{inspect(map-get($breakpoints, $breakpoint))} {
+      @content;
+    }
+  }
+
+  // If the key doesn't exist in the map
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+// Usage
+// .selector {
+//   color: red;
+
+//   @include respond-to('small') {
+//     color: blue;
+//   }
+// }
+// https://css-tricks.com/snippets/sass/mixin-manage-breakpoints/
+
+//---------------------------------------------------------------------------------------------------------------
+
+//-------------------------------------------
+//  Breakpoints - grid-system에서 사용되고 있어서 유지, 다른 곳에서는 사용하지 않음
+// ------------------------------------------
+// 전역 변수를 정의하는 `_vars.scss` 파일의 `$grid-breakpoints`에 정의된 map을 `$breakpoints` 인수로 사용합니다.
+//
+//   Breakpoints
+//   ==========================================
+//   xs    ||  0
+//   sm    ||  640px
+//   md    ||  768px
+//   lg    ||  1024px
+//   xl    ||  1280px
+//   2xl   ||  1440px
+//   ==========================================
+//
+
+// 다음 중단점, 또는 마지막 중단점의 이름.
+//  >> breakpoint-next(sm)
+//  md
+//  >> breakpoint-next(sm, (xs: 0, sm: 640px, md: 768px, lg: 1024px, xl: 1280px))
+//  md
+//  >> breakpoint-next(sm, $breakpoint-names: (xs sm md lg xl))
+//  md
+@function breakpoint-next(
+  $name,
+  $breakpoints: $grid-breakpoints,
+  $breakpoint-names: map-keys($breakpoints)
+) {
+  $n: index($breakpoint-names, $name);
+  @if not $n {
+    @error "`#{$breakpoints}`에서 `#{$name}` breakpoint를 찾지 못했습니다.";
+  }
+  @return if(
+    $n < length($breakpoint-names),
+    nth($breakpoint-names, $n + 1),
+    null
+  );
+}
+
+// 최소 width 기준 breakpoint
+//  >> breakpoint-min(sm, (xs: 0, sm: 640px, md: 768px, lg: 1024px, xl: 1280px))
+//  640px
+@function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  @return if($min != 0, $min, null);
+}
+
+// Maximum breakpoint width.
+// The maximum value is reduced by 0.02px to work around the limitations of
+// `min-` and `max-` prefixes and viewports with fractional widths.
+// See https://www.w3.org/TR/mediaqueries-4/#mq-min-max
+// Uses 0.02px rather than 0.01px to work around a current rounding bug in Safari.
+// See https://bugs.webkit.org/show_bug.cgi?id=178261
+//
+//  >> breakpoint-max(md, (xs: 0, sm: 640px, md: 768px, lg: 1024px, xl: 1280px))
+//  767.98px
+@function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
+  $max: map-get($breakpoints, $name);
+  @return if($max and $max > 0, $max - 0.02, null);
+}
+
+@function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
+  @return if(breakpoint-min($name, $breakpoints) == null, "", "-#{$name}");
+}
+
+// 최소 breakpoint 너비에 따른 미디어 쿼리.
+// @content를 지정된 breakpoint와 그보다 넓은 사이즈일 때 적용한다.
+@mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+// 최대 breakpoint 너비에 따른 미디어 쿼리
+// @content를 지정된 breakpoint와 그보다 좁은 사이즈일 때 적용한다.
+@mixin media-breakpoint-down($name, $breakpoints: $grid-breakpoints) {
+  $max: breakpoint-max($name, $breakpoints);
+  @if $max {
+    @media (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}

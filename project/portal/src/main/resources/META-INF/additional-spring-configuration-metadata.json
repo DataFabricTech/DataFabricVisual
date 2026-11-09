@@ -1,0 +1,68 @@
+{
+  "properties": [
+    {
+      "name": "security.ignores",
+      "type": "java.lang.String",
+      "description": "웹 시큐리티의 접속 가능한 리소스 목록 설정"
+    },
+    {
+      "name": "security.permit-all",
+      "type": "java.lang.String",
+      "description": "웹 시큐리티의 접속 가능한 경로 목록 설정"
+    },
+    {
+      "name": "security.iframe-option",
+      "type": "java.lang.String",
+      "description": "웹 시큐리티의 X-Frame 옵션. disable/same-origin/deny"
+    },
+    {
+      "name": "security.redirect-url",
+      "type": "java.lang.String",
+      "description": "로그아웃/비인가 인증 시 리다이렉트 주소"
+    },
+    {
+      "name": "i18n.basenames",
+      "type": "java.lang.String",
+      "description": "다국어 메세지 파일 목록 설정"
+    },
+    {
+      "name": "http-client-configuration.max-total",
+      "type": "java.lang.int",
+      "description": "HttpClient Connection Pool 최대값"
+    },
+    {
+      "name": "http-client-configuration.default-max-per-route",
+      "type": "java.lang.int",
+      "description": "HttpClient 라우트 당 최대값"
+    },
+    {
+      "name": "http-client-configuration.default-keep-alive-duration",
+      "type": "java.lang.long",
+      "description": "HttpClient keep-alive 길이 timeout 값 (단위: ms)"
+    },
+    {
+      "name": "http-client-configuration.connection-reqeust-timeout",
+      "type": "java.lang.int",
+      "description": "HttpClient reqeust timeout 값(단위: ms)"
+    },
+    {
+      "name": "http-client-configuration.connection-timeout",
+      "type": "java.lang.int",
+      "description": "HttpClient connection timeout 값(단위: ms)"
+    },
+    {
+      "name": "http-client-configuration.socket-timeout",
+      "type": "java.lang.int",
+      "description": "HttpClient socket timeout 값(단위: ms)"
+    },
+    {
+      "name": "http-client-configuration.idle-timeout",
+      "type": "java.lang.int",
+      "description": "HttpClient idle timeout 값(단위: s)"
+    },
+    {
+      "name": "properties",
+      "description": "각종 속성값들"
+    }
+  ]
+}

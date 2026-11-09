@@ -1,0 +1,37 @@
+//-------------------------------------------
+//  Box-shadow
+// ------------------------------------------
+//   ==========================================
+//   0 - Base              ||  0
+//   1 - Flat              ||  1
+//   2 - Raised            ||  2
+//   3 - Overlay           ||  8
+//   4 - Header/Nav        ||  12
+//   5 - Pop-out           ||  24
+//   ==========================================
+
+// Box shadow 색상
+// Usage: `box-shadow: 0 rem(3px) rem(3px) 0 $box-shadow;`
+$box-shadow: rgba(0, 0, 0, 0.2);
+$box-shadow-raised: 0 rem(2px) rem(4px) 0 $box-shadow;
+$box-shadow-overlay: 0 rem(4px) rem(8px) 0 $box-shadow;
+$box-shadow-nav: 0 rem(2px) rem(4px) 0 $box-shadow;
+$box-shadow-pop-out: 0 rem(12px) rem(24px) 0 $box-shadow;
+
+// Layer box-shadow map
+$layer-shadows: (
+  base: none,
+  flat: none,
+  raised: $box-shadow-raised,
+  overlay: $box-shadow-overlay,
+  pop-out: $box-shadow-pop-out,
+  nav: $box-shadow-nav
+);
+
+// `box-shadow` 설정 mixin
+// Useage: `@include layer('raised');`
+@mixin layer($layer) {
+  @if map-has-key($layer-shadows, $layer) {
+    box-shadow: #{map-get($layer-shadows, $layer)};
+  }
+}

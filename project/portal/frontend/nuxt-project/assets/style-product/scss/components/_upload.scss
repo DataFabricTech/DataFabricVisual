@@ -1,0 +1,332 @@
+// -------------------------
+// upload
+// -------------------------
+.upload {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  height: $button-height-md;
+  border: 1px solid $border-light;
+  border-radius: $button-border-radius;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $border-light;
+
+    .upload__file-button {
+      border-left-color: $border-light;
+    }
+  }
+
+  .upload__file-button:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+  }
+
+  &--focused {
+    border-color: $secondary;
+    box-shadow: 0 0 rem(4px) rgba(77, 174, 255, 0.4);
+
+    .upload__file-button {
+      border-left-color: $secondary;
+    }
+
+    &:hover,
+    &:hover:active,
+    &:hover:focus {
+      border-color: $secondary;
+      box-shadow: 0 0 rem(4px) rgba(77, 174, 255, 0.4);
+
+      .upload__file-button {
+        border-left-color: $secondary;
+      }
+    }
+  }
+
+  &--disabled {
+    border-color: lighten($border-light, 50%);
+
+    .upload__input {
+      cursor: not-allowed !important;
+    }
+
+    .upload__file-button {
+      border-left-color: lighten($border-light, 50%);
+      color: rgba($text-light, 0.5);
+
+      .svg-icon {
+        fill: rgba($text-light, 0.5);
+      }
+    }
+
+    &:hover,
+    &:hover:active,
+    &:hover:focus {
+      border-color: lighten($border-light, 50%);
+
+      .upload__file-button {
+        border-left-color: lighten($border-light, 50%);
+      }
+    }
+  }
+}
+
+.upload__input {
+  @include text-input;
+  @include text-overflow;
+  height: 100%;
+  border-radius: 0;
+
+  &::placeholder {
+    @include font-weight("light");
+    color: $text-light;
+  }
+}
+
+.upload__file {
+  position: relative;
+  height: 100%;
+}
+
+.upload__file-button {
+  @include button-normal;
+  @include font-weight("regular");
+  height: 100%;
+  background-color: $dark;
+  border: none;
+  border-left: 1px solid $border-light;
+
+  .svg-icon {
+    fill: $text-base;
+  }
+
+  &:disabled {
+    z-index: 1;
+    position: relative;
+    cursor: not-allowed;
+  }
+}
+
+.upload__file-input,
+.upload-alt__file-input,
+.upload-preview__file-input,
+.upload-drag__file-input {
+  z-index: z("float");
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -ms-filter: "alpha(opacity=0)";
+  -khtml-opacity: 0;
+  -moz-opacity: 0;
+}
+
+// Size overwrite
+.upload--lg {
+  height: $button-height-lg;
+}
+
+// -------------------------
+// upload-preview
+// -------------------------
+.upload-preview__thumbnail {
+  width: 100%;
+  height: rem(130px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-md;
+  background-color: $white;
+  border: 1px solid $border-light;
+  border-radius: $field-border-radius;
+
+  .svg-icon {
+    @include svg-icon-size(40px);
+    margin-bottom: $spacing-xs;
+    fill: $icon-basic;
+  }
+
+  img {
+    width: rem(66px);
+  }
+}
+
+.upload-preview__thumbnail-text {
+  @include font-size("14");
+  @include font-weight("light");
+  color: $text-light;
+  text-align: center;
+  line-height: normal;
+}
+
+.upload-preview__file {
+  position: relative;
+  width: 100%;
+
+  &:hover {
+    .upload-preview__file-label {
+      background-color: rgba(0, 90, 205, 0.07);
+    }
+  }
+
+  &:active {
+    .upload-preview__file-label {
+      background-color: rgba(0, 90, 205, 0.16);
+    }
+  }
+}
+
+.upload-preview__file-label {
+  @include button-normal;
+  width: 100%;
+  height: $button-height-md;
+  margin-top: $spacing-xs;
+  background-color: $white;
+  border: 1px solid $border-light;
+  border-radius: $field-border-radius;
+
+  .svg-icon {
+    @include svg-icon-size(20px);
+    fill: $primary;
+    color: $primary;
+  }
+}
+
+.upload-preview__delete-button {
+  @include button-normal;
+  width: 100%;
+  height: $button-height-md;
+  margin-top: $spacing-xs;
+  background-color: $white;
+  border: 1px solid $border-light;
+  border-radius: $field-border-radius;
+
+  &:hover {
+    background-color: #fef3f3;
+    border: 1px solid #ef594f;
+  }
+
+  &:active {
+    background-color: #fce4e3;
+    border: 1px solid #ef594f;
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+  }
+
+  .svg-icon {
+    @include svg-icon-size(20px);
+    fill: $negative;
+    color: $negative;
+  }
+}
+
+.upload-preview__delete-text {
+  @include font-size("14");
+  margin-left: $spacing-2xs;
+  color: $negative;
+}
+
+.upload-preview__file-text {
+  @include font-size("14");
+  margin-left: $spacing-2xs;
+  color: $primary;
+}
+
+.upload-preview--loaded {
+  .upload-preview__thumbnail {
+    background: $dark;
+  }
+
+  .upload-preview__file-label {
+    .svg-icon {
+      fill: $negative;
+    }
+  }
+
+  .upload-preview__file-text {
+    color: $negative;
+  }
+}
+
+.upload-preview--disabled {
+  .upload-preview__file-input {
+    cursor: not-allowed;
+  }
+
+  .upload-preview__file-label {
+    cursor: not-allowed;
+    opacity: 0.25;
+  }
+
+  .upload-preview__delete-button {
+    cursor: not-allowed;
+    opacity: 0.25;
+  }
+
+  &:hover,
+  &:hover:active,
+  &:hover:focus {
+    .upload-preview__file-label,
+    .upload-preview__delete-button {
+      background-color: $white;
+      border: 1px solid $border-light;
+    }
+  }
+}
+
+// -------------------------
+// upload-drag
+// -------------------------
+.upload-drag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-top: $layout-md;
+  padding-bottom: $layout-md;
+  background-color: $white;
+  border: 1px dashed $border-light;
+  border-radius: $field-border-radius;
+}
+
+.upload-drag__icon {
+  width: rem(36px);
+  height: rem(36px);
+  fill: $light;
+  margin-bottom: $spacing-md;
+}
+
+.upload-drag__description {
+  margin-bottom: $spacing-lg;
+}
+
+.upload-drag__description-text {
+  @include font-size("18");
+  color: $text-light;
+  text-align: center;
+}
+
+.upload-drag__description-file-type {
+  @include font-size("13");
+  @include font-weight("regular");
+}
+
+.upload-drag__file {
+  position: relative;
+  // width: 100%;
+}
+
+.upload-drag__file-label {
+  @include button-normal;
+  @include button--support;
+  @include button--lg;
+  z-index: 1;
+}

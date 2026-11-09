@@ -1,0 +1,20 @@
+@startuml
+
+autoactivate on
+
+title 권한 관리
+
+actor 관리자 as admin
+
+box "권한 생성"
+participant Client as client
+participant RoleManagementController as roleManagementController
+participant RoleManagementService as roleManagementService
+end box
+
+client -> roleManagementController : 권한 생성 요청
+roleManagementController -> roleManagementService : 권한 생성 요청
+roleManagementService -> roleManagementController : 권한 생성 결과 반환
+roleManagementController -> client : 권한 생성 결과 반환
+
+@enduml

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>시스템 관리 < 시스템 관리 < 데이터 카탈로그</title>
+    <link href="../css/common.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="__nuxt">
+      <div id="__layout">
+        <div>
+          <!-- DEV nuxt common layout ADD -->
+          <div id="app" class="admin-wrapper">
+            <!-- 실제 PUB layout + admin -->
+            <!-- skip -->
+            <div class="skiptoContent">
+              <a href="#main">본문 바로가기</a>
+            </div>
+            <!-- //skip -->
+            <!-- header -->
+            <header class="header-sub">
+              <!-- hover시 .open 추가됨 nav 펼침 -->
+              <div class="header">
+                <div class="inner">
+                  <h1 class="logo">
+                    <a href="#" target="_self"><span>데이터 카탈로그</span></a>
+                  </h1>
+                  <div class="gnb-area">
+                    <!-- nav -->
+                    <nav class="nav">
+                      <ul>
+                        <li>
+                          <a href="#">데이터 활용 현황 관리</a>
+                          <ul>
+                            <li><a href="#">데이터 활용 현황 조회</a></li>
+                            <li><a href="#">감사로그</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">메타 데이터 관리</a>
+                          <ul>
+                            <li><a href="#">메타 데이터 통합 관리</a></li>
+                            <li><a href="#">데이터 접근권한 관리</a></li>
+                            <li><a href="#">용어사전 관리</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">고객 지원 관리</a>
+                          <ul>
+                            <li><a href="#">데이터 요청 관리</a></li>
+                            <li><a href="#">공지사항 관리</a></li>
+                            <li><a href="#">FAQ 관리</a></li>
+                          </ul>
+                        </li>
+                        <li class="current">
+                          <a href="#">시스템 관리</a>
+                          <ul>
+                            <li><a href="#">사용자/그룹 관리</a></li>
+                            <li class="current"><a href="#">메인 관리</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </nav>
+                    <!-- //nav -->
+                    <ul class="top-menu">
+                      <li>
+                        <a href="/member/join/indexJoinInit.do"><span>홍길동</span>님</a>
+                      </li>
+                      <!-- 2022-08-16 MOD : 디자인적용span추가 -->
+                      <li><a href="/member/indexLogin.do">로그아웃</a></li>
+                      <li><a href="/member/join/indexJoinInit.do" class="link-home">사용자홈</a></li>
+                      <!-- 2022-08-17 ADD : 로그인시 -->
+                    </ul>
+                    <div class="nav-dim"></div>
+                  </div>
+                </div>
+              </div>
+            </header>
+            <!-- //header -->
+            <!-- main-sub -->
+            <main id="main" class="main-sub">
+              <!-- sub page : main-sub class 추가 -->
+              <div class="main-contents">
+                <h2 class="blind">시스템 관리</h2>
+                <!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                <div class="contents-wrap">
+                  <!-- contents-top -->
+                  <div class="contents-top">
+                    <div class="breadcrumbs-wrap">
+                      <div class="breadcrumbs">
+                        <ol class="mu-path">
+                          <li class="home"><a href="">HOME</a></li>
+                          <li><a href="">시스템 관리</a></li>
+                          <li><a href="">시스템 관리</a></li>
+                        </ol>
+                      </div>
+                    </div>
+                    <div class="subject-wrap">
+                      <div class="subject">
+                        <div class="subject-title">
+                          <h3>시스템 관리</h3>
+                          <!-- 실제 해당 페이지명 -->
+                          <p class="subject-desc"></p>
+                        </div>
+                        <!-- 우측 버튼영역 -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- contents -->
+                  <div class="contents">
+                    <div>
+                      <div class="inner">
+                        <!-- main-system -->
+                        <div class="main-system">
+                          <!-- Left -->
+                          <div class="inner-column">
+                            <div class="mu-heading">
+                              <h4>추천 검색어 관리</h4>
+                            </div>
+                            <!-- recommend-keyword -->
+                            <dl class="recommend-keyword">
+                              <dt>추천검색어 01</dt>
+                              <dd><input type="text" id="recommKeyword01" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                              <dt>추천검색어 02</dt>
+                              <dd><input type="text" id="recommKeyword02" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                              <dt>추천검색어 03</dt>
+                              <dd><input type="text" id="recommKeyword03" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                              <dt>추천검색어 04</dt>
+                              <dd><input type="text" id="recommKeyword04" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                              <dt>추천검색어 05</dt>
+                              <dd><input type="text" id="recommKeyword05" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                            </dl>
+                            <!-- //recommend-keyword -->
+                            <!-- mu-button-wrap -->
+                            <div class="mu-button-wrap">
+                              <button type="button" class="mu-btn mu-btn-lg mu-btn-primary"><span>적용</span></button>
+                            </div>
+                            <!-- //mu-button-wrap -->
+                          </div>
+                          <!-- Right -->
+                          <div class="inner-column">
+                            <div class="mu-heading">
+                              <h4>태그 관리</h4>
+                            </div>
+                            <div class="mu-heading">
+                              <h5>태그추가</h5>
+                            </div>
+                            <div class="mu-item-group">
+                              <input type="text" title="태그 입력" placeholder="추가할 태그를 입력하세요." class="mu-input">
+                              <button type="button" class="mu-btn mu-btn-primary">
+                                <div class="mu-icon-svg add"></div>
+                                <span>추가</span>
+                              </button>
+                            </div>
+                            <ul class="bul-refer mt20">
+                              <li>
+                                <b>허용되는 입력 조건</b>
+                                <ul class="bul-dot bul-txt">
+                                  <li>숫자 0-9</li>
+                                  <li>알파벳 a-zA-Z</li>
+                                  <li>한글 ' 초성어 모음( ㄱ-ㅎ,ㅏ-ㅢ 불가) 완성된 한글만 가능</li>
+                                  <li>특수문자 _- 두개만 허용</li>
+                                </ul>
+                              </li>
+                            </ul>
+                            <div class="mu-heading mt20">
+                              <h5>태그목록</h5>
+                              <div class="mu-item-group">
+                                <button type="button" title="태그목록 새로고침" class="mu-btn mu-btn-icon-only"><i class="mu-icon-svg refresh"></i></button>
+                              </div>
+                            </div>
+                            <div class="tags-setting">
+                              <div class="tags-group">
+                                <div class="tag">
+                                  <span class="tag-label">사용자태그</span>
+                                  <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                </div>
+                                <div class="tag">
+                                  <span class="tag-label">사용자태그</span>
+                                  <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                </div>
+                                <div class="tag">
+                                  <span class="tag-label">사용자태그</span>
+                                  <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                </div>
+                                <div class="tag">
+                                  <span class="tag-label">사용자태그</span>
+                                  <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                </div>
+                                <div class="tag">
+                                  <span class="tag-label">사용자태그</span>
+                                  <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                </div>
+                                <div class="tag">
+                                  <span class="tag-label">사용자태그</span>
+                                  <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                </div>
+                                <div class="tag">
+                                  <span class="tag-label">사용자태그</span>
+                                  <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- //mu-row -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- //contents -->
+                </div>
+              </div>
+            </main>
+            <!-- //main-sub -->
+
+            <!-- footer -->
+            <footer>
+              <div class="inner">
+                <!-- footer-info -->
+                <div class="footer-info">
+                  <address>
+                    <p>대표번호 <strong class="tel">02-2018-5114</strong></p>
+                  </address>
+                  <p class="copyright">ⓒ 2024. MOBIGEN COMPANY.</p>
+                </div>
+                <!-- footer-logo -->
+                <div class="footer-logo"><span>MOBIGEN</span></div>
+              </div>
+              <!-- floating-button -->
+              <div class="floating-button">
+                <a href="#" title="맨 위로 가기" class="mu-btn btn-go-top">상단가기</a>
+              </div>
+            </footer>
+            <!-- //footer -->
+          </div>
+          <!-- //DEV nuxt common layout ADD -->
+        </div>
+      </div>
+    </div>
+    <script src="../lib/vue/vue.min.js"></script>
+    <script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script>
+    <!-- vue2-datepicker ver up -->
+    <script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script>
+    <!-- vue2-datepicker kor ver -->
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="../js/common.js"></script>
+    <!-- 동작 확인용 임시 -->
+  </body>
+</html>

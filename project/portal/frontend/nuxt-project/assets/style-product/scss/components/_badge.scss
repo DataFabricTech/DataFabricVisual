@@ -1,0 +1,255 @@
+// -------------------------
+// Badge
+// -------------------------
+.badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  flex-grow: 1;
+
+  .badge + .badge {
+    margin: 0 0 0 rem(4px);
+  }
+
+  .badge {
+    position: relative;
+    max-width: 10rem;
+  }
+}
+
+.badge + .badge {
+  margin: 0 0 0 rem(4px);
+}
+
+.badge {
+  @include font-weight("regular");
+  @include font-size("14");
+  @include font-family("sans");
+  @include font-smoothing;
+  @include letter-spacing;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: rem(80px);
+  height: $button-height-xs;
+  padding: 0 $spacing-md;
+  white-space: nowrap;
+  user-select: none;
+  border-radius: rem(4px);
+  background-color: $bg-dark;
+  text-align: center;
+  cursor: inherit;
+
+  &--rounded {
+    padding: 0 rem(20px);
+    height: $button-height-xs;
+    border-radius: calc($button-height-xs / 2) !important;
+  }
+
+  &.badge--icon {
+    width: 1.5rem;
+    padding: rem(3px);
+  }
+}
+
+.badge__label {
+  @include text-overflow;
+  line-height: 1;
+}
+
+// 벤더
+.badge--provider {
+  @include font-family("noto");
+  @include font-size("14");
+  padding: 0 $spacing-md;
+  height: 1.5rem;
+  background-color: transparent;
+
+  &:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: rem(1px);
+    height: 0.75rem;
+    margin-top: rem(-6px);
+    background-color: $bg-dark;
+  }
+}
+
+// -------------------------
+// badge size
+// -------------------------
+.badge--lg {
+  @include font-size("14");
+  height: $button-height-sm;
+  padding: 0 $spacing-xs;
+
+  &--rounded {
+    border-radius: calc($button-height-sm / 2) !important;
+  }
+
+  &.badge--icon {
+    width: 1.750rem;
+    padding: $spacing-2xs;
+  }
+
+  .badge__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.badge--sm {
+  height: 1.25rem;
+
+  &--rounded {
+    border-radius: rem(10px) !important;
+  }
+
+  &.badge--icon {
+    width: rem(18px);
+    padding: 0;
+  }
+
+  .badge__icon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+// -------------------------
+// theme color mixin
+// -------------------------
+@mixin badge-theme($bg-color, $icon-color, $font-color, $border-color: false) {
+  background-color: $bg-color;
+  color: $font-color;
+
+  .badge__icon {
+    fill: $icon-color;
+  }
+
+  @if ($border-color) {
+    border: 1px solid $border-color;
+
+    .badge__label {
+      color: inherit;
+    }
+  }
+}
+
+@each $name, $color in $button-colors {
+  .badge--#{$name} {
+    @include badge-theme($color, $white, $white);
+  }
+}
+
+.badge--disabled {
+  @include badge-theme($bg-light, $white, $white, $border-basic);
+}
+
+.badge--ready {
+  @include badge-theme(#E0F3ED, $primary, $primary);
+}
+
+.badge--progress {
+  @include badge-theme(#E2ECFB, $secondary, $secondary);
+}
+
+.badge--impossible {
+  @include badge-theme(#FCE4E5, $negative, $negative);
+}
+
+.badge--info {
+  @include badge-theme($info, $white, $white);
+}
+
+.badge--file {
+  display: flex;
+  background-image: url(#{$img-path}/icon/file-data.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  font-size: 0;
+  color: transparent;
+}
+
+// 카테고리별 컬러
+.badge--category-01 {
+  @include badge-theme(#d9f3ff, #77aac2, #77aac2); // 방호 (하늘색)
+}
+
+.badge--category-02 {
+  @include badge-theme(#fbf1d6, #a89664, #a89664); // 우주 (노랑색)
+}
+
+.badge--category-03 {
+  @include badge-theme(#e0e9f8, #778dae, #778dae); // 항공 (보라색)
+}
+
+.badge--category-04 {
+  @include badge-theme(#f8ced0, #be8789, #be8789); // 사이버 (분홍색)
+}
+
+.badge--category-05 {
+  @include badge-theme(#d2eeec, #6faea9, #6faea9); // 함정
+}
+
+.badge--category-06 {
+  @include badge-theme(#dbf2d2, #6eb253, #6eb253); // 화력
+}
+
+.badge--category-07 {
+  @include badge-theme(#e1dbeb, #9682b8, #9682b8); // 지휘통제통신
+}
+
+.badge--category-08 {
+  @include badge-theme(#e9e0d8, #b08c6c, #b08c6c); // 기동
+}
+
+.badge--category-09 {
+  @include badge-theme(#cedce4, #5e8ca2, #5e8ca2); // 감시정찰
+}
+
+.badge--category-10 {
+  @include badge-theme(#ffe0d2, #ca9379, #ca9379); // 그 밖의 무기체계
+}
+
+// -------------------------
+// theme border color mixin
+// -------------------------
+@mixin badge-theme-outline($icon-color, $font-color, $border-color: false) {
+  @include font-weight("regular");
+  border: 1px solid currentColor;
+  background-color: $white;
+  color: $font-color;
+  
+  @if ($border-color) {
+    border: 1px solid $border-color;
+  }
+
+  .badge__icon {
+    fill: $icon-color;
+  }
+
+  &.badge--rounded {
+    color: $dark;
+  }
+}
+
+.badge--outline {
+  @include badge-theme-outline($basic, $text-dark, $border-basic);
+}
+
+@each $name, $color in $button-colors {
+  .badge--outline.badge--#{$name} {
+    @include badge-theme-outline($color, $color, $color);
+  }
+}
+
+.badge--outline.badge--disabled {
+  @include badge-theme-outline($light, $light, $border-basic);
+}

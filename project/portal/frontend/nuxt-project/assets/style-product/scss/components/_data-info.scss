@@ -1,0 +1,32 @@
+.data-info {
+  display: flex;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-top: $spacing-md;
+  }
+
+  dl {
+    display: flex;
+    align-items: center;
+
+    & + dl:not(.ml-auto)::before,
+    dt:not(:first-child)::before {
+      content: "";
+      height: $layout-3xs;
+      margin: 0 $spacing-md + $spacing-2xs;
+      border-left: 1px solid $border-light;
+    }
+  }
+
+  dt {
+    display: flex;
+    align-items: center;
+    color: $text-light;
+  }
+
+  dd {
+    margin-left: $spacing-xs;
+    color: $text-dark;
+  }
+}

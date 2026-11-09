@@ -1,0 +1,92 @@
+// -------------------------
+// Textarea
+// -------------------------
+.textarea {
+  width: 100%;
+}
+
+.text-area {
+  padding: $spacing-sm;
+  width: 100%;
+  min-width: rem(120px);
+  min-height: rem(40px);
+  background-color: $white;
+  border: 1px solid $border-basic;
+  border-radius: $form-border-radius;
+  font-family: inherit;
+  font-size: inherit;
+  vertical-align: top;
+  transition: all $duration-fast-01 motion(standard, productive);
+  outline: none;
+  resize: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $primary;
+  }
+
+  // chrom에서 자동저장된 input의 배경컬러를 제어
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px $white inset;
+  }
+
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    cursor: not-allowed;
+    border-color: $border-basic;
+    background-color: $disabled;
+    opacity: 0.5;
+    box-shadow: none;
+
+    ~ .text-input-group__button {
+      display: none;
+    }
+  }
+
+  &[readonly],
+  &[readonly]:hover,
+  &[readonly]:focus {
+    cursor: default;
+    border-color: $border-basic;
+    background-color: $disabled;
+    box-shadow: none;
+  }
+
+  &::placeholder {
+    color: $text-light;
+  }
+}
+
+.text-area--fixed {
+  resize: none;
+}
+
+.text-area-wrap {
+  width: 100%;
+}
+
+.text-area-wrap__foot-buttons {
+  display: flex;
+}
+
+.text-area-wrap__foot-text {
+  @include font-size("14");
+  @include line-height("title");
+  color: $text-light;
+}
+
+// 텍스트 길이(byte) 표시
+.text-area__byte {
+  @include font-weight("regular");
+  @include font-size("14");
+  margin-top: $spacing-2xs;
+  text-align: right;
+  color: $text-light;
+
+  strong {
+    @include font-weight("bold");
+    color: $text-dark;
+  }
+}

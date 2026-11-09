@@ -1,0 +1,24 @@
+$desktop: rem(1280px);
+$laptop: rem(1020px);
+$mobile: rem(767px);
+
+
+@mixin desktop{
+  @media(max-width: #{$desktop}){
+    @content;
+  }
+}
+
+@mixin laptop{
+  @media(max-width: #{$laptop}){
+    @content;
+  }
+}
+
+@mixin mobile{
+  @media(max-width: #{$mobile}){
+    @content;
+  }
+}
+
+

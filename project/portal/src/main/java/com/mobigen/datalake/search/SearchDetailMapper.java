@@ -1,0 +1,98 @@
+package com.mobigen.datalake.search;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+@Repository("searchDetailMapper")
+public interface SearchDetailMapper {
+
+    Map<String, Object> getTableData(String guid);
+
+    Map<String, Object> getDbData(String guid);
+
+    List<Map> getColumnData(List<String> columnData);
+
+    Map<String, Object> getUserDescription(String guid);
+
+    List<Map> getUserDescriptionList(Map<String, Object> params);
+
+    Integer insertUserDescription(Map<String, Object> params);
+
+    Integer updateUserDescription(Map<String, Object> params);
+
+    int updateMetaUserDescription(Map<String, Object> params);
+
+    int deleteUserDescription(Map<String, Object> params);
+
+    int deleteMetaUserDescription(String guid);
+
+    Integer getUserDescriptionFavoriteCounts(Map<String, Object> params);
+
+    Map<String, Object> getUserDescriptionFavoriteStatus(Map<String, Object> params);
+
+    Integer insertUserDescriptionFavorite(Map<String, Object> params);
+
+    Integer addUserDescriptionFavoriteCount(int params);
+
+    Integer deleteUserDescriptionFavorite(Map<String, Object> params);
+
+    Integer subUserDescriptionFavoriteCount(int params);
+
+    List<Map> getReviewData(String guid);
+
+    Integer insertUserReview(Map<String, Object> params);
+
+    Integer updateUserReview(Map<String, Object> params);
+
+    Integer deleteUserReview(int params);
+
+    Map<String, Object> getDataRecommendedByUser(Map<String, Object> params);
+
+    Integer getDataRecommendedCounts(Map<String, Object> params);
+
+    Map<String, Object> getDataFavoredByUser(Map<String, Object> params);
+
+    Integer insertDataRecommendation(Map<String, Object> params);
+
+    Integer deleteDataRecommendation(Map<String, Object> params);
+
+    Integer insertDataFavorite(Map<String, Object> params);
+
+    int updateMetaBusinessAttributes(Map<String, Object> params);
+
+    Integer deleteDataFavorite(Map<String, Object> params);
+
+    // List<Map> getAuthCheckList(Map<String, Object> params);
+
+    void insertSearchMetaHistory(Map<String, Object> saveData);
+
+    Map<String, Object> getDbInfo(String system_name);
+
+    List<Map<String, Object>> getClassificationList(String[] ids);
+
+    List<Map<String, String>> getDataManagerInfoList();
+
+    Map<String, Object> getDetailData(String id);
+
+    Integer checkExistMetaData(String meta_id);
+
+    Integer getUserDataAuth(Map<String, Object> params);
+
+    Integer getMetaDataRelease(String meta_id);
+
+    Integer getMetaDataAdminAuthCnt(Map<String, Object> params);
+
+    Integer getUserDescriptionAdminAuthCnt(Map<String, Object> params);
+
+    String getSampleDataUrl(String meta_id);
+
+    Integer getFileSampleCount(String meta_id);
+
+    Map<String, Object> getSystemInfo(String system_id);
+
+    int updateUnstructuredMetadata(Map<String, Object> params);
+
+    Map<String, Object> getMetaDataByMetaName(String system_id, String meta_name);
+}

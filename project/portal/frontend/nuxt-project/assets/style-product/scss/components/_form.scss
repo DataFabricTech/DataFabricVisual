@@ -1,0 +1,456 @@
+// -------------------------
+// Form
+// -------------------------
+@mixin form__item($both-side-padding) {
+  @include line-height("heading");
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: $both-side-padding 0;
+}
+
+@mixin form__label {
+  @include make-col(4);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  height: rem(32px);
+}
+
+@mixin form__label-text {
+  @include font-weight("medium");
+  @include line-height("title");
+  padding-right: $spacing-2xs;
+  color: $text-dark;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+}
+
+@mixin form__detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 0 auto;
+  min-height: rem(32px);
+}
+
+.form__head-title {
+  @include font-size("16");
+  @include font-weight("medium");
+  display: block;
+}
+
+.form__head + .form__body {
+  margin-top: $spacing-md;
+}
+
+.form__body {
+  width: 100%;
+}
+
+.form__list {
+  width: 100%;
+}
+
+.form__item {
+  @include form__item($spacing-xs);
+  width: 100%;
+}
+
+.form__label {
+  @include form__label;
+}
+
+.form__label-text {
+  @include form__label-text;
+}
+
+.form__label-subtext {
+  @include font-size("12");
+  @include line-height("heading");
+  padding-right: $spacing-2xs;
+  color: $text-light;
+  word-break: normal;
+  white-space: nowrap;
+}
+
+.form__detail-value {
+  @include font-size("13");
+  color: $text-dark;
+  width: rem(40px);
+}
+
+.form__label-text + .button--link {
+  margin-right: $spacing-2xs;
+}
+
+.form__detail {
+  @include form__detail;
+}
+
+.form__detail-text {
+  @include font-weight("medium");
+  @include font-size("15");
+  color: $text-dark;
+}
+
+.form__detail-item {
+  & + & {
+    margin-top: $spacing-sm;
+  }
+}
+
+.form__detail-helper-text {
+  @include font-size("12");
+  @include line-height("heading");
+  @include text-overflow;
+  padding-left: $spacing-2xs;
+  color: $text-light;
+}
+
+.form__foot {
+  display: flex;
+  align-items: center;
+  padding-top: $spacing-sm;
+}
+
+.form__foot-main-buttons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  .button + .button {
+    margin-left: $spacing-xs;
+  }
+}
+
+.form__detail .upload-preview {
+  width: 100%;
+}
+
+// h-group으로 대체 하는게 좋을듯 하여 주석처리
+// .form__detail .text-input + .button {
+//   margin-left: $spacing-2xs;
+// }
+
+// -------------------------
+// Size overwrite
+// -------------------------
+.form--lg {
+  .form__head-title {
+    @include font-size("16");
+  }
+
+  .form__item,
+  form__items {
+    padding: $spacing-xs 0;
+  }
+
+  .form__item:first-child,
+  .form__items:first-child {
+    padding-top: 0;
+  }
+
+  .form__label,
+  .form__items-title {
+    height: rem(40px);
+  }
+
+  .form__label,
+  .form__text,
+  .form__items-title-text {
+    @include font-size("15");
+  }
+}
+
+// -------------------------
+// form--vertical
+// -------------------------
+.form__head.form--vertical {
+  margin-top: $spacing-xs;
+}
+.form--vertical {
+  .form__item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: $spacing-sm 0;
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  .form__label {
+    width: 100%;
+    height: auto;
+    padding: 0;
+    margin-bottom: $spacing-3xs;
+  }
+
+  .form__label-text {
+    @include font-size("15");
+  }
+
+  .form__label-subtext {
+    margin-left: auto;
+  }
+
+  .form__detail {
+    width: 100%;
+    margin-top: $spacing-sm;
+  }
+
+  .form__detail-textarea {
+    height: rem(120px);
+  }
+
+  .form__detail-detail {
+    flex: auto;
+  }
+}
+
+// -------------------------
+// dynamic-from
+// -------------------------
+.dynamic-form {
+}
+
+.dynamic-form__list {
+  padding: $spacing-sm 0;
+  // border-top: 1px solid $border-light;
+}
+
+.dynamic-form__item {
+  display: flex;
+}
+
+.form__v-group-item {
+  display: flex;
+  align-items: center;
+  height: rem(32px);
+}
+
+.form__v-group-title {
+  display: flex;
+  align-items: center;
+  width: rem(130px);
+  color: $text-dark;
+}
+
+.dynamic-form__item + .dynamic-form__item {
+  margin-top: $spacing-xs;
+}
+
+.dynamic-form__handler {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dynamic-form__handler .button:first-child {
+  margin-bottom: $spacing-2xs;
+}
+
+.dynamic-form__forms {
+  flex: 1 0;
+}
+
+.dynamic-form__handler + .dynamic-form__forms {
+  margin-left: $spacing-xs;
+}
+
+.dynamic-form__form {
+  @include form__item($spacing-3xs);
+  width: 100%;
+}
+
+.dynamic-form__form .v-group {
+  width: 100%;
+}
+
+.dynamic-form__form-label {
+  @include form__label;
+}
+
+.dynamic-form__form-label-text {
+  @include form__label-text;
+}
+
+.dynamic-form__form-detail {
+  @include form__detail;
+  flex: 1 1 100%;
+}
+
+.dynamic-form__list--line + .dynamic-form__list--line {
+  border-top: 1px solid $border-light;
+}
+
+.dynamic-form__action-buttons {
+  display: flex;
+  align-items: center;
+  margin-left: $spacing-3xs;
+}
+
+.dynamic-form__foot {
+  padding-top: $spacing-sm;
+}
+
+.dynamic-form__foot .button {
+  width: 100%;
+}
+
+// -------------------------
+// dynamic-from--condition
+// -------------------------
+.dynamic-form--condition {
+  .dynamic-form__item + .dynamic-form__item {
+    margin-top: $spacing-md;
+    padding-top: $spacing-md;
+    border-top: 1px solid $border-light;
+  }
+
+  .dynamic-form__form-label {
+    width: 20%;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .dynamic-form__form-label-text {
+    text-align: right;
+    padding-right: $spacing-xs;
+  }
+
+  .dynamic-form__handler + .dynamic-form__forms {
+    margin-left: 0;
+  }
+
+  .toggle-button__item {
+    flex-grow: 1;
+  }
+
+  .notification {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .notification__icon {
+    width: rem(18px);
+    height: rem(18px);
+    margin: $spacing-xs;
+  }
+
+  .notification__contents {
+    padding: $spacing-xs 0;
+  }
+
+  .notification__text {
+    @include font-size("13");
+  }
+
+  .text-input[type="number"] {
+    min-width: unset;
+  }
+}
+
+.dynamic-form--slider {
+  .dynamic-form__form-label {
+    width: 15%;
+  }
+}
+
+.dynamic-form--responsive {
+  padding-top: $spacing-sm;
+
+  .dynamic-form__item + .dynamic-form__item {
+    padding-top: $spacing-xs;
+    border-top: 1px solid $border-light;
+  }
+
+  .select {
+    display: flex;
+    flex: 1;
+  }
+
+  .select-selector {
+    flex: 1;
+  }
+
+  .dynamic-form__action-buttons {
+    width: rem(68px);
+    margin-left: 0;
+  }
+
+  .dynamic-form__action-buttons > *:not(:first-child) {
+    margin-left: $spacing-2xs;
+  }
+}
+
+// -------------------------
+// form__items - 환경설정에 새롭게 추가된 item 유형입니다.
+// -------------------------
+.form__detail-item {
+  display: flex;
+  align-items: center;
+}
+
+.form__detail-item--border:last-child {
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid $hover-row;
+}
+
+.form__detail-item + .form__detail-item {
+  margin-top: $spacing-xs;
+}
+
+.form__detail-label {
+  width: rem(112px);
+  padding-right: $spacing-sm;
+  text-align: right;
+}
+
+.form__detail-label-text {
+  @include font-weight("regular");
+  color: $text-dark;
+  word-break: break-word;
+}
+
+.form__detail-detail {
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+}
+
+.form__text-input {
+  display: flex;
+  gap: rem(8px);
+}
+
+.lower-level {
+  .formbox {
+    border-top: 1px solid $basic;
+  }
+
+  & + &, 
+  .table + .table-wrap,
+  .table-wrap + .table,
+  .board-bottom + .formbox,
+  .formbox + .basic-add-row,
+  .basic-add-row + .basic-add-row,
+  .table-wrap + .basic-add-row,
+  .table-wrap + .lower-level,
+  .table-wrap + &
+  {
+    margin-top: rem(40px);
+  }
+}
+.tab_content {
+  .table-wrap + .lower-level
+  {
+    margin-top: rem(40px);
+  }
+}

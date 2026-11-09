@@ -1,0 +1,8 @@
+// 기본 테마 변수 먼저 불러오기
+@import "./themes/theme.scss";
+@import "./utils/utils.scss";
+@import "./config/config.scss";
+@import "./vendors/vendors.scss";
+@import "./components/components.scss";
+@import "./config/helper-classes.scss";
+@import "./layout/layout.scss";
